@@ -19,6 +19,7 @@
               <in>GameStateManager.h</in>
             </df>
             <in>Gradient.h</in>
+            <in>TileMap.h</in>
             <in>ValueNoise.h</in>
           </df>
           <df name="server">
@@ -38,10 +39,10 @@
               <in>GameStateManager.cpp</in>
             </df>
             <in>Gradient.cpp</in>
+            <in>TileMap.cpp</in>
             <in>ValueNoise.cpp</in>
           </df>
           <df name="server">
-            <in>Game.cc</in>
             <in>Game.cpp</in>
           </df>
           <df name="shared">
