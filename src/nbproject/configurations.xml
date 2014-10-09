@@ -18,16 +18,20 @@
               <in>GameStateMainMenu.cpp</in>
               <in>GameStateManager.cpp</in>
             </df>
+            <in>Client.cpp</in>
             <in>Gradient.cpp</in>
             <in>ValueNoise.cpp</in>
           </df>
           <df name="server">
             <in>Game.cc</in>
             <in>Game.cpp</in>
+            <in>Server.cpp</in>
           </df>
           <df name="shared">
             <in>Random.cc</in>
             <in>Random.cpp</in>
+            <in>Sharable.cpp</in>
+            <in>TileMap.cpp</in>
           </df>
         </df>
       </df>
@@ -115,6 +119,8 @@
           </preprocessorList>
         </ccTool>
       </folder>
+      <item path="lib/tbs/client/Client.cpp" ex="false" tool="1" flavor2="8">
+      </item>
       <item path="lib/tbs/client/Gradient.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="lib/tbs/client/ValueNoise.cpp" ex="false" tool="1" flavor2="8">
@@ -123,22 +129,16 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
       </item>
       <item path="lib/tbs/client/gamestate/GameStateMainMenu.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
       </item>
       <item path="lib/tbs/client/gamestate/GameStateManager.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
       </item>
       <item path="lib/tbs/server/Game.cc" ex="false" tool="1" flavor2="8">
         <ccTool>
@@ -148,6 +148,14 @@
         </ccTool>
       </item>
       <item path="lib/tbs/server/Game.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="1">
+          <incDir>
+            <pElem>include/tbs/gamestate</pElem>
+            <pElem>../build/lib/tbs</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="lib/tbs/server/Server.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="1">
           <incDir>
             <pElem>include/tbs/gamestate</pElem>
@@ -169,6 +177,16 @@
             <pElem>../build/lib/tbs</pElem>
           </incDir>
         </ccTool>
+      </item>
+      <item path="lib/tbs/shared/Sharable.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="1">
+          <incDir>
+            <pElem>include/tbs/gamestate</pElem>
+            <pElem>../build/lib/tbs</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="lib/tbs/shared/TileMap.cpp" ex="false" tool="1" flavor2="8">
       </item>
     </conf>
   </confs>

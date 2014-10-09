@@ -13,11 +13,9 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-#include <iostream>
-
-#include "config.h"
+#include "server/Server.h"
 
 int main(void) {
-    std::cout << "Gzzzt-Server (version " << GAME_VERSION << ")" << std::endl;
+    Server().start();
     return 0;
 }
