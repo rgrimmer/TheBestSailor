@@ -1,0 +1,25 @@
+Scanning dependencies of target tbs-server0
+[ 14%] Building CXX object lib/tbs/CMakeFiles/tbs-server0.dir/server/Game.cc.o
+Linking CXX shared library server/libtbs-server0.so
+[ 14%] Built target tbs-server0
+Scanning dependencies of target tbs-shared0
+[ 28%] Building CXX object lib/tbs/CMakeFiles/tbs-shared0.dir/shared/Random.cc.o
+Linking CXX shared library shared/libtbs-shared0.so
+[ 28%] Built target tbs-shared0
+Scanning dependencies of target tbs0
+[ 42%] Building CXX object lib/tbs/CMakeFiles/tbs0.dir/client/Entity.cc.o
+[ 57%] Building CXX object lib/tbs/CMakeFiles/tbs0.dir/client/World.cc.o
+[ 71%] Building CXX object lib/tbs/CMakeFiles/tbs0.dir/client/Animation.cc.o
+Linking CXX shared library client/libtbs0.so
+[ 71%] Built target tbs0
+Scanning dependencies of target tbs
+[ 85%] Building CXX object bin/CMakeFiles/tbs.dir/client/tbs.cc.o
+Linking CXX executable client/tbs
+CMakeFiles/tbs.dir/client/tbs.cc.o: dans la fonction « main »:
+/home/remy/Documents/TBS/src/bin/client/tbs.cc:24: référence indéfinie vers « gzzzt::Testation::Testation() »
+/home/remy/Documents/TBS/src/bin/client/tbs.cc:24: référence indéfinie vers « gzzzt::Testation::~Testation() »
+/home/remy/Documents/TBS/src/bin/client/tbs.cc:24: référence indéfinie vers « gzzzt::Testation::~Testation() »
+collect2: error: ld returned 1 exit status
+make[2]: *** [bin/client/tbs] Erreur 1
+make[1]: *** [bin/CMakeFiles/tbs.dir/all] Erreur 2
+make: *** [all] Erreur 2
