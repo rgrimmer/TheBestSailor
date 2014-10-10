@@ -9,8 +9,9 @@
 
 #include "client/TileMap.h"
 #include "client/Gradient.h"
+#include "shared/Map.h"
 
-void TileMap::load(sf::Vector2u tileSize, const float* tiles, unsigned int width, unsigned int height) {
+void TileMap::load(sf::Vector2u tileSize, const Map &map) {
 
     // @TODO
     Gradient g;
@@ -18,16 +19,16 @@ void TileMap::load(sf::Vector2u tileSize, const float* tiles, unsigned int width
 
     // resize the vertex array to fit the level size
     m_vertices.setPrimitiveType(sf::Quads);
-    m_vertices.resize(width * height * 4);
+    m_vertices.resize(map.width() * map.height() * 4);
 
     // populate the vertex array, with one quad per tile
-    for (unsigned int i = 0; i < width; ++i) {
-        for (unsigned int j = 0; j < height; ++j) {
+    for (unsigned int i = 0; i < map.width(); ++i) {
+        for (unsigned int j = 0; j < map.height(); ++j) {
             // get the current tile number
-            float tileValue = tiles[i + j * width];
+            float tileValue = map[i + j * map.width()];
 
             // get a pointer to the current tile's quad
-            sf::Vertex* quad = &m_vertices[(i + j * width) * 4];
+            sf::Vertex* quad = &m_vertices[(i + j * map.width()) * 4];
 
             // define its 4 corners
             quad[0].position = sf::Vector2f(i * tileSize.x, j * tileSize.y);
@@ -55,37 +56,4 @@ void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
     // draw the vertex array
     target.draw(m_vertices, states);
-}
-
-virtual sf::Packet TileMap::serialize() {
-    // @TODO
-    sf::Packet packet;
-    for (int i = 0; i < 600; ++i)
-        for (int j = 0; j < 800; j++)
-            packet << i << j;
-    // @TODO
-    return packet;
-}
-
-sf::Packet& operator<<(sf::Packet &packet, TileMap &map) {
-    // @TODO : redo
-    for (sf::Int16 i = 0; i < 600; ++i)
-        for (sf::Int16 j = 0; j < 800; j++)
-            packet << i << j;
-    return packet;
-}
-
-#include <iostream>
-
-sf::Packet& operator>>(sf::Packet &packet, TileMap &map) {
-    // @TODO : redo
-    sf::Int16 a, b;
-    for (sf::Int16 i = 0; i < 600; ++i) {
-        for (sf::Int16 j = 0; j < 800; j++) {
-            packet >> a >> b;
-            std::cout << a << b;
-        }
-        std::cout << std::end;
-    }
-    return packet;
 }

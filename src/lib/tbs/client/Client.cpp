@@ -8,10 +8,16 @@
 #include "client/Client.h"
 
 #include <iostream>
-#include <SFML/Network.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Network/Packet.hpp>
+#include <SFML/Network/UdpSocket.hpp>
+#include <SFML/Network/IpAddress.hpp>
 
-#include "shared/TileMap.h"
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Window/Event.hpp>
+
+#include "shared/Map.h"
+#include "client/TileMap.h"
 
 Client::Client() {
 
@@ -43,10 +49,13 @@ void Client::start(void) {
         // erreur...
     }
     std::cout << "Received " << mapPacket.getDataSize() << " bytes from " << ipServer << " on port " << portServer << std::endl;
-    TileMap map = TileMap();
-    map << mapPacket;
+    Map map;
+    // @TODO mapPacket >> map;
+    map.generate(800,600); // @TODO remove it
 
     // @TODO l'afficher
+    TileMap mapView;
+    mapView.load(sf::Vector2u(100,100), map);
     sf::RenderWindow window(sf::VideoMode(800, 600), "The Best Sailor");
     while (window.isOpen()) {
         sf::Event event;
@@ -57,7 +66,7 @@ void Client::start(void) {
 
         window.clear();
         //window.setView(window.getView().setCenter(400,200));
-        window.draw(map);
+        window.draw(mapView);
         window.display();
     }
 }

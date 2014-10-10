@@ -10,7 +10,7 @@
 
 #include <SFML/Network.hpp>
 
-#include "../shared/TileMap.h"
+#include "shared/Map.h"
 
 class Server {
 public:
@@ -19,10 +19,9 @@ public:
     virtual ~Server();
     
     void start(void);
-    void generateMap(TileMap& map, int width, int heigth);
 
 private:
-    TileMap *map;
+    Map *map;
 
 };
 
