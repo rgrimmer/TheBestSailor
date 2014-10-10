@@ -1,7 +1,7 @@
 #include <cmath>
 #include <stdlib.h>
 
-#include "client/ValueNoise.h"
+#include "shared/ValueNoise.h"
 
 ValueNoise::ValueNoise() {
     for (unsigned i = 0; i < MAX_VERTICES * MAX_VERTICES; ++i) {

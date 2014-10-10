@@ -6,7 +6,6 @@
  */
 
 #include "shared/Sharable.h"
-#include "server/Server.h"
 
 Sharable::Sharable() {
 }

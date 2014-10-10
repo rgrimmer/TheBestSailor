@@ -7,6 +7,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "shared/Map.h"
+
 class TileMap : public sf::Drawable, public sf::Transformable {
 public:
 

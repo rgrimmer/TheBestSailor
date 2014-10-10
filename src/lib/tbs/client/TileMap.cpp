@@ -9,7 +9,6 @@
 
 #include "client/TileMap.h"
 #include "client/Gradient.h"
-#include "shared/Map.h"
 
 void TileMap::load(sf::Vector2u tileSize, const Map &map) {
 
@@ -22,8 +21,8 @@ void TileMap::load(sf::Vector2u tileSize, const Map &map) {
     m_vertices.resize(map.width() * map.height() * 4);
 
     // populate the vertex array, with one quad per tile
-    for (unsigned int i = 0; i < map.width(); ++i) {
-        for (unsigned int j = 0; j < map.height(); ++j) {
+    for (int i = 0; i < map.width(); ++i) {
+        for (int j = 0; j < map.height(); ++j) {
             // get the current tile number
             float tileValue = map[i + j * map.width()];
 

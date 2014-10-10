@@ -21,7 +21,6 @@
             <in>Client.h</in>
             <in>Gradient.h</in>
             <in>TileMap.h</in>
-            <in>ValueNoise.h</in>
           </df>
           <df name="server">
             <in>Game.h</in>
@@ -31,6 +30,7 @@
             <in>Map.h</in>
             <in>Random.h</in>
             <in>Sharable.h</in>
+            <in>ValueNoise.h</in>
           </df>
         </df>
       </df>
@@ -45,7 +45,6 @@
             <in>Client.cpp</in>
             <in>Gradient.cpp</in>
             <in>TileMap.cpp</in>
-            <in>ValueNoise.cpp</in>
           </df>
           <df name="server">
             <in>Game.cc</in>
@@ -57,6 +56,7 @@
             <in>Random.cc</in>
             <in>Random.cpp</in>
             <in>Sharable.cpp</in>
+            <in>ValueNoise.cpp</in>
           </df>
         </df>
       </df>

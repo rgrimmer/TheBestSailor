@@ -33,7 +33,8 @@ void Server::start(void) {
 
     // @TODO send map to client
     sf::Packet mapPacket;
-    if (socket.send(mapPacket << map, client, port) != sf::Socket::Done) {
+    mapPacket << map;
+    if (socket.send(mapPacket, client, port) != sf::Socket::Done) {
         // Erreur
     }
 }

@@ -23,13 +23,16 @@ public:
     inline int& rwidth() { return m_width; }
     inline int height() const { return m_height; }    
     inline int& rheight() { return m_height; }    
+    inline float get(int index) const { return m_container[index]; }
     
-    float& operator[](unsigned indice) {
-        return m_container[indice];
+    float& operator[](int index) {
+        return m_container[index];
     }
     
-    // sf::Packet& operator<<(sf::Packet &packet);
-    // sf::Packet& operator>>(sf::Packet &packet);
+    float operator[](int index) const {
+        return m_container[index];
+    }
+    
     
 private:
     float *m_container;

@@ -21,7 +21,6 @@
             <in>Client.cpp</in>
             <in>Gradient.cpp</in>
             <in>TileMap.cpp</in>
-            <in>ValueNoise.cpp</in>
           </df>
           <df name="server">
             <in>Game.cc</in>
@@ -33,6 +32,7 @@
             <in>Random.cc</in>
             <in>Random.cpp</in>
             <in>Sharable.cpp</in>
+            <in>ValueNoise.cpp</in>
           </df>
         </df>
       </df>
@@ -124,14 +124,6 @@
       <item path="lib/tbs/client/Gradient.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="lib/tbs/client/TileMap.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="0">
-          <incDir>
-            <pElem>include/tbs/gamestate</pElem>
-            <pElem>../build/lib/tbs</pElem>
-          </incDir>
-        </ccTool>
-      </item>
-      <item path="lib/tbs/client/ValueNoise.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="lib/tbs/client/gamestate/GameState.cpp"
             ex="false"
@@ -171,7 +163,13 @@
           </incDir>
         </ccTool>
       </item>
-      <item path="lib/tbs/shared/Map.cpp" ex="false" tool="1" flavor2="4">
+      <item path="lib/tbs/shared/Map.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="0">
+          <incDir>
+            <pElem>include/tbs/gamestate</pElem>
+            <pElem>../build/lib/tbs</pElem>
+          </incDir>
+        </ccTool>
       </item>
       <item path="lib/tbs/shared/Random.cc" ex="false" tool="1" flavor2="8">
         <ccTool>
@@ -189,6 +187,14 @@
         </ccTool>
       </item>
       <item path="lib/tbs/shared/Sharable.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="0">
+          <incDir>
+            <pElem>include/tbs/gamestate</pElem>
+            <pElem>../build/lib/tbs</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="lib/tbs/shared/ValueNoise.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">
           <incDir>
             <pElem>include/tbs/gamestate</pElem>

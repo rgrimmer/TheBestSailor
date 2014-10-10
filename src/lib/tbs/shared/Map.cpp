@@ -5,7 +5,11 @@
  * Created on 10 octobre 2014, 13:39
  */
 
-#include "Map.h"
+#include "shared/Map.h"
+
+#include <SFML/Graphics.hpp>
+
+#include "shared/ValueNoise.h"
 
 Map::Map() : m_container(NULL), m_width(0), m_height(0) {
 }
@@ -15,10 +19,10 @@ Map::Map(const Map& orig) {
     m_height = orig.height();
 
     int mapSize = orig.size();
-    m_container = new auto[mapSize];
+    m_container = new float[mapSize];
 
-    for (unsigned i = 0; i < mapSize; ++i)
-        m_container[i] = orig[i];
+    for (int i = 0; i < mapSize; ++i)
+        m_container[i] = orig.get(i);
 }
 
 Map::~Map() {
@@ -32,33 +36,32 @@ void Map::generate(int width, int height) {
 
     m_width = width;
     m_height = height;
-    m_container = new auto[width * height];
+    m_container = new float[width * height];
 
     // Generation
 
-    float invImageWidth = 1.f / width, invImageHeight = 1.f / height;
+    float invImageWidth = 1.0f / width, invImageHeight = 1.0f / height;
     ValueNoise simpleNoise2D;
-    float level[width * height];
-
+    
     for (int j = 0; j < height; ++j) {
         for (int i = 0; i < width; ++i) {
             sf::Vector2f pnoise(i * invImageWidth, j * invImageHeight);
             pnoise.x *= 10.0f;
             pnoise.y *= 10.0f;
             float n = simpleNoise2D.Eval(pnoise);
-            level[i + j * width] = n;
+            m_container[i + j * width] = n;
         }
     }
 }
 
-sf::Packet& Map::operator<<(sf::Packet &packet, const Map &map) {
+sf::Packet& operator<<(sf::Packet &packet, const Map &map) {
     int mapSize = map.size();
 
     // @TODO check syntaxe of cast
     packet << (sf::Int32) map.width() << (sf::Int32) map.height();
     
     for (int i = 0; i < mapSize; ++i)
-        packet << map[i];
+        packet << map.get(i);
 
     return packet;
 }
@@ -70,6 +73,7 @@ sf::Packet& operator>>(sf::Packet &packet, Map &map) {
 
     packet >> map.rwidth() >> map.rheight(); 
     
+    // @TODO add cast (sf::Int32)
     for (int i = 0; i < mapSize; ++i)
         packet >> map[i];
 

@@ -8,12 +8,14 @@
 #include "client/Client.h"
 
 #include <iostream>
+
 #include <SFML/Network/Packet.hpp>
 #include <SFML/Network/UdpSocket.hpp>
 #include <SFML/Network/IpAddress.hpp>
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+
 #include <SFML/Window/Event.hpp>
 
 #include "shared/Map.h"
@@ -50,8 +52,8 @@ void Client::start(void) {
     }
     std::cout << "Received " << mapPacket.getDataSize() << " bytes from " << ipServer << " on port " << portServer << std::endl;
     Map map;
-    // @TODO mapPacket >> map;
-    map.generate(800,600); // @TODO remove it
+    mapPacket >> map;²
+    //map.generate(800,600); // @TODO remove it
 
     // @TODO l'afficher
     TileMap mapView;
