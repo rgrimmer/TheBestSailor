@@ -29,10 +29,11 @@ void Server::start(void) {
     // @TODO generate a map
     map = new TileMap();
 
-    generateMap(&map, 800, 600);
+    generateMap(*map, 800, 600);
 
     // @TODO send map to client
-    if (socket.send(map->serialize(), client, port) != sf::Socket::Done) {
+    sf::Packet mapPacket = map->serialize();
+    if (socket.send(mapPacket, client, port) != sf::Socket::Done) {
         // Erreur
     }
 }
@@ -44,8 +45,8 @@ void Server::generateMap(TileMap& map, int imageWidth, int imageHeight) {
     ValueNoise simpleNoise2D;
     float level[imageWidth * imageHeight];
 
-    for (unsigned j = 0; j < imageHeight; ++j) {
-        for (unsigned i = 0; i < imageWidth; ++i) {
+    for (int j = 0; j < imageHeight; ++j) {
+        for (int i = 0; i < imageWidth; ++i) {
             sf::Vector2f pnoise(i * invImageWidth, j * invImageHeight);
             pnoise.x *= 10.0f;
             pnoise.y *= 10.0f;

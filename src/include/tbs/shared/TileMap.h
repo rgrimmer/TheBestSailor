@@ -6,6 +6,7 @@
  */
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Network.hpp>
 
 #include "../shared/Sharable.h"
 
@@ -16,6 +17,7 @@ public:
     void load(sf::Vector2u tileSize, const float* tiles, unsigned int width, unsigned int height);
     virtual sf::Packet serialize();
 
+    sf::Packet& operator<<(TileMap &map);
 
 private:
 

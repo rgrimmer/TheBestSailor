@@ -60,9 +60,32 @@ void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 virtual sf::Packet TileMap::serialize() {
     // @TODO
     sf::Packet packet;
-    for(int i=0; i < 600; ++i)
-        for(int j=0; j < 800; j++)
+    for (int i = 0; i < 600; ++i)
+        for (int j = 0; j < 800; j++)
             packet << i << j;
     // @TODO
+    return packet;
+}
+
+sf::Packet& operator<<(sf::Packet &packet, TileMap &map) {
+    // @TODO : redo
+    for (sf::Int16 i = 0; i < 600; ++i)
+        for (sf::Int16 j = 0; j < 800; j++)
+            packet << i << j;
+    return packet;
+}
+
+#include <iostream>
+
+sf::Packet& operator>>(sf::Packet &packet, TileMap &map) {
+    // @TODO : redo
+    sf::Int16 a, b;
+    for (sf::Int16 i = 0; i < 600; ++i) {
+        for (sf::Int16 j = 0; j < 800; j++) {
+            packet >> a >> b;
+            std::cout << a << b;
+        }
+        std::cout << std::end;
+    }
     return packet;
 }
