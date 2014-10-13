@@ -28,6 +28,7 @@
             <in>Server.cpp</in>
           </df>
           <df name="shared">
+            <in>ConnectionManager.cpp</in>
             <in>Map.cpp</in>
             <in>Random.cc</in>
             <in>Random.cpp</in>
@@ -156,6 +157,17 @@
         </ccTool>
       </item>
       <item path="lib/tbs/server/Server.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="0">
+          <incDir>
+            <pElem>include/tbs/gamestate</pElem>
+            <pElem>../build/lib/tbs</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="lib/tbs/shared/ConnectionManager.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
         <ccTool flags="0">
           <incDir>
             <pElem>include/tbs/gamestate</pElem>

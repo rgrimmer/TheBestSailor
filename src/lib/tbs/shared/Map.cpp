@@ -8,6 +8,7 @@
 #include "shared/Map.h"
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 #include "shared/ValueNoise.h"
 
@@ -22,7 +23,7 @@ Map::Map(const Map& orig) {
     m_container = new float[mapSize];
 
     for (int i = 0; i < mapSize; ++i)
-        m_container[i] = orig.get(i);
+        m_container[i] = orig[i];
 }
 
 Map::~Map() {
@@ -53,30 +54,3 @@ void Map::generate(int width, int height) {
         }
     }
 }
-
-sf::Packet& operator<<(sf::Packet &packet, const Map &map) {
-    int mapSize = map.size();
-
-    // @TODO check syntaxe of cast
-    packet << (sf::Int32) map.width() << (sf::Int32) map.height();
-    
-    for (int i = 0; i < mapSize; ++i)
-        packet << map.get(i);
-
-    return packet;
-}
-
-sf::Packet& operator>>(sf::Packet &packet, Map &map) {
-    int mapSize = map.size();
-
-    assert(packet.getDataSize() >= map.size() * sizeof (float) + sizeof(sf::Int32) * 2);
-
-    packet >> map.rwidth() >> map.rheight(); 
-    
-    // @TODO add cast (sf::Int32)
-    for (int i = 0; i < mapSize; ++i)
-        packet >> map[i];
-
-    return packet;
-}
-

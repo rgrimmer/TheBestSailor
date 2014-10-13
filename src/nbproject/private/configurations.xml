@@ -27,6 +27,7 @@
             <in>Server.h</in>
           </df>
           <df name="shared">
+            <in>ConnectionManager.h</in>
             <in>Map.h</in>
             <in>Random.h</in>
             <in>Sharable.h</in>
@@ -52,6 +53,7 @@
             <in>Server.cpp</in>
           </df>
           <df name="shared">
+            <in>ConnectionManager.cpp</in>
             <in>Map.cpp</in>
             <in>Random.cc</in>
             <in>Random.cpp</in>
@@ -105,7 +107,7 @@
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
         </runcommandpicklist>
         <runcommand>"${OUTPUT_PATH}"</runcommand>
-        <rundir>../build</rundir>
+        <rundir>/home/maxence/NetBeansProjects/TheBestSailor/src/../build/bin/server</rundir>
         <buildfirst>false</buildfirst>
         <terminal-type>0</terminal-type>
         <remove-instrumentation>0</remove-instrumentation>

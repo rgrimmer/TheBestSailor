@@ -17,6 +17,7 @@ public:
     Map(const Map& orig);
     virtual ~Map();
     
+    inline void create() { m_container = new float[size()]; }
     void generate(int width, int height);
     inline int size() const { return m_width * m_height; }
     inline int width() const { return m_width; }

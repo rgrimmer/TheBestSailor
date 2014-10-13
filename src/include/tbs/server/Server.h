@@ -11,6 +11,7 @@
 #include <SFML/Network.hpp>
 
 #include "shared/Map.h"
+#include "shared/ConnectionManager.h"
 
 class Server {
 public:
@@ -21,7 +22,8 @@ public:
     void start(void);
 
 private:
-    Map *map;
+    Map *m_map;
+    ConnectionManager m_connectionManager;
 
 };
 

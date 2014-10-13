@@ -7,34 +7,65 @@
 
 #include "server/Server.h"
 
+#include <iostream>
+
+
+sf::Packet& operator<< (sf::Packet &packet, const Map &map) {
+    int mapSize = map.size();
+
+    // @TODO check syntaxe of cast
+    packet << (sf::Int32) map.width() << (sf::Int32) map.height();
+    
+    for (int i = 0; i < mapSize; ++i)
+        packet << map[i];
+
+    return packet;
+}
+
+
 Server::Server() :
-map(NULL) {
+m_map(NULL) {
 }
 
 Server::Server(const Server& orig) {
 }
 
 Server::~Server() {
-    delete map;
+    delete m_map;
 }
 
 void Server::start(void) {
-    sf::UdpSocket socket;
-    sf::IpAddress client;
-    unsigned short port;
-    sf::Packet packet;
+    std::cout << "server start" << std::endl;
+    /*sf::UdpSocket socket;
+    sf::IpAddress client = "localhost";
+    unsigned short portClient = 1234, portServer = 54000;
+    sf::Packet packet;*/
+    
+    m_connectionManager.bind(ConnectionManager::serverPort);
 
     // @TODO get a connection
-    socket.receive(packet, client, port);
+    m_connectionManager.addRemote("localhost", ConnectionManager::clientPort);
+    //std::cout << socket.receive(packet, client, portClient) << " ";
+    //std::cout << "Connection receive : " << client << " " << portClient <<std::endl;
+    
     // @TODO generate a map
-    map = new Map();
+    m_map = new Map();
 
-    map->generate(800, 600);
+    m_map->generate(800, 600);
+    std::cout << "Map generate" << std::endl;
+
 
     // @TODO send map to client
     sf::Packet mapPacket;
-    mapPacket << map;
-    if (socket.send(mapPacket, client, port) != sf::Socket::Done) {
-        // Erreur
+    mapPacket << (*m_map);
+    std::cout << "packet create" << mapPacket.getDataSize() <<std::endl;
+    
+    m_connectionManager.send(mapPacket);
+    
+    /*if (socket.send(mapPacket, client, portClient) != sf::Socket::Done) {
+        std::cout << "Send error" << std::endl;
+
     }
+    else
+        std::cout << "Message send" << std::endl;*/
 }
