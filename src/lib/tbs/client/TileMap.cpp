@@ -8,11 +8,18 @@
 #include "client/TileMap.h"
 #include "client/Gradient.h"
 
-void TileMap::load(sf::Vector2u tileSize, const float* tiles, unsigned int width, unsigned int height) {
+void TileMap::load(const float* tiles, unsigned int width, unsigned int height, bool squared) {
 
+    sf::Color map[width * height];
     Gradient g;
-    g.CreateGradient();
-    
+
+    for (unsigned int i = 0; i < width; ++i) {
+        for (unsigned int j = 0; j < height; ++j) {
+            float tileValue = tiles[i + j * width];
+            map[i + j * width] = g.getColor((int) (tileValue * 255));
+        }
+    }
+
     // resize the vertex array to fit the level size
     m_vertices.setPrimitiveType(sf::Quads);
     m_vertices.resize(width * height * 4);
@@ -20,31 +27,37 @@ void TileMap::load(sf::Vector2u tileSize, const float* tiles, unsigned int width
     // populate the vertex array, with one quad per tile
     for (unsigned int i = 0; i < width; ++i) {
         for (unsigned int j = 0; j < height; ++j) {
-            // get the current tile number
-            float tileValue = tiles[i + j * width];
 
             // get a pointer to the current tile's quad
             sf::Vertex* quad = &m_vertices[(i + j * width) * 4];
 
             // define its 4 corners
-            quad[0].position = sf::Vector2f(i * tileSize.x, j * tileSize.y);
-            quad[1].position = sf::Vector2f((i + 1) * tileSize.x, j * tileSize.y);
-            quad[2].position = sf::Vector2f((i + 1) * tileSize.x, (j + 1) * tileSize.y);
-            quad[3].position = sf::Vector2f(i * tileSize.x, (j + 1) * tileSize.y);
+            quad[0].position = sf::Vector2f(i * TILE_SIZE, j * TILE_SIZE);
+            quad[1].position = sf::Vector2f((i + 1) * TILE_SIZE, j * TILE_SIZE);
+            quad[2].position = sf::Vector2f((i + 1) * TILE_SIZE, (j + 1) * TILE_SIZE);
+            quad[3].position = sf::Vector2f(i * TILE_SIZE, (j + 1) * TILE_SIZE);
 
-            sf::Color c(g.GradientR[(int) (tileValue * 255)], g.GradientG[(int) (tileValue * 255)], g.GradientB[(int) (tileValue * 255)], 255);
-            
             // define its 4 colors coordinates
-            quad[0].color = c;
-            quad[1].color = c;
-            quad[2].color = c;
-            quad[3].color = c;
+            if (squared) {
+                sf::Color c = map[i + j * width];
+                quad[0].color = c;
+                quad[1].color = c;
+                quad[2].color = c;
+                quad[3].color = c;
+            } else {
+                if (i < width && j < height) {
+                    quad[0].color = map[i + j * width];
+                    quad[1].color = map[i + j * width + 1];
+                    quad[2].color = map[i + (j + 1) * width + 1];
+                    quad[3].color = map[i + (j + 1) * width];
+                }
+            }
+
         }
     }
 }
 
-void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
+void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     // apply the transform
     states.transform *= getTransform();
 

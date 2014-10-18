@@ -16,7 +16,8 @@ public:
     static int B[NB_COLORS];
     static double Percent[NB_COLORS];
 
-    static int GradientR[NB_STEPS];
-    static int GradientG[NB_STEPS];
-    static int GradientB[NB_STEPS];
+    sf::Color getColor(int index);
+    
+private:
+    sf::Color m_gradient[NB_STEPS];
 };

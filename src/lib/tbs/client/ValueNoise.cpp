@@ -3,14 +3,13 @@
 
 #include "client/ValueNoise.h"
 
-ValueNoise::ValueNoise() {
+float ValueNoise::r[ MAX_VERTICES * MAX_VERTICES ];
+const int ValueNoise::maxVerticesMask = MAX_VERTICES - 1;
+
+void ValueNoise::GenerateSeed() {
     for (unsigned i = 0; i < MAX_VERTICES * MAX_VERTICES; ++i) {
         r[ i ] = rand() % 100 / 100.0f;
     }
-}
-
-ValueNoise::~ValueNoise() {
-
 }
 
 float ValueNoise::Eval(const sf::Vector2f &pt) {

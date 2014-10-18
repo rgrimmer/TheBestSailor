@@ -6,20 +6,16 @@
 
 class ValueNoise {
 public:
-    ValueNoise();
-    ~ValueNoise();
-
-    float Eval(const sf::Vector2f &pt);
+    static void  GenerateSeed();
+    static float Eval(const sf::Vector2f &pt);
 
 private:
-    float Smoothstep(const float & t);
-    float Mix(const float &a, const float &b, const float &t);
+    static float Smoothstep(const float & t);
+    static float Mix(const float &a, const float &b, const float &t);
 
 public:
 
-
-private:
-    static const unsigned int maxVerticesMask = MAX_VERTICES - 1;
-    float r[ MAX_VERTICES * MAX_VERTICES ];
+    static const int maxVerticesMask;
+    static float r[ MAX_VERTICES * MAX_VERTICES ];
 
 };
