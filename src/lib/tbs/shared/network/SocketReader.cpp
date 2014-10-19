@@ -5,7 +5,7 @@
  * Created on 19 octobre 2014, 11:54
  */
 
-#include "SocketReader.h"
+#include "shared/network/SocketReader.h"
 
 SocketReader::SocketReader(SocketQueuBuffer *buffer) : m_buffer(buffer)
 {
