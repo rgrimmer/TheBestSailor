@@ -6,18 +6,11 @@
 class Gradient {
 public:
 
-    Gradient();
-    ~Gradient();
-
-    void CreateGradient();
+    static void initialize();
 
     static int R[NB_COLORS];
     static int G[NB_COLORS];
     static int B[NB_COLORS];
     static double Percent[NB_COLORS];
-
-    sf::Color getColor(int index);
-    
-private:
-    sf::Color m_gradient[NB_STEPS];
+    static sf::Color gradient[NB_STEPS];
 };

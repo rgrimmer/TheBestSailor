@@ -3,21 +3,16 @@
 #include "client/Gradient.h"
 
 
+
 int Gradient::R[NB_COLORS] = {255, 179, 153, 115, 42, 69, 17, 9, 2};
 int Gradient::G[NB_COLORS] = {255, 179, 143, 128, 102, 108, 82, 62, 43};
 int Gradient::B[NB_COLORS] = {255, 179, 92, 77, 41, 118, 112, 92, 68};
 
-double Gradient::Percent[NB_COLORS] = {0.0, 5.0, 10.0, 20.0, 40.0, 41.0, 60.0, 75.0, 100.0};
+double Gradient::Percent[NB_COLORS] = {0.0, 3.0, 5.0, 10.0, 35.0, 36.0, 45.0, 75.0, 100.0};
 
-Gradient::Gradient() {
-    CreateGradient();
-}
+ sf::Color Gradient::gradient[NB_STEPS];
 
-Gradient::~Gradient() {
-
-}
-
-void Gradient::CreateGradient() {
+void Gradient::initialize() {
     int counter = 0;
     int pos1, pos2, pDiff;
     int rDiff, gDiff, bDiff;
@@ -38,14 +33,9 @@ void Gradient::CreateGradient() {
         bStep = bDiff * 1.0 / pDiff;
 
         for (int i = 0; i < pDiff; ++i) {
-            m_gradient[pos1 + i] = sf::Color((int) (R[counter] - (rStep * i)), (int) (G[counter] - (gStep * i)), (int) (B[counter] - (bStep * i)), 255);
+            gradient[pos1 + i] = sf::Color((int) (R[counter] - (rStep * i)), (int) (G[counter] - (gStep * i)), (int) (B[counter] - (bStep * i)), 255);
         }
 
         counter++;
     }
-}
-
-sf::Color Gradient::getColor(int index) {
-
-    return m_gradient[index];
 }

@@ -2,14 +2,16 @@
 
 #define TILE_SIZE 200
 
-#define NB_TILES_WIDTH 800
-#define NB_TILES_HEIGHT 600
+#define NB_TILES_WIDTH 200
+#define NB_TILES_HEIGHT 200
+
+#define WATER(x) (x > 0.35) ? true : false
 
 class TileMap : public sf::Drawable, public sf::Transformable {
     
 public:
 
-    void load(const float* tiles, unsigned int width, unsigned int height, bool squared);
+    void load(const float tiles[NB_TILES_WIDTH][NB_TILES_HEIGHT], bool squared);
 
 private:
 

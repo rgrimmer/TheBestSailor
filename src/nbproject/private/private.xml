@@ -10,8 +10,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/PathFinding.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/Gradient.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/server/Game.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/TileMap.h</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/ValueNoise.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/TileMap.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/bin/server/tbs-server.cpp</file>
