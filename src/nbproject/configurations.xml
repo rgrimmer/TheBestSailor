@@ -32,7 +32,6 @@
             </df>
             <in>Map.cpp</in>
             <in>Random.cc</in>
-            <in>Random.cpp</in>
             <in>Sharable.cpp</in>
             <in>UdpSocketManager.cpp</in>
             <in>ValueNoise.cpp</in>
@@ -180,8 +179,6 @@
       <item path="lib/tbs/shared/Map.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="lib/tbs/shared/Random.cc" ex="false" tool="1" flavor2="8">
-      </item>
-      <item path="lib/tbs/shared/Random.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="lib/tbs/shared/Sharable.cpp" ex="false" tool="1" flavor2="8">
       </item>
