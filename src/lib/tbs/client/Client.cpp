@@ -66,7 +66,7 @@ void Client::start(void) {
 
     
     TileMap mapView;
-    mapView.load(sf::Vector2u(1,1), map);
+    //mapView.load(sf::Vector2u(1,1), map);
     
     sf::RenderWindow window(sf::VideoMode(800, 600), "The Best Sailor");
     while (window.isOpen()) {

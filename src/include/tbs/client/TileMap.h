@@ -1,18 +1,11 @@
-/* 
- * File:   TileMap.cpp
- * Author: remy
- * 
- * Created on 9 octobre 2014, 15:49
- */
-
 #include <SFML/Graphics.hpp>
-
-#include "shared/Map.h"
+#include "shared/Utils.h"
 
 class TileMap : public sf::Drawable, public sf::Transformable {
+    
 public:
 
-    void load(sf::Vector2u tileSize, const Map &tiles);
+    void load(const float tiles[NB_TILES_WIDTH][NB_TILES_HEIGHT], bool squared);
 
 private:
 

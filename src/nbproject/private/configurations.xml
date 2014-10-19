@@ -23,7 +23,6 @@
             <in>TileMap.h</in>
           </df>
           <df name="server">
-            <in>Game.h</in>
             <in>Server.h</in>
           </df>
           <df name="shared">
