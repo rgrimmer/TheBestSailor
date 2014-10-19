@@ -25,12 +25,16 @@
           <df name="server">
             <in>Game.h</in>
             <in>Server.h</in>
+            <in>ServerSocketManager.h</in>
           </df>
           <df name="shared">
-            <in>ConnectionManager.h</in>
+            <df name="network">
+              <in>EmplifiedSocket.h</in>
+            </df>
             <in>Map.h</in>
             <in>Random.h</in>
             <in>Sharable.h</in>
+            <in>UdpSocketManager.h</in>
             <in>ValueNoise.h</in>
           </df>
         </df>
@@ -48,16 +52,19 @@
             <in>TileMap.cpp</in>
           </df>
           <df name="server">
-            <in>Game.cc</in>
             <in>Game.cpp</in>
             <in>Server.cpp</in>
+            <in>ServerSocketManager.cpp</in>
           </df>
           <df name="shared">
-            <in>ConnectionManager.cpp</in>
+            <df name="network">
+              <in>EmplifiedSocket.cpp</in>
+            </df>
             <in>Map.cpp</in>
             <in>Random.cc</in>
             <in>Random.cpp</in>
             <in>Sharable.cpp</in>
+            <in>UdpSocketManager.cpp</in>
             <in>ValueNoise.cpp</in>
           </df>
         </df>
