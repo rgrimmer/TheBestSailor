@@ -14,12 +14,16 @@ public:
     MapHeader(int heigth, int width, double seed = 0);
     MapHeader(const MapHeader& orig);
     virtual ~MapHeader();
-    
+
     int getSize() const;
     int getWidth() const;
     int getHeight() const;
     int getSeed() const;
-    
+
+    void setSeed(int seed);
+    void setWidth(int width);
+    void setHeight(int height);
+
 private:
     int m_height;
     int m_width;

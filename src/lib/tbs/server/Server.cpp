@@ -17,9 +17,9 @@ sf::Packet& operator<<(sf::Packet &packet, const MapHeader &header) {
     int mapSeed = header.getSeed();
 
     // @TODO check syntaxe of cast
-    packet << (sf::Int32) mapWidth 
-            << (sf::Int32) mapHeight 
-//            << (sf::Int64) mapSeed
+    packet << (sf::Int32) mapWidth
+            << (sf::Int32) mapHeight
+            << (sf::Int32) mapSeed
             ;
 
     return packet;

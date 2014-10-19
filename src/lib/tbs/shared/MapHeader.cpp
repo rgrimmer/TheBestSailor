@@ -32,6 +32,18 @@ int MapHeader::getHeight() const {
     return m_height;
 }
 
+void MapHeader::setSeed(int seed) {
+    m_seed = seed;
+}
+
+void MapHeader::setWidth(int width){
+    m_width = width;
+}
+
+void MapHeader::setHeight(int height) {
+    m_height = height;
+}
+
 int MapHeader::getSeed() const {
     return m_seed;
 }

@@ -17,20 +17,27 @@ Map::Map() : m_header(MapHeader(0,0)), m_container(NULL) {
 
 }
 
-Map::Map(const MapHeader &header) : m_header(header) {
+Map::Map(const MapHeader &header) {
+
+    m_header.setWidth(header.getWidth());
+    m_header.setHeight(header.getHeight());
+    m_header.setSeed(header.getSeed());
+    
+    int width = header.getWidth();
+    int height = header.getHeight();
 
     ValueNoise::GenerateValues(getSeed());
 
-    m_container = new float*[getHeight()];
+    m_container = new float*[height];
 
-    for (int i = 0; i < getHeight(); ++i) {
-        m_container[i] = new float[getWidth()];
+    for (int i = 0; i < height; ++i) {
+        m_container[i] = new float[width];
     }
 
-    float invWidth = 1.f / getWidth(), invHeight = 1.f / getHeight();
+    float invWidth = 1.f / width, invHeight = 1.f / height;
 
-    for (int i = 0; i < getWidth(); ++i) {
-        for (int j = 0; j < getHeight(); ++j) {
+    for (int i = 0; i < width; ++i) {
+        for (int j = 0; j < height; ++j) {
             sf::Vector2f pnoise(i * invWidth, j * invHeight);
             pnoise.x *= 20.0f;
             pnoise.y *= 20.0f;
