@@ -5,43 +5,55 @@
  * Created on 9 octobre 2014, 15:49
  */
 
-#include <SFML/Network/Packet.hpp>
-
 #include "client/TileMap.h"
 #include "client/Gradient.h"
 
-void TileMap::load(sf::Vector2u tileSize, const Map &map) {
 
-    // @TODO
-    Gradient g;
-    g.CreateGradient();
+
+void TileMap::load(const float tiles[NB_TILES_WIDTH][NB_TILES_HEIGHT], bool squared) {
+
+    sf::Color map[NB_TILES_WIDTH][NB_TILES_HEIGHT];
+
+    for (unsigned int i = 0; i < NB_TILES_WIDTH; ++i) {
+        for (unsigned int j = 0; j < NB_TILES_HEIGHT; ++j) {
+            float tileValue = tiles[i][j];
+            map[i][j] = Gradient::gradient[(int) (tileValue * 255)]; //g.getColor((int) (tileValue * 255));
+        }
+    }
 
     // resize the vertex array to fit the level size
     m_vertices.setPrimitiveType(sf::Quads);
-    m_vertices.resize(map.width() * map.height() * 4);
+    m_vertices.resize(NB_TILES_WIDTH * NB_TILES_HEIGHT * 4);
 
     // populate the vertex array, with one quad per tile
-    for (int i = 0; i < map.width(); ++i) {
-        for (int j = 0; j < map.height(); ++j) {
-            // get the current tile number
-            float tileValue = map[i + j * map.width()];
+    for (unsigned int i = 0; i < NB_TILES_WIDTH; ++i) {
+        for (unsigned int j = 0; j < NB_TILES_HEIGHT; ++j) {
 
             // get a pointer to the current tile's quad
-            sf::Vertex* quad = &m_vertices[(i + j * map.width()) * 4];
+            sf::Vertex* quad = &m_vertices[(i + j * NB_TILES_WIDTH) * 4];
 
             // define its 4 corners
-            quad[0].position = sf::Vector2f(i * tileSize.x, j * tileSize.y);
-            quad[1].position = sf::Vector2f((i + 1) * tileSize.x, j * tileSize.y);
-            quad[2].position = sf::Vector2f((i + 1) * tileSize.x, (j + 1) * tileSize.y);
-            quad[3].position = sf::Vector2f(i * tileSize.x, (j + 1) * tileSize.y);
-
-            sf::Color c(g.GradientR[(int) (tileValue * 255)], g.GradientG[(int) (tileValue * 255)], g.GradientB[(int) (tileValue * 255)], 255);
+            quad[0].position = sf::Vector2f(i * TILE_SIZE, j * TILE_SIZE);
+            quad[1].position = sf::Vector2f((i + 1) * TILE_SIZE, j * TILE_SIZE);
+            quad[2].position = sf::Vector2f((i + 1) * TILE_SIZE, (j + 1) * TILE_SIZE);
+            quad[3].position = sf::Vector2f(i * TILE_SIZE, (j + 1) * TILE_SIZE);
 
             // define its 4 colors coordinates
-            quad[0].color = c;
-            quad[1].color = c;
-            quad[2].color = c;
-            quad[3].color = c;
+            if (squared) {
+                sf::Color c = map[i][j];
+                quad[0].color = c;
+                quad[1].color = c;
+                quad[2].color = c;
+                quad[3].color = c;
+            } else {
+                if (i < NB_TILES_WIDTH && j < NB_TILES_HEIGHT) {
+                    quad[0].color = map[i][j];// + j * NB_TILES_WIDTH];
+                    quad[1].color = map[i+1][j];// + j * NB_TILES_WIDTH + 1];
+                    quad[2].color = map[i+1][j+1];// + (j + 1) * NB_TILES_WIDTH + 1];
+                    quad[3].color = map[i][j+1];// + (j + 1) * NB_TILES_WIDTH];
+                }
+            }
+
         }
     }
 }
