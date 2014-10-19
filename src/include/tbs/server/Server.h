@@ -11,7 +11,7 @@
 #include <SFML/Network.hpp>
 
 #include "shared/Map.h"
-#include "shared/ConnectionManager.h"
+#include "shared/UdpSocketManager.h"
 
 class Server {
 public:
@@ -23,7 +23,7 @@ public:
 
 private:
     Map *m_map;
-    ConnectionManager m_connectionManager;
+    UdpSocketManager m_connectionManager;
 
 };
 

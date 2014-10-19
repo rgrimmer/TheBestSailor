@@ -1,11 +1,9 @@
 include_directories(${SFML2_INCLUDE_DIRS})
 include_directories(${CMAKE_SOURCE_DIR}/include/tbs)
-include_directories(${CMAKE_SOURCE_DIR}/include/tbs/gamestate)
 
 # Client
 file(GLOB LIBTBS0_SRC
 	"client/*.cpp"
-        "client/gamestate/*.cpp"
 )
 
 add_library(tbs0 SHARED
@@ -58,6 +56,7 @@ install(
 # Shared
 file(GLOB LIBTBSSHARED0_SRC
 	"shared/*.cpp"
+        "shared/network/*.cpp"
 )
 
 add_library(tbs-shared0 SHARED

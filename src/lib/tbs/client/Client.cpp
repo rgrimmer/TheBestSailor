@@ -18,14 +18,13 @@
 
 #include <SFML/Window/Event.hpp>
 
-#include "shared/Map.h"
 #include "client/TileMap.h"
-#include "shared/ConnectionManager.h"
 
 sf::Packet& operator>> (sf::Packet &packet, Map &map) {
 
     //assert(packet.getDataSize() >= map.size() * sizeof (float) + sizeof(sf::Int32) * 2);
 
+    // @TODO add cast(sf::int32)
     packet >> map.rwidth() >> map.rheight(); 
     map.create();
     
@@ -50,39 +49,25 @@ Client::~Client() {
 }
 
 void Client::start(void) {
-    std::cout << "client start " << ConnectionManager::clientPort << std::endl;
-
-    ConnectionManager connectionManager;
-    connectionManager.bind(ConnectionManager::clientPort);
+    Map map;
+    UdpSocketManager udpSocketManager;
+    
+    // Attribution d'un port automatique
+    udpSocketManager.bind();
 
     // @TODO se connecter au serveur
-    //socket.bind(clientPort);
-    //if (socket.send(p, ipServer, portServer) != sf::Socket::Done) {
-    //    // erreur...
-    //    std::cerr << "Err send" << std::endl;
-    //}
-    std::cout << "test" << std::endl;
-    sf::IpAddress ipServer;
-    unsigned short portServer;
-    sf::Packet mapPacket;
+    udpSocketManager.connectTo(UdpSocketManager::serverAddress, UdpSocketManager::serverPort);
     
+
     // @TODO attendre une map
-    connectionManager.receive(mapPacket, ipServer, portServer);
-    /*
-    if (socket.receive(mapPacket, ipServer, portServer) != sf::Socket::Done) {
-        std::cerr << "Err receive" << std::endl;
-        // erreur...
-    }*/
-    std::cout << "Received " << mapPacket.getDataSize() << " bytes from " << ipServer << " on port " << portServer << std::endl;
-    Map map;
-    //truc(mapPacket, map);
-    mapPacket >> map;
-    //operator>>(mapPacket, map);
-    //map.generate(800,600); // @TODO remove it
+    receiveMap(map, udpSocketManager);
+    
+   
 
     
     TileMap mapView;
     mapView.load(sf::Vector2u(1,1), map);
+    
     sf::RenderWindow window(sf::VideoMode(800, 600), "The Best Sailor");
     while (window.isOpen()) {
         sf::Event event;
@@ -96,4 +81,13 @@ void Client::start(void) {
         window.draw(mapView);
         window.display();
     }
+}
+
+void Client::receiveMap(Map &map, UdpSocketManager &connectionManager) {
+    sf::Packet mapPacket;       // Temp
+    sf::IpAddress serverIp;     // Unused
+    unsigned short serverPort;  // Unused
+    connectionManager.receive(mapPacket, serverIp, serverPort);
+    mapPacket >> map;
+//    std::cout << "Received " << mapPacket.getDataSize() << " bytes from " << serverIp << " on port " << serverPort << std::endl;
 }
