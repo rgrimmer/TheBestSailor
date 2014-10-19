@@ -103,7 +103,7 @@ int main(int argc, char* argv[]) {
 
     sf::View currentView = window.getView();
 
-    ValueNoise::GenerateSeed();
+    ValueNoise::GenerateValues(rand());
     createMap(level);
     PathFinding::initialize(&level);
     findPaths(pathNW, pathNE, pathSW, pathSE);
@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
 
             if (event.type == sf::Event::KeyPressed) {
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::G)) {
-                    ValueNoise::GenerateSeed();
+                    ValueNoise::GenerateValues(rand());
                     createMap(level);
                     PathFinding::initialize(&level);
                     findPaths(pathNW, pathNE, pathSW, pathSE);

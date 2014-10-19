@@ -2,13 +2,16 @@
 #include <stdlib.h>
 
 #include "client/ValueNoise.h"
+#include "Rand.h"
 
 float ValueNoise::r[ MAX_VERTICES * MAX_VERTICES ];
 const int ValueNoise::maxVerticesMask = MAX_VERTICES - 1;
 
-void ValueNoise::GenerateSeed() {
+void ValueNoise::GenerateValues(int seed) {
+    Rand random(seed);
+    
     for (unsigned i = 0; i < MAX_VERTICES * MAX_VERTICES; ++i) {
-        r[ i ] = rand() % 100 / 100.0f;
+        r[ i ] = random.getNextFloat(0.0f,1.0f);
     }
 }
 

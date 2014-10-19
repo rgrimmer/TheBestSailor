@@ -6,7 +6,7 @@
 
 class ValueNoise {
 public:
-    static void  GenerateSeed();
+    static void  GenerateValues(int seed);
     static float Eval(const sf::Vector2f &pt);
 
 private:
