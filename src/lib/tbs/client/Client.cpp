@@ -19,26 +19,23 @@
 #include <SFML/Window/Event.hpp>
 
 #include "client/TileMap.h"
+#include "shared/MapHeader.h"
 
-sf::Packet& operator>>(sf::Packet &packet, Map &map) {
+sf::Packet& operator>>(sf::Packet &packet, MapHeader &header) {
 
     //assert(packet.getDataSize() >= map.size() * sizeof (float) + sizeof(sf::Int32) * 2);
 
-    int mapWidth;
-    int mapHeight;
+    sf::Int32 mapWidth;
+    sf::Int32 mapHeight;
+    sf::Int64 mapSeed = 0;
 
     // @TODO add cast(sf::int32)
-    packet >> mapWidth >> mapHeight;
-    map.allocate(mapWidth, mapHeight);
+    packet >> mapWidth >> mapHeight 
+            /*>> mapSeed*/;
+    
+    header = MapHeader(mapWidth, mapHeight, mapSeed);
 
-    std::cout << "packet to map : " << mapWidth << " " << mapHeight << std::endl;
-    // @TODO add cast (float)
-    for (int i = 0; i < mapWidth; ++i) {
-        for (int j = 0; j < mapHeight; ++j) {
-            packet >> map(i,j);
-        }
-
-    }
+    std::cout << "packet to map : " << mapWidth << " " << mapHeight << " " << mapSeed << std::endl;
 
     return packet;
 }
@@ -54,7 +51,6 @@ Client::~Client() {
 }
 
 void Client::start(void) {
-    Map map;
     UdpSocketManager udpSocketManager;
 
     // Attribution d'un port automatique
@@ -63,11 +59,13 @@ void Client::start(void) {
     // @TODO se connecter au serveur
     udpSocketManager.connectTo(UdpSocketManager::serverAddress, UdpSocketManager::serverPort);
 
-
+    Map *map;
+    MapHeader mapHeader;
+    
     // @TODO attendre une map
-    receiveMap(map, udpSocketManager);
+    receiveMap(mapHeader, udpSocketManager);
 
-
+    map = new Map(mapHeader);
 
 
     TileMap mapView;
@@ -88,11 +86,11 @@ void Client::start(void) {
     }
 }
 
-void Client::receiveMap(Map &map, UdpSocketManager &connectionManager) {
+void Client::receiveMap(MapHeader &header, UdpSocketManager &connectionManager) {
     sf::Packet mapPacket; // Temp
     sf::IpAddress serverIp; // Unused
     unsigned short serverPort; // Unused
     connectionManager.receive(mapPacket, serverIp, serverPort);
-    mapPacket >> map;
+    mapPacket >> header;
     //    std::cout << "Received " << mapPacket.getDataSize() << " bytes from " << serverIp << " on port " << serverPort << std::endl;
 }

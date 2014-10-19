@@ -19,7 +19,7 @@ public:
 
     void start(void);
 private:
-    void receiveMap(Map &map, UdpSocketManager &connectionManager);
+    void receiveMap(MapHeader &map, UdpSocketManager &connectionManager);
 
 };
 

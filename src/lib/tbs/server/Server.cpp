@@ -8,20 +8,19 @@
 #include <iostream>
 
 #include "server/Server.h"
+#include "shared/MapHeader.h"
 #include "shared/Utils.h"
 
-sf::Packet& operator<<(sf::Packet &packet, const Map &map) {
-    int mapWidth = map.getWidth();
-    int mapHeight = map.getHeight();
+sf::Packet& operator<<(sf::Packet &packet, const MapHeader &header) {
+    int mapWidth = header.getWidth();
+    int mapHeight = header.getHeight();
+    int mapSeed = header.getSeed();
 
     // @TODO check syntaxe of cast
-    packet << (sf::Int32) mapWidth << (sf::Int32) mapHeight;
-
-    for (int i = 0; i < mapWidth; ++i) {
-        for (int j = 0; j < mapHeight; ++j) {
-            packet << map(i,j);
-        }
-    }
+    packet << (sf::Int32) mapWidth 
+            << (sf::Int32) mapHeight 
+//            << (sf::Int64) mapSeed
+            ;
 
     return packet;
 }
@@ -48,13 +47,13 @@ void Server::start(void) {
 
     // @TODO generate a map
     int seed = rand();
-    m_map = new Map(NB_TILES_WIDTH, NB_TILES_HEIGHT, seed);
+    m_map = new Map(MapHeader(NB_TILES_WIDTH, NB_TILES_HEIGHT, seed));
     std::cout << "Map generate" << std::endl;
 
 
     // @TODO send map to client
     sf::Packet mapPacket;
-    mapPacket << (*m_map);
+    mapPacket << m_map->getHeader();
     std::cout << "packet create" << mapPacket.getDataSize() << std::endl;
 
     m_connectionManager.send(mapPacket);

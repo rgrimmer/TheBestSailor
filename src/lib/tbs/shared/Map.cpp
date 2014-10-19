@@ -11,26 +11,26 @@
 #include <iostream>
 
 #include "shared/ValueNoise.h"
+#include "shared/MapHeader.h"
 
-Map::Map() : m_width(0), m_height(0), m_container(NULL) {
+Map::Map() : m_header(MapHeader(0,0)), m_container(NULL) {
 
 }
 
-Map::Map(int width, int height, double seed) : m_width(width), m_height(height) {
-    assert(width >= 0 && height >= 0);
+Map::Map(const MapHeader &header) : m_header(header) {
 
-    ValueNoise::GenerateValues(seed);
+    ValueNoise::GenerateValues(getSeed());
 
-    m_container = new float*[m_height];
+    m_container = new float*[getHeight()];
 
-    for (int i = 0; i < m_height; ++i) {
-        m_container[i] = new float[m_width];
+    for (int i = 0; i < getHeight(); ++i) {
+        m_container[i] = new float[getWidth()];
     }
 
-    float invWidth = 1.f / m_width, invHeight = 1.f / m_height;
+    float invWidth = 1.f / getWidth(), invHeight = 1.f / getHeight();
 
-    for (int i = 0; i < m_width; ++i) {
-        for (int j = 0; j < m_height; ++j) {
+    for (int i = 0; i < getWidth(); ++i) {
+        for (int j = 0; j < getHeight(); ++j) {
             sf::Vector2f pnoise(i * invWidth, j * invHeight);
             pnoise.x *= 20.0f;
             pnoise.y *= 20.0f;
@@ -40,32 +40,31 @@ Map::Map(int width, int height, double seed) : m_width(width), m_height(height) 
     }
 }
 
+    
+
 Map::~Map() {
-    for (int i = 0; i < m_height; ++i) {
+    for (int i = 0; i < getHeight(); ++i) {
         delete m_container[i];
     }
     delete m_container;
 }
 
-void Map::allocate(int width, int height) {
-    m_width = width;
-    m_height = height;
-    
-    m_container = new float*[m_height];
-
-    for (int i = 0; i < m_height; ++i) {
-        m_container[i] = new float[m_width];
-    }
-}
-
 int Map::getSize() const {
-    return m_width * m_height;
+    return m_header.getSize();
 }
 
 int Map::getWidth() const {
-    return m_width;
+    return m_header.getWidth();
 }
 
 int Map::getHeight() const {
-    return m_height;
+    return m_header.getHeight();
+}
+
+double Map::getSeed() const {
+    return m_header.getSeed();
+}
+
+MapHeader Map::getHeader() const {
+    return m_header;
 }
