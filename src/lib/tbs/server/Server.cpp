@@ -47,7 +47,7 @@ void Server::start(void) {
     //std::cout << "Connection receive : " << client << " " << portClient <<std::endl;
 
     // @TODO generate a map
-    double seed = 0.0;
+    int seed = rand();
     m_map = new Map(NB_TILES_WIDTH, NB_TILES_HEIGHT, seed);
     std::cout << "Map generate" << std::endl;
 

@@ -19,8 +19,7 @@ Map::Map() : m_width(0), m_height(0), m_container(NULL) {
 Map::Map(int width, int height, double seed) : m_width(width), m_height(height) {
     assert(width >= 0 && height >= 0);
 
-    //@TODO use seed
-    ValueNoise::GenerateSeed();
+    ValueNoise::GenerateValues(seed);
 
     m_container = new float*[m_height];
 
