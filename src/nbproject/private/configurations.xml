@@ -30,6 +30,8 @@
           <df name="shared">
             <df name="network">
               <in>EmplifiedSocket.h</in>
+              <in>SocketQueuBuffer.h</in>
+              <in>SocketReader.h</in>
             </df>
             <in>Map.h</in>
             <in>Rand.h</in>
@@ -60,6 +62,8 @@
           <df name="shared">
             <df name="network">
               <in>EmplifiedSocket.cpp</in>
+              <in>SocketQueuBuffer.cpp</in>
+              <in>SocketReader.cpp</in>
             </df>
             <in>Map.cpp</in>
             <in>Sharable.cpp</in>

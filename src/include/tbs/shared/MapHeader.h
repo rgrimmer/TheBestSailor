@@ -18,11 +18,11 @@ public:
     int getSize() const;
     int getWidth() const;
     int getHeight() const;
-    double getSeed() const;
+    int getSeed() const;
     
 private:
-    int m_width;
     int m_height;
+    int m_width;
     double m_seed;
 };
 

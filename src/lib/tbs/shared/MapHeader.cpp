@@ -32,6 +32,6 @@ int MapHeader::getHeight() const {
     return m_height;
 }
 
-double MapHeader::getSeed() const {
+int MapHeader::getSeed() const {
     return m_seed;
 }

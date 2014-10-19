@@ -59,7 +59,6 @@ void Client::start(void) {
     // @TODO se connecter au serveur
     udpSocketManager.connectTo(UdpSocketManager::serverAddress, UdpSocketManager::serverPort);
 
-    Map *map;
     MapHeader mapHeader;
     
     // @TODO attendre une map

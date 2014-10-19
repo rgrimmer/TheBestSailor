@@ -61,7 +61,7 @@ int Map::getHeight() const {
     return m_header.getHeight();
 }
 
-double Map::getSeed() const {
+int Map::getSeed() const {
     return m_header.getSeed();
 }
 
