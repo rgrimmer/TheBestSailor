@@ -20,6 +20,14 @@
 
 #include "client/TileMap.h"
 #include "shared/MapHeader.h"
+#include "shared/Utils.h"
+#include "client/Gradient.h"
+
+float x = 1.0f;
+float posViewX = 0.0f;
+float posViewY = 0.0f;
+float zoomValue = 1.0f;
+bool squared = true;
 
 sf::Packet& operator>>(sf::Packet &packet, MapHeader &header) {
 
@@ -31,7 +39,7 @@ sf::Packet& operator>>(sf::Packet &packet, MapHeader &header) {
 
     // @TODO add cast(sf::int32)
     packet >> mapWidth >> mapHeight >> mapSeed;
-    
+
     header = MapHeader(mapWidth, mapHeight, mapSeed);
 
     std::cout << "packet to map : " << mapWidth << " " << mapHeight << " " << mapSeed << std::endl;
@@ -58,30 +66,58 @@ void Client::start(void) {
     // @TODO se connecter au serveur
     //udpSocketManager.connectTo(UdpSocketManager::serverAddress, UdpSocketManager::serverPort);
 
+    Gradient::initialize();
+
     Map *map;
     MapHeader mapHeader;
-    
+
     // @TODO attendre une map
     //receiveMap(mapHeader, udpSocketManager);
 
     //map = new Map(mapHeader);
-    map = new Map(MapHeader(100,100,345674));
+    map = new Map(MapHeader(NB_TILES_WIDTH, NB_TILES_HEIGHT, rand()));
 
-    std::cout << map->getWidth() << " " << map->getHeight() << " " << map->getSeed() <<  std::endl;
+    std::cout << map->getWidth() << " " << map->getHeight() << " " << map->getSeed() << std::endl;
     TileMap mapView;
     mapView.load(*map, true);
 
 
-    sf::RenderWindow window(sf::VideoMode(800, 600), "The Best Sailor");
+    sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
+    window.setKeyRepeatEnabled(true);
+    sf::View currentView = window.getView();
+    
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
                 window.close();
+
+            if (event.type == sf::Event::KeyPressed) {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+                    posViewX -= 500.0f;
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+                    posViewX += 500.0f;
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+                    posViewY -= 500.0f;
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+                    posViewY += 500.0f;
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+                    zoomValue += 1.0f;
+                    currentView = sf::View(sf::FloatRect(posViewX, posViewY, SCREEN_WIDTH * zoomValue, SCREEN_HEIGHT * zoomValue));
+                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+                    zoomValue -= 1.0f;
+                    currentView = sf::View(sf::FloatRect(posViewX, posViewY, SCREEN_WIDTH * zoomValue, SCREEN_HEIGHT * zoomValue));
+                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+                    squared = !squared;
+                    mapView.load(*map, squared);
+                }
+
+            }
         }
 
         window.clear();
-        //window.setView(window.getView().setCenter(400,200));
+        currentView.setCenter(posViewX, posViewY);
+        window.setView(currentView);
         window.draw(mapView);
         window.display();
     }
