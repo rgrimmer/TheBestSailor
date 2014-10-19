@@ -50,25 +50,27 @@ Client::~Client() {
 }
 
 void Client::start(void) {
-    UdpSocketManager udpSocketManager;
+    //UdpSocketManager udpSocketManager;
 
     // Attribution d'un port automatique
-    udpSocketManager.bind();
+    //udpSocketManager.bind();
 
     // @TODO se connecter au serveur
-    udpSocketManager.connectTo(UdpSocketManager::serverAddress, UdpSocketManager::serverPort);
+    //udpSocketManager.connectTo(UdpSocketManager::serverAddress, UdpSocketManager::serverPort);
 
     Map *map;
     MapHeader mapHeader;
     
     // @TODO attendre une map
-    receiveMap(mapHeader, udpSocketManager);
+    //receiveMap(mapHeader, udpSocketManager);
 
-    map = new Map(mapHeader);
+    //map = new Map(mapHeader);
+    map = new Map(MapHeader(100,100,345674));
 
-
+    std::cout << map->getWidth() << " " << map->getHeight() << " " << map->getSeed() <<  std::endl;
     TileMap mapView;
     mapView.load(*map, true);
+
 
     sf::RenderWindow window(sf::VideoMode(800, 600), "The Best Sailor");
     while (window.isOpen()) {
