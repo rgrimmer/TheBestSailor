@@ -5,23 +5,26 @@
  * Created on 9 octobre 2014, 18:30
  */
 
-#include "server/Server.h"
-
 #include <iostream>
 
+#include "server/Server.h"
+#include "shared/Utils.h"
 
-sf::Packet& operator<< (sf::Packet &packet, const Map &map) {
-    int mapSize = map.size();
+sf::Packet& operator<<(sf::Packet &packet, const Map &map) {
+    int mapWidth = map.getWidth();
+    int mapHeight = map.getHeight();
 
     // @TODO check syntaxe of cast
-    packet << (sf::Int32) map.width() << (sf::Int32) map.height();
-    
-    for (int i = 0; i < mapSize; ++i)
-        packet << map[i];
+    packet << (sf::Int32) mapWidth << (sf::Int32) mapHeight;
+
+    for (int i = 0; i < mapWidth; ++i) {
+        for (int j = 0; j < mapHeight; ++j) {
+            packet << map(i,j);
+        }
+    }
 
     return packet;
 }
-
 
 Server::Server() :
 m_map(NULL) {
@@ -42,18 +45,17 @@ void Server::start(void) {
     m_connectionManager.addRemote("localhost", UdpSocketManager::clientPort);
     //std::cout << socket.receive(packet, client, portClient) << " ";
     //std::cout << "Connection receive : " << client << " " << portClient <<std::endl;
-    
-    // @TODO generate a map
-    m_map = new Map();
 
-    m_map->generate(2000, 2000);
+    // @TODO generate a map
+    double seed = 0.0;
+    m_map = new Map(NB_TILES_WIDTH, NB_TILES_HEIGHT, seed);
     std::cout << "Map generate" << std::endl;
 
 
     // @TODO send map to client
     sf::Packet mapPacket;
     mapPacket << (*m_map);
-    std::cout << "packet create" << mapPacket.getDataSize() <<std::endl;
-    
+    std::cout << "packet create" << mapPacket.getDataSize() << std::endl;
+
     m_connectionManager.send(mapPacket);
 }

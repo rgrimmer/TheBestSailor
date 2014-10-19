@@ -14,32 +14,27 @@
 class Map {
 public:
     Map();
-    Map(const Map& orig);
+    Map(int width, int height, double seed);
     virtual ~Map();
+
+    void allocate(int width, int height);
     
-    inline void create() { m_container = new float[size()]; }
-    void generate(int width, int height);
-    inline int size() const { return m_width * m_height; }
-    inline int width() const { return m_width; }
-    inline int& rwidth() { return m_width; }
-    inline int height() const { return m_height; }    
-    inline int& rheight() { return m_height; }    
-    inline float get(int index) const { return m_container[index]; }
-    
-    float& operator[](int index) {
-        return m_container[index];
+    float& operator()(int i, int j) {
+        return m_container[i][j];
+    }
+
+    float operator()(int i, int j) const {
+        return m_container[i][j];
     }
     
-    float operator[](int index) const {
-        return m_container[index];
-    }
-    
-    
+    int getSize() const;
+    int getWidth() const;
+    int getHeight() const;
+
 private:
-    float *m_container;
     int m_width;
     int m_height;
-
+    float** m_container;
 };
 
 #endif	/* MAP_H */
