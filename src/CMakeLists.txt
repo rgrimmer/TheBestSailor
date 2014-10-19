@@ -10,6 +10,7 @@ pkg_check_modules(SFML2 REQUIRED sfml-graphics>=2.1 sfml-audio>=2.1 sfml-network
 
 add_definitions(-Wall -g -O2)
 add_definitions(-std=c++11)
+#add_definitions(-pthread)
 
 include_directories("${CMAKE_SOURCE_DIR}/include")
 

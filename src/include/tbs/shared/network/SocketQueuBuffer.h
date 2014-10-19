@@ -8,7 +8,10 @@
 #ifndef SOCKETQUEUBUFFER_H
 #define	SOCKETQUEUBUFFER_H
 
-class SocketQueuBuffer {
+#include <list>
+#include <SFML/Network/Packet.hpp>
+
+class SocketQueuBuffer : public std::list<sf::Packet> {
 public:
     SocketQueuBuffer();
     SocketQueuBuffer(const SocketQueuBuffer& orig);

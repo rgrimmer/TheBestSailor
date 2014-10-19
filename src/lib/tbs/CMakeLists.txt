@@ -2,8 +2,8 @@ include_directories(${SFML2_INCLUDE_DIRS})
 include_directories(${CMAKE_SOURCE_DIR}/include/tbs)
 
 # Client
-file(GLOB LIBTBS0_SRC
-	"client/*.cpp"
+file(GLOB_RECURSE LIBTBS0_SRC
+	"client/*"
 )
 
 add_library(tbs0 SHARED
@@ -28,8 +28,8 @@ install(
 )
 
 # Server
-file(GLOB LIBTBSSERVER0_SRC
-	"server/*.cpp"
+file(GLOB_RECURSE LIBTBSSERVER0_SRC
+	"server/*"
 )
 
 add_library(tbs-server0 SHARED
@@ -54,9 +54,8 @@ install(
 )
 
 # Shared
-file(GLOB LIBTBSSHARED0_SRC
-	"shared/*.cpp"
-        "shared/network/*.cpp"
+file(GLOB_RECURSE LIBTBSSHARED0_SRC
+	"shared/*"
 )
 
 add_library(tbs-shared0 SHARED

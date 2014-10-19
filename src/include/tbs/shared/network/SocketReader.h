@@ -8,6 +8,7 @@
 #ifndef SOCKETREADER_H
 #define	SOCKETREADER_H
 
+#include <SFML/Network/UdpSocket.hpp>
 #include "shared/network/SocketQueuBuffer.h"
 
 class SocketReader {
@@ -17,9 +18,13 @@ public:
     virtual ~SocketReader();
     
     void setBuffer(SocketQueuBuffer *buffer);
+    
+    void asynchRead();
+    void read();
 private:
     
     SocketQueuBuffer *m_buffer;
+    sf::UdpSocket *m_socket;
 
 };
 

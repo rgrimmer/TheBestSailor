@@ -1,6 +1,3 @@
-# CMake files
-src/CPackConfig.cmake
-
 # Executables and libraries
 build/
 
