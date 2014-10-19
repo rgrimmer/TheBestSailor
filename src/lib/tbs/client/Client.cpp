@@ -27,11 +27,10 @@ sf::Packet& operator>>(sf::Packet &packet, MapHeader &header) {
 
     sf::Int32 mapWidth;
     sf::Int32 mapHeight;
-    sf::Int64 mapSeed = 0;
+    sf::Int32 mapSeed;
 
     // @TODO add cast(sf::int32)
-    packet >> mapWidth >> mapHeight 
-            /*>> mapSeed*/;
+    packet >> mapWidth >> mapHeight >> mapSeed;
     
     header = MapHeader(mapWidth, mapHeight, mapSeed);
 
@@ -69,7 +68,7 @@ void Client::start(void) {
 
 
     TileMap mapView;
-    //mapView.load(sf::Vector2u(1,1), map);
+    mapView.load(*map, true);
 
     sf::RenderWindow window(sf::VideoMode(800, 600), "The Best Sailor");
     while (window.isOpen()) {

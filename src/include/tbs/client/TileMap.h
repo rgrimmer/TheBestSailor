@@ -1,11 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include "shared/Utils.h"
+#include "shared/Map.h"
 
 class TileMap : public sf::Drawable, public sf::Transformable {
     
 public:
 
-    void load(const float tiles[NB_TILES_WIDTH][NB_TILES_HEIGHT], bool squared);
+    void load(const Map &map, bool squared);
 
 private:
 

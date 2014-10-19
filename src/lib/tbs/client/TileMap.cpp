@@ -10,14 +10,14 @@
 
 
 
-void TileMap::load(const float tiles[NB_TILES_WIDTH][NB_TILES_HEIGHT], bool squared) {
+void TileMap::load(const Map &map, bool squared) {
 
-    sf::Color map[NB_TILES_WIDTH][NB_TILES_HEIGHT];
+    sf::Color mapColor[NB_TILES_WIDTH][NB_TILES_HEIGHT];
 
     for (unsigned int i = 0; i < NB_TILES_WIDTH; ++i) {
         for (unsigned int j = 0; j < NB_TILES_HEIGHT; ++j) {
-            float tileValue = tiles[i][j];
-            map[i][j] = Gradient::gradient[(int) (tileValue * 255)]; //g.getColor((int) (tileValue * 255));
+            float tileValue = map(i,j);
+            mapColor[i][j] = Gradient::gradient[(int) (tileValue * 255)]; //g.getColor((int) (tileValue * 255));
         }
     }
 
@@ -40,17 +40,17 @@ void TileMap::load(const float tiles[NB_TILES_WIDTH][NB_TILES_HEIGHT], bool squa
 
             // define its 4 colors coordinates
             if (squared) {
-                sf::Color c = map[i][j];
+                sf::Color c = mapColor[i][j];
                 quad[0].color = c;
                 quad[1].color = c;
                 quad[2].color = c;
                 quad[3].color = c;
             } else {
                 if (i < NB_TILES_WIDTH && j < NB_TILES_HEIGHT) {
-                    quad[0].color = map[i][j];// + j * NB_TILES_WIDTH];
-                    quad[1].color = map[i+1][j];// + j * NB_TILES_WIDTH + 1];
-                    quad[2].color = map[i+1][j+1];// + (j + 1) * NB_TILES_WIDTH + 1];
-                    quad[3].color = map[i][j+1];// + (j + 1) * NB_TILES_WIDTH];
+                    quad[0].color = mapColor[i][j];// + j * NB_TILES_WIDTH];
+                    quad[1].color = mapColor[i+1][j];// + j * NB_TILES_WIDTH + 1];
+                    quad[2].color = mapColor[i+1][j+1];// + (j + 1) * NB_TILES_WIDTH + 1];
+                    quad[3].color = mapColor[i][j+1];// + (j + 1) * NB_TILES_WIDTH];
                 }
             }
 
