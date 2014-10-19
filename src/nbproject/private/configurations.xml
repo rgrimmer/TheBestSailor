@@ -25,7 +25,6 @@
           <df name="server">
             <in>Game.h</in>
             <in>Server.h</in>
-            <in>ServerSocketManager.h</in>
           </df>
           <df name="shared">
             <df name="network">

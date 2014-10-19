@@ -23,7 +23,6 @@
             <in>TileMap.cpp</in>
           </df>
           <df name="server">
-            <in>Game.cpp</in>
             <in>Server.cpp</in>
             <in>ServerSocketManager.cpp</in>
           </df>
@@ -168,8 +167,6 @@
             ex="false"
             tool="1"
             flavor2="8">
-      </item>
-      <item path="lib/tbs/server/Game.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="lib/tbs/server/Server.cpp" ex="false" tool="1" flavor2="8">
       </item>
