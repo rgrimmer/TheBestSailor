@@ -6,7 +6,6 @@
  */
 
 #include "server/ServerSocketManager.h"
-
 #include <SFML/Network/Packet.hpp>
 
 ServerSocketManager::ServerSocketManager() {
@@ -17,6 +16,9 @@ ServerSocketManager::ServerSocketManager(const ServerSocketManager& orig) {
 }
 
 ServerSocketManager::~ServerSocketManager() {
+    m_readerLoop = false;
+    //m_readerThread.join();
+    
     for(sf::Socket* subscriberSocket : m_subscriberSockets) {
         delete(subscriberSocket);
     }
@@ -45,25 +47,28 @@ sf::Socket& ServerSocketManager::addSubscriber(const sf::IpAddress &subscriberAd
     return *commSocket;
 }
 
-void ServerSocketManager::readSubscriber() {
-    sf::Packet subPacket;
-    sf::IpAddress subAdress;
-    unsigned short subPort;
-    m_connectionSocket.receive(subPacket, subAdress, subPort);
-    addSubscriber(subAdress, subPort);
+
+void ServerSocketManager::readerLoop() {
+    while(m_readerLoop) {
+        readSelector();
+    }
 }
 
-/* Attente d'une activité
- */
-sf::Packet ServerSocketManager::receive() {
-    // @TODO, comportement différent en fonction du gameState
-    
-    // Comportement pour : Une carte déjà généré. On l'envoi a tout ceux qui ce connect
-    m_socketSelector.wait();
-    
-    if(m_socketSelector.isReady(m_connectionSocket))
-        readSubscriber();
-    
-        // @TODO
-    return sf::Packet();
+void ServerSocketManager::readSelector() {
+    // Wait event on socket
+    if(m_socketSelector.wait()) {
+            // Search on communication socket
+            for(sf::Socket *socket : m_subscriberSockets) {
+                if(m_socketSelector.isReady(*socket)) {
+                    m_reader.asynchRead();
+                }
+            }
+            // Sheach on connection socket
+            if(m_socketSelector.isReady(m_connectionSocket))
+                // Not asychrone for update socketSelector
+                m_reader.read();
+            
+        } else {
+            // Timeout
+        }
 }
