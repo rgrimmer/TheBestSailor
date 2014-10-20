@@ -18,9 +18,9 @@
               <in>GameStateMainMenu.h</in>
               <in>GameStateManager.h</in>
             </df>
+            <df name="map">
+            </df>
             <in>Client.h</in>
-            <in>Gradient.h</in>
-            <in>TileMap.h</in>
           </df>
           <df name="server">
             <in>PathFinding.h</in>
@@ -50,6 +50,8 @@
               <in>GameState.cpp</in>
               <in>GameStateMainMenu.cpp</in>
               <in>GameStateManager.cpp</in>
+            </df>
+            <df name="map">
             </df>
             <in>Client.cpp</in>
             <in>Gradient.cpp</in>

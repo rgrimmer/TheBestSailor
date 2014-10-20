@@ -1,6 +1,6 @@
 #include <SFML/Graphics/Color.hpp>
 
-#include "client/Gradient.h"
+#include "client/map/Gradient.h"
 
 
 
