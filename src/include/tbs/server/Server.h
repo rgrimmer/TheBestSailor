@@ -10,7 +10,7 @@
 
 #include <SFML/Network.hpp>
 
-#include "shared/Map.h"
+#include "shared/map/Map.h"
 #include "shared/UdpSocketManager.h"
 
 class Server {

@@ -8,7 +8,7 @@
 #ifndef CLIENT_H
 #define	CLIENT_H
 
-#include "shared/Map.h"
+#include "shared/map/Map.h"
 #include "shared/UdpSocketManager.h"
 
 class Client {

@@ -5,11 +5,11 @@
  * Created on 9 octobre 2014, 15:49
  */
 
-#include "client/TileMap.h"
-#include "client/Gradient.h"
-
-
 #include <iostream>
+
+#include "client/map/TileMap.h"
+#include "client/map/Gradient.h"
+
 void TileMap::load(const Map &map, bool squared) {
 
     int height = map.getHeight();

@@ -8,7 +8,7 @@
 #include <iostream>
 
 #include "server/Server.h"
-#include "shared/MapHeader.h"
+#include "shared/map/MapHeader.h"
 #include "shared/Utils.h"
 
 sf::Packet& operator<<(sf::Packet &packet, const MapHeader &header) {

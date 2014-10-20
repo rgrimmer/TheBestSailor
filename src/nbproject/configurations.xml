@@ -74,11 +74,6 @@
           <buildCommand>${MAKE} -f Makefile</buildCommand>
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
           <executablePath>../build/bin/client/tbs</executablePath>
-          <ccTool flags="1">
-            <incDir>
-              <pElem>include</pElem>
-            </incDir>
-          </ccTool>
         </makeTool>
       </makefileType>
       <item path="bin/client/tbs.cpp" ex="false" tool="1" flavor2="8">
@@ -88,6 +83,7 @@
       <folder path="0/bin">
         <ccTool>
           <incDir>
+            <pElem>include</pElem>
             <pElem>../build/bin</pElem>
             <pElem>include/tbs</pElem>
           </incDir>
@@ -101,8 +97,11 @@
           </incDir>
         </ccTool>
       </folder>
-      <folder path="0/lib/tbs/client">
+      <folder path="0/lib/tbs/client/gamestate">
         <ccTool>
+          <incDir>
+            <pElem>include</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>tbs0_EXPORTS</Elem>
           </preprocessorList>
@@ -110,6 +109,9 @@
       </folder>
       <folder path="0/lib/tbs/server">
         <ccTool>
+          <incDir>
+            <pElem>include</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>tbs_server0_EXPORTS</Elem>
           </preprocessorList>
@@ -117,16 +119,29 @@
       </folder>
       <folder path="0/lib/tbs/shared">
         <ccTool>
+          <incDir>
+            <pElem>include</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>tbs_shared0_EXPORTS</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
       <item path="lib/tbs/client/Client.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="1">
+          <incDir>
+            <pElem>include/tbs</pElem>
+            <pElem>../build/lib/tbs</pElem>
+            <pElem>include</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>tbs0_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
       </item>
-      <item path="lib/tbs/client/Gradient.cpp" ex="false" tool="1" flavor2="8">
+      <item path="lib/tbs/client/Gradient.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="lib/tbs/client/TileMap.cpp" ex="false" tool="1" flavor2="8">
+      <item path="lib/tbs/client/TileMap.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="lib/tbs/client/gamestate/GameState.cpp"
             ex="false"
@@ -142,6 +157,30 @@
             ex="false"
             tool="1"
             flavor2="8">
+      </item>
+      <item path="lib/tbs/client/map/Gradient.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="1">
+          <incDir>
+            <pElem>include/tbs</pElem>
+            <pElem>../build/lib/tbs</pElem>
+            <pElem>include</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>tbs0_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="lib/tbs/client/map/TileMap.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="1">
+          <incDir>
+            <pElem>include/tbs</pElem>
+            <pElem>../build/lib/tbs</pElem>
+            <pElem>include</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>tbs0_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
       </item>
       <item path="lib/tbs/server/PathFinding.cpp" ex="false" tool="1" flavor2="8">
       </item>
@@ -173,6 +212,30 @@
       </item>
       <item path="lib/tbs/shared/ValueNoise.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="lib/tbs/shared/map/Map.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="1">
+          <incDir>
+            <pElem>include</pElem>
+            <pElem>include/tbs</pElem>
+            <pElem>../build/lib/tbs</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>tbs_shared0_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="lib/tbs/shared/map/MapHeader.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="1">
+          <incDir>
+            <pElem>include</pElem>
+            <pElem>include/tbs</pElem>
+            <pElem>../build/lib/tbs</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>tbs_shared0_EXPORTS</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="lib/tbs/shared/network/EmplifiedSocket.cpp"
