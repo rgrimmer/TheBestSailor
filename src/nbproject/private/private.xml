@@ -10,16 +10,25 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/shared/ValueNoise.h</file>
-            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/Gradient.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/Shader.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/Vector3.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/Shader.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/Normalize.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/server/Game.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/TileMap.h</file>
-            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/Rand.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/ValueNoise.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/ValueNoise.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/CMakeLists.txt</file>
-            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/TileMap.cpp</file>
-            <file>file:/home/remy/Documents/TheBestSailor/src/bin/server/tbs-server.cpp</file>
-            <file>file:/home/remy/Documents/TheBestSailor/src/bin/client/tbs.cpp</file>
-            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/ValueNoise.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/Gradient.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/PathFinding.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/PathFinding.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/Gradient.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/Curve.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/bin/server/tbs-server.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/TileMap.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/Normalize.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/bin/client/tbs.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/Rand.h</file>
         </group>
     </open-files>
 </project-private>

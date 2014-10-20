@@ -24,7 +24,6 @@ void TileMap::load(const Map &map, bool squared) {
         }
     }
 
-            std::cout << "test"<<std::endl;
     // resize the vertex array to fit the level size
     m_vertices.setPrimitiveType(sf::Quads);
     m_vertices.resize(width * height * 4);

@@ -13,13 +13,11 @@
 #include <iostream>
 #include <utility>
 
-struct node{
-    float cout_g, cout_h, cout_f;
-    std::pair<int,int> parent;    // 'adresse' du parent (qui sera toujours dans la map fermée
-};
+#include <SFML/System/Vector2.hpp>
 
-struct position{
-    int x,y;
+struct node{
+    float g_cost, h_cost, f_cost;
+    std::pair<int,int> parent;    // 'adresse' du parent (qui sera toujours dans la map fermée
 };
 
 typedef std::map<std::pair<int, int>, node> l_node;
@@ -36,9 +34,9 @@ public:
         area_north_west 
     };
     
-    static int find(position s, position e, std::list<position> &ch);
+    static int find(sf::Vector2i s, sf::Vector2i e, std::list<sf::Vector2i> &ch);
     static void initialize(float (*level)[NB_TILES_WIDTH][NB_TILES_HEIGHT]);
-    static position choosePoint(area a);
+    static sf::Vector2i choosePoint(area a);
     
 private:
     

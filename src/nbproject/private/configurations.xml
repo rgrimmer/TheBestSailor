@@ -34,6 +34,7 @@
               <in>SocketReader.h</in>
             </df>
             <in>Map.h</in>
+            <in>MapHeader.h</in>
             <in>Rand.h</in>
             <in>Sharable.h</in>
             <in>UdpSocketManager.h</in>
@@ -66,6 +67,7 @@
               <in>SocketReader.cpp</in>
             </df>
             <in>Map.cpp</in>
+            <in>MapHeader.cpp</in>
             <in>Sharable.cpp</in>
             <in>UdpSocketManager.cpp</in>
             <in>ValueNoise.cpp</in>
