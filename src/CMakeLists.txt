@@ -6,6 +6,7 @@ include(CPackConfig.cmake)
 include(GNUInstallDirs)
 
 find_package(PkgConfig REQUIRED)
+find_package(OpenGL REQUIRED)
 pkg_check_modules(SFML2 REQUIRED sfml-graphics>=2.1 sfml-audio>=2.1 sfml-network>=2.1)
 
 add_definitions(-Wall -g -O2)

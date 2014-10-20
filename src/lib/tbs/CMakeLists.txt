@@ -1,4 +1,5 @@
 include_directories(${SFML2_INCLUDE_DIRS})
+include_directories(${OPENGL_INCLUDE_DIRS})
 include_directories(${CMAKE_SOURCE_DIR}/include/tbs)
 include_directories(${CMAKE_SOURCE_DIR}/include/tbs/gamestate)
 
@@ -14,6 +15,7 @@ add_library(tbs0 SHARED
 
 target_link_libraries(tbs0
   ${SFML2_LIBRARIES}
+  ${OPENGL_LIBRARIES}
 )
 
 set_target_properties(tbs0
@@ -40,6 +42,7 @@ add_library(tbs-server0 SHARED
 
 target_link_libraries(tbs-server0
   ${SFML2_LIBRARIES}
+  ${OPENGL_LIBRARIES}
 )
 
 set_target_properties(tbs-server0
@@ -66,6 +69,7 @@ add_library(tbs-shared0 SHARED
 
 target_link_libraries(tbs-shared0
   ${SFML2_LIBRARIES}
+  ${OPENGL_LIBRARIES}
 )
 
 set_target_properties(tbs-shared0

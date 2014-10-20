@@ -21,12 +21,17 @@
             <in>Gradient.h</in>
             <in>PathFinding.h</in>
             <in>TileMap.h</in>
+            <in>ValueNoise.h</in>
           </df>
           <df name="server">
+            <in>Game.h</in>
           </df>
           <df name="shared">
             <df name="network">
+              <in>SocketQueuBuffer.h</in>
+              <in>SocketReader.h</in>
             </df>
+            <in>Random.h</in>
           </df>
         </df>
       </df>
@@ -40,6 +45,7 @@
             </df>
             <in>Gradient.cpp</in>
             <in>PathFinding.cpp</in>
+            <in>Rand.h</in>
             <in>TileMap.cpp</in>
             <in>ValueNoise.cpp</in>
           </df>
@@ -48,6 +54,8 @@
           </df>
           <df name="shared">
             <df name="network">
+              <in>SocketQueuBuffer.cpp</in>
+              <in>SocketReader.cpp</in>
             </df>
             <in>Random.cc</in>
             <in>Random.cpp</in>

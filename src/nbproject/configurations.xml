@@ -13,7 +13,6 @@
       <df name="include">
         <df name="tbs">
           <df name="client">
-            <in>PathFinding.h</in>
             <in>TileMap.h</in>
           </df>
         </df>
@@ -27,7 +26,6 @@
               <in>GameStateManager.cpp</in>
             </df>
             <in>Gradient.cpp</in>
-            <in>PathFinding.cpp</in>
             <in>TileMap.cpp</in>
             <in>ValueNoise.cpp</in>
           </df>
@@ -123,15 +121,9 @@
           </preprocessorList>
         </ccTool>
       </folder>
-      <item path="include/tbs/client/PathFinding.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="include/tbs/client/TileMap.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="lib/tbs/client/Gradient.cpp" ex="false" tool="1" flavor2="8">
-      </item>
-      <item path="lib/tbs/client/PathFinding.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="lib/tbs/client/Rand.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="lib/tbs/client/TileMap.cpp" ex="false" tool="1" flavor2="0">
       </item>
