@@ -14,16 +14,16 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include <list>
-
 #include "shared/Utils.h"
 #include "server/PathFinding.h"
 
+#define MAX_STEPS 10000
+
 l_node openList;
 l_node closedList;
-std::list<position> path;
-node depart;
-position arrivee;
+std::list<sf::Vector2i> path;
+node start;
+sf::Vector2i end;
 
 float (*PathFinding::m_level)[NB_TILES_WIDTH][NB_TILES_HEIGHT];
 
@@ -31,75 +31,71 @@ void PathFinding::initialize(float (*level)[NB_TILES_WIDTH][NB_TILES_HEIGHT]) {
     m_level = level;
 }
 
-position PathFinding::choosePoint(area a) {
+sf::Vector2i PathFinding::choosePoint(area a) {
 
-    int xmin = 0;
-    int xmax = 0;
-    int ymin = 0;
-    int ymax = 0;
-
-    position choosenPoint;
-
-    choosenPoint.x = -1;
-    choosenPoint.y = -1;
+    sf::Vector2i min;
+    sf::Vector2i max;
+    sf::Vector2i choosenPoint;
 
     switch (a) {
         case area_center:
         {
-            xmin = NB_TILES_WIDTH / 2 - NB_TILES_WIDTH / 4;
-            xmax = NB_TILES_WIDTH / 2 + NB_TILES_WIDTH / 4;
-            ymin = NB_TILES_HEIGHT / 2 - NB_TILES_HEIGHT / 4;
-            ymax = NB_TILES_HEIGHT / 2 + NB_TILES_HEIGHT / 4;
+            min.x = NB_TILES_WIDTH / 2 - NB_TILES_WIDTH / 4;
+            min.y = NB_TILES_HEIGHT / 2 - NB_TILES_HEIGHT / 4;
+            max.x = NB_TILES_WIDTH / 2 + NB_TILES_WIDTH / 4;
+            max.y = NB_TILES_HEIGHT / 2 + NB_TILES_HEIGHT / 4;
         }
             break;
 
         case area_north_west:
         {
-            xmin = 0;
-            xmax = NB_TILES_WIDTH / 2;
-            ymin = 0;
-            ymax = NB_TILES_HEIGHT / 2;
+            min.x = 0;
+            max.x = NB_TILES_WIDTH / 2;
+            min.y = 0;
+            max.y = NB_TILES_HEIGHT / 2;
         }
             break;
 
         case area_north_east:
         {
-            xmin = NB_TILES_WIDTH / 2;
-            xmax = NB_TILES_WIDTH - 1;
-            ymin = 0;
-            ymax = NB_TILES_HEIGHT / 2;
+            min.x = NB_TILES_WIDTH / 2;
+            max.x = NB_TILES_WIDTH - 1;
+            min.y = 0;
+            max.y = NB_TILES_HEIGHT / 2;
         }
             break;
 
         case area_south_west:
         {
-            xmin = 0;
-            xmax = NB_TILES_WIDTH / 2;
-            ymin = NB_TILES_HEIGHT / 2;
-            ymax = NB_TILES_HEIGHT - 1;
+            min.x = 0;
+            max.x = NB_TILES_WIDTH / 2;
+            min.y = NB_TILES_HEIGHT / 2;
+            max.y = NB_TILES_HEIGHT - 1;
         }
             break;
 
         case area_south_east:
         {
-            xmin = NB_TILES_WIDTH / 2;
-            xmax = NB_TILES_WIDTH - 1;
-            ymin = NB_TILES_HEIGHT / 2;
-            ymax = NB_TILES_HEIGHT - 1;
+            min.x = NB_TILES_WIDTH / 2;
+            max.x = NB_TILES_WIDTH - 1;
+            min.y = NB_TILES_HEIGHT / 2;
+            max.y = NB_TILES_HEIGHT - 1;
         }
             break;
 
         default:
+        {
+
+        }
             break;
 
     }
 
 
     for (int i = 0; i < 100; ++i) {
-        choosenPoint.x = rand() % (xmax - xmin) + xmin;
-        choosenPoint.y = rand() % (ymax - ymin) + ymin;
+        choosenPoint.x = rand() % (max.x - min.x) + min.x;
+        choosenPoint.y = rand() % (max.y - min.y) + min.y;
 
-        //if (WATER((*m_level)[choosenPoint.x][choosenPoint.y])) {
         if (isWatterAround(choosenPoint.x, choosenPoint.y, 2)) {
             break;
         }
@@ -108,50 +104,50 @@ position PathFinding::choosePoint(area a) {
     return choosenPoint;
 }
 
-int PathFinding::find(position s, position e, std::list<position> &ch) {
+int PathFinding::find(sf::Vector2i s, sf::Vector2i e, std::list<sf::Vector2i> &ch) {
     path.clear();
     openList.clear();
     closedList.clear();
 
     int nbSteps = 0;
 
-    arrivee.x = e.x;
-    arrivee.y = e.y;
+    end.x = e.x;
+    end.y = e.y;
 
-    depart.parent.first = s.x;
-    depart.parent.second = s.y;
+    start.parent.first = s.x;
+    start.parent.second = s.y;
 
-    std::pair <int, int> courant;
+    std::pair <int, int> current;
 
     /* déroulement de l'algo A* */
 
-    courant.first = s.x;
-    courant.second = s.y;
+    current.first = s.x;
+    current.second = s.y;
     // ajout de courant dans la liste ouverte
 
-    openList[courant] = depart;
-    addToClosedList(courant);
-    add_neightbours(courant);
+    openList[current] = start;
+    addToClosedList(current);
+    add_neightbours(current);
 
 
-    while (!((courant.first == arrivee.x) && (courant.second == arrivee.y))
+    while (!((current.first == end.x) && (current.second == end.y))
             &&
             (!openList.empty())
             &&
-            (nbSteps < 10000)
+            (nbSteps < MAX_STEPS)
             ) {
 
         // on cherche le meilleur noeud de la liste ouverte, on sait qu'elle n'est pas vide donc il existe
-        courant = best_node(openList);
+        current = best_node(openList);
 
         // on le passe dans la liste fermee, il ne peut pas déjà y être
-        addToClosedList(courant);
+        addToClosedList(current);
 
-        add_neightbours(courant);
+        add_neightbours(current);
         nbSteps++;
     }
 
-    if ((courant.first == arrivee.x) && (courant.second == arrivee.y)) {
+    if ((current.first == end.x) && (current.second == end.y)) {
         retrieve_path();
         ch = path;
     } else {
@@ -174,7 +170,7 @@ bool PathFinding::isWatterAround(int x, int y, int radius) {
         for (int j = y - radius; j <= y + radius; j++) {
             if ((j < 0) || (j >= NB_TILES_HEIGHT))
                 continue;
-            
+
             if (!WATER((*m_level)[i][j])) {
                 return false;
             }
@@ -200,7 +196,6 @@ void PathFinding::add_neightbours(std::pair <int, int>& n) {
             if ((i == n.first) && (j == n.second)) // case actuelle n
                 continue;
 
-            //if (!WATER((*m_level)[i][j]))
             if (!isWatterAround(i, j, 2))
                 // obstace, terrain non franchissable
                 continue;
@@ -210,14 +205,14 @@ void PathFinding::add_neightbours(std::pair <int, int>& n) {
             if (!isAlreadyIn(it, closedList)) {
                 /* le noeud n'est pas déjà présent dans la liste fermée */
 
-                tmp.cout_g = closedList[n].cout_g + distance(i, j, n.first, n.second);
-                tmp.cout_h = distance(i, j, arrivee.x, arrivee.y);
-                tmp.cout_f = tmp.cout_g + tmp.cout_h;
+                tmp.g_cost = closedList[n].g_cost + distance(i, j, n.first, n.second);
+                tmp.h_cost = distance(i, j, end.x, end.y);
+                tmp.f_cost = tmp.g_cost + tmp.h_cost;
                 tmp.parent = n;
 
                 if (isAlreadyIn(it, openList)) {
                     /* le noeud est déjà présent dans la liste ouverte, il faut comparer les couts */
-                    if (tmp.cout_f < openList[it].cout_f) {
+                    if (tmp.f_cost < openList[it].f_cost) {
                         /* si le nouveau chemin est meilleur, on update */
                         openList[it] = tmp;
                     }
@@ -246,12 +241,12 @@ bool PathFinding::isAlreadyIn(std::pair<int, int> n, l_node& l) {
     fonction qui renvoie la clé du meilleur noeud de la liste
  */
 std::pair<int, int> PathFinding::best_node(l_node& l) {
-    float m_coutf = l.begin()->second.cout_f;
+    float m_coutf = l.begin()->second.f_cost;
     std::pair<int, int> m_noeud = l.begin()->first;
 
     for (l_node::iterator i = l.begin(); i != l.end(); i++)
-        if (i->second.cout_f < m_coutf) {
-            m_coutf = i->second.cout_f;
+        if (i->second.f_cost < m_coutf) {
+            m_coutf = i->second.f_cost;
             m_noeud = i->first;
         }
 
@@ -272,16 +267,16 @@ void PathFinding::addToClosedList(std::pair<int, int>& p) {
 
 void PathFinding::retrieve_path() {
     // l'arrivée est le dernier élément de la liste fermée.
-    node& tmp = closedList[std::pair<int, int>(arrivee.x, arrivee.y)];
-    position n;
+    node& tmp = closedList[std::pair<int, int>(end.x, end.y)];
+    sf::Vector2i n;
     std::pair<int, int> prec;
-    n.x = arrivee.x;
-    n.y = arrivee.y;
+    n.x = end.x;
+    n.y = end.y;
     prec.first = tmp.parent.first;
     prec.second = tmp.parent.second;
     path.push_front(n);
 
-    while (prec != std::pair<int, int>(depart.parent.first, depart.parent.second)) {
+    while (prec != std::pair<int, int>(start.parent.first, start.parent.second)) {
         n.x = prec.first;
         n.y = prec.second;
         path.push_front(n);
