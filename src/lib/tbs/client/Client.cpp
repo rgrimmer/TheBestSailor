@@ -19,7 +19,7 @@
 #include <SFML/Window/Event.hpp>
 
 #include "client/map/TileMap.h"
-#include "shared/MapHeader.h"
+#include "shared/map/MapHeader.h"
 #include "shared/Utils.h"
 #include "client/map/Gradient.h"
 

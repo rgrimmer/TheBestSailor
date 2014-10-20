@@ -5,13 +5,12 @@
  * Created on 10 octobre 2014, 13:39
  */
 
-#include "shared/Map.h"
-
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
 #include "shared/ValueNoise.h"
-#include "shared/MapHeader.h"
+#include "shared/map/MapHeader.h"
+#include "shared/map/Map.h"
 
 Map::Map() : m_header(MapHeader(0,0)), m_container(NULL) {
 

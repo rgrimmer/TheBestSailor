@@ -28,13 +28,13 @@
             <in>ServerSocketManager.h</in>
           </df>
           <df name="shared">
+            <df name="map">
+            </df>
             <df name="network">
               <in>EmplifiedSocket.h</in>
               <in>SocketQueuBuffer.h</in>
               <in>SocketReader.h</in>
             </df>
-            <in>Map.h</in>
-            <in>MapHeader.h</in>
             <in>Rand.h</in>
             <in>Sharable.h</in>
             <in>UdpSocketManager.h</in>
@@ -63,6 +63,8 @@
             <in>ServerSocketManager.cpp</in>
           </df>
           <df name="shared">
+            <df name="map">
+            </df>
             <df name="network">
               <in>EmplifiedSocket.cpp</in>
               <in>SocketQueuBuffer.cpp</in>
