@@ -22,28 +22,23 @@ public:
     ServerSocketManager(const ServerSocketManager& orig);
     virtual ~ServerSocketManager();
     
-    sf::Socket& addSubscriber(const sf::IpAddress &subscriberAdress, unsigned short subscriberPort);
-    sf::Packet receive();
+    SocketReader* createAndAddConnectionSocket(unsigned short serverPort = UdpSocketManager::serverPort);
+    SocketReader* createCommunicationSocket(const sf::IpAddress &remoteAdress, unsigned short remotePort, unsigned short socketPort = sf::UdpSocket::AnyPort);
+    
+    void broadcastMessage(sf::Packet &packet);
     
 private:
     
     void readSelector();
     void readerLoop();
-    sf::UdpSocket m_connectionSocket;
-    std::vector<EmplifiedSocket*> m_subscriberSockets;
-    sf::SocketSelector m_socketSelector;
+    
+    SocketReader* m_connectionReader;
     
     bool m_readerLoop;
     //thread* m_readerThread;
-    SocketReader m_reader;
-    //New
-    //@TODO : Buffer de connection
-    //@TODO : socket de connection
-    //@TODO : vecteur de buffer de com
-    //@TODO : vecteur de socket de com
+    std::vector<SocketReader*> m_communicationReaders;
+    sf::SocketSelector m_socketSelector;
     
-    //@TODO : Connection : retourne un buffer sur lequel sera
-    // enregistré les infos envoyés par les joueurs
     
 
 };

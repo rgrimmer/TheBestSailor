@@ -9,7 +9,7 @@
 #include <SFML/Network/Packet.hpp>
 
 ServerSocketManager::ServerSocketManager() {
-    m_connectionSocket.bind(UdpSocketManager::serverPort);
+    createAndAddConnectionSocket();
 }
 
 ServerSocketManager::ServerSocketManager(const ServerSocketManager& orig) {
@@ -19,32 +19,24 @@ ServerSocketManager::~ServerSocketManager() {
     m_readerLoop = false;
     //m_readerThread.join();
     
-    for(sf::Socket* subscriberSocket : m_subscriberSockets) {
-        delete(subscriberSocket);
+    for(SocketReader* reader : m_communicationReaders) {
+        delete(reader);
     }
+    delete m_connectionReader;
 }
 
-void createSocket() {
-    
+SocketReader* ServerSocketManager::createAndAddConnectionSocket(unsigned short serverPort) {
+    m_connectionReader = new SocketReader(sf::IpAddress(), 0, serverPort);
+    m_socketSelector.add(*(m_connectionReader->getSocket()));
+    return m_connectionReader;
 }
 
-/* @brief Call when a new client send message on the connectionSocket
- * @return the communication socket for the client
- */
-sf::Socket& ServerSocketManager::addSubscriber(const sf::IpAddress &subscriberAdress, unsigned short subscriberPort) {
-    // Create the communication socket
-    EmplifiedSocket *commSocket = new EmplifiedSocket(subscriberAdress, subscriberPort);
-    commSocket->bind(sf::UdpSocket::AnyPort);
-    
-    // Add to the subscriber list
-    m_subscriberSockets.push_back(commSocket);
-    
-    // Add to the selector
-    m_socketSelector.add(*commSocket);
-    
-    // @TODO save ip and port of the subscriber
-    
-    return *commSocket;
+
+SocketReader* ServerSocketManager::createCommunicationSocket(const sf::IpAddress &remoteAdress, unsigned short remotePort, unsigned short socketPort) {
+    SocketReader* reader = new SocketReader(remoteAdress, remotePort, socketPort);
+    m_communicationReaders.push_back(reader);
+    m_socketSelector.add(*reader->getSocket());
+    return reader;
 }
 
 
@@ -58,17 +50,23 @@ void ServerSocketManager::readSelector() {
     // Wait event on socket
     if(m_socketSelector.wait()) {
             // Search on communication socket
-            for(sf::Socket *socket : m_subscriberSockets) {
-                if(m_socketSelector.isReady(*socket)) {
-                    m_reader.asynchRead();
+            for(SocketReader *reader : m_communicationReaders) {
+                if(m_socketSelector.isReady(*reader->getSocket())) {
+                    reader->asynchRead();
                 }
             }
             // Sheach on connection socket
-            if(m_socketSelector.isReady(m_connectionSocket))
+            if(m_socketSelector.isReady(*m_connectionReader->getSocket())) {
                 // Not asychrone for update socketSelector
-                m_reader.read();
-            
+                m_connectionReader->read();
+            }
         } else {
             // Timeout
         }
+}
+
+void ServerSocketManager::broadcastMessage(sf::Packet &packet) {
+    for(SocketReader *reader : m_communicationReaders) {
+        reader->send(packet);
+    }
 }
