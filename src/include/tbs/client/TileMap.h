@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 
-#define TILE_SIZE 200
+#define TILE_SIZE 5
 
 #define NB_TILES_WIDTH 200
 #define NB_TILES_HEIGHT 200

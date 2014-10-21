@@ -19,7 +19,6 @@
               <in>GameStateManager.h</in>
             </df>
             <in>Gradient.h</in>
-            <in>PathFinding.h</in>
             <in>TileMap.h</in>
             <in>ValueNoise.h</in>
           </df>
@@ -44,7 +43,6 @@
               <in>GameStateManager.cpp</in>
             </df>
             <in>Gradient.cpp</in>
-            <in>PathFinding.cpp</in>
             <in>Rand.h</in>
             <in>TileMap.cpp</in>
             <in>ValueNoise.cpp</in>

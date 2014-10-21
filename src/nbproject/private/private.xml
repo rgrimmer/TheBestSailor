@@ -10,15 +10,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/remy/Documents/TheBestSailor/src/bin/client/tbs.cpp</file>
-            <file>file:/home/remy/Documents/TheBestSailor/src/bin/server/tbs-server.cpp</file>
-            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/CMakeLists.txt</file>
-            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/TileMap.h</file>
-            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/Gradient.h</file>
-            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/random.h</file>
-            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/random.cpp</file>
-            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/Random.h</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/Random.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/TileMap.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/CMakeLists.txt</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/bin/server/tbs-server.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/bin/client/tbs.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/Gradient.h</file>
         </group>
     </open-files>
 </project-private>
