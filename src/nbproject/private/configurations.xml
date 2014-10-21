@@ -19,6 +19,8 @@
               <in>GameStateManager.h</in>
             </df>
             <df name="map">
+              <in>Gradient.h</in>
+              <in>TileMap.h</in>
             </df>
             <in>Client.h</in>
           </df>
@@ -28,10 +30,13 @@
             <in>ServerSocketManager.h</in>
           </df>
           <df name="shared">
+            <df name="checkpoint">
+            </df>
             <df name="map">
+              <in>Map.h</in>
+              <in>MapHeader.h</in>
             </df>
             <df name="network">
-              <in>EmplifiedSocket.h</in>
               <in>SocketQueuBuffer.h</in>
               <in>SocketReader.h</in>
             </df>
@@ -63,6 +68,8 @@
             <in>ServerSocketManager.cpp</in>
           </df>
           <df name="shared">
+            <df name="checkpoint">
+            </df>
             <df name="map">
             </df>
             <df name="network">

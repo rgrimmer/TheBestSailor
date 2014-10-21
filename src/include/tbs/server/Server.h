@@ -8,9 +8,13 @@
 #ifndef SERVER_H
 #define	SERVER_H
 
+#include <list>
+
 #include <SFML/Network.hpp>
 
 #include "shared/map/Map.h"
+#include "shared/checkpoint/CheckpointManager.h"
+
 #include "shared/UdpSocketManager.h"
 
 class Server {
@@ -20,9 +24,11 @@ public:
     virtual ~Server();
     
     void start(void);
-
+    void createCheckpoints();
+    
 private:
     Map *m_map;
+    CheckpointManager m_checkpointManager;
     UdpSocketManager m_connectionManager;
 
 };
