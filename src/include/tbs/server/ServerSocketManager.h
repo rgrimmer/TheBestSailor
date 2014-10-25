@@ -11,7 +11,9 @@
 //#include <thread>
 #include <list>
 
-#include "shared/UdpSocketManager.h"
+#include <SFML/Network/SocketSelector.hpp>
+
+#include "shared/UdpSocketManager.h" // TODO rm
 #include "shared/network/EmplifiedSocket.h"
 #include "shared/network/SocketReader.h"
 #include "server/network/ConnectionEvent.h"

@@ -63,10 +63,7 @@ void TileMap::load(const Map &map, bool squared) {
 
 void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     // apply the transform
-    states.transform *= getTransform();
-
-    // apply the tileset texture
-    states.texture = &m_tileset;
+    //states.transform *= getTransform();
 
     // draw the vertex array
     target.draw(m_vertices, states);

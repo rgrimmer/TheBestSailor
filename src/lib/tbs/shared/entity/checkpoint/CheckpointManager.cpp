@@ -5,7 +5,7 @@
  * Created on 21 octobre 2014, 13:59
  */
 
-#include "shared/checkpoint/CheckpointManager.h"
+#include "shared/entity/checkpoint/CheckpointManager.h"
 #include "server/PathFinding.h"
 
 CheckpointManager::CheckpointManager()

@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "shared/Utils.h"
-#include "shared/map/Map.h"
+#include "shared/entity/map/Map.h"
 
 class TileMap : public sf::Drawable, public sf::Transformable {
     
@@ -13,5 +13,4 @@ private:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
     sf::VertexArray m_vertices;
-    sf::Texture m_tileset;
 };

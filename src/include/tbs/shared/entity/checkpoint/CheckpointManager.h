@@ -9,8 +9,8 @@
 
 #include <list>
 
-#include "shared/checkpoint/Checkpoint.h"
-#include "shared/map/Map.h"
+#include "shared/entity/checkpoint/Checkpoint.h"
+#include "shared/entity/map/Map.h"
 
 class CheckpointManager {
     

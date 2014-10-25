@@ -8,9 +8,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+#include "shared/entity/map/Map.h"
 #include "shared/ValueNoise.h"
-#include "shared/map/MapHeader.h"
-#include "shared/map/Map.h"
 
 Map::Map() : m_header(MapHeader(0,0)), m_container(NULL) {
 

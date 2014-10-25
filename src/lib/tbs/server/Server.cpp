@@ -11,8 +11,8 @@
 #include "server/Server.h"
 
 #include "server/PathFinding.h"
-#include "shared/checkpoint/Checkpoint.h"
-#include "shared/map/MapHeader.h"
+#include "shared/entity/checkpoint/Checkpoint.h"
+#include "shared/entity/map/MapHeader.h"
 #include "shared/Utils.h"
 
 sf::Packet& operator<<(sf::Packet &packet, const MapHeader &header) {

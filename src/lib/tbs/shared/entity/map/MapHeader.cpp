@@ -5,7 +5,7 @@
  * Created on 19 octobre 2014, 16:23
  */
 
-#include "shared/map/MapHeader.h"
+#include "shared/entity/map/MapHeader.h"
 
 MapHeader::MapHeader() {
 }

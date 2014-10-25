@@ -12,11 +12,11 @@
 
 #include <SFML/Network.hpp>
 
-#include "shared/map/Map.h"
+#include "shared/entity/map/Map.h"
 #include "server/ServerSocketManager.h"
 #include "server/player/PlayerManager.h"
 #include "server/network/ConnectionEvent.h"
-#include "shared/checkpoint/CheckpointManager.h"
+#include "shared/entity/checkpoint/CheckpointManager.h"
 
 class ConnectionEvent;
 class ServerSocketManager;
@@ -39,6 +39,7 @@ public:
     
 private:
     Map *m_map;
+//    World m_world;
     ServerSocketManager m_clientManager;
     PlayerManager m_players;
     CheckpointManager m_checkpointManager;
