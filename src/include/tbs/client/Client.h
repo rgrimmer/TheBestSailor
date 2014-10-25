@@ -10,6 +10,8 @@
 
 #include "shared/map/Map.h"
 #include "shared/UdpSocketManager.h"
+#include "shared/network/SocketReader.h"
+#include "shared/game/Player.h"
 
 class Client {
 public:
@@ -19,7 +21,14 @@ public:
 
     void start(void);
 private:
-    void receiveMap(MapHeader &map, UdpSocketManager &connectionManager);
+    Map* receiveMap();
+    void sendConnectionToServer(void);
+    void receiveCommSocket(void);
+    
+private:
+    UdpSocketManager m_commManager;
+    SocketReader m_socketReader;
+    Player m_player;
 
 };
 

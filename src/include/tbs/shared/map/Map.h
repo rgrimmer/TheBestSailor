@@ -32,7 +32,8 @@ public:
     int getWidth() const;
     int getHeight() const;
     int getSeed() const;
-    MapHeader getHeader() const;
+    const MapHeader& getHeader() const;
+    MapHeader& getHeader();
     //void setHeader(const MapHeader& mapHeader);
 
 private:

@@ -24,6 +24,9 @@ public:
     SocketQueuBuffer*  getBuffer();
     sf::UdpSocket* getSocket();
     
+    void setRemoteAdress(const sf::IpAddress &remoteAdress);
+    void setRemotePort(unsigned short remotePort);
+    
     void asynchRead();
     void read();
     

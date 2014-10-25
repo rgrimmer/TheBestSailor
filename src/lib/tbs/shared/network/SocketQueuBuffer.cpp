@@ -16,3 +16,12 @@ SocketQueuBuffer::SocketQueuBuffer(const SocketQueuBuffer& orig) {
 SocketQueuBuffer::~SocketQueuBuffer() {
 }
 
+sf::Packet SocketQueuBuffer::pop(void) {
+    sf::Packet packet = m_queue.front();
+    m_queue.pop();
+    return packet;
+}
+
+void SocketQueuBuffer::pushBack(const sf::Packet &packet) {
+    m_queue.push(packet);
+}

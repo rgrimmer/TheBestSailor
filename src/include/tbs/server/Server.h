@@ -11,19 +11,31 @@
 #include <SFML/Network.hpp>
 
 #include "shared/map/Map.h"
-#include "shared/UdpSocketManager.h"
+#include "server/ServerSocketManager.h"
+#include "server/player/PlayerManager.h"
+#include "server/network/ConnectionEvent.h"
 
-class Server {
+class ConnectionEvent;
+class ServerSocketManager;
+
+class Server : public ConnectionEvent {
 public:
     Server();
     Server(const Server& orig);
     virtual ~Server();
     
     void start(void);
+    void waitPlayers(void);
+    void addWaitingPlayers(void);
+    
+
+    void receiveConnection(sf::Packet& packet, SocketQueuBuffer* buffer);
+
 
 private:
     Map *m_map;
-    UdpSocketManager m_connectionManager;
+    ServerSocketManager m_clientManager;
+    PlayerManager m_players;
 
 };
 

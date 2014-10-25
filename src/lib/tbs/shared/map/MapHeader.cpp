@@ -13,9 +13,6 @@ MapHeader::MapHeader() {
 MapHeader::MapHeader(int height, int width, double seed) :
 m_height(height), m_width(width), m_seed(seed) {
 }
-    
-MapHeader::MapHeader(const MapHeader& orig) {
-}
 
 MapHeader::~MapHeader() {
 }

@@ -22,6 +22,7 @@
 #include "shared/map/MapHeader.h"
 #include "shared/Utils.h"
 #include "client/map/Gradient.h"
+#include "shared/game/Player.h"
 
 float x = 1.0f;
 float posViewX = 0.0f;
@@ -30,6 +31,7 @@ float zoomValue = 1.0f;
 bool squared = true;
 
 sf::Packet& operator>>(sf::Packet &packet, MapHeader &header) {
+    std::cout << packet.getDataSize() << std::endl;
 
     //assert(packet.getDataSize() >= map.size() * sizeof (float) + sizeof(sf::Int32) * 2);
 
@@ -37,8 +39,8 @@ sf::Packet& operator>>(sf::Packet &packet, MapHeader &header) {
     sf::Int32 mapHeight;
     sf::Int32 mapSeed;
 
-    // @TODO add cast(sf::int32)
     packet >> mapWidth >> mapHeight >> mapSeed;
+
 
     header = MapHeader(mapWidth, mapHeight, mapSeed);
 
@@ -68,16 +70,11 @@ void Client::start(void) {
 
     Gradient::initialize();
 
-    Map *map;
-    MapHeader mapHeader;
 
-    // @TODO attendre une map
-    //receiveMap(mapHeader, udpSocketManager);
+    sendConnectionToServer();
+    receiveCommSocket();
+    Map *map = receiveMap();
 
-    //map = new Map(mapHeader);
-    map = new Map(MapHeader(NB_TILES_WIDTH, NB_TILES_HEIGHT, rand()));
-
-    std::cout << map->getWidth() << " " << map->getHeight() << " " << map->getSeed() << std::endl;
     TileMap mapView;
     mapView.load(*map, true);
 
@@ -123,11 +120,31 @@ void Client::start(void) {
     }
 }
 
-void Client::receiveMap(MapHeader &header, UdpSocketManager &connectionManager) {
-    sf::Packet mapPacket; // Temp
-    sf::IpAddress serverIp; // Unused
-    unsigned short serverPort; // Unused
-    connectionManager.receive(mapPacket, serverIp, serverPort);
-    mapPacket >> header;
+void Client::sendConnectionToServer(void) {
+    m_socketReader.setRemoteAdress(UdpSocketManager::serverAddress);
+    m_socketReader.setRemotePort(UdpSocketManager::serverPort);
+    m_socketReader.send((sf::Packet() << m_player.getName()));
+}
+
+void Client::receiveCommSocket(void) {
+    sf::Packet packetReceive;
+    sf::IpAddress remoteAddress;
+    unsigned short remotePort;
+        std::cout << "wait comm socket of server" << std::endl;
+    m_socketReader.getSocket()->receive(packetReceive, remoteAddress, remotePort);
+    m_socketReader.setRemoteAdress(remoteAddress);
+    m_socketReader.setRemotePort(remotePort);
+    std::cout << "serv : "<< packetReceive << " " << remoteAddress << " " << remotePort << std::endl;
+}
+
+Map* Client::receiveMap(void) {
+    
+    m_socketReader.read();
+    
+    MapHeader mapHeader;
+    sf::Packet packetHeader = m_socketReader.getBuffer()->pop();
+    packetHeader >> mapHeader;
+    
+    return new Map(mapHeader);
     //    std::cout << "Received " << mapPacket.getDataSize() << " bytes from " << serverIp << " on port " << serverPort << std::endl;
 }

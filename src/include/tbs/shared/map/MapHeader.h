@@ -12,7 +12,6 @@ class MapHeader {
 public:
     MapHeader();
     MapHeader(int heigth, int width, double seed = 0);
-    MapHeader(const MapHeader& orig);
     virtual ~MapHeader();
 
     int getSize() const;

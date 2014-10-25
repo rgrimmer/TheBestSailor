@@ -44,6 +44,7 @@ Map::Map(const MapHeader &header) {
             m_container[i][j] = n;
         }
     }
+    std::cout << "map create : " << getWidth() << " " << getHeight() << " " << getSeed() << std::endl;
 }
 
     
@@ -71,6 +72,10 @@ int Map::getSeed() const {
     return m_header.getSeed();
 }
 
-MapHeader Map::getHeader() const {
+const MapHeader& Map::getHeader() const {
+    return m_header;
+}
+
+MapHeader& Map::getHeader() {
     return m_header;
 }
