@@ -5,7 +5,7 @@
  * Created on 25 octobre 2014, 12:37
  */
 
-#include "shared/game/ship/Sail.h"
+#include "shared/entity/ship/Sail.h"
 
 Sail::Sail() {
 }

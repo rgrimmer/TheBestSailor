@@ -5,7 +5,7 @@
  * Created on 20 octobre 2014, 18:28
  */
 
-#include "shared/game/Player.h"
+#include "shared/entity/Player.h"
 
 Player::Player(const std::string& name, SocketQueuBuffer *buffer) : m_name(name), m_buffer(buffer) {
 }
