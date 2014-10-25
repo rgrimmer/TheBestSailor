@@ -28,11 +28,11 @@ class PathFinding {
 public:
 
     enum area {
-        area_center,
-        area_south_west,
-        area_south_east,
-        area_north_east,
-        area_north_west
+        area_center = 0,
+        area_north_east = 1,
+        area_north_west = 2,
+        area_south_west = 3,
+        area_south_east = 4
     };
 
     bool find(sf::Vector2i s, sf::Vector2i e);

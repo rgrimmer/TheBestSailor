@@ -82,6 +82,7 @@ sf::Vector2i PathFinding::choosePoint(area a) {
             break;
 
         default:
+            std::cout << "warning" << std::endl; 
             break;
 
     }
@@ -90,7 +91,7 @@ sf::Vector2i PathFinding::choosePoint(area a) {
     for (int i = 0; i < 100; ++i) {
         choosenPoint.x = rand() % (max.x - min.x) + min.x;
         choosenPoint.y = rand() % (max.y - min.y) + min.y;
-
+        
         if (isWatterAround(choosenPoint.x, choosenPoint.y, 2)) {
             break;
         }

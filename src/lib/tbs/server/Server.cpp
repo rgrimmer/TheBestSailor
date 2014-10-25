@@ -97,8 +97,7 @@ void Server::receiveConnection(sf::Packet& packet, SocketQueuBuffer* buffer) {
     m_players.addPlayer(new Player(name, buffer));
 
     // @TODO send map
-
-    m_connectionManager.send(mapPacket);
+//    m_clientManager.send(mapPacket);
 }
 
 //TODO remove non constants values
@@ -119,11 +118,14 @@ void Server::createCheckpoints() {
         for (int i = 0; i < 4; ++i) {
 
             attempts = 0;
-
+            std::cout << "test" << std::endl;
             do {
+            std::cout << "while choose" << std::endl;
                 checkpointsPos[i] = p.choosePoint((PathFinding::area)(PathFinding::area_north_east + i));
+            std::cout << "while find" << std::endl;
                 pathFound = p.find(startPoint, checkpointsPos[i]);
                 attempts++;
+            std::cout << "while end" << std::endl;
             } while (!pathFound && attempts <= 100);
 
             if (!pathFound) {
