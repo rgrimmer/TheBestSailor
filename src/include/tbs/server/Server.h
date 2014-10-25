@@ -8,12 +8,15 @@
 #ifndef SERVER_H
 #define	SERVER_H
 
+#include <list>
+
 #include <SFML/Network.hpp>
 
 #include "shared/map/Map.h"
 #include "server/ServerSocketManager.h"
 #include "server/player/PlayerManager.h"
 #include "server/network/ConnectionEvent.h"
+#include "shared/checkpoint/CheckpointManager.h"
 
 class ConnectionEvent;
 class ServerSocketManager;
@@ -32,10 +35,13 @@ public:
     void receiveConnection(sf::Packet& packet, SocketQueuBuffer* buffer);
 
 
+    void createCheckpoints();
+    
 private:
     Map *m_map;
     ServerSocketManager m_clientManager;
     PlayerManager m_players;
+    CheckpointManager m_checkpointManager;
 
 };
 

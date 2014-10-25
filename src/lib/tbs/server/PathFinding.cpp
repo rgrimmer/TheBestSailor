@@ -15,20 +15,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 #include "shared/Utils.h"
+
+
+
 #include "server/PathFinding.h"
 
 #define MAX_STEPS 10000
 
-l_node openList;
-l_node closedList;
-std::list<sf::Vector2i> path;
-node start;
-sf::Vector2i end;
-
-float (*PathFinding::m_level)[NB_TILES_WIDTH][NB_TILES_HEIGHT];
-
-void PathFinding::initialize(float (*level)[NB_TILES_WIDTH][NB_TILES_HEIGHT]) {
-    m_level = level;
+void PathFinding::initialize(const Map* map) {
+    m_map = map;
 }
 
 sf::Vector2i PathFinding::choosePoint(area a) {
@@ -37,56 +32,56 @@ sf::Vector2i PathFinding::choosePoint(area a) {
     sf::Vector2i max;
     sf::Vector2i choosenPoint;
 
+    int mapWidth = m_map->getWidth();
+    int mapHeight = m_map->getHeight();
+
     switch (a) {
         case area_center:
         {
-            min.x = NB_TILES_WIDTH / 2 - NB_TILES_WIDTH / 4;
-            min.y = NB_TILES_HEIGHT / 2 - NB_TILES_HEIGHT / 4;
-            max.x = NB_TILES_WIDTH / 2 + NB_TILES_WIDTH / 4;
-            max.y = NB_TILES_HEIGHT / 2 + NB_TILES_HEIGHT / 4;
+            min.x = mapWidth / 2 - mapWidth / 4;
+            min.y = mapHeight / 2 - mapHeight / 4;
+            max.x = mapWidth / 2 + mapWidth / 4;
+            max.y = mapHeight / 2 + mapHeight / 4;
         }
             break;
 
         case area_north_west:
         {
             min.x = 0;
-            max.x = NB_TILES_WIDTH / 2;
+            max.x = mapWidth / 2;
             min.y = 0;
-            max.y = NB_TILES_HEIGHT / 2;
+            max.y = mapHeight / 2;
         }
             break;
 
         case area_north_east:
         {
-            min.x = NB_TILES_WIDTH / 2;
-            max.x = NB_TILES_WIDTH - 1;
+            min.x = mapWidth / 2;
+            max.x = mapWidth - 1;
             min.y = 0;
-            max.y = NB_TILES_HEIGHT / 2;
+            max.y = mapHeight / 2;
         }
             break;
 
         case area_south_west:
         {
             min.x = 0;
-            max.x = NB_TILES_WIDTH / 2;
-            min.y = NB_TILES_HEIGHT / 2;
-            max.y = NB_TILES_HEIGHT - 1;
+            max.x = mapWidth / 2;
+            min.y = mapHeight / 2;
+            max.y = mapHeight - 1;
         }
             break;
 
         case area_south_east:
         {
-            min.x = NB_TILES_WIDTH / 2;
-            max.x = NB_TILES_WIDTH - 1;
-            min.y = NB_TILES_HEIGHT / 2;
-            max.y = NB_TILES_HEIGHT - 1;
+            min.x = mapWidth / 2;
+            max.x = mapWidth - 1;
+            min.y = mapHeight / 2;
+            max.y = mapHeight - 1;
         }
             break;
 
         default:
-        {
-
-        }
             break;
 
     }
@@ -104,7 +99,7 @@ sf::Vector2i PathFinding::choosePoint(area a) {
     return choosenPoint;
 }
 
-int PathFinding::find(sf::Vector2i s, sf::Vector2i e, std::list<sf::Vector2i> &ch) {
+bool PathFinding::find(sf::Vector2i s, sf::Vector2i e) {
     path.clear();
     openList.clear();
     closedList.clear();
@@ -148,13 +143,10 @@ int PathFinding::find(sf::Vector2i s, sf::Vector2i e, std::list<sf::Vector2i> &c
     }
 
     if ((current.first == end.x) && (current.second == end.y)) {
-        retrieve_path();
-        ch = path;
-    } else {
-        return -1;
+        return true;
     }
 
-    return 0;
+    return false;
 }
 
 float PathFinding::distance(int x1, int y1, int x2, int y2) {
@@ -163,15 +155,18 @@ float PathFinding::distance(int x1, int y1, int x2, int y2) {
 
 bool PathFinding::isWatterAround(int x, int y, int radius) {
 
+    int width = m_map->getWidth();
+    int height = m_map->getHeight();
+
     for (int i = x - radius; i <= x + radius; i++) {
-        if ((i < 0) || (i >= NB_TILES_WIDTH))
+        if ((i < 0) || (i >= width))
             continue;
 
         for (int j = y - radius; j <= y + radius; j++) {
-            if ((j < 0) || (j >= NB_TILES_HEIGHT))
+            if ((j < 0) || (j >= height))
                 continue;
 
-            if (!WATER((*m_level)[i][j])) {
+            if (!WATER((*m_map)(i, j))) {
                 return false;
             }
         }
@@ -186,12 +181,15 @@ ajoute toutes les cases adjacentes à n dans la liste ouverte
 void PathFinding::add_neightbours(std::pair <int, int>& n) {
     node tmp;
 
+    int width = m_map->getWidth();
+    int height = m_map->getHeight();
+
     // on met tous les noeud adjacents dans la liste ouverte (+vérif)
     for (int i = n.first - 1; i <= n.first + 1; i++) {
-        if ((i < 0) || (i >= NB_TILES_WIDTH))
+        if ((i < 0) || (i >= width))
             continue;
         for (int j = n.second - 1; j <= n.second + 1; j++) {
-            if ((j < 0) || (j >= NB_TILES_HEIGHT))
+            if ((j < 0) || (j >= height))
                 continue;
             if ((i == n.first) && (j == n.second)) // case actuelle n
                 continue;
@@ -264,25 +262,3 @@ void PathFinding::addToClosedList(std::pair<int, int>& p) {
     if (openList.erase(p) == 0)
         printf("n'apparait pas dans la liste ouverte, impossible à supprimer");
 }
-
-void PathFinding::retrieve_path() {
-    // l'arrivée est le dernier élément de la liste fermée.
-    node& tmp = closedList[std::pair<int, int>(end.x, end.y)];
-    sf::Vector2i n;
-    std::pair<int, int> prec;
-    n.x = end.x;
-    n.y = end.y;
-    prec.first = tmp.parent.first;
-    prec.second = tmp.parent.second;
-    path.push_front(n);
-
-    while (prec != std::pair<int, int>(start.parent.first, start.parent.second)) {
-        n.x = prec.first;
-        n.y = prec.second;
-        path.push_front(n);
-        tmp = closedList[tmp.parent];
-        prec.first = tmp.parent.first;
-        prec.second = tmp.parent.second;
-    }
-}
-
