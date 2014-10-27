@@ -1,21 +1,21 @@
 /* 
- * File:   Map.cpp
+ * File:   HeigthMap.cpp
  * Author: maxence
  * 
  * Created on 10 octobre 2014, 13:39
  */
+#include "shared/entity/map/HeigthMap.h"
 
-#include <SFML/Graphics.hpp>
 #include <iostream>
+#include <SFML/System/Vector2.hpp>
 
-#include "shared/entity/map/Map.h"
 #include "shared/ValueNoise.h"
 
-Map::Map() : m_header(MapHeader(0,0)), m_container(NULL) {
+HeigthMap::HeigthMap() : m_header(MapHeader(0,0)), m_container(NULL) {
 
 }
 
-Map::Map(const MapHeader &header) {
+HeigthMap::HeigthMap(const MapHeader &header) {
 
     m_header.setWidth(header.getWidth());
     m_header.setHeight(header.getHeight());
@@ -48,33 +48,33 @@ Map::Map(const MapHeader &header) {
 
     
 
-Map::~Map() {
+HeigthMap::~HeigthMap() {
     for (int i = 0; i < getHeight(); ++i) {
         delete m_container[i];
     }
     delete m_container;
 }
 
-int Map::getSize() const {
+int HeigthMap::getSize() const {
     return m_header.getSize();
 }
 
-int Map::getWidth() const {
+int HeigthMap::getWidth() const {
     return m_header.getWidth();
 }
 
-int Map::getHeight() const {
+int HeigthMap::getHeight() const {
     return m_header.getHeight();
 }
 
-int Map::getSeed() const {
+int HeigthMap::getSeed() const {
     return m_header.getSeed();
 }
 
-const MapHeader& Map::getHeader() const {
+const MapHeader& HeigthMap::getHeader() const {
     return m_header;
 }
 
-MapHeader& Map::getHeader() {
+MapHeader& HeigthMap::getHeader() {
     return m_header;
 }

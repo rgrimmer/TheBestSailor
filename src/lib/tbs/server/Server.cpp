@@ -49,8 +49,8 @@ void Server::start() {
     //std::cout << "Connection receive : " << client << " " << portClient <<std::endl;
 
     // @TODO generate a map
-    m_map = new Map(MapHeader(NB_TILES_WIDTH, NB_TILES_HEIGHT, rand()));
-    std::cout << "Map generate" << std::endl;
+    m_map = new HeigthMap(MapHeader(NB_TILES_WIDTH, NB_TILES_HEIGHT, rand()));
+    std::cout << "HeigthMap generate" << std::endl;
 
     createCheckpoints();
     std::cout << "checkpoints create" << std::endl;
@@ -60,7 +60,7 @@ void Server::start() {
     mapPacket << m_map->getHeader();
 
     m_clientManager.broadcastMessage(mapPacket);
-    std::cout << "Map send" << std::endl;
+    std::cout << "HeigthMap send" << std::endl;
     //m_clientManager.send(mapPacket);
 }
 
@@ -131,7 +131,7 @@ void Server::createCheckpoints() {
             if (!pathFound) {
                 // new map
                 delete m_map;
-                m_map = new Map(MapHeader(NB_TILES_WIDTH, NB_TILES_HEIGHT, rand()));
+                m_map = new HeigthMap(MapHeader(NB_TILES_WIDTH, NB_TILES_HEIGHT, rand()));
                 restart = true;
                 break;
             }

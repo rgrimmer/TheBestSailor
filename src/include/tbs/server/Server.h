@@ -12,7 +12,7 @@
 
 #include <SFML/Network.hpp>
 
-#include "shared/entity/map/Map.h"
+#include "shared/entity/map/HeigthMap.h"
 #include "server/ServerSocketManager.h"
 #include "server/player/PlayerManager.h"
 #include "server/network/ConnectionEvent.h"
@@ -38,7 +38,7 @@ public:
     void createCheckpoints();
     
 private:
-    Map *m_map;
+    HeigthMap *m_map;
 //    World m_world;
     ServerSocketManager m_clientManager;
     PlayerManager m_players;

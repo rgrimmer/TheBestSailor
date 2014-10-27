@@ -15,7 +15,7 @@
 
 #include <SFML/System/Vector2.hpp>
 
-#include "shared/entity/map/Map.h"
+#include "shared/entity/map/HeigthMap.h"
 
 struct node {
     float g_cost, h_cost, f_cost;
@@ -36,7 +36,7 @@ public:
     };
 
     bool find(sf::Vector2i s, sf::Vector2i e);
-    void initialize(const Map* map);
+    void initialize(const HeigthMap* map);
     sf::Vector2i choosePoint(area a);
 
 private:
@@ -50,7 +50,7 @@ private:
 
 private:
 
-    const Map* m_map;
+    const HeigthMap* m_map;
     l_node openList;
     l_node closedList;
     std::list<sf::Vector2i> path;

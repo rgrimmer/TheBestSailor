@@ -10,7 +10,7 @@
 #include "client/map/TileMap.h"
 #include "client/map/Gradient.h"
 
-void TileMap::load(const Map &map, bool squared) {
+void TileMap::load(const HeigthMap &map, bool squared) {
 
     int height = map.getHeight();
     int width = map.getWidth();

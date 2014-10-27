@@ -1,23 +1,22 @@
 /* 
- * File:   Map.h
+ * File:   HeigthMap.h
  * Author: maxence
  *
  * Created on 10 octobre 2014, 13:39
  */
 
-#ifndef MAP_H
-#define	MAP_H
+#ifndef HEIGTHMAP_H
+#define	HEIGTHMAP_H
 
-#include <assert.h>
 #include <SFML/Network/Packet.hpp>
 
 #include "MapHeader.h"
 
-class Map {
+class HeigthMap {
 public:
-    Map();
-    Map(const MapHeader &header);
-    virtual ~Map();
+    HeigthMap();
+    HeigthMap(const MapHeader &header);
+    virtual ~HeigthMap();
 
     
     float& operator()(int i, int j) {

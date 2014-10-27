@@ -73,7 +73,7 @@ void Client::start(void) {
 
     sendConnectionToServer();
     receiveCommSocket();
-    Map *map = receiveMap();
+    HeigthMap *map = receiveMap();
 
     TileMap mapView;
     mapView.load(*map, true);
@@ -137,7 +137,7 @@ void Client::receiveCommSocket(void) {
     std::cout << "serv : "<< packetReceive << " " << remoteAddress << " " << remotePort << std::endl;
 }
 
-Map* Client::receiveMap(void) {
+HeigthMap* Client::receiveMap(void) {
     
     m_socketReader.read();
     
@@ -145,6 +145,6 @@ Map* Client::receiveMap(void) {
     sf::Packet packetHeader = m_socketReader.getBuffer()->pop();
     packetHeader >> mapHeader;
     
-    return new Map(mapHeader);
+    return new HeigthMap(mapHeader);
     //    std::cout << "Received " << mapPacket.getDataSize() << " bytes from " << serverIp << " on port " << serverPort << std::endl;
 }

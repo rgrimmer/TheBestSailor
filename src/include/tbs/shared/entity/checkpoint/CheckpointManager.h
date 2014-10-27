@@ -10,7 +10,7 @@
 #include <list>
 
 #include "shared/entity/checkpoint/Checkpoint.h"
-#include "shared/entity/map/Map.h"
+#include "shared/entity/map/HeigthMap.h"
 
 class CheckpointManager {
     

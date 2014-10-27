@@ -8,7 +8,7 @@
 #ifndef CLIENT_H
 #define	CLIENT_H
 
-#include "shared/entity/map/Map.h"
+#include "shared/entity/map/HeigthMap.h"
 #include "shared/UdpSocketManager.h"
 #include "shared/network/SocketReader.h"
 #include "shared/entity/Player.h"
@@ -21,7 +21,7 @@ public:
 
     void start(void);
 private:
-    Map* receiveMap();
+    HeigthMap* receiveMap();
     void sendConnectionToServer(void);
     void receiveCommSocket(void);
     
