@@ -35,8 +35,10 @@ public:
         area_south_east = 4
     };
 
+    PathFinding();
+    
+    void loadMap(const HeigthMap* map);
     bool find(sf::Vector2i s, sf::Vector2i e);
-    void initialize(const HeigthMap* map);
     sf::Vector2i choosePoint(area a);
 
 private:

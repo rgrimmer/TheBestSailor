@@ -8,7 +8,7 @@
 #ifndef SERVER_WORLD_H
 #define	SERVER_WORLD_H
 
-#include <SFML/Graphics.hpp>
+#include <SFML/Network.hpp>
 #include <vector>
 
 #include "server/serverCheckpoint/ServerCheckpointManager.h"
@@ -19,8 +19,10 @@ public:
     ServerWorld();
     virtual ~ServerWorld();
 
-    void initialize(void);
+    void initialize();
     void update(float dt);
+    
+    sf::Packet getMapPacket(void) const;
 
 private:
     HeigthMap *m_map;

@@ -9,9 +9,6 @@
 #define	CLIENT_H
 
 #include "shared/map/HeigthMap.h"
-#include "shared/UdpSocketManager.h"
-#include "shared/network/SocketReader.h"
-#include "shared/Player.h"
 
 class Client {
 public:
@@ -21,14 +18,8 @@ public:
 
     void start(void);
 private:
-    HeigthMap* receiveMap();
-    void sendConnectionToServer(void);
-    void receiveCommSocket(void);
     
 private:
-    UdpSocketManager m_commManager;
-    SocketReader m_socketReader;
-    Player m_player;
 
 };
 

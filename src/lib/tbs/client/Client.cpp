@@ -10,8 +10,7 @@
 #include <iostream>
 
 //#include <SFML/Network/Packet.hpp>
-#include <SFML/Network/UdpSocket.hpp>
-#include <SFML/Network/IpAddress.hpp>
+#include <SFML//Network.hpp>
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -22,7 +21,6 @@
 #include "shared/map/MapHeader.h"
 #include "shared/Utils.h"
 #include "client/map/Gradient.h"
-#include "shared/Player.h"
 
 float x = 1.0f;
 float posViewX = 0.0f;
@@ -30,7 +28,7 @@ float posViewY = 0.0f;
 float zoomValue = 1.0f;
 bool squared = true;
 
-sf::Packet& operator>>(sf::Packet &packet, MapHeader &header) {
+/*sf::Packet& operator>>(sf::Packet &packet, MapHeader &header) {
     std::cout << packet.getDataSize() << std::endl;
 
     //assert(packet.getDataSize() >= map.size() * sizeof (float) + sizeof(sf::Int32) * 2);
@@ -48,6 +46,7 @@ sf::Packet& operator>>(sf::Packet &packet, MapHeader &header) {
 
     return packet;
 }
+ */
 
 Client::Client() {
 
@@ -60,20 +59,27 @@ Client::~Client() {
 }
 
 void Client::start(void) {
-    //UdpSocketManager udpSocketManager;
 
-    // Attribution d'un port automatique
-    //udpSocketManager.bind();
+    sf::TcpSocket socket;
+    sf::Socket::Status status = socket.connect("localhost", SERVER_PORT);
+    if (status != sf::Socket::Done) {
+        std::cout << "Error connect" << std::endl;
+    }
 
-    // @TODO se connecter au serveur
-    //udpSocketManager.connectTo(UdpSocketManager::serverAddress, UdpSocketManager::serverPort);
+    sf::Packet packet;
+    socket.send(packet);
+    socket.receive(packet);
 
+    int width;
+    int height;
+    int seed;
+
+    packet >> width >> height >> seed;
+    std::cout << width << " " << height << " " << seed << std::endl;
+    
     Gradient::initialize();
 
-
-    sendConnectionToServer();
-    receiveCommSocket();
-    HeigthMap *map = receiveMap();
+    HeigthMap *map = new HeigthMap(MapHeader(height, width, seed));
 
     TileMap mapView;
     mapView.load(*map, true);
@@ -82,13 +88,14 @@ void Client::start(void) {
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
     window.setKeyRepeatEnabled(true);
     sf::View currentView = window.getView();
-    
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+            if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 window.close();
-
+                socket.disconnect();
+            }
             if (event.type == sf::Event::KeyPressed) {
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
                     posViewX -= 500.0f;
@@ -118,33 +125,6 @@ void Client::start(void) {
         window.draw(mapView);
         window.display();
     }
-}
 
-void Client::sendConnectionToServer(void) {
-    m_socketReader.setRemoteAdress(UdpSocketManager::serverAddress);
-    m_socketReader.setRemotePort(UdpSocketManager::serverPort);
-    m_socketReader.send((sf::Packet() << m_player.getName()));
-}
 
-void Client::receiveCommSocket(void) {
-    sf::Packet packetReceive;
-    sf::IpAddress remoteAddress;
-    unsigned short remotePort;
-        std::cout << "wait comm socket of server" << std::endl;
-    m_socketReader.getSocket()->receive(packetReceive, remoteAddress, remotePort);
-    m_socketReader.setRemoteAdress(remoteAddress);
-    m_socketReader.setRemotePort(remotePort);
-    std::cout << "serv : "<< packetReceive << " " << remoteAddress << " " << remotePort << std::endl;
-}
-
-HeigthMap* Client::receiveMap(void) {
-    
-    m_socketReader.read();
-    
-    MapHeader mapHeader;
-    sf::Packet packetHeader = m_socketReader.getBuffer()->pop();
-    packetHeader >> mapHeader;
-    
-    return new HeigthMap(mapHeader);
-    //    std::cout << "Received " << mapPacket.getDataSize() << " bytes from " << serverIp << " on port " << serverPort << std::endl;
 }

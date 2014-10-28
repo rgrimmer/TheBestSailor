@@ -20,9 +20,8 @@ ServerCheckpointManager::~ServerCheckpointManager() {
 }
 
 void ServerCheckpointManager::initialise(HeigthMap *m_map) {
-   PathFinding p;
-   p.choosePoint(PathFinding::area_center);
-   sf::Vector2i checkpointsPos[4];
+    PathFinding p;
+    sf::Vector2i checkpointsPos[4];
 
     bool pathFound;
     bool restart = false;
@@ -31,20 +30,17 @@ void ServerCheckpointManager::initialise(HeigthMap *m_map) {
 
     do {
 
-        p.initialize(m_map);
+        p.loadMap(m_map);
         sf::Vector2i startPoint = p.choosePoint(PathFinding::area_center);
 
         for (int i = 0; i < 4; ++i) {
 
             attempts = 0;
-            std::cout << "test" << std::endl;
+
             do {
-                std::cout << "while choose" << std::endl;
                 checkpointsPos[i] = p.choosePoint((PathFinding::area)(PathFinding::area_north_east + i));
-                std::cout << "while find" << std::endl;
                 pathFound = p.find(startPoint, checkpointsPos[i]);
                 attempts++;
-                std::cout << "while end" << std::endl;
             } while (!pathFound && attempts <= 100);
 
             if (!pathFound) {

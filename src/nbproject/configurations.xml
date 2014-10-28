@@ -25,19 +25,12 @@
             <in>Client.cpp</in>
           </df>
           <df name="server">
-            <df name="network">
-              <in>ConnectionEvent.cpp</in>
-            </df>
-            <df name="player">
-              <in>PlayerManager.cpp</in>
-            </df>
             <df name="serverCheckpoint">
               <in>ServerCheckpoint.cpp</in>
               <in>ServerCheckpointManager.cpp</in>
             </df>
             <in>PathFinding.cpp</in>
             <in>Server.cpp</in>
-            <in>ServerSocketManager.cpp</in>
             <in>ServerWorld.cpp</in>
           </df>
           <df name="shared">
@@ -46,19 +39,11 @@
               <in>MapHeader.cpp</in>
               <in>WindMap.cpp</in>
             </df>
-            <df name="network">
-              <in>EmplifiedSocket.cpp</in>
-              <in>SocketQueuBuffer.cpp</in>
-              <in>SocketReader.cpp</in>
-            </df>
             <df name="ship">
               <in>Helm.cpp</in>
               <in>Sail.cpp</in>
               <in>Ship.cpp</in>
             </df>
-            <in>Player.cpp</in>
-            <in>Sharable.cpp</in>
-            <in>UdpSocketManager.cpp</in>
             <in>ValueNoise.cpp</in>
           </df>
         </df>
@@ -104,8 +89,6 @@
         </makeTool>
       </makefileType>
       <item path="bin/client/tbs.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="0">
-        </ccTool>
       </item>
       <item path="bin/server/tbs-server.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="0">
@@ -193,28 +176,7 @@
         <ccTool flags="1">
         </ccTool>
       </item>
-      <item path="lib/tbs/server/ServerSocketManager.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
       <item path="lib/tbs/server/ServerWorld.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="lib/tbs/server/network/ConnectionEvent.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="lib/tbs/server/player/PlayerManager.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
         <ccTool flags="1">
         </ccTool>
       </item>
@@ -226,21 +188,6 @@
         </ccTool>
       </item>
       <item path="lib/tbs/server/serverCheckpoint/ServerCheckpointManager.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="lib/tbs/shared/Player.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="lib/tbs/shared/Sharable.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="lib/tbs/shared/UdpSocketManager.cpp"
             ex="false"
             tool="1"
             flavor2="8">
@@ -260,27 +207,6 @@
         </ccTool>
       </item>
       <item path="lib/tbs/shared/map/WindMap.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="lib/tbs/shared/network/EmplifiedSocket.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="lib/tbs/shared/network/SocketQueuBuffer.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="lib/tbs/shared/network/SocketReader.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
         <ccTool flags="1">
         </ccTool>
       </item>

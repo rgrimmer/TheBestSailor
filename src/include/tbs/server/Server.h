@@ -13,32 +13,20 @@
 #include <SFML/Network.hpp>
 
 #include "server/ServerWorld.h"
-#include "server/ServerSocketManager.h"
-#include "server/player/PlayerManager.h"
-#include "server/network/ConnectionEvent.h"
 
-class ConnectionEvent;
-class ServerSocketManager;
-
-class Server : public ConnectionEvent {
+class Server {
 public:
     Server();
     Server(const Server& orig);
     virtual ~Server();
     
     void start(void);
-    void waitPlayers(void);
-    void addWaitingPlayers(void);
-    
-
-    void receiveConnection(sf::Packet& packet, SocketQueuBuffer* buffer);
+    void waitConnections(void);
     
 private:
-
-    ServerSocketManager m_clientManager;
-    PlayerManager m_players;
     ServerWorld m_world;
-
+    sf::TcpSocket m_clients[100];
+    int m_clientsCount;
 };
 
 #endif	/* SERVER_H */

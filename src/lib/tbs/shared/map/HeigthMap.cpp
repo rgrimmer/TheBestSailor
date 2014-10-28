@@ -43,7 +43,6 @@ HeigthMap::HeigthMap(const MapHeader &header) {
             m_container[i][j] = n;
         }
     }
-    std::cout << "map create : " << getWidth() << " " << getHeight() << " " << getSeed() << std::endl;
 }
 
     

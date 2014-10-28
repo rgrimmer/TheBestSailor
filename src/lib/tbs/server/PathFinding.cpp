@@ -19,7 +19,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #define MAX_STEPS 10000
 
-void PathFinding::initialize(const HeigthMap* map) {
+PathFinding::PathFinding() : m_map(NULL){
+
+}
+
+void PathFinding::loadMap(const HeigthMap* map) {
     m_map = map;
 }
 
@@ -28,7 +32,7 @@ sf::Vector2i PathFinding::choosePoint(area a) {
     sf::Vector2i min;
     sf::Vector2i max;
     sf::Vector2i choosenPoint;
-
+    
     int mapWidth = m_map->getWidth();
     int mapHeight = m_map->getHeight();
 
@@ -79,7 +83,7 @@ sf::Vector2i PathFinding::choosePoint(area a) {
             break;
 
         default:
-            std::cout << "warning" << std::endl; 
+            std::cout << "warning" << std::endl;
             break;
 
     }
@@ -88,7 +92,7 @@ sf::Vector2i PathFinding::choosePoint(area a) {
     for (int i = 0; i < 100; ++i) {
         choosenPoint.x = rand() % (max.x - min.x) + min.x;
         choosenPoint.y = rand() % (max.y - min.y) + min.y;
-        
+
         if (isWatterAround(choosenPoint.x, choosenPoint.y, 2)) {
             break;
         }
