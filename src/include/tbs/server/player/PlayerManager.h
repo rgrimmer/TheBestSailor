@@ -10,7 +10,7 @@
 
 #include <vector>
 
-#include "shared/entity/Player.h"
+#include "shared/Player.h"
 
 class PlayerManager {
 public:

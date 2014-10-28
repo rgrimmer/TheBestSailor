@@ -5,7 +5,7 @@
  * Created on 27 octobre 2014, 19:44
  */
 
-#include "shared/entity/map/WindMap.h"
+#include "shared/map/WindMap.h"
 
 WindMap::WindMap() {
 }

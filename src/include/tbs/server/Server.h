@@ -12,11 +12,10 @@
 
 #include <SFML/Network.hpp>
 
-#include "shared/entity/map/HeigthMap.h"
+#include "server/ServerWorld.h"
 #include "server/ServerSocketManager.h"
 #include "server/player/PlayerManager.h"
 #include "server/network/ConnectionEvent.h"
-#include "shared/entity/checkpoint/CheckpointManager.h"
 
 class ConnectionEvent;
 class ServerSocketManager;
@@ -33,16 +32,12 @@ public:
     
 
     void receiveConnection(sf::Packet& packet, SocketQueuBuffer* buffer);
-
-
-    void createCheckpoints();
     
 private:
-    HeigthMap *m_map;
-//    World m_world;
+
     ServerSocketManager m_clientManager;
     PlayerManager m_players;
-    CheckpointManager m_checkpointManager;
+    ServerWorld m_world;
 
 };
 

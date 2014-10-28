@@ -15,7 +15,7 @@
 
 #include <SFML/System/Vector2.hpp>
 
-#include "shared/entity/map/HeigthMap.h"
+#include "shared/map/HeigthMap.h"
 
 struct node {
     float g_cost, h_cost, f_cost;

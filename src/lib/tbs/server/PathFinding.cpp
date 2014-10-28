@@ -15,14 +15,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
 #include "shared/Utils.h"
-
-
-
 #include "server/PathFinding.h"
 
 #define MAX_STEPS 10000
 
-void PathFinding::initialize(const Map* map) {
+void PathFinding::initialize(const HeigthMap* map) {
     m_map = map;
 }
 

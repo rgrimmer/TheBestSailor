@@ -19,10 +19,10 @@
 #include <SFML/Window/Event.hpp>
 
 #include "client/map/TileMap.h"
-#include "shared/entity/map/MapHeader.h"
+#include "shared/map/MapHeader.h"
 #include "shared/Utils.h"
 #include "client/map/Gradient.h"
-#include "shared/entity/Player.h"
+#include "shared/Player.h"
 
 float x = 1.0f;
 float posViewX = 0.0f;

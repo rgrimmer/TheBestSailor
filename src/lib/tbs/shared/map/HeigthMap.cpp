@@ -4,7 +4,7 @@
  * 
  * Created on 10 octobre 2014, 13:39
  */
-#include "shared/entity/map/HeigthMap.h"
+#include "shared/map/HeigthMap.h"
 
 #include <iostream>
 #include <SFML/System/Vector2.hpp>

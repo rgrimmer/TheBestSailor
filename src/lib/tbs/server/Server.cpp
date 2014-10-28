@@ -11,8 +11,8 @@
 #include "server/Server.h"
 
 #include "server/PathFinding.h"
-#include "shared/entity/checkpoint/Checkpoint.h"
-#include "shared/entity/map/MapHeader.h"
+#include "server/serverCheckpoint/ServerCheckpoint.h"
+#include "shared/map/MapHeader.h"
 #include "shared/Utils.h"
 
 sf::Packet& operator<<(sf::Packet &packet, const MapHeader &header) {
@@ -28,15 +28,14 @@ sf::Packet& operator<<(sf::Packet &packet, const MapHeader &header) {
     return packet;
 }
 
-Server::Server() :
-m_map(NULL) {
+Server::Server() {
 }
 
 Server::Server(const Server& orig) {
 }
 
 Server::~Server() {
-    delete m_map;
+
 }
 
 void Server::start() {
@@ -45,23 +44,20 @@ void Server::start() {
 
     // @TODO get a connection
     waitPlayers();
+    
+    m_world.initialize();
+    
     //std::cout << socket.receive(packet, client, portClient) << " ";
     //std::cout << "Connection receive : " << client << " " << portClient <<std::endl;
-
-    // @TODO generate a map
-    m_map = new HeigthMap(MapHeader(NB_TILES_WIDTH, NB_TILES_HEIGHT, rand()));
-    std::cout << "HeigthMap generate" << std::endl;
-
-    createCheckpoints();
-    std::cout << "checkpoints create" << std::endl;
     
+
     // @TODO send map to client
-    sf::Packet mapPacket;
+    /*sf::Packet mapPacket;
     mapPacket << m_map->getHeader();
 
     m_clientManager.broadcastMessage(mapPacket);
-    std::cout << "HeigthMap send" << std::endl;
-    //m_clientManager.send(mapPacket);
+    std::cout << "HeigthMap sent" << std::endl;
+    //m_clientManager.send(mapPacket);*/
 }
 
 void Server::waitPlayers() {
@@ -97,50 +93,5 @@ void Server::receiveConnection(sf::Packet& packet, SocketQueuBuffer* buffer) {
     m_players.addPlayer(new Player(name, buffer));
 
     // @TODO send map
-//    m_clientManager.send(mapPacket);
-}
-
-//TODO remove non constants values
-void Server::createCheckpoints() {
-    PathFinding p;
-    sf::Vector2i checkpointsPos[4];
-
-    bool pathFound;
-    bool restart = false;
-
-    int attempts = 0;
-
-    do {
-
-        p.initialize(m_map);
-        sf::Vector2i startPoint = p.choosePoint(PathFinding::area_center);
-
-        for (int i = 0; i < 4; ++i) {
-
-            attempts = 0;
-            std::cout << "test" << std::endl;
-            do {
-            std::cout << "while choose" << std::endl;
-                checkpointsPos[i] = p.choosePoint((PathFinding::area)(PathFinding::area_north_east + i));
-            std::cout << "while find" << std::endl;
-                pathFound = p.find(startPoint, checkpointsPos[i]);
-                attempts++;
-            std::cout << "while end" << std::endl;
-            } while (!pathFound && attempts <= 100);
-
-            if (!pathFound) {
-                // new map
-                delete m_map;
-                m_map = new HeigthMap(MapHeader(NB_TILES_WIDTH, NB_TILES_HEIGHT, rand()));
-                restart = true;
-                break;
-            }
-        }
-
-    } while (restart);
-
-    for (int i = 0; i < 4; ++i) {
-        Checkpoint* c = new Checkpoint(checkpointsPos[i]);
-        m_checkpointManager.addCheckpoint(c);
-    }
+    //    m_clientManager.send(mapPacket);
 }

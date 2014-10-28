@@ -8,10 +8,10 @@
 #ifndef CLIENT_H
 #define	CLIENT_H
 
-#include "shared/entity/map/HeigthMap.h"
+#include "shared/map/HeigthMap.h"
 #include "shared/UdpSocketManager.h"
 #include "shared/network/SocketReader.h"
-#include "shared/entity/Player.h"
+#include "shared/Player.h"
 
 class Client {
 public:

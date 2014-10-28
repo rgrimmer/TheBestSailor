@@ -5,7 +5,7 @@
  * Created on 25 octobre 2014, 12:28
  */
 
-#include "shared/entity/ship/Helm.h"
+#include "shared/ship/Helm.h"
 
 Helm::Helm() {
 }

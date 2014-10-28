@@ -10,12 +10,40 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/Random.cpp</file>
-            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/TileMap.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/gamestate/GameStateMainMenu.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/checkpoint/CheckpointManager.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/World.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/map/HeigthMap.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/map/Gradient.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/shared/UdpSocketManager.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/ValueNoise.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/server/PathFinding.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/Sharable.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/shared/network/SocketReader.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/map/TileMap.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/Player.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/server/Server.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/checkpoint/Checkpoint.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/Client.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/server/PathFinding.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/shared/World.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/server/ServerSocketManager.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/server/Server.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/gamestate/GameState.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/map/MapHeader.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/CMakeLists.txt</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/network/SocketReader.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/ship/Helm.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/UdpSocketManager.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/shared/checkpoint/CheckpointManager.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/Client.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/ship/Sail.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/map/TileMap.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/bin/server/tbs-server.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/ship/Ship.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/bin/client/tbs.cpp</file>
-            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/Gradient.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/map/WindMap.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/server/player/PlayerManager.h</file>
         </group>
     </open-files>
 </project-private>

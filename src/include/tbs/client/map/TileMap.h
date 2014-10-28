@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "shared/Utils.h"
-#include "shared/entity/map/HeigthMap.h"
+#include "shared/map/HeigthMap.h"
 
 class TileMap : public sf::Drawable, public sf::Transformable {
     
