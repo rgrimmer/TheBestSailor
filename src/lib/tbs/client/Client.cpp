@@ -84,6 +84,7 @@ void Client::start(void) {
     TileMap mapView;
     mapView.load(*map, true);
 
+    WindMap windMap(MapHeader(10,10,0));
 
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
     window.setKeyRepeatEnabled(true);
@@ -123,6 +124,7 @@ void Client::start(void) {
         currentView.setCenter(posViewX, posViewY);
         window.setView(currentView);
         window.draw(mapView);
+	window.draw(windMap);
         window.display();
     }
 
