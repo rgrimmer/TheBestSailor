@@ -15,18 +15,14 @@ ServerWorld::ServerWorld() {
 }
 
 ServerWorld::~ServerWorld() {
+    delete m_map;
 }
 
 void ServerWorld::initialize(void) {
-    m_map = new HeigthMap(MapHeader(NB_TILES_WIDTH, NB_TILES_HEIGHT, rand()));
+    m_map = new HeigthMap(MapHeader(NB_TILES_WIDTH, NB_TILES_HEIGHT, rand()));  
     m_checkpointManager.initialise(m_map);
-
 }
 
 void ServerWorld::update(float dt) {
-
-}
-
-void ServerWorld::render(sf::RenderWindow& window) {
-
+    
 }
