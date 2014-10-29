@@ -21,6 +21,7 @@
 #include "shared/map/MapHeader.h"
 #include "shared/Utils.h"
 #include "client/map/Gradient.h"
+#include "shared/map/WindMap.h"
 
 float x = 1.0f;
 float posViewX = 0.0f;
@@ -84,7 +85,7 @@ void Client::start(void) {
     TileMap mapView;
     mapView.load(*map, true);
 
-    WindMap windMap(MapHeader(10,10,0));
+    WindMap windMap(MapHeader(150,150,0));
 
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
     window.setKeyRepeatEnabled(true);

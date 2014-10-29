@@ -10,6 +10,7 @@
 #include <iostream>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include "shared/Utils.h"
+#include "shared/ValueNoise.h"
 
 WindMap::WindMap() {
 }
@@ -26,9 +27,14 @@ WindMap::WindMap(const MapHeader &header)
 
     int size = m_header.getSize();
     m_winds = new Wind[size];
-
-    for (int i = 0; i < size; i++) {
-        m_winds[i] = Wind(m_windStrength, m_windDirection);
+    
+    int height = m_header.getHeight();
+    int width = m_header.getWidth();
+    for (int j = 0; j < height; j++) {
+    for (int i = 0; i < width; i++) {
+        float n = ValueNoise::Eval(sf::Vector2f((float)i/width*10.0f, (float)j/height*10.0f));
+        m_winds[j*m_header.getWidth() + i] = Wind(random.getNextInt(20, 100), m_windDirection+( (n-0.5f) * 45.0f));
+    }
     }
 }
 
@@ -37,8 +43,8 @@ void WindMap::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     int width = m_header.getWidth();
     for (int i = 0; i < heigth; ++i) {
         for (int j = 0; j < width; ++j) {
-            states.transform.translate(TILE_SIZE, 0);
             target.draw(m_winds[i * width + j], states);
+            states.transform.translate(TILE_SIZE, 0);
         }
         states.transform.translate(-TILE_SIZE * width, TILE_SIZE);
     }
