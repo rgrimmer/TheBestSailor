@@ -22,6 +22,7 @@
 #include "shared/Utils.h"
 #include "client/map/Gradient.h"
 #include "shared/map/WindMap.h"
+#include "shared/ship/Ship.h"
 
 float x = 1.0f;
 float posViewX = 0.0f;
@@ -86,6 +87,8 @@ void Client::start(void) {
     mapView.load(*map, true);
 
     WindMap windMap(MapHeader(150,150,0));
+    
+    Ship ship;
 
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
     window.setKeyRepeatEnabled(true);
@@ -113,6 +116,10 @@ void Client::start(void) {
                 } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
                     zoomValue -= 1.0f;
                     currentView = sf::View(sf::FloatRect(posViewX, posViewY, SCREEN_WIDTH * zoomValue, SCREEN_HEIGHT * zoomValue));
+                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
+                    ship.turnLeft(0.5f);
+                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
+                    ship.turnRight(0.5f);
                 } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
                     squared = !squared;
                     mapView.load(*map, squared);
@@ -120,12 +127,13 @@ void Client::start(void) {
 
             }
         }
-
+        ship.advance(2);
         window.clear();
         currentView.setCenter(posViewX, posViewY);
         window.setView(currentView);
         window.draw(mapView);
 	window.draw(windMap);
+	window.draw(ship);
         window.display();
     }
 

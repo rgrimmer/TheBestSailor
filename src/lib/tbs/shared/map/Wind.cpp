@@ -11,6 +11,9 @@
 #include "shared/Utils.h"
 
 #include "shared/map/Wind.h"
+//
+const int Wind::maxStrength = 150;
+const int Wind::minStrength = 30;
 
 Wind::Wind() {
 }
@@ -46,7 +49,11 @@ sf::VertexArray Wind::getVertices() const {
     triangle[0].position = sf::Vector2f(0, 0); 
     triangle[1].position = sf::Vector2f(-TILE_SIZE/8.0f, TILE_SIZE/2.0f);
     triangle[2].position = sf::Vector2f(TILE_SIZE/8.0f, TILE_SIZE/2.0f);
-    triangle[0].color = sf::Color::Red;
+    int colorVal = (float) m_strength / (maxStrength - minStrength) * 255;
+    triangle[0].color = sf::Color(colorVal, colorVal, colorVal, 125);
+    triangle[1].color = triangle[0].color;
+    triangle[2].color = triangle[0].color;
+//    sf::Color()
     
     return vertices;
 }

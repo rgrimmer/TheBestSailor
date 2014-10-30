@@ -11,11 +11,22 @@
 #include "Helm.h"
 #include "Sail.h"
 
-class Ship {
+#include <SFML/Graphics/Transformable.hpp>
+#include <SFML/Graphics/Drawable.hpp>
+
+class Ship : public sf::Drawable, public sf::Transformable {
 public:
     Ship();
     virtual ~Ship();
+    
+    void turnLeft(float angle);
+    void turnRight(float angle);
+    void advance(float distance);
+    
 private:
+
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
     Helm m_helm;
     Sail m_sail;
 

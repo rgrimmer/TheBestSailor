@@ -14,6 +14,9 @@
 
 class Wind : public sf::Drawable, public sf::Transformable {
 public:
+    static const int maxStrength;
+    static const int minStrength;
+    
     Wind();
     Wind(int strength, float direction);
     Wind(const Wind& orig);

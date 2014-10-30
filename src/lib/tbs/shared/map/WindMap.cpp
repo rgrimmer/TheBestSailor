@@ -33,7 +33,7 @@ WindMap::WindMap(const MapHeader &header)
     for (int j = 0; j < height; j++) {
     for (int i = 0; i < width; i++) {
         float n = ValueNoise::Eval(sf::Vector2f((float)i/width*10.0f, (float)j/height*10.0f));
-        m_winds[j*m_header.getWidth() + i] = Wind(random.getNextInt(20, 100), m_windDirection+( (n-0.5f) * 45.0f));
+        m_winds[j*m_header.getWidth() + i] = Wind(random.getNextInt(Wind::minStrength, Wind::maxStrength), n*360);
     }
     }
 }
