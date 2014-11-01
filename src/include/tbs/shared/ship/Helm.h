@@ -8,11 +8,18 @@
 #ifndef HELM_H
 #define	HELM_H
 
+#include "shared/Kinematics.h"
+
 class Helm {
 public:
-    Helm();
+    Helm(Kinematics &kinematics);
     virtual ~Helm();
+    
+    void turn(float angle);
+    
+    
 private:
+    Kinematics &m_kinematics;
 
 };
 

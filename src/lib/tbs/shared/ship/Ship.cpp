@@ -12,31 +12,26 @@
 
 #include "shared/ship/Ship.h"
 
-Ship::Ship() : m_helm(Helm()), m_sail(Sail()) {
+Ship::Ship() : m_helm(Helm(m_kinematics)), m_sail(Sail()) {
 }
 
 Ship::~Ship() {
 }
 
-void Ship::turnLeft(float angle) {
-    rotate(-angle);
+void Ship::advance(float speed) {
+    m_kinematics.speed() += sf::Vector2f(speed, speed);
 }
-
-void Ship::turnRight(float angle) {
-    
-    rotate(angle);
-}
-
-void Ship::advance(float distance) {
-    move(distance*cos(getRotation()),distance*sin(getRotation()));
-}
-
 
 void Ship::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     states.transform *= getTransform();
     sf::CircleShape shape(10, 4);
-    shape.setFillColor(sf::Color(150 ,75 , 0));
+    shape.setOutlineColor(sf::Color::Red);
     shape.rotate(45);
-    shape.setOrigin(5,5);
+    shape.setOrigin(5, 5);
     target.draw(sf::CircleShape(10, 4), states);
+}
+
+void Ship::update(float dt) {
+    m_kinematics.update(dt);
+    setPosition(m_kinematics.position());
 }

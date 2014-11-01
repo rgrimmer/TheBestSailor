@@ -59,7 +59,7 @@ void Server::waitConnections() {
     while (stay) {
         stay = false;
         
-        if (selector.wait(sf::seconds(10.0f))) {
+        if (selector.wait(sf::seconds(5.0f))) {
             stay = true;
             for (int i = 0; i < m_clientsCount; ++i) {
 
@@ -95,5 +95,6 @@ void Server::waitConnections() {
         }
            
     }
+    listener.close();
 
 }

@@ -10,6 +10,7 @@
 
 #include "Helm.h"
 #include "Sail.h"
+#include "shared/Kinematics.h"
 
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/Drawable.hpp>
@@ -19,9 +20,11 @@ public:
     Ship();
     virtual ~Ship();
     
-    void turnLeft(float angle);
-    void turnRight(float angle);
-    void advance(float distance);
+    inline Kinematics& kinematics() { return m_kinematics; }
+    inline const Kinematics& kinematics() const { return m_kinematics; }
+    inline Helm& helm() {return m_helm; }
+    void advance(float speed);
+    void update(float dt);
     
 private:
 
@@ -29,6 +32,9 @@ private:
 
     Helm m_helm;
     Sail m_sail;
+    Kinematics m_kinematics;
+    
+    
 
 };
 
