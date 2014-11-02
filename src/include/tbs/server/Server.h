@@ -17,7 +17,6 @@
 class Server {
 public:
     Server();
-    Server(const Server& orig);
     virtual ~Server();
     
     void start(void);

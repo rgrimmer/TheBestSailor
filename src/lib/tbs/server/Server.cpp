@@ -29,9 +29,6 @@
 Server::Server() {
 }
 
-Server::Server(const Server& orig) {
-}
-
 Server::~Server() {
 
 }

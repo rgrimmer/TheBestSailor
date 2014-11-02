@@ -17,8 +17,8 @@ WindMap::WindMap() {
 
 WindMap::WindMap(const MapHeader &header)
 : m_header(header) {
-    std::cout << "north : " << windDirection::north << std::endl;
-    std::cout << "southEast : " << windDirection::southEast << std::endl;
+//    std::cout << "north : " << windDirection::north << std::endl;
+//    std::cout << "southEast : " << windDirection::southEast << std::endl;
     int seed = header.getSeed();
 
     Rand random(seed);
@@ -38,6 +38,8 @@ WindMap::WindMap(const MapHeader &header)
     }
 }
 
+#include <iostream>
+
 void WindMap::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     int heigth = m_header.getHeight();
     int width = m_header.getWidth();
@@ -49,25 +51,28 @@ void WindMap::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         states.transform.translate(-TILE_SIZE * width, TILE_SIZE);
     }
 }
-#include <iostream>
 
 Force WindMap::force(const sf::Vector2f& point) {
     Force force;
 
+    sf::Vector2i tileSize(TILE_SIZE, TILE_SIZE);    
+    sf::Vector2i corner((int) point.x - ((int) point.x % tileSize.x), (int) point.y - ((int) point.y % tileSize.y));
+    force.angle() = wind(corner.x / tileSize.x, corner.y / tileSize.y).getRotation();
+/*
     sf::Vector2f corner[4];
 
-    std::cout << point.x << " " << point.y << std::endl;
+//    std::cout << point.x << " " << point.y << std::endl;
     sf::Vector2f tileSize(TILE_SIZE, TILE_SIZE);
 
     corner[0] = sf::Vector2f(   (int) point.x - ((int) point.x % (int)tileSize.x), (int) point.y - ((int) point.y % (int) tileSize.y));
     corner[1] = corner[0] + tileSize;
     corner[2] = sf::Vector2f(corner[0].x, corner[1].y);
     corner[3] = sf::Vector2f(corner[1].x, corner[0].y);
-    std::cout << "[c0] " << corner[0].x << " " << corner[0].y;
-    std::cout << " [c1] " << corner[1].x << " " << corner[1].y;
-    std::cout << " [c2] " << corner[2].x << " " << corner[2].y;
-    std::cout << " [c3] " << corner[3].x << " " << corner[3].y;
-    std::cout << std::endl;
+//    std::cout << "[c0] " << corner[0].x << " " << corner[0].y;
+//    std::cout << " [c1] " << corner[1].x << " " << corner[1].y;
+//    std::cout << " [c2] " << corner[2].x << " " << corner[2].y;
+//    std::cout << " [c3] " << corner[3].x << " " << corner[3].y;
+//    std::cout << std::endl;
 
 
     for (int i = 0; i < 4; ++i) {
@@ -77,10 +82,10 @@ Force WindMap::force(const sf::Vector2f& point) {
         sf::Vector2f pourcent = sf::Vector2f(1.0f, 1.0f) - sf::Vector2f(distAbs.x / tileSize.x, distAbs.y / tileSize.y);
         float angle = wind(corner[i].x / tileSize.x, corner[i].y / tileSize.y).getRotation();
         force.angle() += (pourcent.x + pourcent.y) * angle /4;
-        std::cout << "[" << i << "]" << angle << " " << pourcent.x + pourcent.y << " ";
+//        std::cout << "[" << i << "]" << angle << " " << pourcent.x + pourcent.y << " ";
     }
-    std::cout << std::endl;
-
+//    std::cout << std::endl;
+*/
     return force;
 }
 

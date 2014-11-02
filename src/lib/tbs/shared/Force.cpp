@@ -7,7 +7,7 @@
 
 #include "shared/Force.h"
 
-Force::Force() : m_angle(0), m_applicationPoint(sf::Vector2f()), m_norm(0) {
+Force::Force() : m_angle(0), m_norm(0), m_applicationPoint() {
 }
 
 Force::~Force() {
