@@ -17,6 +17,7 @@
 #include "shared/ship/Ship.h"
 #include "shared/map/MapHeader.h"
 #include "client/map/TileMap.h"
+#include "shared/map/DrawWind.h"
 #include "shared/map/HeigthMap.h"
 
 class Client {
@@ -27,14 +28,13 @@ public:
     void start(void);
 private:
     void gameLoop(sf::RenderWindow *window);
-    void pollEvent(sf::RenderWindow &window);
-    void processEvent(sf::RenderWindow &window, const sf::Event& event);
-    void startAsyncGameLoop(sf::RenderWindow &window);
+    
 private:
     sf::TcpSocket m_socket;
-    
-    HeigthMap *m_map;
-    WindMap m_windMap;
+
+    HeigthMap* m_map;
+    WindMap* m_wind;
+    DrawWind m_windView;
     TileMap m_mapView;
     Ship m_ship;
     bool m_enableWind;

@@ -23,6 +23,7 @@
               <in>TileMap.h</in>
             </df>
             <in>Client.h</in>
+            <in>DisplayInfo.h</in>
           </df>
           <df name="server">
             <df name="serverCheckpoint">
@@ -35,6 +36,7 @@
           </df>
           <df name="shared">
             <df name="map">
+              <in>DrawWind.h</in>
               <in>HeigthMap.h</in>
               <in>MapHeader.h</in>
               <in>WindMap.h</in>
@@ -44,6 +46,8 @@
               <in>Sail.h</in>
               <in>Ship.h</in>
             </df>
+            <in>Force.h</in>
+            <in>Kinematics.h</in>
             <in>Rand.h</in>
             <in>Utils.h</in>
             <in>ValueNoise.h</in>
@@ -63,6 +67,7 @@
               <in>TileMap.cpp</in>
             </df>
             <in>Client.cpp</in>
+            <in>DisplayInfo.cpp</in>
           </df>
           <df name="server">
             <df name="serverCheckpoint">
@@ -75,6 +80,7 @@
           </df>
           <df name="shared">
             <df name="map">
+              <in>DrawWind.cpp</in>
               <in>HeigthMap.cpp</in>
               <in>MapHeader.cpp</in>
               <in>WindMap.cpp</in>
@@ -84,6 +90,8 @@
               <in>Sail.cpp</in>
               <in>Ship.cpp</in>
             </df>
+            <in>Force.cpp</in>
+            <in>Kinematics.cpp</in>
             <in>ValueNoise.cpp</in>
           </df>
         </df>

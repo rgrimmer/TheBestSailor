@@ -2,15 +2,96 @@
  * File:   WindMap.cpp
  * Author: maxence
  * 
- * Created on 27 octobre 2014, 19:44
+ * Created on 07 novembre 2014, 13:39
  */
+#include "shared/map/WindMap.h"
 
+#include <iostream>
+#include <SFML/System/Vector2.hpp>
+
+#include "shared/ValueNoise.h"
+
+WindMap::WindMap() : m_header(MapHeader(0,0)), m_container(NULL) {
+
+}
+
+WindMap::WindMap(const MapHeader &header) {
+
+    m_header.setWidth(header.getWidth());
+    m_header.setHeight(header.getHeight());
+    m_header.setSeed(header.getSeed());
+    
+    int width = header.getWidth();
+    int height = header.getHeight();
+
+    ValueNoise::GenerateValues(getSeed());
+
+    m_container = new float*[height];
+
+    for (int i = 0; i < height; ++i) {
+        m_container[i] = new float[width];
+    }
+
+    float invWidth = 1.f / width, invHeight = 1.f / height;
+
+    for (int i = 0; i < width; ++i) {
+        for (int j = 0; j < height; ++j) {
+            sf::Vector2f pnoise(i * invWidth, j * invHeight);
+            pnoise.x *= 20.0f;
+            pnoise.y *= 20.0f;
+            float n = ValueNoise::Eval(pnoise);
+            m_container[i][j] = n*360.0f;
+        }
+    }
+}
+
+    
+
+WindMap::~WindMap() {
+    for (int i = 0; i < getHeight(); ++i) {
+        delete m_container[i];
+    }
+    delete m_container;
+}
+
+int WindMap::getSize() const {
+    return m_header.getSize();
+}
+
+int WindMap::getWidth() const {
+    return m_header.getWidth();
+}
+
+int WindMap::getHeight() const {
+    return m_header.getHeight();
+}
+
+int WindMap::getSeed() const {
+    return m_header.getSeed();
+}
+
+const MapHeader& WindMap::getHeader() const {
+    return m_header;
+}
+
+MapHeader& WindMap::getHeader() {
+    return m_header;
+}
+
+
+
+
+
+
+
+/*
 #include "shared/map/WindMap.h"
 #include "shared/Rand.h"
 #include <iostream>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include "shared/Utils.h"
 #include "shared/ValueNoise.h"
+
 
 WindMap::WindMap() {
 }
@@ -26,85 +107,35 @@ WindMap::WindMap(const MapHeader &header)
     m_windStrength = random.getNextInt(20, 100);
 
     int size = m_header.getSize();
-    m_winds = new Wind[size];
+    m_winds = new DrawWind[size];
 
     int height = m_header.getHeight();
     int width = m_header.getWidth();
     for (int j = 0; j < height; j++) {
         for (int i = 0; i < width; i++) {
             float n = ValueNoise::Eval(sf::Vector2f((float) i / width * 10.0f, (float) j / height * 10.0f));
-            m_winds[j * m_header.getWidth() + i] = Wind(random.getNextInt(Wind::minStrength, Wind::maxStrength), n * 360);
+            m_winds[j * m_header.getWidth() + i] = DrawWind(random.getNextInt(DrawWind::minStrength, DrawWind::maxStrength), n * 360);
         }
     }
 }
 
-#include <iostream>
-
-void WindMap::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-    int heigth = m_header.getHeight();
-    int width = m_header.getWidth();
-    for (int i = 0; i < heigth; ++i) {
-        for (int j = 0; j < width; ++j) {
-            target.draw(m_winds[i * width + j], states);
-            states.transform.translate(TILE_SIZE, 0);
-        }
-        states.transform.translate(-TILE_SIZE * width, TILE_SIZE);
-    }
-}
-
-Force WindMap::force(const sf::Vector2f& point) {
-    Force force;
-
-    sf::Vector2i tileSize(TILE_SIZE, TILE_SIZE);    
-    sf::Vector2i corner((int) point.x - ((int) point.x % tileSize.x), (int) point.y - ((int) point.y % tileSize.y));
-    force.angle() = wind(corner.x / tileSize.x, corner.y / tileSize.y).getRotation();
-/*
-    sf::Vector2f corner[4];
-
-//    std::cout << point.x << " " << point.y << std::endl;
-    sf::Vector2f tileSize(TILE_SIZE, TILE_SIZE);
-
-    corner[0] = sf::Vector2f(   (int) point.x - ((int) point.x % (int)tileSize.x), (int) point.y - ((int) point.y % (int) tileSize.y));
-    corner[1] = corner[0] + tileSize;
-    corner[2] = sf::Vector2f(corner[0].x, corner[1].y);
-    corner[3] = sf::Vector2f(corner[1].x, corner[0].y);
-//    std::cout << "[c0] " << corner[0].x << " " << corner[0].y;
-//    std::cout << " [c1] " << corner[1].x << " " << corner[1].y;
-//    std::cout << " [c2] " << corner[2].x << " " << corner[2].y;
-//    std::cout << " [c3] " << corner[3].x << " " << corner[3].y;
-//    std::cout << std::endl;
-
-
-    for (int i = 0; i < 4; ++i) {
-
-        sf::Vector2f dist = corner[i] - point;
-        sf::Vector2f distAbs(std::abs(dist.x), std::abs(dist.y));
-        sf::Vector2f pourcent = sf::Vector2f(1.0f, 1.0f) - sf::Vector2f(distAbs.x / tileSize.x, distAbs.y / tileSize.y);
-        float angle = wind(corner[i].x / tileSize.x, corner[i].y / tileSize.y).getRotation();
-        force.angle() += (pourcent.x + pourcent.y) * angle /4;
-//        std::cout << "[" << i << "]" << angle << " " << pourcent.x + pourcent.y << " ";
-    }
-//    std::cout << std::endl;
-*/
-    return force;
-}
-
-Wind& WindMap::wind(int x, int y) {
+DrawWind& WindMap::wind(int x, int y) {
     return m_winds[x + y * m_header.getWidth()];
 }
 
-const Wind& WindMap::wind(int x, int y) const {
+const DrawWind& WindMap::wind(int x, int y) const {
     return m_winds[x + y * m_header.getWidth()];
 }
 
-Wind& WindMap::wind(const sf::Vector2i& point) {
+DrawWind& WindMap::wind(const sf::Vector2i& point) {
     return wind(point.x, point.y);
 }
 
-const Wind& WindMap::wind(const sf::Vector2i& point) const {
+const DrawWind& WindMap::wind(const sf::Vector2i& point) const {
     return wind(point.x, point.y);
 }
 
 WindMap::~WindMap() {
 }
 
+*/

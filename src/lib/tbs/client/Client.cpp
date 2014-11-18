@@ -42,8 +42,7 @@ bool squared = true;
 }
  */
 
-Client::Client()
-{
+Client::Client() {
     //            startPollEventThread();
 }
 
@@ -73,10 +72,13 @@ void Client::start(void) {
 
     // Data
     m_map = new HeigthMap(MapHeader(height, width, seed));
-    m_windMap= WindMap(MapHeader(150, 150, 0));
+    m_wind = new WindMap(MapHeader(height, width, seed));
+
+    //m_windView = WindMap(MapHeader(height, width, 0));
+    m_windView.load(*m_wind);
     m_mapView.load(*m_map, true);
-    
-        sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
+
+    sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
 
 
     window.setKeyRepeatEnabled(true);
@@ -84,23 +86,19 @@ void Client::start(void) {
 
     m_enableWind = true;
     m_enableFolowCamera = false;
-    
 
-//    startAsyncGameLoop(window);
 
-//    sf::Thread gameLoopThread(std::bind(&Client::gameLoop, this, &window));
-//    gameLoopThread.launch();
-    
+    //    startAsyncGameLoop(window);
+
+    //    sf::Thread gameLoopThread(std::bind(&Client::gameLoop, this, &window));
+    //    gameLoopThread.launch();
+
     gameLoop(&window);
-//    while (window.isOpen()) {
-//        pollEvent(window);
-//        
-//    }
+    //    while (window.isOpen()) {
+    //        pollEvent(window);
+    //        
+    //    }
 
-}
-
-void Client::startAsyncGameLoop(sf::RenderWindow &window) {
-    //    m_pollEventThread = std::thread(&Client::pollEvent, this);
 }
 
 void Client::gameLoop(sf::RenderWindow *window) {
@@ -123,8 +121,51 @@ void Client::gameLoop(sf::RenderWindow *window) {
     while (window->isOpen()) {
         window->clear();
 
-        pollEvent(*window);
-        
+        sf::Event event;
+        //    std::cout << "start poll" << std::endl;
+        //        window.waitEvent(event);
+        //        processEvent(window, event);
+        while (window->pollEvent(event)) {
+
+            if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                window->close();
+                m_socket.disconnect();
+            }
+            if (event.type == sf::Event::KeyPressed) {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+                    posView.x -= 500.0f;
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+                    posView.x += 500.0f;
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+                    posView.y -= 500.0f;
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+                    posView.y += 500.0f;
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+                    zoomValue += 1.0f;
+                    currentView = sf::View(sf::FloatRect(posView.x, posView.y, SCREEN_WIDTH * zoomValue, SCREEN_HEIGHT * zoomValue));
+                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+                    zoomValue -= 1.0f;
+                    currentView = sf::View(sf::FloatRect(posView.x, posView.y, SCREEN_WIDTH * zoomValue, SCREEN_HEIGHT * zoomValue));
+                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
+                    m_ship.helm().turn(0.5f);
+                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
+                    m_ship.helm().turn(-0.5f);
+                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
+                    m_ship.advance(1.0f);
+                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
+                    m_ship.advance(-1.0f);
+                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+                    squared = !squared;
+                    m_mapView.load(*m_map, squared);
+                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+                    m_enableWind = !m_enableWind;
+                } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+                    m_enableFolowCamera = !m_enableFolowCamera;
+                }
+
+            }
+        }
+
         // Set view position
         if (m_enableFolowCamera) {
             currentView.setCenter(m_ship.getPosition());
@@ -140,7 +181,7 @@ void Client::gameLoop(sf::RenderWindow *window) {
 
         // Update ship
         m_ship.update(timeLoop);
-        
+
 
         // Draw
 
@@ -153,7 +194,7 @@ void Client::gameLoop(sf::RenderWindow *window) {
         // Draw windMap
         if (m_enableWind) {
             clockDraw.restart();
-            window->draw(m_windMap);
+            window->draw(m_windView);
             timeDrawWindMap = clockDraw.getElapsedTime();
         }
 
@@ -169,12 +210,12 @@ void Client::gameLoop(sf::RenderWindow *window) {
         // Clocks infos
         displayInfo.draw(std::to_string(clockGlobal.getElapsedTime().asSeconds()));
         displayInfo.draw("fps : " + std::to_string(fps));
-        
+
         // Data infos
         displayInfo.draw("ship :");
         displayInfo.draw("speed : " + std::to_string(m_ship.kinematics().speed().x) + " " + std::to_string(m_ship.kinematics().speed().y));
         displayInfo.draw("pos : " + std::to_string(m_ship.getPosition().x) + " " + std::to_string(m_ship.getPosition().y));
-        displayInfo.draw("wind : " + m_windMap.force(m_ship.getPosition()).toString());
+        //displayInfo.draw("wind : " + m_windView.force(m_ship.getPosition()).toString());
 
         // Draw infos
         displayInfo.draw("Draw(ms)");
@@ -190,57 +231,6 @@ void Client::gameLoop(sf::RenderWindow *window) {
             ++countFram;
         }
         window->display();
-
-    }
-}
-
-void Client::pollEvent(sf::RenderWindow &window) {
-    sf::Event event;
-//    std::cout << "start poll" << std::endl;
-//        window.waitEvent(event);
-//        processEvent(window, event);
-            while (window.pollEvent(event)) {
-//                std::cout << "poll event" << std::endl;
-                processEvent(window, event);
-            }
-}
-
-void Client::processEvent(sf::RenderWindow &window, const sf::Event & event) {
-    if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-        window.close();
-        m_socket.disconnect();
-    }
-    if (event.type == sf::Event::KeyPressed) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-            posView.x -= 500.0f;
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            posView.x += 500.0f;
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            posView.y -= 500.0f;
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-            posView.y += 500.0f;
-        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            zoomValue += 1.0f;
-            currentView = sf::View(sf::FloatRect(posView.x, posView.y, SCREEN_WIDTH * zoomValue, SCREEN_HEIGHT * zoomValue));
-        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
-            zoomValue -= 1.0f;
-            currentView = sf::View(sf::FloatRect(posView.x, posView.y, SCREEN_WIDTH * zoomValue, SCREEN_HEIGHT * zoomValue));
-        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
-            m_ship.helm().turn(0.5f);
-        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
-            m_ship.helm().turn(-0.5f);
-        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
-            m_ship.advance(1.0f);
-        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
-            m_ship.advance(-1.0f);
-        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-            squared = !squared;
-            m_mapView.load(*m_map, squared);
-        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-            m_enableWind = !m_enableWind;
-        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
-            m_enableFolowCamera = !m_enableFolowCamera;
-        }
 
     }
 }

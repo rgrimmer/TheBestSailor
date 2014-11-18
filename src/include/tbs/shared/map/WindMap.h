@@ -8,14 +8,43 @@
 #ifndef WINDMAP_H
 #define	WINDMAP_H
 
-#include <SFML/Graphics/Drawable.hpp>
+#include "MapHeader.h"
+
+class WindMap {
+public:
+    WindMap();
+    WindMap(const MapHeader &header);
+    virtual ~WindMap();
+
+    
+    float& operator()(int i, int j) {
+        return m_container[i][j];
+    }
+
+    float operator()(int i, int j) const {
+        return m_container[i][j];
+    }
+    
+    int getSize() const;
+    int getWidth() const;
+    int getHeight() const;
+    int getSeed() const;
+    const MapHeader& getHeader() const;
+    MapHeader& getHeader();
+    //void setHeader(const MapHeader& mapHeader);
+
+private:
+    MapHeader m_header;
+    float** m_container;
+};
+
+/*#include <SFML/Graphics/Drawable.hpp>
 
 #include "MapHeader.h"
-#include "Wind.h"
 #include "shared/Force.h"
 #include <SFML/System/Vector2.hpp>
 
-class WindMap : public sf::Drawable {
+class WindMap {
 public:
 
     enum horizontalDir {
@@ -45,21 +74,20 @@ public:
     WindMap(const MapHeader &header);
     virtual ~WindMap();
     
-    Wind& wind(int x, int y);
-    const Wind& wind(int x, int y) const;
-    Wind& wind(const sf::Vector2i &point);
-    const Wind& wind(const sf::Vector2i &point)const;
-    Force force(const sf::Vector2f &point);
+    //DrawWind& wind(int x, int y);
+    //const DrawWind& wind(int x, int y) const;
+    //DrawWind& wind(const sf::Vector2i &point);
+    //const DrawWind& wind(const sf::Vector2i &point)const;
+    //Force force(const sf::Vector2f &point);
 private:
-
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
     MapHeader m_header;
     float m_windDirection;
     int m_windStrength;
-    Wind* m_winds;
+    //DrawWind* m_winds;
 
 };
+*/
 
 #endif	/* WINDMAP_H */
 
