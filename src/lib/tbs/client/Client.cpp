@@ -129,7 +129,6 @@ void Client::gameLoop(sf::RenderWindow *window) {
 
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 window->close();
-                m_socket.disconnect();
             }
             if (event.type == sf::Event::KeyPressed) {
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
@@ -233,4 +232,6 @@ void Client::gameLoop(sf::RenderWindow *window) {
         window->display();
 
     }
+
+    m_socket.disconnect();
 }

@@ -15,10 +15,13 @@
             <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/shared/map/DrawWind.h</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/map/HeigthMap.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/map/Gradient.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/server/serverCheckpoint/ServerCheckpoint.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/ValueNoise.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/server/PathFinding.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/map/TileMap.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/Kinematics.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/server/Server.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/DisplayInfo.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/Client.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/server/PathFinding.h</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/server/Server.h</file>
@@ -29,6 +32,7 @@
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/ship/Helm.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/ship/Sail.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/Client.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/server/serverCheckpoint/ServerCheckpointManager.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/map/TileMap.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/shared/map/HeigthMap.h</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/map/DrawWind.cpp</file>
@@ -36,6 +40,7 @@
             <file>file:/home/remy/Documents/TheBestSailor/src/bin/client/tbs.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/ship/Ship.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/map/WindMap.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/Force.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/server/ServerWorld.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/shared/Force.h</file>
         </group>
