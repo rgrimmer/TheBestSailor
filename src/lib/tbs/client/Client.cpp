@@ -12,6 +12,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 #include <SFML/Window/Event.hpp>
+#include <complex>
 
 #include "shared/Utils.h"
 #include "client/map/Gradient.h"
@@ -41,6 +42,14 @@ bool squared = true;
     return packet;
 }
  */
+float degToRad(float x)
+{
+    return x / 180 * M_PI;
+}
+
+sf::Vector2f operator*(const sf::Vector2f &v1, const sf::Vector2f &v2) {
+    return sf::Vector2f(v1.x * v2.x, v1.y * v2.y);
+}
 
 Client::Client() {
     //            startPollEventThread();
@@ -178,9 +187,16 @@ void Client::gameLoop(sf::RenderWindow *window) {
         float timeLoop = clockGameLoop.getElapsedTime().asSeconds();
         clockGameLoop.restart();
 
+        sf::Vector2f CONSTANTE(1, 1);
         // Update ship
         m_ship.update(timeLoop);
-
+        sf::Vector2f moveForce = -m_ship.kinematics().speed();
+        sf::Vector2f windForce = m_wind->wind(static_cast<sf::Vector2i>(m_ship.getPosition())).getVector();
+        
+        sf::Vector2f ventApparent = windForce + moveForce; 
+        float angleSailWind = m_ship.sail().getAngleWith(ventApparent);
+        sf::Vector2f forceDePousser = CONSTANTE * ventApparent * ventApparent * sf::Vector2f(std::sin(degToRad(angleSailWind)), std::sin(degToRad(angleSailWind)));
+        m_ship.kinematics().acceleration() = forceDePousser * sf::Vector2f(0.00001, 0.00001);
 
         // Draw
 
@@ -220,6 +236,7 @@ void Client::gameLoop(sf::RenderWindow *window) {
         displayInfo.draw("Draw(ms)");
         displayInfo.draw("HeightMap : " + std::to_string(timeDrawHeightMap.asMilliseconds()));
         displayInfo.draw("WindMap : " + std::to_string(timeDrawWindMap.asMilliseconds()));
+        displayInfo.draw("Force : " + std::to_string(forceDePousser.x) + " " + std::to_string(forceDePousser.y));
 
 
         if (clockFPS.getElapsedTime().asSeconds() >= 1) {

@@ -21,6 +21,7 @@ public:
     inline const sf::Vector2f& speed(void) const { return m_speed; }
     inline  sf::Vector2f& position(void) { return m_position; }
     inline const sf::Vector2f& position(void) const { return m_position; }
+    sf::Vector2f direction(void) const;
     
     void update(float dt);
 

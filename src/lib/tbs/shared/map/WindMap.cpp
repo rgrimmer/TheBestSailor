@@ -11,6 +11,9 @@
 
 #include "shared/ValueNoise.h"
 
+const int WindMap::maxStrength = 150;
+const int WindMap::minStrength = 30;
+
 WindMap::WindMap() : m_header(MapHeader(0,0)), m_container(NULL) {
 
 }
@@ -26,10 +29,10 @@ WindMap::WindMap(const MapHeader &header) {
 
     ValueNoise::GenerateValues(getSeed());
 
-    m_container = new float*[height];
+    m_container = new Wind*[height];
 
     for (int i = 0; i < height; ++i) {
-        m_container[i] = new float[width];
+        m_container[i] = new Wind[width];
     }
 
     float invWidth = 1.f / width, invHeight = 1.f / height;
@@ -37,10 +40,9 @@ WindMap::WindMap(const MapHeader &header) {
     for (int i = 0; i < width; ++i) {
         for (int j = 0; j < height; ++j) {
             sf::Vector2f pnoise(i * invWidth, j * invHeight);
-            pnoise.x *= 20.0f;
-            pnoise.y *= 20.0f;
-            float n = ValueNoise::Eval(pnoise);
-            m_container[i][j] = n*360.0f;
+            float nDirection = ValueNoise::Eval(sf::Vector2f(pnoise.x*20.0f, pnoise.y * 20.0f));
+            float nForce = ValueNoise::Eval(sf::Vector2f(pnoise.x*15.0f, pnoise.y * 15.0f));
+            m_container[i][j] = Wind(nDirection*360.0f, nForce * (maxStrength - minStrength) + minStrength);
         }
     }
 }

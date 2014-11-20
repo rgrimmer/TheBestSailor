@@ -23,6 +23,7 @@ public:
     inline Kinematics& kinematics() { return m_kinematics; }
     inline const Kinematics& kinematics() const { return m_kinematics; }
     inline Helm& helm() {return m_helm; }
+    inline Sail& sail() { return m_sail; }
     void advance(float speed);
     void update(float dt);
     

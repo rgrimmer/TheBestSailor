@@ -5,8 +5,8 @@
  * Created on 28 octobre 2014, 23:06
  */
 
-#ifndef WIND_H
-#define	WIND_H
+#ifndef DRAWWIND_H
+#define	DRAWWIND_H
 
 #include <SFML/Graphics.hpp>
 #include "shared/Utils.h"
@@ -25,5 +25,5 @@ private:
     sf::VertexArray m_vertices;
 };
 
-#endif	/* WIND_H */
+#endif	/* DRAWWIND_H */
 

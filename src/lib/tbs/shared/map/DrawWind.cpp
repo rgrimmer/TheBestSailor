@@ -27,11 +27,12 @@ void DrawWind::load(const WindMap &map) {
 
             // define its 3 corners
             triangle[0].position = sf::Vector2f(i * TILE_SIZE, j * TILE_SIZE);
-            
-            float cos1 = std::cos((map(i,j) + 10.0f) * 3.1415f / 180.0f);
-            float sin1 = std::sin((map(i,j) + 10.0f) * 3.1415f / 180.0f);
-            float cos2 = std::cos((map(i,j) - 10.0f) * 3.1415f / 180.0f);
-            float sin2 = std::sin((map(i,j) - 10.0f) * 3.1415f / 180.0f);
+//            Wind wind = map(i,j).direction();
+            float wind = 0;
+            float cos1 = std::cos((wind + 10.0f) * 3.1415f / 180.0f);
+            float sin1 = std::sin((wind + 10.0f) * 3.1415f / 180.0f);
+            float cos2 = std::cos((wind - 10.0f) * 3.1415f / 180.0f);
+            float sin2 = std::sin((wind - 10.0f) * 3.1415f / 180.0f);
             
             sf::Vector2f pos1 = triangle[0].position + sf::Vector2f(TILE_SIZE*cos1,TILE_SIZE*sin1);
             sf::Vector2f pos2 = triangle[0].position + sf::Vector2f(TILE_SIZE*cos2,TILE_SIZE*sin2);
