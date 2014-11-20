@@ -146,9 +146,9 @@ void Client::gameLoop(sf::RenderWindow *window) {
                     zoomValue -= 1.0f;
                     currentView = sf::View(sf::FloatRect(posView.x, posView.y, SCREEN_WIDTH * zoomValue, SCREEN_HEIGHT * zoomValue));
                 } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
-                    m_ship.helm().turn(0.5f);
+                    m_ship.getSail()->setAngle(m_ship.getSail()->getAngle() - 5.0f);
                 } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
-                    m_ship.helm().turn(-0.5f);
+                    m_ship.getSail()->setAngle(m_ship.getSail()->getAngle() + 5.0f);
                 } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
                     m_ship.advance(1.0f);
                 } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {

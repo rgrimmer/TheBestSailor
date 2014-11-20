@@ -21,9 +21,11 @@
             <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/client/map/TileMap.h</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/Kinematics.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/server/Server.cpp</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/shared/ship/Ship.h</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/DisplayInfo.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/Client.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/server/PathFinding.h</file>
+            <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/shared/ship/Sail.h</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/include/tbs/server/Server.h</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/client/gamestate/GameState.cpp</file>
             <file>file:/home/remy/Documents/TheBestSailor/src/lib/tbs/shared/map/MapHeader.cpp</file>

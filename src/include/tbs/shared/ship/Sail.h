@@ -8,12 +8,27 @@
 #ifndef SAIL_H
 #define	SAIL_H
 
-class Sail {
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Drawable.hpp>
+
+class Sail : public sf::Drawable {
 public:
     Sail();
     virtual ~Sail();
-private:
+    
+    void update(float dt);
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
+public:
+
+    void setPosition(const sf::Vector2f & pos);
+    void setAngle(float angle);
+    float getAngle(void) const;
+    
+private:
+    sf::RectangleShape m_line;
+    float m_angle;
+    sf::Vector2f m_position;
 };
 
 #endif	/* SAIL_H */

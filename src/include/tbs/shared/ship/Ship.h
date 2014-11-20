@@ -12,6 +12,7 @@
 #include "Sail.h"
 #include "shared/Kinematics.h"
 
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 
@@ -26,16 +27,16 @@ public:
     void advance(float speed);
     void update(float dt);
     
+    Sail* getSail(void);
+    
 private:
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
+    sf::RectangleShape m_shape;
     Helm m_helm;
-    Sail m_sail;
+    Sail* m_sail;
     Kinematics m_kinematics;
-    
-    
-
 };
 
 #endif	/* SHIP_H */
