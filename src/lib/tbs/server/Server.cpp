@@ -93,5 +93,8 @@ void Server::waitConnections() {
            
     }
     listener.close();
+    for(int i=0 ; i < m_clientsCount ; ++i) {
+        m_clients[i].disconnect();
+    }
 
 }

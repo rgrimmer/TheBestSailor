@@ -15,10 +15,13 @@ public:
     Helm(Kinematics &kinematics);
     virtual ~Helm();
     
+    inline float& angle() { return m_angle; }
+    inline float angle() const { return m_angle; }
     void turn(float angle);
     
     
 private:
+    float m_angle;
     Kinematics &m_kinematics;
 
 };

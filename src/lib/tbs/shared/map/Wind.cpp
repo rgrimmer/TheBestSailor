@@ -25,7 +25,7 @@ float& Wind::force() {
 }
 
 sf::Vector2f Wind::getVector() const {
-    float rad = m_direction / 180 * M_PI;
+    float rad = (m_direction - 180) / 180 * M_PI;
     return sf::Vector2f(cos(rad) * m_force, sin(rad) * m_force);
 }
 

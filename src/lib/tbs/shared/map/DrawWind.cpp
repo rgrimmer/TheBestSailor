@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include "shared/map/DrawWind.h"
+#include <math.h>
 
 void DrawWind::load(const WindMap &map) {
 
@@ -28,21 +29,24 @@ void DrawWind::load(const WindMap &map) {
             // define its 3 corners
             triangle[0].position = sf::Vector2f(i * TILE_SIZE, j * TILE_SIZE);
 //            Wind wind = map(i,j).direction();
-            float wind = 0;
-            float cos1 = std::cos((wind + 10.0f) * 3.1415f / 180.0f);
-            float sin1 = std::sin((wind + 10.0f) * 3.1415f / 180.0f);
-            float cos2 = std::cos((wind - 10.0f) * 3.1415f / 180.0f);
-            float sin2 = std::sin((wind - 10.0f) * 3.1415f / 180.0f);
+            Wind wind = map.wind(i,j);
+            float windDir = wind.direction();
+            float cos1 = std::cos((windDir + 15.0f) * M_PI / 180.0f);
+            float sin1 = std::sin((windDir + 15.0f) * M_PI / 180.0f);
+            float cos2 = std::cos((windDir - 15.0f) * M_PI / 180.0f);
+            float sin2 = std::sin((windDir - 15.0f) * M_PI / 180.0f);
             
-            sf::Vector2f pos1 = triangle[0].position + sf::Vector2f(TILE_SIZE*cos1,TILE_SIZE*sin1);
-            sf::Vector2f pos2 = triangle[0].position + sf::Vector2f(TILE_SIZE*cos2,TILE_SIZE*sin2);
+            sf::Vector2f pos1 = triangle[0].position + sf::Vector2f(TILE_SIZE/1.5f*cos1,TILE_SIZE/1.5f*sin1);
+            sf::Vector2f pos2 = triangle[0].position + sf::Vector2f(TILE_SIZE/1.5f*cos2,TILE_SIZE/1.5f*sin2);
             
             triangle[1].position = pos1;
             triangle[2].position = pos2;
 
-            triangle[0].color = sf::Color(100, 255, 255, 255);
-            triangle[1].color = sf::Color(255, 100, 255, 255);
-            triangle[2].color = sf::Color(255, 255, 100, 255);
+            int valTrans = 255 * (wind.force() - WindMap::minStrength) / (WindMap::maxStrength - WindMap::minStrength);
+//            int valTrans = 255;
+            triangle[0].color = sf::Color(255, 255, 255, valTrans);
+            triangle[1].color = sf::Color(255, 255, 255, valTrans);
+            triangle[2].color = sf::Color(255, 255, 255, valTrans);
         }
     }
 }

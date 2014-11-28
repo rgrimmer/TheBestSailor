@@ -15,6 +15,9 @@ public:
     Kinematics();
     virtual ~Kinematics();
     
+    static sf::Vector2f vectorDir(float angle);
+    static float norme(const sf::Vector2f &vector);
+    static sf::Vector2f pourcentage(const sf::Vector2f &vector);
     inline sf::Vector2f& acceleration(void) { return m_acceleration; }
     inline const sf::Vector2f& acceleration(void) const { return m_acceleration; }
     inline sf::Vector2f& speed(void) { return m_speed; }
