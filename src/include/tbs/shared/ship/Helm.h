@@ -9,8 +9,9 @@
 #define	HELM_H
 
 #include "shared/Kinematics.h"
+#include <SFML/Graphics/Drawable.hpp>
 
-class Helm {
+class Helm : public sf::Drawable{
 public:
     Helm(Kinematics &kinematics);
     virtual ~Helm();
@@ -19,6 +20,10 @@ public:
     inline float angle() const { return m_angle; }
     void turn(float angle);
     
+    void update(float dt);
+    
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
     
 private:
     float m_angle;

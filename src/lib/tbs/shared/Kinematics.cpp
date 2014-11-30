@@ -6,7 +6,6 @@
  */
 
 #include <cstdlib>
-#include <cmath>
 #include <complex>
 #include "shared/Kinematics.h"
 
@@ -29,19 +28,17 @@ sf::Vector2f Kinematics::direction() const {
     return sf::Vector2f(m_speed.x / orme, m_speed.y/orme);
 }
 
-float Kinematics::norme(const sf::Vector2f &vector) {
-    return std::sqrt(vector.x * vector.x + vector.y * vector.y);
-}
+// Template : in header
+//float Kinematics::norme(const sf::Vector2<T> &vector);
 
-sf::Vector2f Kinematics::pourcentage(const sf::Vector2f& vector) {
-    float sum = std::abs(vector.x) + std::abs(vector.y);
-    if(sum == 0.0f)
-        return sf::Vector2f(0.5f, 0.5f);
-    else
-        return sf::Vector2f(vector.x / sum, vector.y / sum);
-}
+//sf::Vector2f Kinematics::pourcentage(const sf::Vector2f& vector) {
+//    float sum = std::abs(vector.x) + std::abs(vector.y);
+//    if(sum == 0.0f)
+//        return sf::Vector2f(0.5f, 0.5f);
+//    else
+//        return sf::Vector2f(vector.x / sum, vector.y / sum);
+//}
 
 sf::Vector2f Kinematics::vectorDir(float angleRad) {
-    // @TODO
     return sf::Vector2f(std::cos(angleRad),std::sin(angleRad));
 }

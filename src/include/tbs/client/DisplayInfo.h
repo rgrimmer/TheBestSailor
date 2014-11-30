@@ -9,10 +9,11 @@
 #define	DISPLAYINFO_H
 
 #include <SFML/Graphics/RenderWindow.hpp>
+#include "shared/Font.h"
 
 class DisplayInfo {
 public:
-    DisplayInfo(sf::RenderWindow *window, const sf::Font *font);
+    DisplayInfo(sf::RenderWindow *window);
     virtual ~DisplayInfo();
     
     void setTopLeftPosition(const sf::Vector2f &position);
@@ -21,7 +22,6 @@ public:
 
 private:
     
-    const sf::Font *m_font;
     sf::RenderWindow *m_window;
     sf::RenderStates m_states;
     float m_zoom;

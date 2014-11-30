@@ -8,16 +8,25 @@
 #ifndef KINEMATICS_H
 #define	KINEMATICS_H
 
+#include <cmath>
 #include <SFML/System/Vector2.hpp>
 
 class Kinematics {
 public:
     Kinematics();
     virtual ~Kinematics();
+    template <typename T>
+    static T degToRad(T deg) { return deg / 180.0 * M_PI; }
+    template <typename T>
+    static T radToDeg(T rad) { return rad * 180.0 / M_PI; }
+    template <typename T>
+    static float norme(const sf::Vector2<T> &vector) {return std::sqrt(vector.x * vector.x + vector.y * vector.y);}
+    template <typename T>
+    static T direction(const sf::Vector2<T> vector) { return Kinematics::radToDeg(std::atan(vector.y/vector.x)); }
     
     static sf::Vector2f vectorDir(float angle);
-    static float norme(const sf::Vector2f &vector);
-    static sf::Vector2f pourcentage(const sf::Vector2f &vector);
+//    static sf::Vector2f pourcentage(const sf::Vector2f &vector);
+    
     inline sf::Vector2f& acceleration(void) { return m_acceleration; }
     inline const sf::Vector2f& acceleration(void) const { return m_acceleration; }
     inline sf::Vector2f& speed(void) { return m_speed; }

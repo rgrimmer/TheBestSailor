@@ -13,13 +13,15 @@
 //#include <thread>
 #include <SFML/System/Thread.hpp>
 
+#include "client/ship/DrawShip.h"
+#include "client/map/TileMap.h"
+
+
 #include "shared/map/WindMap.h"
 #include "shared/ship/Ship.h"
 #include "shared/map/MapHeader.h"
-#include "client/map/TileMap.h"
 #include "shared/map/DrawWind.h"
 #include "shared/map/HeigthMap.h"
-
 class Client {
 public:
     Client();
@@ -34,11 +36,16 @@ private:
 
     HeigthMap* m_map;
     WindMap* m_wind;
-    DrawWind m_windView;
     TileMap m_mapView;
     Ship m_ship;
     bool m_enableWind;
     bool m_enableFolowCamera;
+    bool m_enablePause;
+    float m_timeSpeed;
+    
+    // Graphic
+    DrawShip m_shipView;
+    DrawWind m_windView;
 
 };
 

@@ -12,10 +12,7 @@
 #include "Sail.h"
 #include "shared/Kinematics.h"
 
-#include <SFML/Graphics/Transformable.hpp>
-#include <SFML/Graphics/Drawable.hpp>
-
-class Ship : public sf::Drawable, public sf::Transformable {
+class Ship {
 public:
     Ship();
     virtual ~Ship();
@@ -23,20 +20,18 @@ public:
     inline Kinematics& kinematics() { return m_kinematics; }
     inline const Kinematics& kinematics() const { return m_kinematics; }
     inline Helm& helm() {return m_helm; }
-    inline Sail& sail() { return m_sail; }
-    void advance(float speed);
+    inline Sail& sail() { return *m_sail; }
+    inline const Sail& sail() const { return *m_sail; }
     void update(float dt);
+    
+    Sail* getSail(void);
     
 private:
 
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-
     Helm m_helm;
-    Sail m_sail;
+    Sail* m_sail;
     Kinematics m_kinematics;
     
-    
-
 };
 
 #endif	/* SHIP_H */

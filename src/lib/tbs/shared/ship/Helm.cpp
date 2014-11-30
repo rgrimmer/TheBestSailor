@@ -22,3 +22,13 @@ void Helm::turn(float angle) {
     m_kinematics.speed().y = m_kinematics.speed().x * std::sin(angle)  + m_kinematics.speed().y * std::cos(angle);
 //        m_kinematics.speed() += m_kinematics.speed() * sf::Vector2f(std::cos(angle),std::sin(angle)) ;
 }
+
+void Helm::update(float dt) {
+    
+}
+
+void Helm::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+    // Relative from ship direction
+    
+}
+

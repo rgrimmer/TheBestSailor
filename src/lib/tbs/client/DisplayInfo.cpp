@@ -9,8 +9,8 @@
 
 #include "client/DisplayInfo.h"
 
-DisplayInfo::DisplayInfo(sf::RenderWindow* window, const sf::Font* font) :
-m_window(window), m_font(font), m_zoom(1.0f) {
+DisplayInfo::DisplayInfo(sf::RenderWindow* window) :
+m_window(window), m_zoom(1.0f) {
 }
 
 DisplayInfo::~DisplayInfo() {
@@ -26,7 +26,7 @@ void DisplayInfo::zoom(float zoom) {
 
 void DisplayInfo::draw(const std::string &text) {
     
-    sf::Text sfText(text, *m_font, 20 * m_zoom);
+    sf::Text sfText(text, Font::getFont(), 20 * m_zoom);
     m_window->draw(sfText, m_states);
     m_states.transform.translate(0,sfText.getCharacterSize() + 2);
 }
