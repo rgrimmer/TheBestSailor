@@ -9,22 +9,11 @@
 #include <unistd.h>
 #include <vector>
 #include <ctime>
+#include <thread>
 
 #include "server/Server.h"
+
 #include "shared/Utils.h"
-
-/*sf::Packet& operator<<(sf::Packet &packet, const MapHeader &header) {
-    int mapWidth = header.getWidth();
-    int mapHeight = header.getHeight();
-    int mapSeed = header.getSeed();
-
-    // @TODO check syntaxe of cast
-    packet << (sf::Int32) mapWidth
-            << (sf::Int32) mapHeight
-            << (sf::Int32) mapSeed
-            ;
-    return packet;
-}*/
 
 Server::Server() {
 }
@@ -33,68 +22,79 @@ Server::~Server() {
 
 }
 
-void Server::start() {
-    srand(time(NULL));
-    m_clientsCount = 0;
-    m_world.initialize();
-    waitConnections();
+void Server::receive(ServerUDPManager& udpManager, SynchronizedQueue<sf::Packet>& inQueue) {
+    std::cout << "receive thread started" << std::endl;
+    while (true) {
+        sf::Packet packet = udpManager.receive();
+        if (packet.getDataSize() > 0) {
+            inQueue.push(packet);
+        }
+    }
+    std::cout << "receive thread ended" << std::endl;
 }
 
-void Server::waitConnections() {
-    sf::SocketSelector selector;
-    sf::TcpListener listener;
-    bool stay = true;
-    
-    // bind the listener to a port
-    if (listener.listen(SERVER_PORT) != sf::Socket::Done) {
-        std::cout << "Error listen" << std::endl;
-        return;
+void Server::start() {
+    srand(time(NULL));
+
+    m_map = new HeigthMap(MapHeader(NB_TILES_WIDTH, NB_TILES_HEIGHT, rand()));
+    std::cout << "map created" << std::endl;
+
+    sf::Packet packet;
+    packet << m_map->getWidth() << m_map->getHeight() << m_map->getSeed();
+
+    m_tcpManager.initialize(SERVER_PORT_TCP);
+    m_tcpManager.waitConnections(packet, m_players);
+
+    m_udpManager.initialize(SERVER_PORT_UDP);
+
+    //send player list to others
+    sf::Packet playersList;
+
+    playersList << static_cast<sf::Uint8> (m_players.size());
+
+    for (ServerPlayer* p : m_players) {
+        playersList << p->getName();
     }
 
-    selector.add(listener);
-    
-    while (stay) {
-        stay = false;
-        
-        if (selector.wait(sf::seconds(5.0f))) {
-            stay = true;
-            for (int i = 0; i < m_clientsCount; ++i) {
+    std::cout << "send players list to all players.........." << std::endl;
+    for (ServerPlayer* p : m_players) {
+        m_tcpManager.send(playersList, p->getTCPSocket());
+    }
 
-                if (selector.isReady(m_clients[i])) {
-                    sf::Packet packetRecv;
-                    sf::TcpSocket::Status s = m_clients[i].receive(packetRecv);
-                    sf::Packet packet = m_world.getMapPacket();
-                    
-                    if (s == sf::TcpSocket::Disconnected) {
-                        std::cout << "player disconnected" << std::endl;
-                        selector.remove(m_clients[i]);
-                    }
-                    else if (s == sf::TcpSocket::Error) {
-                        std::cout << "Error recv" << std::endl;
-                        return;
-                    }
-                    else {
-                        m_clients[i].send(packet);
-                    }
-                }
-            }
+    std::cout << "receiving udp port of all players.........." << std::endl;
+    //receiving an ident msg from other players
+    for (ServerPlayer* p : m_players) {
+        sf::Packet resp = m_udpManager.receive();
+        unsigned short int port;
+        resp >> port;
+        std::cout << "port : " << port << std::endl;
+        p->setUdpPort(port);
+    }
 
-            if (m_clientsCount < NB_CLIENT_MAX && selector.isReady(listener)) {
-                if (listener.accept(m_clients[m_clientsCount]) != sf::Socket::Done) {
-                    std::cout << "Error accept" << std::endl;
-                    return;
-                }
 
-                std::cout << "new player connected" << std::endl;
-                selector.add(m_clients[m_clientsCount]);
-                m_clientsCount++;
+    std::thread receiver(&receive, std::ref(m_udpManager), std::ref(m_inQueue));
+
+    while (true) {
+
+        //update
+
+        if (!m_inQueue.empty()) {
+            m_inQueue.pop();
+
+            std::cout << "receiving msg from client.........." << std::endl;
+            sf::Packet packet;
+            packet << 0;
+
+            for (ServerPlayer* p : m_players) {
+                std::cout << " sending resp to : " << p->getAddress() << " port = " << p->getUdpPort() << std::endl;
+                m_udpManager.send(packet, p->getAddress(), p->getUdpPort());
             }
         }
-           
     }
-    listener.close();
-    for(int i=0 ; i < m_clientsCount ; ++i) {
-        m_clients[i].disconnect();
+    
+    for (ServerPlayer* p : m_players) {
+        delete p;
     }
-
+    
+    m_players.empty();
 }

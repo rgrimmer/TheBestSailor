@@ -22,33 +22,52 @@
               <in>Gradient.h</in>
               <in>TileMap.h</in>
             </df>
+            <df name="network">
+              <in>ClientTCPManager.h</in>
+              <in>ClientUDPManager.h</in>
+            </df>
+            <df name="ship">
+              <in>DrawShip.h</in>
+            </df>
             <in>Client.h</in>
+            <in>ClientPlayer.h</in>
             <in>DisplayInfo.h</in>
+            <in>VectorView.h</in>
           </df>
           <df name="server">
+            <df name="network">
+              <in>ServerTCPManager.h</in>
+              <in>ServerUDPManager.h</in>
+            </df>
             <df name="serverCheckpoint">
               <in>ServerCheckpoint.h</in>
               <in>ServerCheckpointManager.h</in>
             </df>
             <in>PathFinding.h</in>
             <in>Server.h</in>
-            <in>ServerWorld.h</in>
+            <in>ServerPlayer.h</in>
           </df>
           <df name="shared">
             <df name="map">
               <in>DrawWind.h</in>
               <in>HeigthMap.h</in>
               <in>MapHeader.h</in>
+              <in>Wind.h</in>
               <in>WindMap.h</in>
+            </df>
+            <df name="network">
+              <in>Requests.h</in>
             </df>
             <df name="ship">
               <in>Helm.h</in>
               <in>Sail.h</in>
               <in>Ship.h</in>
             </df>
+            <in>Font.h</in>
             <in>Force.h</in>
             <in>Kinematics.h</in>
             <in>Rand.h</in>
+            <in>SynchronizedQueue.h</in>
             <in>Utils.h</in>
             <in>ValueNoise.h</in>
           </df>
@@ -66,16 +85,30 @@
               <in>Gradient.cpp</in>
               <in>TileMap.cpp</in>
             </df>
+            <df name="network">
+              <in>ClientTCPManager.cpp</in>
+              <in>ClientUDPManager.cpp</in>
+            </df>
+            <df name="ship">
+              <in>DrawShip.cpp</in>
+            </df>
             <in>Client.cpp</in>
+            <in>ClientPlayer.cpp</in>
             <in>DisplayInfo.cpp</in>
+            <in>VectorView.cpp</in>
           </df>
           <df name="server">
+            <df name="network">
+              <in>ServerTCPManager.cpp</in>
+              <in>ServerUDPManager.cpp</in>
+            </df>
             <df name="serverCheckpoint">
               <in>ServerCheckpoint.cpp</in>
               <in>ServerCheckpointManager.cpp</in>
             </df>
             <in>PathFinding.cpp</in>
             <in>Server.cpp</in>
+            <in>ServerPlayer.cpp</in>
             <in>ServerWorld.cpp</in>
           </df>
           <df name="shared">
@@ -83,6 +116,7 @@
               <in>DrawWind.cpp</in>
               <in>HeigthMap.cpp</in>
               <in>MapHeader.cpp</in>
+              <in>Wind.cpp</in>
               <in>WindMap.cpp</in>
             </df>
             <df name="ship">
@@ -90,6 +124,7 @@
               <in>Sail.cpp</in>
               <in>Ship.cpp</in>
             </df>
+            <in>Font.cpp</in>
             <in>Force.cpp</in>
             <in>Kinematics.cpp</in>
             <in>ValueNoise.cpp</in>

@@ -8,20 +8,23 @@
 #ifndef CLIENT_H
 #define	CLIENT_H
 
-#include <SFML/Network.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 //#include <thread>
 #include <SFML/System/Thread.hpp>
 
 #include "client/ship/DrawShip.h"
 #include "client/map/TileMap.h"
-
+#include "client/ClientPlayer.h"
+#include "client/network/ClientTCPManager.h"
+#include "client/network/ClientUDPManager.h"
 
 #include "shared/map/WindMap.h"
 #include "shared/ship/Ship.h"
 #include "shared/map/MapHeader.h"
 #include "shared/map/DrawWind.h"
 #include "shared/map/HeigthMap.h"
+#include "shared/SynchronizedQueue.h"
+
 class Client {
 public:
     Client();
@@ -29,11 +32,10 @@ public:
 
     void start(void);
 private:
+    static void receive(ClientUDPManager& udpManager, SynchronizedQueue<sf::Packet>& inQueue);
     void gameLoop(sf::RenderWindow *window);
     
 private:
-    sf::TcpSocket m_socket;
-
     HeigthMap* m_map;
     WindMap* m_wind;
     TileMap m_mapView;
@@ -43,9 +45,17 @@ private:
     bool m_enablePause;
     float m_timeSpeed;
     
+    ClientTCPManager m_tcpManager;
+    ClientUDPManager m_udpManager;
+    
     // Graphic
     DrawShip m_shipView;
     DrawWind m_windView;
+    
+    std::vector<ClientPlayer> m_otherPlayers;
+    std::string m_name;
+    
+    SynchronizedQueue<sf::Packet> m_inQueue;
 
 };
 

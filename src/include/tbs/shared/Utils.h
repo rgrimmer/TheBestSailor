@@ -8,7 +8,9 @@
 #ifndef UTILS_H
 #define	UTILS_H
 
-#define SERVER_PORT 6767
+#define SERVER_PORT_TCP 6767
+#define SERVER_PORT_UDP 6768
+
 #define NB_CLIENT_MAX 100
 
 #define SCREEN_WIDTH 1366

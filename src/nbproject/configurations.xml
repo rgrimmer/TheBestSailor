@@ -26,12 +26,17 @@
             <in>DisplayInfo.cpp</in>
           </df>
           <df name="server">
+            <df name="network">
+              <in>ServerTCPManager.cpp</in>
+              <in>ServerUDPManager.cpp</in>
+            </df>
             <df name="serverCheckpoint">
               <in>ServerCheckpoint.cpp</in>
               <in>ServerCheckpointManager.cpp</in>
             </df>
             <in>PathFinding.cpp</in>
             <in>Server.cpp</in>
+            <in>ServerPlayer.cpp</in>
             <in>ServerWorld.cpp</in>
           </df>
           <df name="shared">
@@ -108,6 +113,7 @@
           </incDir>
           <preprocessorList>
             <Elem>tbs0_EXPORTS</Elem>
+            <Elem>tbs_server0_EXPORTS</Elem>
             <Elem>tbs_shared0_EXPORTS</Elem>
           </preprocessorList>
         </ccTool>
@@ -127,6 +133,22 @@
           </preprocessorList>
         </ccTool>
       </folder>
+      <folder path="0/lib/tbs/client/gamestate">
+        <ccTool>
+          <preprocessorList>
+            <Elem>tbs_server0_EXPORTS</Elem>
+            <Elem>tbs_shared0_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/lib/tbs/client/map">
+        <ccTool>
+          <preprocessorList>
+            <Elem>tbs_server0_EXPORTS</Elem>
+            <Elem>tbs_shared0_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
       <folder path="0/lib/tbs/server">
         <ccTool>
           <preprocessorList>
@@ -134,59 +156,85 @@
           </preprocessorList>
         </ccTool>
       </folder>
+      <folder path="0/lib/tbs/server/serverCheckpoint">
+        <ccTool>
+          <preprocessorList>
+            <Elem>tbs0_EXPORTS</Elem>
+            <Elem>tbs_shared0_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
       <folder path="0/lib/tbs/shared">
         <ccTool>
           <preprocessorList>
+            <Elem>tbs0_EXPORTS</Elem>
+            <Elem>tbs_server0_EXPORTS</Elem>
             <Elem>tbs_shared0_EXPORTS</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
       <item path="lib/tbs/client/Client.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
       </item>
       <item path="lib/tbs/client/DisplayInfo.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="1">
+          <preprocessorList>
+            <Elem>tbs_server0_EXPORTS</Elem>
+            <Elem>tbs_shared0_EXPORTS</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="lib/tbs/client/gamestate/GameState.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
       </item>
       <item path="lib/tbs/client/gamestate/GameStateMainMenu.cpp"
             ex="false"
             tool="1"
             flavor2="8">
+      </item>
+      <item path="lib/tbs/client/gamestate/GameStateManager.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="lib/tbs/client/map/Gradient.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="lib/tbs/client/map/TileMap.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="lib/tbs/server/PathFinding.cpp" ex="false" tool="1" flavor2="8">
+        <ccTool flags="1">
+          <preprocessorList>
+            <Elem>tbs0_EXPORTS</Elem>
+            <Elem>tbs_shared0_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="lib/tbs/server/Server.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="lib/tbs/server/ServerPlayer.cpp" ex="false" tool="1" flavor2="8">
         <ccTool flags="1">
         </ccTool>
       </item>
-      <item path="lib/tbs/client/gamestate/GameStateManager.cpp"
+      <item path="lib/tbs/server/ServerWorld.cpp" ex="false" tool="1" flavor2="4">
+        <ccTool>
+          <preprocessorList>
+            <Elem>tbs0_EXPORTS</Elem>
+            <Elem>tbs_shared0_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="lib/tbs/server/network/ServerTCPManager.cpp"
             ex="false"
             tool="1"
             flavor2="8">
         <ccTool flags="1">
         </ccTool>
       </item>
-      <item path="lib/tbs/client/map/Gradient.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="lib/tbs/client/map/TileMap.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="lib/tbs/server/PathFinding.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="lib/tbs/server/Server.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
-      </item>
-      <item path="lib/tbs/server/ServerWorld.cpp" ex="false" tool="1" flavor2="8">
+      <item path="lib/tbs/server/network/ServerUDPManager.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
         <ccTool flags="1">
         </ccTool>
       </item>
@@ -194,55 +242,31 @@
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
       </item>
       <item path="lib/tbs/server/serverCheckpoint/ServerCheckpointManager.cpp"
             ex="false"
             tool="1"
             flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
       </item>
       <item path="lib/tbs/shared/Force.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
       </item>
       <item path="lib/tbs/shared/Kinematics.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
       </item>
       <item path="lib/tbs/shared/ValueNoise.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
       </item>
       <item path="lib/tbs/shared/map/DrawWind.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
       </item>
       <item path="lib/tbs/shared/map/HeigthMap.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
       </item>
       <item path="lib/tbs/shared/map/MapHeader.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
       </item>
       <item path="lib/tbs/shared/map/WindMap.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
       </item>
       <item path="lib/tbs/shared/ship/Helm.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
       </item>
       <item path="lib/tbs/shared/ship/Sail.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
       </item>
       <item path="lib/tbs/shared/ship/Ship.cpp" ex="false" tool="1" flavor2="8">
-        <ccTool flags="1">
-        </ccTool>
       </item>
     </conf>
   </confs>
