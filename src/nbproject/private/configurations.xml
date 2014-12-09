@@ -20,10 +20,18 @@
             </df>
             <df name="map">
               <in>Gradient.h</in>
-              <in>TileMap.h</in>
+              <in>HeigthMapView.h</in>
+              <in>WindMapView.h</in>
+            </df>
+            <df name="ship">
+              <in>ShipView.h</in>
             </df>
             <in>Client.h</in>
+            <in>DetailsView.h</in>
             <in>DisplayInfo.h</in>
+            <in>EntityView.h</in>
+            <in>GlobalView.h</in>
+            <in>VectorView.h</in>
           </df>
           <df name="server">
             <df name="serverCheckpoint">
@@ -36,9 +44,9 @@
           </df>
           <df name="shared">
             <df name="map">
-              <in>DrawWind.h</in>
               <in>HeigthMap.h</in>
               <in>MapHeader.h</in>
+              <in>Wind.h</in>
               <in>WindMap.h</in>
             </df>
             <df name="ship">
@@ -46,6 +54,7 @@
               <in>Sail.h</in>
               <in>Ship.h</in>
             </df>
+            <in>Font.h</in>
             <in>Force.h</in>
             <in>Kinematics.h</in>
             <in>Rand.h</in>
@@ -64,10 +73,18 @@
             </df>
             <df name="map">
               <in>Gradient.cpp</in>
-              <in>TileMap.cpp</in>
+              <in>HeigthMapView.cpp</in>
+              <in>WindMapView.cpp</in>
+            </df>
+            <df name="ship">
+              <in>DrawShip.cpp</in>
+              <in>ShipView.cpp</in>
             </df>
             <in>Client.cpp</in>
+            <in>DetailsView.cpp</in>
             <in>DisplayInfo.cpp</in>
+            <in>GlobalView.cpp</in>
+            <in>VectorView.cpp</in>
           </df>
           <df name="server">
             <df name="serverCheckpoint">
@@ -80,9 +97,9 @@
           </df>
           <df name="shared">
             <df name="map">
-              <in>DrawWind.cpp</in>
               <in>HeigthMap.cpp</in>
               <in>MapHeader.cpp</in>
+              <in>Wind.cpp</in>
               <in>WindMap.cpp</in>
             </df>
             <df name="ship">
@@ -90,6 +107,7 @@
               <in>Sail.cpp</in>
               <in>Ship.cpp</in>
             </df>
+            <in>Font.cpp</in>
             <in>Force.cpp</in>
             <in>Kinematics.cpp</in>
             <in>ValueNoise.cpp</in>
@@ -141,7 +159,7 @@
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
         </runcommandpicklist>
         <runcommand>"${OUTPUT_PATH}"</runcommand>
-        <rundir>/home/maxence/NetBeansProjects/TheBestSailor/src/../build/bin/server</rundir>
+        <rundir>/home/maxence/NetBeansProjects/TheBestSailor/src/../build/bin/client</rundir>
         <buildfirst>false</buildfirst>
         <terminal-type>0</terminal-type>
         <remove-instrumentation>0</remove-instrumentation>
