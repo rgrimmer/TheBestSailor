@@ -9,6 +9,10 @@ ServerPlayer::~ServerPlayer() {
     
 }
 
+unsigned int ServerPlayer::getId() const {
+    return m_id;
+}
+
 void ServerPlayer::setUdpPort(unsigned short udpPort) {
     m_udpPort = udpPort;
 }

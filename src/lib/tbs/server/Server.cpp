@@ -53,6 +53,7 @@ void Server::start() {
     playersList << static_cast<sf::Uint8> (m_players.size());
 
     for (ServerPlayer* p : m_players) {
+        playersList << static_cast<sf::Uint8>(p->getId());
         playersList << p->getName();
     }
 
@@ -63,12 +64,9 @@ void Server::start() {
 
     std::cout << "receiving udp port of all players.........." << std::endl;
     //receiving an ident msg from other players
-    for (ServerPlayer* p : m_players) {
-        sf::Packet resp = m_udpManager.receive();
-        unsigned short int port;
-        resp >> port;
-        std::cout << "port : " << port << std::endl;
-        p->setUdpPort(port);
+    if (!m_udpManager.receiveIdentifyRequests(m_players)) {
+        std::cout << "Error receive identify request" << std::endl;
+        return;
     }
 
 
@@ -79,22 +77,21 @@ void Server::start() {
         //update
 
         if (!m_inQueue.empty()) {
-            m_inQueue.pop();
-
-            std::cout << "receiving msg from client.........." << std::endl;
+            sf::Packet packetReceived = m_inQueue.pop();
+            
             sf::Packet packet;
             packet << 0;
 
             for (ServerPlayer* p : m_players) {
-                std::cout << " sending resp to : " << p->getAddress() << " port = " << p->getUdpPort() << std::endl;
+                std::cout << " sending resp to : " << p->getName() << " port = " << p->getUdpPort() << std::endl;
                 m_udpManager.send(packet, p->getAddress(), p->getUdpPort());
             }
         }
     }
-    
+
     for (ServerPlayer* p : m_players) {
         delete p;
     }
-    
+
     m_players.empty();
 }

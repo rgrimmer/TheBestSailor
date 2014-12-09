@@ -19,6 +19,7 @@ public:
     sf::TcpSocket* getTCPSocket() const;
     sf::IpAddress getAddress() const;
     std::string getName() const;
+    unsigned int   getId() const;
     unsigned short getUdpPort() const;
     
 private:

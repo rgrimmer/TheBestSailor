@@ -41,11 +41,8 @@ sf::Vector2f operator/(const sf::Vector2f &v1, const sf::Vector2f &v2) {
     return sf::Vector2f(v1.x / v2.x, v1.y / v2.y);
 }
 
-#include <iostream>
-
-Client::Client() {
+Client::Client() : m_player(-1, "") {
     //            startPollEventThread();
-    m_name = "";
     m_enablePause = false;
     m_timeSpeed = 1.0f;
 }
@@ -65,8 +62,9 @@ void Client::receive(ClientUDPManager& udpManager, SynchronizedQueue<sf::Packet>
     std::cout << "receive thread ended" << std::endl;
 }
 
-void Client::start(void) {
+void Client::start(const std::string & name) {
 
+    m_player.setName(name);
     m_ship.kinematics().position() = posView;
 
     //init TCP MANAGER
@@ -77,9 +75,8 @@ void Client::start(void) {
 
     //send player name
     sf::Packet packet;
-    m_name = "toto"+std::to_string(rand() % 10000);
-    packet << static_cast<sf::Uint8> (REQ_NEW_PLAYER) << m_name;
-    std::cout << "sending player name : " << m_name << "............." << std::endl;
+    packet << static_cast<sf::Uint8> (REQ_NEW_PLAYER) << name;
+    std::cout << "sending player name : " << name << "............." << std::endl;
 
     if (!m_tcpManager.send(packet)) {
         std::cout << "Error send" << std::endl;
@@ -110,27 +107,37 @@ void Client::start(void) {
     std::cout << "receiving players list.........." << std::endl;
     playersPacket = m_tcpManager.receive();
 
-    int nbPlayers;
+    sf::Uint8 nbPlayers;
     playersPacket >> nbPlayers;
 
-    for (int i = 0; i < nbPlayers; ++i) {
-        std::string playerName;
-        playersPacket >> playerName;
-    m_enableFolowCamera = false;
+    int nbPlayersInt = static_cast<int> (nbPlayers);
 
-        if (playerName != m_name) {
-            m_otherPlayers.push_back(ClientPlayer(playerName));
+    std::cout << "players list (nbPlayer=" << nbPlayersInt << ")" << std::endl;
+    for (int i = 0; i < nbPlayersInt; ++i) {
+        sf::Uint8 id;
+        std::string playerName;
+
+        playersPacket >> id;
+        playersPacket >> playerName;
+
+        unsigned int idUInt = static_cast<unsigned int> (id);
+        m_enableFolowCamera = false;
+
+        if (playerName != name) {
+            m_otherPlayers.push_back(ClientPlayer(idUInt, playerName));
+        } else {
+            m_player.setId(idUInt);
         }
     }
 
     m_udpManager.initialize("localhost", SERVER_PORT_UDP);
 
     std::thread receiver(&receive, std::ref(m_udpManager), std::ref(m_inQueue));
-    
+
     //sending ident packet
     sf::Packet identPacket;
-    identPacket << static_cast<sf::Uint8>(REQ_IDENT);
-    std::cout << "sending ident packet............" << std::endl;
+    identPacket << static_cast<sf::Uint8> (m_player.getId());
+    std::cout << "sending ident packet id = " << m_player.getId() << std::endl;
     m_udpManager.send(identPacket);
 
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
@@ -152,7 +159,7 @@ void Client::gameLoop(sf::RenderWindow *window) {
 
     // Display info
 
-    
+
     DisplayInfo::setWindow(window);
 
     while (window->isOpen()) {
@@ -193,7 +200,8 @@ void Client::gameLoop(sf::RenderWindow *window) {
                     case sf::Keyboard::K:
                     {
                         sf::Packet packet;
-                        packet << static_cast<sf::Uint8> (REQ_ACTION_TURN_HELM) << 0.5f;
+                        packet << static_cast<sf::Uint8> (REQ_ACTION_TURN_HELM);
+                        packet << 0.5f;
                         m_udpManager.send(packet);
                         m_ship.helm().turn(0.5f);
                     }
@@ -201,7 +209,8 @@ void Client::gameLoop(sf::RenderWindow *window) {
                     case sf::Keyboard::M:
                     {
                         sf::Packet packet;
-                        packet << static_cast<sf::Uint8> (REQ_ACTION_TURN_HELM) << -0.5f;
+                        packet << static_cast<sf::Uint8> (REQ_ACTION_TURN_HELM);
+                        packet << -0.5f;
                         m_udpManager.send(packet);
                         m_ship.helm().turn(-0.5f);
                     }
@@ -264,39 +273,39 @@ void Client::gameLoop(sf::RenderWindow *window) {
 
         sf::Vector2f frottement(0.001f, 0.001f);
         sf::Vector2f apparentWind = windVector - shipVector;
-        
+
         float apparentWindDir = Kinematics::direction(apparentWind);
         float sailDir = Kinematics::degToRad(m_ship.sail().getAngle());
         float helmDir = Kinematics::degToRad(m_ship.helm().angle());
         float shipDir = Kinematics::degToRad(Kinematics::direction(m_ship.kinematics().speed()));
-        if(isnan(shipDir))
+        if (isnan(shipDir))
             shipDir = 0;
-        
-        float angleAlpha = 0.0f;    // @TODO angle ventApparent - voile
-//        float angleAlpha = 
-        float angleBeta = shipDir - sailDir;     // @TODO angle axe du bateau - voile 
-        
+
+        float angleAlpha = 0.0f; // @TODO angle ventApparent - voile
+        //        float angleAlpha = 
+        float angleBeta = shipDir - sailDir; // @TODO angle axe du bateau - voile 
+
         // Equation from https://www.ensta-bretagne.fr/jaulin/jaulincifa2004.pdf
 
         sf::Vector2f sailVector =
                 coefSail * (
-                windVector * std::cos(shipDir + angleBeta) 
+                windVector * std::cos(shipDir + angleBeta)
                 - shipVector * std::sin(shipDir)
                 );
-        
+
         sf::Vector2f helmVector = coefHelm * shipVector * std::sin(helmDir);
-        
-        sf::Vector2f forceDePousser1 = 
+
+        sf::Vector2f forceDePousser1 =
                 (sailVector * std::sin(angleBeta)
                 - helmVector * std::sin(helmDir)
                 - shipVector * frottement)
                 / 1.0f; // Masse
-        
+
         // Equation from wikipedia
         sf::Vector2f CONSTANTE(0.1f, 0.1f);
         float sinAB = std::sin(angleAlpha + angleBeta);
         sf::Vector2f forceDePousser2 = CONSTANTE * sinAB * angleAlpha - helmVector * std::sin(helmDir);
-        
+
         sf::Vector2f forceDePousser = forceDePousser1;
 
         m_ship.kinematics().acceleration() = forceDePousser /* Kinematics::vectorDir(degToRad(angleDirShip))*/;
@@ -307,7 +316,7 @@ void Client::gameLoop(sf::RenderWindow *window) {
         }
 
         // Draw
-        
+
         // Set view position
         if (m_enableFolowCamera) {
             currentView.setCenter(m_ship.kinematics().position());
@@ -315,7 +324,7 @@ void Client::gameLoop(sf::RenderWindow *window) {
             currentView.setCenter(posView);
         }
         window->setView(currentView);
-        
+
         // Draw view
         window->draw(*m_detailsView);
 
@@ -340,7 +349,7 @@ void Client::gameLoop(sf::RenderWindow *window) {
         DisplayInfo::draw("acc : " + std::to_string(m_ship.kinematics().acceleration().x) + " " + std::to_string(m_ship.kinematics().acceleration().y));
         DisplayInfo::draw("speed : " + std::to_string(m_ship.kinematics().speed().x) + " " + std::to_string(m_ship.kinematics().speed().y));
         DisplayInfo::draw("pos : " + std::to_string(m_ship.kinematics().position().x) + " " + std::to_string(m_ship.kinematics().position().y));
-//        DisplayInfo::draw("dir : " + std::to_string(dir.x) + " " + std::to_string(dir.y) + ". norme : " + std::to_string(Kinematics::norme(m_ship.kinematics().speed())));
+        //        DisplayInfo::draw("dir : " + std::to_string(dir.x) + " " + std::to_string(dir.y) + ". norme : " + std::to_string(Kinematics::norme(m_ship.kinematics().speed())));
 
         //DisplayInfo::draw("wind : " + m_windView.force(m_ship.getPosition()).toString());
 

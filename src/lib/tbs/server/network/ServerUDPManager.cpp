@@ -25,12 +25,59 @@ bool ServerUDPManager::send(sf::Packet packet, const sf::IpAddress & address, un
     return (status == sf::Socket::Done);
 }
 
+bool ServerUDPManager::receiveIdentifyRequests(std::vector<ServerPlayer*> players) {
+    unsigned int requestCount = 0;
+
+    while (requestCount < players.size()) {
+        sf::Packet packet;
+        sf::IpAddress senderAddress;
+        unsigned short senderPort;
+
+        if (m_socket.receive(packet, senderAddress, senderPort) != sf::Socket::Done) {
+            return false;
+        }
+
+
+        sf::Uint8 id=0;
+        packet >> id;
+        
+        std::cout << "PORT : " << senderPort << "ID : " << static_cast<int>(id) << std::endl;
+        
+        ServerPlayer* player = nullptr;
+
+        for (ServerPlayer* p : players) {
+            if (p->getId() == id) {
+                player = p;
+                break;
+            }
+        }
+
+        if (player != nullptr) {
+            player->setUdpPort(senderPort);
+        } else {
+            return false;
+        }
+
+        requestCount++;
+    }
+
+    return true;
+}
+
 sf::Packet ServerUDPManager::receive() {
     sf::Packet packet;
     sf::IpAddress senderAddress;
     unsigned short senderPort;
 
     if (m_socket.receive(packet, senderAddress, senderPort) != sf::Socket::Done) {
+        sf::Packet errorPacket;
+        errorPacket << -1;
+        return errorPacket;
+    }
+
+    return packet;
+
+    /*if (m_socket.receive(packet, senderAddress, senderPort) != sf::Socket::Done) {
         return packet;
     }
 
@@ -55,5 +102,5 @@ sf::Packet ServerUDPManager::receive() {
             return packet;
     }
 
-    return resp;
+    return resp;*/
 }

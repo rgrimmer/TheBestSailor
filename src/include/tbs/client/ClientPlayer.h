@@ -13,9 +13,16 @@
 class ClientPlayer {
     
 public:
-    ClientPlayer(std::string name);
+    ClientPlayer(const unsigned int id, const std::string & name);
     ~ClientPlayer();
+    
+    void setName(const std::string & name);
+    void setId(const unsigned int id);
+    std::string getName() const;
+    unsigned int getId() const;
+    
 private:
+    unsigned int m_id;
     std::string m_name;
 };
 
