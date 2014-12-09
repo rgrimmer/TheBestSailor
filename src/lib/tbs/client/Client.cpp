@@ -51,7 +51,7 @@ Client::Client() {
 }
 
 Client::~Client() {
-
+    delete m_detailsView;
 }
 
 void Client::receive(ClientUDPManager& udpManager, SynchronizedQueue<sf::Packet>& inQueue) {
@@ -63,8 +63,6 @@ void Client::receive(ClientUDPManager& udpManager, SynchronizedQueue<sf::Packet>
         }
     }
     std::cout << "receive thread ended" << std::endl;
-    delete m_detailsView;
-    m_socket.disconnect();
 }
 
 void Client::start(void) {
@@ -105,7 +103,6 @@ void Client::start(void) {
 
     m_detailsView = new DetailsView(*m_map, *m_wind, m_ship);
 
-    m_enableWind = true;
     m_enableFolowCamera = false;
 
     //receive players list

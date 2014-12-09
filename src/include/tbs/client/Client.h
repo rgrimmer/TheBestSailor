@@ -18,6 +18,10 @@
 #include "shared/ship/Ship.h"
 
 #include "client/DetailsView.h"
+
+#include "client/network/ClientTCPManager.h"
+#include "client/network/ClientUDPManager.h"
+#include "client/ClientPlayer.h"
 #include "shared/SynchronizedQueue.h"
 
 class Client {
@@ -38,17 +42,15 @@ private:
     bool m_enablePause;
     float m_timeSpeed;
     
+    std::string m_name;
+    
     ClientTCPManager m_tcpManager;
     ClientUDPManager m_udpManager;
     
-    // Graphic
-    DrawShip m_shipView;
-    DrawWind m_windView;
-    
     std::vector<ClientPlayer> m_otherPlayers;
-    std::string m_name;
-    
     SynchronizedQueue<sf::Packet> m_inQueue;
+    
+    // Graphic
     DetailsView* m_detailsView;
 //    HeigthMapView* m_mapView;
 //    WindMapView* m_windView;
