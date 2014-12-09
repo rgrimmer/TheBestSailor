@@ -14,7 +14,7 @@
 #include "shared/ship/Ship.h"
 #include "shared/Font.h"
 
-Ship::Ship() : m_helm(Helm(m_kinematics)) {
+Ship::Ship() {
     m_sail = new Sail();
 }
 

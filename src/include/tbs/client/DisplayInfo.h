@@ -13,18 +13,17 @@
 
 class DisplayInfo {
 public:
-    DisplayInfo(sf::RenderWindow *window);
-    virtual ~DisplayInfo();
+    static void setWindow(sf::RenderWindow *window);
     
-    void setTopLeftPosition(const sf::Vector2f &position);
-    void draw(const std::string &text);
-    void zoom(float zoom);
+    static void setTopLeftPosition(const sf::Vector2f &position);
+    static void draw(const std::string &text);
+    static void setZoom(float zoom);
 
 private:
     
-    sf::RenderWindow *m_window;
-    sf::RenderStates m_states;
-    float m_zoom;
+    static sf::RenderWindow *m_window;
+    static sf::RenderStates m_states;
+    static float m_zoom;
 
 };
 

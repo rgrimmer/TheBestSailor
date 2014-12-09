@@ -22,7 +22,15 @@ public:
     template <typename T>
     static float norme(const sf::Vector2<T> &vector) {return std::sqrt(vector.x * vector.x + vector.y * vector.y);}
     template <typename T>
-    static T direction(const sf::Vector2<T> vector) { return Kinematics::radToDeg(std::atan(vector.y/vector.x)); }
+    static T direction(const sf::Vector2<T> &vector) { 
+        float deg = Kinematics::radToDeg(std::atan(vector.y/vector.x));
+        if(std::signbit(vector.x))
+            deg += 180.0f;
+        else
+            if(std::signbit(vector.y))
+                deg += 360.0f;
+        return deg;
+    }
     
     static sf::Vector2f vectorDir(float angle);
 //    static sf::Vector2f pourcentage(const sf::Vector2f &vector);
@@ -33,7 +41,7 @@ public:
     inline const sf::Vector2f& speed(void) const { return m_speed; }
     inline  sf::Vector2f& position(void) { return m_position; }
     inline const sf::Vector2f& position(void) const { return m_position; }
-    sf::Vector2f direction(void) const;
+    float direction(void) const;
     
     void update(float dt);
 

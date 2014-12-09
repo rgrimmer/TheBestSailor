@@ -23,9 +23,8 @@ void Kinematics::update(float dt) {
     m_position += m_speed * dt;
 }
 
-sf::Vector2f Kinematics::direction() const {
-    float orme = norme(m_speed);
-    return sf::Vector2f(m_speed.x / orme, m_speed.y/orme);
+float Kinematics::direction() const {
+    return Kinematics::direction(m_speed);
 }
 
 // Template : in header

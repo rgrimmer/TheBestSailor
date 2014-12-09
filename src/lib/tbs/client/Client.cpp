@@ -56,13 +56,16 @@ sf::Vector2f operator/(const sf::Vector2f &v1, const sf::Vector2f &v2) {
     return sf::Vector2f(v1.x / v2.x, v1.y / v2.y);
 }
 
+#include <iostream>
+
 Client::Client() {
     //            startPollEventThread();
-    m_enablePause = false;
+    m_enablePause = true;
     m_timeSpeed = 1.0f;
 }
 
 Client::~Client() {
+    delete m_detailsView;
     m_socket.disconnect();
 }
 
@@ -83,8 +86,8 @@ void Client::start(void) {
     int height = 600;
     int seed = 123456;
 
-//    packet >> width >> height >> seed;
-//    std::cout << width << " " << height << " " << seed << std::endl;
+    packet >> width >> height >> seed;
+    std::cout << width << " " << height << " " << seed << std::endl;
 
     Gradient::initialize();
 
@@ -92,10 +95,7 @@ void Client::start(void) {
     m_map = new HeigthMap(MapHeader(height, width, seed));
     m_wind = new WindMap(MapHeader(height, width, seed));
 
-    //m_windView = WindMap(MapHeader(height, width, 0));
-    m_windView.load(*m_wind);
-    m_mapView.load(*m_map, true);
-    m_shipView.load(m_ship);
+    m_detailsView = new DetailsView(*m_map, *m_wind, m_ship);
 
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
 
@@ -103,7 +103,6 @@ void Client::start(void) {
     window.setKeyRepeatEnabled(true);
     currentView = window.getView();
 
-    m_enableWind = true;
     m_enableFolowCamera = false;
 
 
@@ -125,14 +124,13 @@ void Client::gameLoop(sf::RenderWindow *window) {
     sf::Clock clockGlobal;
     sf::Clock clockGameLoop;
     sf::Clock clockFPS;
-    sf::Clock clockDraw;
-    sf::Time timeDrawHeightMap, timeDrawWindMap;
     int countFram = 0;
     int fps = 0;
 
     // Display info
 
-    DisplayInfo displayInfo(window);
+    
+    DisplayInfo::setWindow(window);
 
     while (window->isOpen()) {
         window->clear();
@@ -160,26 +158,31 @@ void Client::gameLoop(sf::RenderWindow *window) {
                     case sf::Keyboard::Down:
                         posView.y += 500.0f;
                         break;
-                    case sf::Keyboard::A:
-                        zoomValue += 1.0f;
+                    case sf::Keyboard::Add:
+                        zoomValue *= 2.0f;
                         currentView = sf::View(sf::FloatRect(posView.x, posView.y, SCREEN_WIDTH * zoomValue, SCREEN_HEIGHT * zoomValue));
+                        break;
+                    case sf::Keyboard::Subtract:
+                        zoomValue /= 2.0f;
+                        currentView = sf::View(sf::FloatRect(posView.x, posView.y, SCREEN_WIDTH * zoomValue, SCREEN_HEIGHT * zoomValue));
+                        break;
+                    case sf::Keyboard::Q:
+                        m_ship.helm().turn(5.0f);
+                        break;
+                    case sf::Keyboard::D:
+                        m_ship.helm().turn(-5.0f);
                         break;
                     case sf::Keyboard::Z:
-                        zoomValue -= 1.0f;
-                        currentView = sf::View(sf::FloatRect(posView.x, posView.y, SCREEN_WIDTH * zoomValue, SCREEN_HEIGHT * zoomValue));
-                        break;
-                    case sf::Keyboard::K:
-                        m_ship.helm().turn(0.5f);
-                        break;
-                    case sf::Keyboard::M:
-                        m_ship.helm().turn(-0.5f);
+                        m_ship.sail().setAngle(m_ship.sail().getAngle() + 5.0f);
                         break;
                     case sf::Keyboard::S:
-                        squared = !squared;
-                        m_mapView.load(*m_map, squared);
+                        m_ship.sail().setAngle(m_ship.sail().getAngle() - 5.0f);
+                        break;
+                    case sf::Keyboard::A:
+                        m_detailsView->switchSquared();
                         break;
                     case sf::Keyboard::W:
-                        m_enableWind = !m_enableWind;
+                        m_detailsView->switchEnableWind();
                         break;
                     case sf::Keyboard::C:
                         m_enableFolowCamera = !m_enableFolowCamera;
@@ -199,13 +202,6 @@ void Client::gameLoop(sf::RenderWindow *window) {
             }
         }
 
-        // Set view position
-        if (m_enableFolowCamera) {
-            currentView.setCenter(m_ship.kinematics().position());
-        } else {
-            currentView.setCenter(posView);
-        }
-        window->setView(currentView);
 
 
         // Update
@@ -223,33 +219,39 @@ void Client::gameLoop(sf::RenderWindow *window) {
         sf::Vector2f coefHelm(1.0f, 1.0f);
         
         sf::Vector2f frottement(0.001f, 0.001f);
-        sf::Vector2f ventApparent = windVector - shipVector;
+        sf::Vector2f apparentWind = windVector - shipVector;
         
-        float angleAlpha = 10.0f;    // @TODO angle ventApparent - voile
+        float apparentWindDir = Kinematics::direction(apparentWind);
+        float sailDir = Kinematics::degToRad(m_ship.sail().getAngle());
+        float helmDir = Kinematics::degToRad(m_ship.helm().angle());
+        float shipDir = Kinematics::degToRad(Kinematics::direction(m_ship.kinematics().speed()));
+        if(isnan(shipDir))
+            shipDir = 0;
+        
+        float angleAlpha = 0.0f;    // @TODO angle ventApparent - voile
 //        float angleAlpha = 
-        float angleBeta = 10.0f;     // @TODO angle axe du bateau - voile 
-        float angleDirShip = 10.0f;
-        float angleHelm = 0.0f;
+        float angleBeta = shipDir - sailDir;     // @TODO angle axe du bateau - voile 
         
         // Equation from https://www.ensta-bretagne.fr/jaulin/jaulincifa2004.pdf
         
         sf::Vector2f sailVector = 
                 coefSail * (
-                windVector * std::cos(angleDirShip + angleBeta) 
-                - shipVector * std::sin(angleDirShip)
+                windVector * std::cos(shipDir + angleBeta) 
+                - shipVector * std::sin(shipDir)
                 );
         
-        sf::Vector2f helmVector = coefHelm * shipVector * std::sin(angleHelm);
+        sf::Vector2f helmVector = coefHelm * shipVector * std::sin(helmDir);
         
         sf::Vector2f forceDePousser1 = 
-                sailVector * std::sin(angleBeta)
-                - helmVector * std::sin(angleHelm)
-                - shipVector * frottement;
+                (sailVector * std::sin(angleBeta)
+                - helmVector * std::sin(helmDir)
+                - shipVector * frottement)
+                / 1.0f; // Masse
         
         // Equation from wikipedia
         sf::Vector2f CONSTANTE(0.1f, 0.1f);
         float sinAB = std::sin(angleAlpha + angleBeta);
-        sf::Vector2f forceDePousser2 = CONSTANTE * sf::Vector2f(sinAB, sinAB) * sf::Vector2f(angleAlpha, angleAlpha);
+        sf::Vector2f forceDePousser2 = CONSTANTE * sinAB * angleAlpha - helmVector * std::sin(helmDir);
         
         sf::Vector2f forceDePousser = forceDePousser1;
         
@@ -260,54 +262,51 @@ void Client::gameLoop(sf::RenderWindow *window) {
             m_ship.update(timeLoop*m_timeSpeed);
         }
 
-
-        // Draw heightMap
-        clockDraw.restart();
-        window->draw(m_mapView);
-        timeDrawHeightMap = clockDraw.getElapsedTime();
-
-        // Draw windMap
-        if (m_enableWind) {
-            clockDraw.restart();
-            window->draw(m_windView);
-            timeDrawWindMap = clockDraw.getElapsedTime();
-        }
+        // Draw
         
-        // Draw ship
-        window->draw(m_shipView);
+        // Set view position
+        if (m_enableFolowCamera) {
+            currentView.setCenter(m_ship.kinematics().position());
+        } else {
+            currentView.setCenter(posView);
+        }
+        window->setView(currentView);
+        
+        // Draw view
+        window->draw(*m_detailsView);
 
         // Draw vent apparent
-        VectorView<float> ventAppView(ventApparent, "Va", sf::Color::Green);
+        VectorView<float> ventAppView(apparentWind, "Va", sf::Color::Green);
         sf::Transform tApp;
         tApp.translate(m_ship.kinematics().position());
         window->draw(ventAppView, tApp);
 
 
         // Display information : 
-        displayInfo.zoom(zoomValue);
-        displayInfo.setTopLeftPosition(posView - sf::Vector2f(SCREEN_WIDTH / 2 * zoomValue, SCREEN_HEIGHT / 2 * zoomValue));
+        DisplayInfo::setZoom(zoomValue);
+        DisplayInfo::setTopLeftPosition(posView - sf::Vector2f(SCREEN_WIDTH / 2 * zoomValue, SCREEN_HEIGHT / 2 * zoomValue));
 
         // Clocks infos
-        displayInfo.draw(std::to_string(clockGlobal.getElapsedTime().asSeconds()));
-        displayInfo.draw("fps : " + std::to_string(fps));
+        DisplayInfo::draw(std::to_string(clockGlobal.getElapsedTime().asSeconds()));
+        DisplayInfo::draw("fps : " + std::to_string(fps));
 
         // Data infos
-        displayInfo.draw("ship :");
-        displayInfo.draw("acc : " + std::to_string(m_ship.kinematics().acceleration().x) + " " + std::to_string(m_ship.kinematics().acceleration().y));
-        displayInfo.draw("speed : " + std::to_string(m_ship.kinematics().speed().x) + " " + std::to_string(m_ship.kinematics().speed().y));
-        displayInfo.draw("pos : " + std::to_string(m_ship.kinematics().position().x) + " " + std::to_string(m_ship.kinematics().position().y));
-//        displayInfo.draw("dir : " + std::to_string(dir.x) + " " + std::to_string(dir.y) + ". norme : " + std::to_string(Kinematics::norme(m_ship.kinematics().speed())));
+        DisplayInfo::draw("ship :");
+        DisplayInfo::draw("ship :" + std::to_string(shipDir));
+        DisplayInfo::draw("acc : " + std::to_string(m_ship.kinematics().acceleration().x) + " " + std::to_string(m_ship.kinematics().acceleration().y));
+        DisplayInfo::draw("speed : " + std::to_string(m_ship.kinematics().speed().x) + " " + std::to_string(m_ship.kinematics().speed().y));
+        DisplayInfo::draw("pos : " + std::to_string(m_ship.kinematics().position().x) + " " + std::to_string(m_ship.kinematics().position().y));
+//        DisplayInfo::draw("dir : " + std::to_string(dir.x) + " " + std::to_string(dir.y) + ". norme : " + std::to_string(Kinematics::norme(m_ship.kinematics().speed())));
 
-        //displayInfo.draw("wind : " + m_windView.force(m_ship.getPosition()).toString());
+        //DisplayInfo::draw("wind : " + m_windView.force(m_ship.getPosition()).toString());
 
         // Draw infos
-        displayInfo.draw("Draw(ms)");
-        displayInfo.draw("HeightMap : " + std::to_string(timeDrawHeightMap.asMilliseconds()));
-        displayInfo.draw("WindMap : " + std::to_string(timeDrawWindMap.asMilliseconds()));
-        displayInfo.draw("Wind Direction/Force: " + std::to_string(wind.direction()) + " " + std::to_string(wind.force()));
-        displayInfo.draw("WindVector: " + std::to_string(windVector.x) + " " + std::to_string(windVector.y));
-        displayInfo.draw("VentApparent : " + std::to_string(ventApparent.x) + " " + std::to_string(ventApparent.y));
-        displayInfo.draw("ForceDePousser : " + std::to_string(forceDePousser.x) + " " + std::to_string(forceDePousser.y));
+        DisplayInfo::draw("Wind Direction/Force: " + std::to_string(wind.direction()) + " " + std::to_string(wind.force()));
+        DisplayInfo::draw("WindVector: " + std::to_string(windVector.x) + " " + std::to_string(windVector.y));
+        DisplayInfo::draw("VentApparent : " + std::to_string(apparentWind.x) + " " + std::to_string(apparentWind.y));
+        DisplayInfo::draw("sailVector : " + std::to_string(sailVector.x) + " " + std::to_string(sailVector.y));
+        DisplayInfo::draw("helmVector : " + std::to_string(helmVector.x) + " " + std::to_string(helmVector.y));
+        DisplayInfo::draw("ForceDePousser : " + std::to_string(forceDePousser.x) + " " + std::to_string(forceDePousser.y));
 
 
         if (clockFPS.getElapsedTime().asSeconds() >= 1) {

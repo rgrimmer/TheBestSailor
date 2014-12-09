@@ -7,19 +7,32 @@
 
 #include <iostream>
 
-#include "client/map/TileMap.h"
+#include "client/map/HeigthMapView.h"
 #include "client/map/Gradient.h"
 
-void TileMap::load(const HeigthMap &map, bool squared) {
+HeigthMapView::HeigthMapView(const HeigthMap &heigthMap)
+: m_heigthMap(heigthMap)
+, m_squared(false) {
+    load();
+}
 
-    int height = map.getHeight();
-    int width = map.getWidth();
+bool HeigthMapView::switchSquared() {
+    m_squared = !m_squared;
+    load();
+    return m_squared;
+}
+
+
+void HeigthMapView::load() {
+
+    int height = m_heigthMap.getHeight();
+    int width = m_heigthMap.getWidth();
     
     sf::Color mapColor[width][height];
 
     for (int i = 0; i < width; ++i) {
         for (int j = 0; j < height; ++j) {
-            float tileValue = map(i,j);
+            float tileValue = m_heigthMap(i,j);
             mapColor[i][j] = Gradient::gradient[(int) (tileValue * 255)]; //g.getColor((int) (tileValue * 255));
         }
     }
@@ -42,7 +55,7 @@ void TileMap::load(const HeigthMap &map, bool squared) {
             quad[3].position = sf::Vector2f(i * TILE_SIZE, (j + 1) * TILE_SIZE);
 
             // define its 4 colors coordinates
-            if (squared) {
+            if (m_squared) {
                 sf::Color c = mapColor[i][j];
                 quad[0].color = c;
                 quad[1].color = c;
@@ -61,7 +74,7 @@ void TileMap::load(const HeigthMap &map, bool squared) {
     }
 }
 
-void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+void HeigthMapView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     // apply the transform
     //states.transform *= getTransform();
 

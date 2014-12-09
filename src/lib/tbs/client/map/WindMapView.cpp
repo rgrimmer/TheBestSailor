@@ -1,19 +1,24 @@
 /* 
- * File:   TileMap.cpp
+ * File:   WindMapView.cpp
  * Author: remy
  * 
  * Created on 9 octobre 2014, 15:49
  */
 
 #include <iostream>
-
-#include "shared/map/DrawWind.h"
 #include <math.h>
 
-void DrawWind::load(const WindMap &map) {
+#include "client/map/WindMapView.h"
 
-    int height = map.getHeight();
-    int width = map.getWidth();
+WindMapView::WindMapView(const WindMap& windMap) 
+: m_windMap(windMap) {
+    load();
+}
+
+void WindMapView::load() {
+
+    int height = m_windMap.getHeight();
+    int width = m_windMap.getWidth();
     
     // resize the vertex array to fit the level size
     m_vertices.setPrimitiveType(sf::Triangles);
@@ -29,7 +34,7 @@ void DrawWind::load(const WindMap &map) {
             // define its 3 corners
             triangle[0].position = sf::Vector2f(i * TILE_SIZE, j * TILE_SIZE);
 //            Wind wind = map(i,j).direction();
-            Wind wind = map.wind(i,j);
+            Wind wind = m_windMap.wind(i,j);
             float windDir = wind.direction();
             float cos1 = std::cos((windDir + 15.0f) * M_PI / 180.0f);
             float sin1 = std::sin((windDir + 15.0f) * M_PI / 180.0f);
@@ -51,7 +56,7 @@ void DrawWind::load(const WindMap &map) {
     }
 }
 
-void DrawWind::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+void WindMapView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     // apply the transform
     states.transform *= getTransform();
 

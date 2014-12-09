@@ -8,12 +8,10 @@
 #ifndef HELM_H
 #define	HELM_H
 
-#include "shared/Kinematics.h"
-#include <SFML/Graphics/Drawable.hpp>
 
-class Helm : public sf::Drawable{
+class Helm {
 public:
-    Helm(Kinematics &kinematics);
+    Helm();
     virtual ~Helm();
     
     inline float& angle() { return m_angle; }
@@ -22,12 +20,8 @@ public:
     
     void update(float dt);
     
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-
-    
 private:
     float m_angle;
-    Kinematics &m_kinematics;
 
 };
 
