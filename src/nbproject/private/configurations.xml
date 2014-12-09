@@ -6,8 +6,28 @@
         <df name="client">
           <in>tbs.cpp</in>
         </df>
+        <df name="CMakeFiles">
+          <df name="tbs-server.dir">
+            <df name="server">
+            </df>
+          </df>
+          <df name="tbs.dir">
+            <df name="client">
+            </df>
+          </df>
+        </df>
         <df name="server">
           <in>tbs-server.cpp</in>
+        </df>
+        <in>config.h</in>
+      </df>
+      <df name="CMakeFiles">
+        <df name="2.8.12.2">
+          <df name="CompilerIdCXX">
+            <in>CMakeCXXCompilerId.cpp</in>
+          </df>
+        </df>
+        <df name="CMakeTmp">
         </df>
       </df>
       <df name="include">
@@ -23,10 +43,15 @@
               <in>HeigthMapView.h</in>
               <in>WindMapView.h</in>
             </df>
+            <df name="network">
+              <in>ClientTCPManager.h</in>
+              <in>ClientUDPManager.h</in>
+            </df>
             <df name="ship">
               <in>ShipView.h</in>
             </df>
             <in>Client.h</in>
+            <in>ClientPlayer.h</in>
             <in>DetailsView.h</in>
             <in>DisplayInfo.h</in>
             <in>EntityView.h</in>
@@ -34,13 +59,17 @@
             <in>VectorView.h</in>
           </df>
           <df name="server">
+            <df name="network">
+              <in>ServerTCPManager.h</in>
+              <in>ServerUDPManager.h</in>
+            </df>
             <df name="serverCheckpoint">
               <in>ServerCheckpoint.h</in>
               <in>ServerCheckpointManager.h</in>
             </df>
             <in>PathFinding.h</in>
             <in>Server.h</in>
-            <in>ServerWorld.h</in>
+            <in>ServerPlayer.h</in>
           </df>
           <df name="shared">
             <df name="map">
@@ -48,6 +77,9 @@
               <in>MapHeader.h</in>
               <in>Wind.h</in>
               <in>WindMap.h</in>
+            </df>
+            <df name="network">
+              <in>Requests.h</in>
             </df>
             <df name="ship">
               <in>Helm.h</in>
@@ -58,6 +90,7 @@
             <in>Force.h</in>
             <in>Kinematics.h</in>
             <in>Rand.h</in>
+            <in>SynchronizedQueue.h</in>
             <in>Utils.h</in>
             <in>ValueNoise.h</in>
           </df>
@@ -76,24 +109,62 @@
               <in>HeigthMapView.cpp</in>
               <in>WindMapView.cpp</in>
             </df>
+            <df name="network">
+              <in>ClientTCPManager.cpp</in>
+              <in>ClientUDPManager.cpp</in>
+            </df>
             <df name="ship">
-              <in>DrawShip.cpp</in>
               <in>ShipView.cpp</in>
             </df>
             <in>Client.cpp</in>
+            <in>ClientPlayer.cpp</in>
             <in>DetailsView.cpp</in>
             <in>DisplayInfo.cpp</in>
             <in>GlobalView.cpp</in>
             <in>VectorView.cpp</in>
           </df>
+          <df name="CMakeFiles">
+            <df name="tbs-server0.dir">
+              <df name="server">
+                <df name="network">
+                </df>
+                <df name="serverCheckpoint">
+                </df>
+              </df>
+            </df>
+            <df name="tbs-shared0.dir">
+              <df name="shared">
+                <df name="map">
+                </df>
+                <df name="ship">
+                </df>
+              </df>
+            </df>
+            <df name="tbs0.dir">
+              <df name="client">
+                <df name="gamestate">
+                </df>
+                <df name="map">
+                </df>
+                <df name="network">
+                </df>
+                <df name="ship">
+                </df>
+              </df>
+            </df>
+          </df>
           <df name="server">
+            <df name="network">
+              <in>ServerTCPManager.cpp</in>
+              <in>ServerUDPManager.cpp</in>
+            </df>
             <df name="serverCheckpoint">
               <in>ServerCheckpoint.cpp</in>
               <in>ServerCheckpointManager.cpp</in>
             </df>
             <in>PathFinding.cpp</in>
             <in>Server.cpp</in>
-            <in>ServerWorld.cpp</in>
+            <in>ServerPlayer.cpp</in>
           </df>
           <df name="shared">
             <df name="map">
@@ -120,7 +191,7 @@
       </df>
     </df>
   </logicalFolder>
-  <projectmakefile>../build/Makefile</projectmakefile>
+  <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="Default" type="0">
       <toolsSet>
@@ -159,7 +230,7 @@
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
         </runcommandpicklist>
         <runcommand>"${OUTPUT_PATH}"</runcommand>
-        <rundir>/home/maxence/NetBeansProjects/TheBestSailor/src/../build/bin/client</rundir>
+        <rundir>.</rundir>
         <buildfirst>false</buildfirst>
         <terminal-type>0</terminal-type>
         <remove-instrumentation>0</remove-instrumentation>

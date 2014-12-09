@@ -1,25 +1,61 @@
 Scanning dependencies of target tbs-server0
-[ 14%] Building CXX object lib/tbs/CMakeFiles/tbs-server0.dir/server/Game.cc.o
+[  2%] Building CXX object lib/tbs/CMakeFiles/tbs-server0.dir/server/serverCheckpoint/ServerCheckpoint.cpp.o
+[  5%] Building CXX object lib/tbs/CMakeFiles/tbs-server0.dir/server/serverCheckpoint/ServerCheckpointManager.cpp.o
+[  8%] Building CXX object lib/tbs/CMakeFiles/tbs-server0.dir/server/PathFinding.cpp.o
+[ 11%] Building CXX object lib/tbs/CMakeFiles/tbs-server0.dir/server/network/ServerTCPManager.cpp.o
+[ 14%] Building CXX object lib/tbs/CMakeFiles/tbs-server0.dir/server/network/ServerUDPManager.cpp.o
+[ 17%] Building CXX object lib/tbs/CMakeFiles/tbs-server0.dir/server/Server.cpp.o
+[ 20%] Building CXX object lib/tbs/CMakeFiles/tbs-server0.dir/server/ServerPlayer.cpp.o
 Linking CXX shared library server/libtbs-server0.so
-[ 14%] Built target tbs-server0
+[ 20%] Built target tbs-server0
 Scanning dependencies of target tbs-shared0
-[ 28%] Building CXX object lib/tbs/CMakeFiles/tbs-shared0.dir/shared/Random.cc.o
+[ 22%] Building CXX object lib/tbs/CMakeFiles/tbs-shared0.dir/shared/Force.cpp.o
+[ 25%] Building CXX object lib/tbs/CMakeFiles/tbs-shared0.dir/shared/Kinematics.cpp.o
+[ 28%] Building CXX object lib/tbs/CMakeFiles/tbs-shared0.dir/shared/Font.cpp.o
+[ 31%] Building CXX object lib/tbs/CMakeFiles/tbs-shared0.dir/shared/ship/Ship.cpp.o
+[ 34%] Building CXX object lib/tbs/CMakeFiles/tbs-shared0.dir/shared/ship/Helm.cpp.o
+[ 37%] Building CXX object lib/tbs/CMakeFiles/tbs-shared0.dir/shared/ship/Sail.cpp.o
+[ 40%] Building CXX object lib/tbs/CMakeFiles/tbs-shared0.dir/shared/ValueNoise.cpp.o
+[ 42%] Building CXX object lib/tbs/CMakeFiles/tbs-shared0.dir/shared/map/Wind.cpp.o
+[ 45%] Building CXX object lib/tbs/CMakeFiles/tbs-shared0.dir/shared/map/MapHeader.cpp.o
+[ 48%] Building CXX object lib/tbs/CMakeFiles/tbs-shared0.dir/shared/map/HeigthMap.cpp.o
+[ 51%] Building CXX object lib/tbs/CMakeFiles/tbs-shared0.dir/shared/map/WindMap.cpp.o
 Linking CXX shared library shared/libtbs-shared0.so
-[ 28%] Built target tbs-shared0
+[ 51%] Built target tbs-shared0
 Scanning dependencies of target tbs0
-[ 42%] Building CXX object lib/tbs/CMakeFiles/tbs0.dir/client/Entity.cc.o
-[ 57%] Building CXX object lib/tbs/CMakeFiles/tbs0.dir/client/World.cc.o
-[ 71%] Building CXX object lib/tbs/CMakeFiles/tbs0.dir/client/Animation.cc.o
-Linking CXX shared library client/libtbs0.so
-[ 71%] Built target tbs0
-Scanning dependencies of target tbs
-[ 85%] Building CXX object bin/CMakeFiles/tbs.dir/client/tbs.cc.o
-Linking CXX executable client/tbs
-CMakeFiles/tbs.dir/client/tbs.cc.o: dans la fonction « main »:
-/home/remy/Documents/TBS/src/bin/client/tbs.cc:24: référence indéfinie vers « gzzzt::Testation::Testation() »
-/home/remy/Documents/TBS/src/bin/client/tbs.cc:24: référence indéfinie vers « gzzzt::Testation::~Testation() »
-/home/remy/Documents/TBS/src/bin/client/tbs.cc:24: référence indéfinie vers « gzzzt::Testation::~Testation() »
-collect2: error: ld returned 1 exit status
-make[2]: *** [bin/client/tbs] Erreur 1
-make[1]: *** [bin/CMakeFiles/tbs.dir/all] Erreur 2
-make: *** [all] Erreur 2
+[ 54%] Building CXX object lib/tbs/CMakeFiles/tbs0.dir/client/DisplayInfo.cpp.o
+[ 57%] Building CXX object lib/tbs/CMakeFiles/tbs0.dir/client/DetailsView.cpp.o
+[ 60%] Building CXX object lib/tbs/CMakeFiles/tbs0.dir/client/Client.cpp.o
+In file included from /home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/client/Client.cpp:8:0:
+/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs/client/Client.h:30:25: error: ‘ClientUDPManager’ has not been declared
+     static void receive(ClientUDPManager& udpManager, SynchronizedQueue<sf::Packet>& inQueue);
+                         ^
+/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs/client/Client.h:43:5: error: ‘ClientTCPManager’ does not name a type
+     ClientTCPManager m_tcpManager;
+     ^
+/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs/client/Client.h:44:5: error: ‘ClientUDPManager’ does not name a type
+     ClientUDPManager m_udpManager;
+     ^
+/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs/client/Client.h:46:17: error: ‘ClientPlayer’ was not declared in this scope
+     std::vector<ClientPlayer> m_otherPlayers;
+                 ^
+/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs/client/Client.h:46:29: error: template argument 1 is invalid
+     std::vector<ClientPlayer> m_otherPlayers;
+                             ^
+/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs/client/Client.h:46:29: error: template argument 2 is invalid
+/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/client/Client.cpp:57:22: error: variable or field ‘receive’ declared void
+ void Client::receive(ClientUDPManager& udpManager, SynchronizedQueue<sf::Packet>& inQueue) {
+                      ^
+/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/client/Client.cpp:57:22: error: ‘ClientUDPManager’ was not declared in this scope
+/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/client/Client.cpp:57:40: error: ‘udpManager’ was not declared in this scope
+ void Client::receive(ClientUDPManager& udpManager, SynchronizedQueue<sf::Packet>& inQueue) {
+                                        ^
+/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/client/Client.cpp:57:81: error: expected primary-expression before ‘&’ token
+ void Client::receive(ClientUDPManager& udpManager, SynchronizedQueue<sf::Packet>& inQueue) {
+                                                                                 ^
+/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/client/Client.cpp:57:83: error: ‘inQueue’ was not declared in this scope
+ void Client::receive(ClientUDPManager& udpManager, SynchronizedQueue<sf::Packet>& inQueue) {
+                                                                                   ^
+make[2]: *** [lib/tbs/CMakeFiles/tbs0.dir/client/Client.cpp.o] Error 1
+make[1]: *** [lib/tbs/CMakeFiles/tbs0.dir/all] Error 2
+make: *** [all] Error 2

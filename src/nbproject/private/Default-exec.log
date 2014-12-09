@@ -1,23 +1,138 @@
 called: /usr/bin/g++
-	/home/remy/Documents/TBS/build/lib/tbs
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
 	/usr/bin/g++
 	-Dtbs_server0_EXPORTS
 	-g3
 	-gdwarf-2
 	-fPIC
-	-I/home/remy/Documents/TBS/src/include
-	-I/home/remy/Documents/TBS/src/include/tbs
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
 	-Wall
 	-g
 	-O2
 	-std=c++11
 	-o
-	CMakeFiles/tbs-server0.dir/server/Game.cc.o
+	CMakeFiles/tbs-server0.dir/server/serverCheckpoint/ServerCheckpoint.cpp.o
 	-c
-	/home/remy/Documents/TBS/src/lib/tbs/server/Game.cc
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/server/serverCheckpoint/ServerCheckpoint.cpp
 
 called: /usr/bin/g++
-	/home/remy/Documents/TBS/build/lib/tbs
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
+	/usr/bin/g++
+	-Dtbs_server0_EXPORTS
+	-g3
+	-gdwarf-2
+	-fPIC
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
+	-Wall
+	-g
+	-O2
+	-std=c++11
+	-o
+	CMakeFiles/tbs-server0.dir/server/serverCheckpoint/ServerCheckpointManager.cpp.o
+	-c
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/server/serverCheckpoint/ServerCheckpointManager.cpp
+
+called: /usr/bin/g++
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
+	/usr/bin/g++
+	-Dtbs_server0_EXPORTS
+	-g3
+	-gdwarf-2
+	-fPIC
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
+	-Wall
+	-g
+	-O2
+	-std=c++11
+	-o
+	CMakeFiles/tbs-server0.dir/server/PathFinding.cpp.o
+	-c
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/server/PathFinding.cpp
+
+called: /usr/bin/g++
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
+	/usr/bin/g++
+	-Dtbs_server0_EXPORTS
+	-g3
+	-gdwarf-2
+	-fPIC
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
+	-Wall
+	-g
+	-O2
+	-std=c++11
+	-o
+	CMakeFiles/tbs-server0.dir/server/network/ServerTCPManager.cpp.o
+	-c
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/server/network/ServerTCPManager.cpp
+
+called: /usr/bin/g++
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
+	/usr/bin/g++
+	-Dtbs_server0_EXPORTS
+	-g3
+	-gdwarf-2
+	-fPIC
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
+	-Wall
+	-g
+	-O2
+	-std=c++11
+	-o
+	CMakeFiles/tbs-server0.dir/server/network/ServerUDPManager.cpp.o
+	-c
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/server/network/ServerUDPManager.cpp
+
+called: /usr/bin/g++
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
+	/usr/bin/g++
+	-Dtbs_server0_EXPORTS
+	-g3
+	-gdwarf-2
+	-fPIC
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
+	-Wall
+	-g
+	-O2
+	-std=c++11
+	-o
+	CMakeFiles/tbs-server0.dir/server/Server.cpp.o
+	-c
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/server/Server.cpp
+
+called: /usr/bin/g++
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
+	/usr/bin/g++
+	-Dtbs_server0_EXPORTS
+	-g3
+	-gdwarf-2
+	-fPIC
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
+	-Wall
+	-g
+	-O2
+	-std=c++11
+	-o
+	CMakeFiles/tbs-server0.dir/server/ServerPlayer.cpp.o
+	-c
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/server/ServerPlayer.cpp
+
+called: /usr/bin/g++
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
 	/usr/bin/g++
 	-fPIC
 	-g3
@@ -26,7 +141,13 @@ called: /usr/bin/g++
 	-Wl,-soname,libtbs-server0.so.0
 	-o
 	server/libtbs-server0.so.0.1.0
-	CMakeFiles/tbs-server0.dir/server/Game.cc.o
+	CMakeFiles/tbs-server0.dir/server/serverCheckpoint/ServerCheckpoint.cpp.o
+	CMakeFiles/tbs-server0.dir/server/serverCheckpoint/ServerCheckpointManager.cpp.o
+	CMakeFiles/tbs-server0.dir/server/PathFinding.cpp.o
+	CMakeFiles/tbs-server0.dir/server/network/ServerTCPManager.cpp.o
+	CMakeFiles/tbs-server0.dir/server/network/ServerUDPManager.cpp.o
+	CMakeFiles/tbs-server0.dir/server/Server.cpp.o
+	CMakeFiles/tbs-server0.dir/server/ServerPlayer.cpp.o
 	-lsfml-graphics
 	-lsfml-window
 	-lsfml-audio
@@ -34,13 +155,13 @@ called: /usr/bin/g++
 	-lsfml-system
 
 called: /usr/bin/ld
-	/home/remy/Documents/TBS/build/lib/tbs
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
 	/usr/bin/ld
 	--sysroot=/
 	--build-id
 	--eh-frame-hdr
 	-m
-	elf_x86_64
+	elf_i386
 	--hash-style=gnu
 	--as-needed
 	-shared
@@ -48,19 +169,25 @@ called: /usr/bin/ld
 	relro
 	-o
 	server/libtbs-server0.so.0.1.0
-	/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../x86_64-linux-gnu/crti.o
-	/usr/lib/gcc/x86_64-linux-gnu/4.8/crtbeginS.o
-	-L/usr/lib/gcc/x86_64-linux-gnu/4.8
-	-L/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../x86_64-linux-gnu
-	-L/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../../lib
-	-L/lib/x86_64-linux-gnu
+	/usr/lib/gcc/i686-linux-gnu/4.8/../../../i386-linux-gnu/crti.o
+	/usr/lib/gcc/i686-linux-gnu/4.8/crtbeginS.o
+	-L/usr/lib/gcc/i686-linux-gnu/4.8
+	-L/usr/lib/gcc/i686-linux-gnu/4.8/../../../i386-linux-gnu
+	-L/usr/lib/gcc/i686-linux-gnu/4.8/../../../../lib
+	-L/lib/i386-linux-gnu
 	-L/lib/../lib
-	-L/usr/lib/x86_64-linux-gnu
+	-L/usr/lib/i386-linux-gnu
 	-L/usr/lib/../lib
-	-L/usr/lib/gcc/x86_64-linux-gnu/4.8/../../..
+	-L/usr/lib/gcc/i686-linux-gnu/4.8/../../..
 	-soname
 	libtbs-server0.so.0
-	CMakeFiles/tbs-server0.dir/server/Game.cc.o
+	CMakeFiles/tbs-server0.dir/server/serverCheckpoint/ServerCheckpoint.cpp.o
+	CMakeFiles/tbs-server0.dir/server/serverCheckpoint/ServerCheckpointManager.cpp.o
+	CMakeFiles/tbs-server0.dir/server/PathFinding.cpp.o
+	CMakeFiles/tbs-server0.dir/server/network/ServerTCPManager.cpp.o
+	CMakeFiles/tbs-server0.dir/server/network/ServerUDPManager.cpp.o
+	CMakeFiles/tbs-server0.dir/server/Server.cpp.o
+	CMakeFiles/tbs-server0.dir/server/ServerPlayer.cpp.o
 	-lsfml-graphics
 	-lsfml-window
 	-lsfml-audio
@@ -71,29 +198,220 @@ called: /usr/bin/ld
 	-lgcc_s
 	-lc
 	-lgcc_s
-	/usr/lib/gcc/x86_64-linux-gnu/4.8/crtendS.o
-	/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../x86_64-linux-gnu/crtn.o
+	/usr/lib/gcc/i686-linux-gnu/4.8/crtendS.o
+	/usr/lib/gcc/i686-linux-gnu/4.8/../../../i386-linux-gnu/crtn.o
 
 called: /usr/bin/g++
-	/home/remy/Documents/TBS/build/lib/tbs
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
 	/usr/bin/g++
 	-Dtbs_shared0_EXPORTS
 	-g3
 	-gdwarf-2
 	-fPIC
-	-I/home/remy/Documents/TBS/src/include
-	-I/home/remy/Documents/TBS/src/include/tbs
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
 	-Wall
 	-g
 	-O2
 	-std=c++11
 	-o
-	CMakeFiles/tbs-shared0.dir/shared/Random.cc.o
+	CMakeFiles/tbs-shared0.dir/shared/Force.cpp.o
 	-c
-	/home/remy/Documents/TBS/src/lib/tbs/shared/Random.cc
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/shared/Force.cpp
 
 called: /usr/bin/g++
-	/home/remy/Documents/TBS/build/lib/tbs
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
+	/usr/bin/g++
+	-Dtbs_shared0_EXPORTS
+	-g3
+	-gdwarf-2
+	-fPIC
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
+	-Wall
+	-g
+	-O2
+	-std=c++11
+	-o
+	CMakeFiles/tbs-shared0.dir/shared/Kinematics.cpp.o
+	-c
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/shared/Kinematics.cpp
+
+called: /usr/bin/g++
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
+	/usr/bin/g++
+	-Dtbs_shared0_EXPORTS
+	-g3
+	-gdwarf-2
+	-fPIC
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
+	-Wall
+	-g
+	-O2
+	-std=c++11
+	-o
+	CMakeFiles/tbs-shared0.dir/shared/Font.cpp.o
+	-c
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/shared/Font.cpp
+
+called: /usr/bin/g++
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
+	/usr/bin/g++
+	-Dtbs_shared0_EXPORTS
+	-g3
+	-gdwarf-2
+	-fPIC
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
+	-Wall
+	-g
+	-O2
+	-std=c++11
+	-o
+	CMakeFiles/tbs-shared0.dir/shared/ship/Ship.cpp.o
+	-c
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/shared/ship/Ship.cpp
+
+called: /usr/bin/g++
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
+	/usr/bin/g++
+	-Dtbs_shared0_EXPORTS
+	-g3
+	-gdwarf-2
+	-fPIC
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
+	-Wall
+	-g
+	-O2
+	-std=c++11
+	-o
+	CMakeFiles/tbs-shared0.dir/shared/ship/Helm.cpp.o
+	-c
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/shared/ship/Helm.cpp
+
+called: /usr/bin/g++
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
+	/usr/bin/g++
+	-Dtbs_shared0_EXPORTS
+	-g3
+	-gdwarf-2
+	-fPIC
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
+	-Wall
+	-g
+	-O2
+	-std=c++11
+	-o
+	CMakeFiles/tbs-shared0.dir/shared/ship/Sail.cpp.o
+	-c
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/shared/ship/Sail.cpp
+
+called: /usr/bin/g++
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
+	/usr/bin/g++
+	-Dtbs_shared0_EXPORTS
+	-g3
+	-gdwarf-2
+	-fPIC
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
+	-Wall
+	-g
+	-O2
+	-std=c++11
+	-o
+	CMakeFiles/tbs-shared0.dir/shared/ValueNoise.cpp.o
+	-c
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/shared/ValueNoise.cpp
+
+called: /usr/bin/g++
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
+	/usr/bin/g++
+	-Dtbs_shared0_EXPORTS
+	-g3
+	-gdwarf-2
+	-fPIC
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
+	-Wall
+	-g
+	-O2
+	-std=c++11
+	-o
+	CMakeFiles/tbs-shared0.dir/shared/map/Wind.cpp.o
+	-c
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/shared/map/Wind.cpp
+
+called: /usr/bin/g++
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
+	/usr/bin/g++
+	-Dtbs_shared0_EXPORTS
+	-g3
+	-gdwarf-2
+	-fPIC
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
+	-Wall
+	-g
+	-O2
+	-std=c++11
+	-o
+	CMakeFiles/tbs-shared0.dir/shared/map/MapHeader.cpp.o
+	-c
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/shared/map/MapHeader.cpp
+
+called: /usr/bin/g++
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
+	/usr/bin/g++
+	-Dtbs_shared0_EXPORTS
+	-g3
+	-gdwarf-2
+	-fPIC
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
+	-Wall
+	-g
+	-O2
+	-std=c++11
+	-o
+	CMakeFiles/tbs-shared0.dir/shared/map/HeigthMap.cpp.o
+	-c
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/shared/map/HeigthMap.cpp
+
+called: /usr/bin/g++
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
+	/usr/bin/g++
+	-Dtbs_shared0_EXPORTS
+	-g3
+	-gdwarf-2
+	-fPIC
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
+	-Wall
+	-g
+	-O2
+	-std=c++11
+	-o
+	CMakeFiles/tbs-shared0.dir/shared/map/WindMap.cpp.o
+	-c
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/shared/map/WindMap.cpp
+
+called: /usr/bin/g++
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
 	/usr/bin/g++
 	-fPIC
 	-g3
@@ -102,7 +420,17 @@ called: /usr/bin/g++
 	-Wl,-soname,libtbs-shared0.so.0
 	-o
 	shared/libtbs-shared0.so.0.1.0
-	CMakeFiles/tbs-shared0.dir/shared/Random.cc.o
+	CMakeFiles/tbs-shared0.dir/shared/Force.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/Kinematics.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/Font.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/ship/Ship.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/ship/Helm.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/ship/Sail.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/ValueNoise.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/map/Wind.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/map/MapHeader.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/map/HeigthMap.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/map/WindMap.cpp.o
 	-lsfml-graphics
 	-lsfml-window
 	-lsfml-audio
@@ -110,13 +438,13 @@ called: /usr/bin/g++
 	-lsfml-system
 
 called: /usr/bin/ld
-	/home/remy/Documents/TBS/build/lib/tbs
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
 	/usr/bin/ld
 	--sysroot=/
 	--build-id
 	--eh-frame-hdr
 	-m
-	elf_x86_64
+	elf_i386
 	--hash-style=gnu
 	--as-needed
 	-shared
@@ -124,19 +452,29 @@ called: /usr/bin/ld
 	relro
 	-o
 	shared/libtbs-shared0.so.0.1.0
-	/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../x86_64-linux-gnu/crti.o
-	/usr/lib/gcc/x86_64-linux-gnu/4.8/crtbeginS.o
-	-L/usr/lib/gcc/x86_64-linux-gnu/4.8
-	-L/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../x86_64-linux-gnu
-	-L/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../../lib
-	-L/lib/x86_64-linux-gnu
+	/usr/lib/gcc/i686-linux-gnu/4.8/../../../i386-linux-gnu/crti.o
+	/usr/lib/gcc/i686-linux-gnu/4.8/crtbeginS.o
+	-L/usr/lib/gcc/i686-linux-gnu/4.8
+	-L/usr/lib/gcc/i686-linux-gnu/4.8/../../../i386-linux-gnu
+	-L/usr/lib/gcc/i686-linux-gnu/4.8/../../../../lib
+	-L/lib/i386-linux-gnu
 	-L/lib/../lib
-	-L/usr/lib/x86_64-linux-gnu
+	-L/usr/lib/i386-linux-gnu
 	-L/usr/lib/../lib
-	-L/usr/lib/gcc/x86_64-linux-gnu/4.8/../../..
+	-L/usr/lib/gcc/i686-linux-gnu/4.8/../../..
 	-soname
 	libtbs-shared0.so.0
-	CMakeFiles/tbs-shared0.dir/shared/Random.cc.o
+	CMakeFiles/tbs-shared0.dir/shared/Force.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/Kinematics.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/Font.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/ship/Ship.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/ship/Helm.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/ship/Sail.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/ValueNoise.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/map/Wind.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/map/MapHeader.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/map/HeigthMap.cpp.o
+	CMakeFiles/tbs-shared0.dir/shared/map/WindMap.cpp.o
 	-lsfml-graphics
 	-lsfml-window
 	-lsfml-audio
@@ -147,205 +485,63 @@ called: /usr/bin/ld
 	-lgcc_s
 	-lc
 	-lgcc_s
-	/usr/lib/gcc/x86_64-linux-gnu/4.8/crtendS.o
-	/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../x86_64-linux-gnu/crtn.o
+	/usr/lib/gcc/i686-linux-gnu/4.8/crtendS.o
+	/usr/lib/gcc/i686-linux-gnu/4.8/../../../i386-linux-gnu/crtn.o
 
 called: /usr/bin/g++
-	/home/remy/Documents/TBS/build/lib/tbs
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
 	/usr/bin/g++
 	-Dtbs0_EXPORTS
 	-g3
 	-gdwarf-2
 	-fPIC
-	-I/home/remy/Documents/TBS/src/include
-	-I/home/remy/Documents/TBS/src/include/tbs
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
 	-Wall
 	-g
 	-O2
 	-std=c++11
 	-o
-	CMakeFiles/tbs0.dir/client/Entity.cc.o
+	CMakeFiles/tbs0.dir/client/DisplayInfo.cpp.o
 	-c
-	/home/remy/Documents/TBS/src/lib/tbs/client/Entity.cc
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/client/DisplayInfo.cpp
 
 called: /usr/bin/g++
-	/home/remy/Documents/TBS/build/lib/tbs
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
 	/usr/bin/g++
 	-Dtbs0_EXPORTS
 	-g3
 	-gdwarf-2
 	-fPIC
-	-I/home/remy/Documents/TBS/src/include
-	-I/home/remy/Documents/TBS/src/include/tbs
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
 	-Wall
 	-g
 	-O2
 	-std=c++11
 	-o
-	CMakeFiles/tbs0.dir/client/World.cc.o
+	CMakeFiles/tbs0.dir/client/DetailsView.cpp.o
 	-c
-	/home/remy/Documents/TBS/src/lib/tbs/client/World.cc
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/client/DetailsView.cpp
 
 called: /usr/bin/g++
-	/home/remy/Documents/TBS/build/lib/tbs
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs
 	/usr/bin/g++
 	-Dtbs0_EXPORTS
 	-g3
 	-gdwarf-2
 	-fPIC
-	-I/home/remy/Documents/TBS/src/include
-	-I/home/remy/Documents/TBS/src/include/tbs
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include
+	-I/usr/local/include
+	-I/home/maxence/NetBeansProjects/TheBestSailor/src/include/tbs
 	-Wall
 	-g
 	-O2
 	-std=c++11
 	-o
-	CMakeFiles/tbs0.dir/client/Animation.cc.o
+	CMakeFiles/tbs0.dir/client/Client.cpp.o
 	-c
-	/home/remy/Documents/TBS/src/lib/tbs/client/Animation.cc
-
-called: /usr/bin/g++
-	/home/remy/Documents/TBS/build/lib/tbs
-	/usr/bin/g++
-	-fPIC
-	-g3
-	-gdwarf-2
-	-shared
-	-Wl,-soname,libtbs0.so.0
-	-o
-	client/libtbs0.so.0.1.0
-	CMakeFiles/tbs0.dir/client/Entity.cc.o
-	CMakeFiles/tbs0.dir/client/World.cc.o
-	CMakeFiles/tbs0.dir/client/Animation.cc.o
-	-lsfml-graphics
-	-lsfml-window
-	-lsfml-audio
-	-lsfml-network
-	-lsfml-system
-
-called: /usr/bin/ld
-	/home/remy/Documents/TBS/build/lib/tbs
-	/usr/bin/ld
-	--sysroot=/
-	--build-id
-	--eh-frame-hdr
-	-m
-	elf_x86_64
-	--hash-style=gnu
-	--as-needed
-	-shared
-	-z
-	relro
-	-o
-	client/libtbs0.so.0.1.0
-	/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../x86_64-linux-gnu/crti.o
-	/usr/lib/gcc/x86_64-linux-gnu/4.8/crtbeginS.o
-	-L/usr/lib/gcc/x86_64-linux-gnu/4.8
-	-L/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../x86_64-linux-gnu
-	-L/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../../lib
-	-L/lib/x86_64-linux-gnu
-	-L/lib/../lib
-	-L/usr/lib/x86_64-linux-gnu
-	-L/usr/lib/../lib
-	-L/usr/lib/gcc/x86_64-linux-gnu/4.8/../../..
-	-soname
-	libtbs0.so.0
-	CMakeFiles/tbs0.dir/client/Entity.cc.o
-	CMakeFiles/tbs0.dir/client/World.cc.o
-	CMakeFiles/tbs0.dir/client/Animation.cc.o
-	-lsfml-graphics
-	-lsfml-window
-	-lsfml-audio
-	-lsfml-network
-	-lsfml-system
-	-lstdc++
-	-lm
-	-lgcc_s
-	-lc
-	-lgcc_s
-	/usr/lib/gcc/x86_64-linux-gnu/4.8/crtendS.o
-	/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../x86_64-linux-gnu/crtn.o
-
-called: /usr/bin/g++
-	/home/remy/Documents/TBS/build/bin
-	/usr/bin/g++
-	-g3
-	-gdwarf-2
-	-I/home/remy/Documents/TBS/src/include
-	-I/home/remy/Documents/TBS/build/bin
-	-I/home/remy/Documents/TBS/src/include/tbs
-	-Wall
-	-g
-	-O2
-	-std=c++11
-	-o
-	CMakeFiles/tbs.dir/client/tbs.cc.o
-	-c
-	/home/remy/Documents/TBS/src/bin/client/tbs.cc
-
-called: /usr/bin/g++
-	/home/remy/Documents/TBS/build/bin
-	/usr/bin/g++
-	-g3
-	-gdwarf-2
-	CMakeFiles/tbs.dir/client/tbs.cc.o
-	-o
-	client/tbs
-	-rdynamic
-	../lib/tbs/client/libtbs0.so.0.1.0
-	../lib/tbs/shared/libtbs-shared0.so.0.1.0
-	-lsfml-graphics
-	-lsfml-window
-	-lsfml-audio
-	-lsfml-network
-	-lsfml-system
-	-Wl,-rpath,/home/remy/Documents/TBS/build/lib/tbs/client:/home/remy/Documents/TBS/build/lib/tbs/shared:
-
-called: /usr/bin/ld
-	/home/remy/Documents/TBS/build/bin
-	/usr/bin/ld
-	--sysroot=/
-	--build-id
-	--eh-frame-hdr
-	-m
-	elf_x86_64
-	--hash-style=gnu
-	--as-needed
-	-export-dynamic
-	-dynamic-linker
-	/lib64/ld-linux-x86-64.so.2
-	-z
-	relro
-	-o
-	client/tbs
-	/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../x86_64-linux-gnu/crt1.o
-	/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../x86_64-linux-gnu/crti.o
-	/usr/lib/gcc/x86_64-linux-gnu/4.8/crtbegin.o
-	-L/usr/lib/gcc/x86_64-linux-gnu/4.8
-	-L/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../x86_64-linux-gnu
-	-L/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../../lib
-	-L/lib/x86_64-linux-gnu
-	-L/lib/../lib
-	-L/usr/lib/x86_64-linux-gnu
-	-L/usr/lib/../lib
-	-L/usr/lib/gcc/x86_64-linux-gnu/4.8/../../..
-	CMakeFiles/tbs.dir/client/tbs.cc.o
-	../lib/tbs/client/libtbs0.so.0.1.0
-	../lib/tbs/shared/libtbs-shared0.so.0.1.0
-	-lsfml-graphics
-	-lsfml-window
-	-lsfml-audio
-	-lsfml-network
-	-lsfml-system
-	-rpath
-	/home/remy/Documents/TBS/build/lib/tbs/client:/home/remy/Documents/TBS/build/lib/tbs/shared:
-	-lstdc++
-	-lm
-	-lgcc_s
-	-lgcc
-	-lc
-	-lgcc_s
-	-lgcc
-	/usr/lib/gcc/x86_64-linux-gnu/4.8/crtend.o
-	/usr/lib/gcc/x86_64-linux-gnu/4.8/../../../x86_64-linux-gnu/crtn.o
+	/home/maxence/NetBeansProjects/TheBestSailor/src/lib/tbs/client/Client.cpp
 
