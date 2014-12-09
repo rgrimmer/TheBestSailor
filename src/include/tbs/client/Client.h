@@ -8,7 +8,6 @@
 #ifndef CLIENT_H
 #define	CLIENT_H
 
-#include <SFML/Network.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 //#include <thread>
 #include <SFML/System/Thread.hpp>
@@ -19,6 +18,7 @@
 #include "shared/ship/Ship.h"
 
 #include "client/DetailsView.h"
+#include "shared/SynchronizedQueue.h"
 
 class Client {
 public:
@@ -27,11 +27,10 @@ public:
 
     void start(void);
 private:
+    static void receive(ClientUDPManager& udpManager, SynchronizedQueue<sf::Packet>& inQueue);
     void gameLoop(sf::RenderWindow *window);
     
 private:
-    sf::TcpSocket m_socket;
-
     HeigthMap* m_map;
     WindMap* m_wind;
     Ship m_ship;
@@ -39,7 +38,17 @@ private:
     bool m_enablePause;
     float m_timeSpeed;
     
+    ClientTCPManager m_tcpManager;
+    ClientUDPManager m_udpManager;
+    
     // Graphic
+    DrawShip m_shipView;
+    DrawWind m_windView;
+    
+    std::vector<ClientPlayer> m_otherPlayers;
+    std::string m_name;
+    
+    SynchronizedQueue<sf::Packet> m_inQueue;
     DetailsView* m_detailsView;
 //    HeigthMapView* m_mapView;
 //    WindMapView* m_windView;
