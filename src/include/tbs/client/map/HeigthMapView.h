@@ -6,7 +6,7 @@
 #include "shared/Utils.h"
 #include "shared/map/HeigthMap.h"
 
-class HeigthMapView : public sf::Drawable, public sf::Transformable {
+class HeigthMapView : public sf::Drawable {
     
 public:
     HeigthMapView(const HeigthMap &heigthMap);

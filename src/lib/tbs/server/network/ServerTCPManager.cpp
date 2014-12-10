@@ -61,6 +61,7 @@ bool ServerTCPManager::waitConnections(sf::Packet mapPacket, std::vector<ServerP
                     if (s == sf::TcpSocket::Disconnected) {
                         std::cout << "player disconnected" << std::endl;
                         m_selector.remove(m_clients[i]);
+                        i--;
                     } else if (s == sf::TcpSocket::Error) {
                         std::cout << "Error recv" << std::endl;
                         return false;

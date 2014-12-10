@@ -8,20 +8,28 @@
 #ifndef GLOBALVIEW_H
 #define	GLOBALVIEW_H
 
+#include <string>
+
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/CircleShape.hpp>
 
 #include "shared/map/MapHeader.h"
 #include "shared/map/HeigthMap.h"
+#include "shared/map/WindMap.h"
+#include "shared/ship/Ship.h"
+
+#include "client/map/HeigthMapView.h"
+#include "client/map/WindMapView.h"
+#include "client/ship/ShipView.h"
+#include "DisplayInfo.h"
+
 //#include "sha"D
 
 class GlobalView : public sf::Drawable {
 public:
-    GlobalView();
+    GlobalView(const HeigthMap& heigthMap, const WindMap& windMap, const Ship& ship);
     virtual ~GlobalView();
     
     void loadInformation();
@@ -33,11 +41,24 @@ private:
     MapHeader *m_mapHeader;
     HeigthMap *m_heigthMap;
     
+    // Graphic
+    HeigthMapView m_heigthMapView;
+    WindMapView m_windMapView;
+    ShipView m_shipView;
+    
+    // Title
+    sf::View m_titleView;
+    DisplayInfo m_titleSfText;
+    
+    // World
     sf::View m_worldView;
-    sf::View m_informationView;
-    sf::RenderTexture m_informationTexture;
+    
+    // Info
+    sf::View m_infoView;
 
-    sf::Texture *m_background;
+    // Background
+    sf::Texture m_backgroundTexture;
+    sf::Sprite m_background;
 };
 
 #endif	/* GLOBALVIEW_H */

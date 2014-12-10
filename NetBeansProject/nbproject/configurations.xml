@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="../src" name="0">
+      <df name="bin">
+        <df name="client">
+          <in>tbs.cpp</in>
+        </df>
+        <df name="server">
+          <in>tbs-server.cpp</in>
+        </df>
+      </df>
+      <df name="lib">
+        <df name="tbs">
+          <df name="client">
+            <df name="gamestate">
+              <in>GameState.cpp</in>
+              <in>GameStateMainMenu.cpp</in>
+              <in>GameStateManager.cpp</in>
+            </df>
+            <df name="map">
+              <in>Gradient.cpp</in>
+              <in>HeigthMapView.cpp</in>
+              <in>WindMapView.cpp</in>
+            </df>
+            <df name="network">
+              <in>ClientTCPManager.cpp</in>
+              <in>ClientUDPManager.cpp</in>
+            </df>
+            <df name="ship">
+              <in>ShipView.cpp</in>
+            </df>
+            <in>Client.cpp</in>
+            <in>ClientPlayer.cpp</in>
+            <in>DetailsView.cpp</in>
+            <in>DisplayInfo.cpp</in>
+            <in>GlobalView.cpp</in>
+            <in>VectorView.cpp</in>
+          </df>
+          <df name="server">
+            <df name="network">
+              <in>ServerTCPManager.cpp</in>
+              <in>ServerUDPManager.cpp</in>
+            </df>
+            <df name="serverCheckpoint">
+              <in>ServerCheckpoint.cpp</in>
+              <in>ServerCheckpointManager.cpp</in>
+            </df>
+            <in>PathFinding.cpp</in>
+            <in>Server.cpp</in>
+            <in>ServerPlayer.cpp</in>
+          </df>
+          <df name="shared">
+            <df name="map">
+              <in>HeigthMap.cpp</in>
+              <in>MapHeader.cpp</in>
+              <in>Wind.cpp</in>
+              <in>WindMap.cpp</in>
+            </df>
+            <df name="ship">
+              <in>Helm.cpp</in>
+              <in>Sail.cpp</in>
+              <in>Ship.cpp</in>
+            </df>
+            <in>Font.cpp</in>
+            <in>Force.cpp</in>
+            <in>Kinematics.cpp</in>
+            <in>ValueNoise.cpp</in>
+          </df>
+        </df>
+      </df>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>../src/CMakeLists.txt</itemPath>
+      <itemPath>../src/../build/Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>../src</Elem>
+  </sourceRootList>
+  <projectmakefile>../src/../build/Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>../src/../build</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath>../build/bin/server/tbs-server</executablePath>
+          <ccTool>
+            <incDir>
+              <pElem>../src/include</pElem>
+            </incDir>
+          </ccTool>
+        </makeTool>
+      </makefileType>
+      <item path="../src/bin/client/tbs.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../src/bin/server/tbs-server.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/client/Client.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/client/ClientPlayer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/client/DetailsView.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/client/DisplayInfo.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/client/GlobalView.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/client/VectorView.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/client/gamestate/GameState.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/client/gamestate/GameStateMainMenu.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/client/gamestate/GameStateManager.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/client/map/Gradient.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/client/map/HeigthMapView.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/client/map/WindMapView.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/client/network/ClientTCPManager.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/client/network/ClientUDPManager.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/client/ship/ShipView.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/server/PathFinding.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/server/Server.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/server/ServerPlayer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/server/network/ServerTCPManager.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/server/network/ServerUDPManager.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/server/serverCheckpoint/ServerCheckpoint.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/server/serverCheckpoint/ServerCheckpointManager.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/shared/Font.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/shared/Force.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/shared/Kinematics.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/shared/ValueNoise.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/shared/map/HeigthMap.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/shared/map/MapHeader.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/shared/map/Wind.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/shared/map/WindMap.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/shared/ship/Helm.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/shared/ship/Sail.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../src/lib/tbs/shared/ship/Ship.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <folder path="0/bin">
+        <ccTool>
+          <incDir>
+            <pElem>../build/bin</pElem>
+            <pElem>../src/include/tbs</pElem>
+          </incDir>
+        </ccTool>
+      </folder>
+      <folder path="0/lib">
+        <ccTool>
+          <incDir>
+            <pElem>/usr/local/include</pElem>
+            <pElem>../src/include/tbs</pElem>
+            <pElem>../build/lib/tbs</pElem>
+          </incDir>
+        </ccTool>
+      </folder>
+      <folder path="0/lib/tbs/client">
+        <ccTool>
+          <preprocessorList>
+            <Elem>tbs0_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/lib/tbs/server">
+        <ccTool>
+          <preprocessorList>
+            <Elem>tbs_server0_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/lib/tbs/shared">
+        <ccTool>
+          <preprocessorList>
+            <Elem>tbs_shared0_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+    </conf>
+  </confs>
+</configurationDescriptor>

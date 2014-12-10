@@ -35,23 +35,28 @@ void DetailsView::draw(sf::RenderTarget& target, sf::RenderStates states) const 
     sf::Clock clockDraw;
     sf::Time timeDrawHeightMap, timeDrawWindMap;
     
+    
+    
     // Draw heightMap
     clockDraw.restart();
     target.draw(m_heigthMapView, states);
     timeDrawHeightMap = clockDraw.getElapsedTime();
         
+    // Draw Ship
+    target.draw(m_shipView, states);
     
+    // Draw Wind
     if(m_enableWind) {
         clockDraw.restart();
         target.draw(m_windMapView, states);
         timeDrawWindMap = clockDraw.getElapsedTime();
     }
     
-    target.draw(m_shipView, states);
     
+
+    target.draw(DisplayInfo("Draw(ms)"));
+    target.draw(DisplayInfo("HeightMap : " + std::to_string(timeDrawHeightMap.asMilliseconds())));
+    target.draw(DisplayInfo("WindMap : " + std::to_string(timeDrawWindMap.asMilliseconds())));
     
-    DisplayInfo::draw("Draw(ms)");
-    DisplayInfo::draw("HeightMap : " + std::to_string(timeDrawHeightMap.asMilliseconds()));
-    DisplayInfo::draw("WindMap : " + std::to_string(timeDrawWindMap.asMilliseconds()));
 }
 

@@ -15,6 +15,7 @@ public:
     static sf::Font& getFont();
     
 private:
+    static std::string getFontString(int index);
     static sf::Font *g_font;
     
     Font();

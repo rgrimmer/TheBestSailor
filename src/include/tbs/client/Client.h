@@ -23,6 +23,7 @@
 #include "client/network/ClientUDPManager.h"
 #include "client/ClientPlayer.h"
 #include "shared/SynchronizedQueue.h"
+#include "GlobalView.h"
 
 class Client {
 public:
@@ -51,7 +52,9 @@ private:
     SynchronizedQueue<sf::Packet> m_inQueue;
     
     // Graphic
+    sf::Drawable* m_mainGraphic;
     DetailsView* m_detailsView;
+    GlobalView* m_globalView;
 //    HeigthMapView* m_mapView;
 //    WindMapView* m_windView;
 //    ShipView* m_shipView;

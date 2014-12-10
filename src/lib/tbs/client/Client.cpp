@@ -52,6 +52,9 @@ Client::Client() {
 
 Client::~Client() {
     delete m_detailsView;
+    delete m_globalView;
+    delete m_map;
+    delete m_wind;
 }
 
 void Client::receive(ClientUDPManager& udpManager, SynchronizedQueue<sf::Packet>& inQueue) {
@@ -68,6 +71,7 @@ void Client::receive(ClientUDPManager& udpManager, SynchronizedQueue<sf::Packet>
 void Client::start(void) {
 
     m_ship.kinematics().position() = posView;
+    m_ship.sail().setAngle(80.0f);
 
     //init TCP MANAGER
     if (!m_tcpManager.connect()) {
@@ -86,12 +90,6 @@ void Client::start(void) {
         return;
     }
 
-    //receive the map
-    packet = m_tcpManager.receive();
-
-    int width, height;
-    double seed;
-
     packet >> width >> height >> seed;
     std::cout << width << " " << height << " " << seed << std::endl;
 
@@ -102,36 +100,38 @@ void Client::start(void) {
     m_wind = new WindMap(MapHeader(height, width, seed));
 
     m_detailsView = new DetailsView(*m_map, *m_wind, m_ship);
+    m_globalView = new GlobalView(*m_map, *m_wind, m_ship);
+    m_mainGraphic = m_globalView;
 
     m_enableFolowCamera = false;
 
-    //receive players list
-    sf::Packet playersPacket;
-    std::cout << "receiving players list.........." << std::endl;
-    playersPacket = m_tcpManager.receive();
-
-    int nbPlayers;
-    playersPacket >> nbPlayers;
-
-    for (int i = 0; i < nbPlayers; ++i) {
-        std::string playerName;
-        playersPacket >> playerName;
-    m_enableFolowCamera = false;
-
-        if (playerName != m_name) {
-            m_otherPlayers.push_back(ClientPlayer(playerName));
-        }
-    }
-
-    m_udpManager.initialize("localhost", SERVER_PORT_UDP);
-
-    std::thread receiver(&receive, std::ref(m_udpManager), std::ref(m_inQueue));
-    
-    //sending ident packet
-    sf::Packet identPacket;
-    identPacket << static_cast<sf::Uint8>(REQ_IDENT);
-    std::cout << "sending ident packet............" << std::endl;
-    m_udpManager.send(identPacket);
+//    //receive players list
+//    sf::Packet playersPacket;
+//    std::cout << "receiving players list.........." << std::endl;
+//    playersPacket = m_tcpManager.receive();
+//
+//    int nbPlayers;
+//    playersPacket >> nbPlayers;
+//
+//    for (int i = 0; i < nbPlayers; ++i) {
+//        std::string playerName;
+//        playersPacket >> playerName;
+//    m_enableFolowCamera = false;
+//
+//        if (playerName != m_name) {
+//            m_otherPlayers.push_back(ClientPlayer(playerName));
+//        }
+//    }
+//
+//    m_udpManager.initialize("localhost", SERVER_PORT_UDP);
+//
+//    std::thread receiver(&receive, std::ref(m_udpManager), std::ref(m_inQueue));
+//    
+//    //sending ident packet
+//    sf::Packet identPacket;
+//    identPacket << static_cast<sf::Uint8>(REQ_IDENT);
+//    std::cout << "sending ident packet............" << std::endl;
+//    m_udpManager.send(identPacket);
 
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
 
@@ -152,9 +152,6 @@ void Client::gameLoop(sf::RenderWindow *window) {
 
     // Display info
 
-    
-    DisplayInfo::setWindow(window);
-
     while (window->isOpen()) {
 
         window->clear();
@@ -166,6 +163,7 @@ void Client::gameLoop(sf::RenderWindow *window) {
         while (window->pollEvent(event)) {
 
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                m_tcpManager.disconnect();
                 window->close();
             }
             if (event.type == sf::Event::KeyPressed) {
@@ -227,6 +225,9 @@ void Client::gameLoop(sf::RenderWindow *window) {
                     case sf::Keyboard::O:
                         m_timeSpeed *= 2.0f;
                         break;
+                    case sf::Keyboard::I:
+                            m_mainGraphic = (m_mainGraphic == dynamic_cast<sf::Drawable*>(m_detailsView))? dynamic_cast<sf::Drawable*>(m_globalView) : dynamic_cast<sf::Drawable*>(m_detailsView);
+                        break;
                     default:
                         break;
                 }
@@ -252,6 +253,9 @@ void Client::gameLoop(sf::RenderWindow *window) {
         float timeLoop = clockGameLoop.getElapsedTime().asSeconds();
         clockGameLoop.restart();
 
+        // Update diplay info
+        DisplayInfo::update();
+        
         // Update ship
 
         Wind wind = m_wind->wind(static_cast<sf::Vector2i> (m_ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
@@ -317,7 +321,8 @@ void Client::gameLoop(sf::RenderWindow *window) {
         window->setView(currentView);
         
         // Draw view
-        window->draw(*m_detailsView);
+//        window->draw(*m_detailsView);
+        window->draw(*m_mainGraphic);
 
         // Draw vent apparent
         VectorView<float> ventAppView(apparentWind, "Va", sf::Color::Green);
@@ -325,32 +330,28 @@ void Client::gameLoop(sf::RenderWindow *window) {
         tApp.translate(m_ship.kinematics().position());
         window->draw(ventAppView, tApp);
 
-
-        // Display information : 
-        DisplayInfo::setZoom(zoomValue);
-        DisplayInfo::setTopLeftPosition(posView - sf::Vector2f(SCREEN_WIDTH / 2 * zoomValue, SCREEN_HEIGHT / 2 * zoomValue));
-
+        
         // Clocks infos
-        DisplayInfo::draw(std::to_string(clockGlobal.getElapsedTime().asSeconds()));
-        DisplayInfo::draw("fps : " + std::to_string(fps));
-
-        // Data infos
-        DisplayInfo::draw("ship :");
-        DisplayInfo::draw("ship :" + std::to_string(shipDir));
-        DisplayInfo::draw("acc : " + std::to_string(m_ship.kinematics().acceleration().x) + " " + std::to_string(m_ship.kinematics().acceleration().y));
-        DisplayInfo::draw("speed : " + std::to_string(m_ship.kinematics().speed().x) + " " + std::to_string(m_ship.kinematics().speed().y));
-        DisplayInfo::draw("pos : " + std::to_string(m_ship.kinematics().position().x) + " " + std::to_string(m_ship.kinematics().position().y));
-//        DisplayInfo::draw("dir : " + std::to_string(dir.x) + " " + std::to_string(dir.y) + ". norme : " + std::to_string(Kinematics::norme(m_ship.kinematics().speed())));
-
-        //DisplayInfo::draw("wind : " + m_windView.force(m_ship.getPosition()).toString());
-
-        // Draw infos
-        DisplayInfo::draw("Wind Direction/Force: " + std::to_string(wind.direction()) + " " + std::to_string(wind.force()));
-        DisplayInfo::draw("WindVector: " + std::to_string(windVector.x) + " " + std::to_string(windVector.y));
-        DisplayInfo::draw("VentApparent : " + std::to_string(apparentWind.x) + " " + std::to_string(apparentWind.y));
-        DisplayInfo::draw("sailVector : " + std::to_string(sailVector.x) + " " + std::to_string(sailVector.y));
-        DisplayInfo::draw("helmVector : " + std::to_string(helmVector.x) + " " + std::to_string(helmVector.y));
-        DisplayInfo::draw("ForceDePousser : " + std::to_string(forceDePousser.x) + " " + std::to_string(forceDePousser.y));
+//        window->draw(DisplayInfo(std::to_string(clockGlobal.getElapsedTime().asSeconds())));
+//        window->draw(DisplayInfo("fps : " + std::to_string(fps)));
+//
+//        // Data infos
+//        window->draw(DisplayInfo("ship :"));
+//        window->draw(DisplayInfo("ship :" + std::to_string(shipDir)));
+//        window->draw(DisplayInfo("acc : " + std::to_string(m_ship.kinematics().acceleration().x) + " " + std::to_string(m_ship.kinematics().acceleration().y)));
+//        window->draw(DisplayInfo("speed : " + std::to_string(m_ship.kinematics().speed().x) + " " + std::to_string(m_ship.kinematics().speed().y)));
+//        window->draw(DisplayInfo("pos : " + std::to_string(m_ship.kinematics().position().x) + " " + std::to_string(m_ship.kinematics().position().y)));
+////        window->draw(DisplayInfo(("dir : " + std::to_string(dir.x) + " " + std::to_string(dir.y) + ". norme : " + std::to_string(Kinematics::norme(m_ship.kinematics().speed())));
+//
+//        //window->draw(DisplayInfo(("wind : " + m_windView.force(m_ship.getPosition()).toString());
+//
+//        // Draw infos
+//        window->draw(DisplayInfo("Wind Direction/Force: " + std::to_string(wind.direction()) + " " + std::to_string(wind.force())));
+//        window->draw(DisplayInfo("WindVector: " + std::to_string(windVector.x) + " " + std::to_string(windVector.y)));
+//        window->draw(DisplayInfo("VentApparent : " + std::to_string(apparentWind.x) + " " + std::to_string(apparentWind.y)));
+//        window->draw(DisplayInfo("sailVector : " + std::to_string(sailVector.x) + " " + std::to_string(sailVector.y)));
+//        window->draw(DisplayInfo("helmVector : " + std::to_string(helmVector.x) + " " + std::to_string(helmVector.y)));
+//        window->draw(DisplayInfo("ForceDePousser : " + std::to_string(forceDePousser.x) + " " + std::to_string(forceDePousser.y)));
 
 
         if (clockFPS.getElapsedTime().asSeconds() >= 1) {

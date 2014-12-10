@@ -22,10 +22,10 @@ class DetailsView : public sf::Drawable {
 public:
     DetailsView(const HeigthMap &heigthMap, const WindMap &windMap, const Ship &ship);
     virtual ~DetailsView();
-    
-   bool switchEnableWind();
-   bool switchSquared();
-    
+
+    bool switchEnableWind();
+    bool switchSquared();
+
 private:
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -35,7 +35,7 @@ private:
     HeigthMapView m_heigthMapView;
     WindMapView m_windMapView;
     ShipView m_shipView;
-    
+
     // Enable
     bool m_enableWind;
 
