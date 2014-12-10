@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <shared/network/Requests.h>
+#include <shared/network/Request.h>
 #include <server/network/ServerTCPManager.h>
 
 #include <shared/Utils.h>

@@ -30,7 +30,7 @@ public:
     Client();
     virtual ~Client();
 
-    void start(void);
+    void start(const std::string & name);
 private:
     static void receive(ClientUDPManager& udpManager, SynchronizedQueue<sf::Packet>& inQueue);
     void gameLoop(sf::RenderWindow *window);
@@ -43,7 +43,7 @@ private:
     bool m_enablePause;
     float m_timeSpeed;
     
-    std::string m_name;
+    ClientPlayer m_player;
     
     ClientTCPManager m_tcpManager;
     ClientUDPManager m_udpManager;

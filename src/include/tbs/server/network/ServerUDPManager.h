@@ -20,6 +20,8 @@ public:
     bool initialize(unsigned short port);
 
     bool send(sf::Packet packet, const sf::IpAddress & address, unsigned short port);
+    
+    bool receiveIdentifyRequests(std::vector<ServerPlayer*> players);
     sf::Packet receive(void);
     
 private:
