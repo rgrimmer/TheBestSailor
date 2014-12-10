@@ -22,8 +22,9 @@ public:
     unsigned int getId() const;
     
 private:
-    unsigned int m_id;
     std::string m_name;
+    unsigned int m_id;
+    
 };
 
 #endif	/* CLIENT_PLAYER_H */

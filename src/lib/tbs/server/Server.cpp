@@ -13,6 +13,9 @@
 
 #include "server/Server.h"
 
+#include "shared/network/Request.h"
+#include "shared/network/RequestTurnHelm.h"
+
 #include "shared/Utils.h"
 
 Server::Server() {
@@ -53,7 +56,7 @@ void Server::start() {
     playersList << static_cast<sf::Uint8> (m_players.size());
 
     for (ServerPlayer* p : m_players) {
-        playersList << static_cast<sf::Uint8>(p->getId());
+        playersList << static_cast<sf::Uint8> (p->getId());
         playersList << p->getName();
     }
 
@@ -78,13 +81,46 @@ void Server::start() {
 
         if (!m_inQueue.empty()) {
             sf::Packet packetReceived = m_inQueue.pop();
+
+            const sf::Uint8* reqType = static_cast<const sf::Uint8*> (packetReceived.getData());
+
+            std::cout << "received ";
             
-            sf::Packet packet;
-            packet << 0;
+            switch (static_cast<int> (reqType[0])) {
+                case REQ_ACTION_TURN_HELM_POSITIVE:
+                    std::cout << "ACTION TURN HELM POSITIVE ";
+                    break;
+
+                case REQ_ACTION_TURN_HELM_NEGATIVE:
+                    std::cout << "ACTION TURN HELM NEGATIVE ";
+                    break;
+
+                case REQ_ACTION_TURN_SAIL_POSITIVE:
+                    std::cout << "ACTION TURN SAIL POSITIVE ";
+                    break;
+
+                case REQ_ACTION_TURN_SAIL_NEGATIVE:
+                    std::cout << "ACTION TURN SAIL NEGATIVE ";
+                    break;
+
+                default:
+
+                    break;
+
+            }
+
+            sf::Uint8 reqTypeUi8;
+            sf::Uint8 idUi8;
+
+            packetReceived >> reqTypeUi8 >> idUi8;
+            std::cout << "from " << m_players.at(static_cast<int> (idUi8))->getName() << std::endl;
+
+            sf::Packet packetResponse;
+            packetResponse << 0;
 
             for (ServerPlayer* p : m_players) {
                 std::cout << " sending resp to : " << p->getName() << " port = " << p->getUdpPort() << std::endl;
-                m_udpManager.send(packet, p->getAddress(), p->getUdpPort());
+                m_udpManager.send(packetResponse, p->getAddress(), p->getUdpPort());
             }
         }
     }

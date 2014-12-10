@@ -16,11 +16,13 @@
 #include <SFML/Window/Event.hpp>
 #include <cmath>
 
-#include "shared/Utils.h"
 #include "client/map/Gradient.h"
 #include "client/DisplayInfo.h"
 
-#include "shared/network/Requests.h"
+#include "shared/network/Request.h"
+#include "shared/network/RequestTurnHelm.h"
+#include "shared/network/RequestTurnSail.h"
+#include "shared/Utils.h"
 #include "shared/Kinematics.h"
 
 
@@ -197,27 +199,32 @@ void Client::gameLoop(sf::RenderWindow *window) {
                         zoomValue /= 2.0f;
                         currentView = sf::View(sf::FloatRect(posView.x, posView.y, SCREEN_WIDTH * zoomValue, SCREEN_HEIGHT * zoomValue));
                         break;
-                    case sf::Keyboard::K:
+                    case sf::Keyboard::D:
                     {
-                        sf::Packet packet;
-                        packet << static_cast<sf::Uint8> (REQ_ACTION_TURN_HELM);
-                        packet << 0.5f;
-                        m_udpManager.send(packet);
+                        m_udpManager.send(RequestTurnHelm(REQ_ACTION_TURN_HELM_POSITIVE, m_player.getId()).createPacket());
                         m_ship.helm().turn(0.5f);
                     }
                         break;
-                    case sf::Keyboard::M:
+                    case sf::Keyboard::Q:
                     {
-                        sf::Packet packet;
-                        packet << static_cast<sf::Uint8> (REQ_ACTION_TURN_HELM);
-                        packet << -0.5f;
-                        m_udpManager.send(packet);
+                        m_udpManager.send(RequestTurnHelm(REQ_ACTION_TURN_HELM_NEGATIVE, m_player.getId()).createPacket());
                         m_ship.helm().turn(-0.5f);
                     }
                         break;
-                    case sf::Keyboard::S:
-                        m_ship.sail().setAngle(m_ship.sail().getAngle() - 5.0f);
+                    case sf::Keyboard::Z:
+                    {
+                        m_udpManager.send(RequestTurnSail(REQ_ACTION_TURN_SAIL_POSITIVE, m_player.getId()).createPacket());
+                        m_ship.sail().setAngle(m_ship.sail().getAngle() + 5.0f);
+                    }
                         break;
+                        
+                    case sf::Keyboard::S:
+                    {
+                        m_udpManager.send(RequestTurnSail(REQ_ACTION_TURN_SAIL_NEGATIVE, m_player.getId()).createPacket());
+                        m_ship.sail().setAngle(m_ship.sail().getAngle() - 5.0f);
+                    }
+                        break;
+                        
                     case sf::Keyboard::A:
                         m_detailsView->switchSquared();
                         break;

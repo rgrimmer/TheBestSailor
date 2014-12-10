@@ -3,7 +3,7 @@
 #include <server/network/ServerUDPManager.h>
 
 #include <shared/Utils.h>
-#include <shared/network/Requests.h>
+#include <shared/network/Request.h>
 
 ServerUDPManager::ServerUDPManager() {
 
