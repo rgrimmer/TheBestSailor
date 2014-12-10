@@ -12,13 +12,10 @@
 //#include <thread>
 #include <SFML/System/Thread.hpp>
 
-#include "shared/map/MapHeader.h"
-#include "shared/map/HeigthMap.h"
-#include "shared/map/WindMap.h"
 #include "shared/ship/Ship.h"
 
 #include "client/DetailsView.h"
-
+#include "client/World.h"
 #include "client/network/ClientTCPManager.h"
 #include "client/network/ClientUDPManager.h"
 #include "client/ClientPlayer.h"
@@ -36,9 +33,10 @@ private:
     void gameLoop(sf::RenderWindow *window);
     
 private:
-    HeigthMap* m_map;
-    WindMap* m_wind;
-    Ship m_ship;
+    World m_world;
+    //HeigthMap* m_map;
+    //WindMap* m_wind;
+    //Ship m_ship;
     bool m_enableFolowCamera;
     bool m_enablePause;
     float m_timeSpeed;
