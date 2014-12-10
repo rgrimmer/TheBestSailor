@@ -73,29 +73,29 @@ void Client::start(const std::string & name) {
     m_ship.kinematics().position() = posView;
     m_ship.sail().setAngle(80.0f);
 
-    //init TCP MANAGER
-    if (!m_tcpManager.connect()) {
-        std::cout << "Error connect" << std::endl;
-        return;
-    }
+//    //init TCP MANAGER
+//    if (!m_tcpManager.connect()) {
+//        std::cout << "Error connect" << std::endl;
+//        return;
+//    }
+//
+//    //send player name
+//    sf::Packet packet;
+//    packet << static_cast<sf::Uint8> (REQ_NEW_PLAYER) << name;
+//    std::cout << "sending player name : " << name << "............." << std::endl;
+//
+//    if (!m_tcpManager.send(packet)) {
+//        std::cout << "Error send" << std::endl;
+//        return;
+//    }
+//
+//    //receive the map
+//    packet = m_tcpManager.receive();
 
-    //send player name
-    sf::Packet packet;
-    packet << static_cast<sf::Uint8> (REQ_NEW_PLAYER) << name;
-    std::cout << "sending player name : " << name << "............." << std::endl;
+    int width = 200, height = 200;
+    double seed = 42;
 
-    if (!m_tcpManager.send(packet)) {
-        std::cout << "Error send" << std::endl;
-        return;
-    }
-
-    //receive the map
-    packet = m_tcpManager.receive();
-
-    int width, height;
-    double seed;
-
-    packet >> width >> height >> seed;
+//    packet >> width >> height >> seed;
     std::cout << width << " " << height << " " << seed << std::endl;
 
     Gradient::initialize();
@@ -104,53 +104,54 @@ void Client::start(const std::string & name) {
     m_map = new HeigthMap(MapHeader(height, width, seed));
     m_wind = new WindMap(MapHeader(height, width, seed));
 
+    m_globalView = new GlobalView(*m_map, *m_wind, m_ship);
     m_detailsView = new DetailsView(*m_map, *m_wind, m_ship);
+    m_mainGraphic = (m_mainGraphic == dynamic_cast<sf::Drawable*>(m_globalView))? dynamic_cast<sf::Drawable*>(m_detailsView) : dynamic_cast<sf::Drawable*>(m_globalView);
 
     m_enableFolowCamera = false;
 
     //receive players list
-    sf::Packet playersPacket;
-    std::cout << "receiving players list.........." << std::endl;
-    playersPacket = m_tcpManager.receive();
-
-    sf::Uint8 nbPlayers;
-    playersPacket >> nbPlayers;
-
-    int nbPlayersInt = static_cast<int> (nbPlayers);
-
-    std::cout << "players list (nbPlayer=" << nbPlayersInt << ")" << std::endl;
-    for (int i = 0; i < nbPlayersInt; ++i) {
-        sf::Uint8 id;
-        std::string playerName;
-
-        playersPacket >> id;
-        playersPacket >> playerName;
-
-        unsigned int idUInt = static_cast<unsigned int> (id);
-        m_enableFolowCamera = false;
-
-        if (playerName != name) {
-            m_otherPlayers.push_back(ClientPlayer(idUInt, playerName));
-        } else {
-            m_player.setId(idUInt);
-        }
-    }
-
-    m_udpManager.initialize("localhost", SERVER_PORT_UDP);
-
-    std::thread receiver(&receive, std::ref(m_udpManager), std::ref(m_inQueue));
-
-    //sending ident packet
-    sf::Packet identPacket;
-    identPacket << static_cast<sf::Uint8> (m_player.getId());
-    std::cout << "sending ident packet id = " << m_player.getId() << std::endl;
-    m_udpManager.send(identPacket);
+//    sf::Packet playersPacket;
+//    std::cout << "receiving players list.........." << std::endl;
+//    playersPacket = m_tcpManager.receive();
+//
+//    sf::Uint8 nbPlayers;
+//    playersPacket >> nbPlayers;
+//
+//    int nbPlayersInt = static_cast<int> (nbPlayers);
+//
+//    std::cout << "players list (nbPlayer=" << nbPlayersInt << ")" << std::endl;
+//    for (int i = 0; i < nbPlayersInt; ++i) {
+//        sf::Uint8 id;
+//        std::string playerName;
+//
+//        playersPacket >> id;
+//        playersPacket >> playerName;
+//
+//        unsigned int idUInt = static_cast<unsigned int> (id);
+//        m_enableFolowCamera = false;
+//
+//        if (playerName != name) {
+//            m_otherPlayers.push_back(ClientPlayer(idUInt, playerName));
+//        } else {
+//            m_player.setId(idUInt);
+//        }
+//    }
+//
+//    m_udpManager.initialize("localhost", SERVER_PORT_UDP);
+//
+//    std::thread receiver(&receive, std::ref(m_udpManager), std::ref(m_inQueue));
+//
+//    //sending ident packet
+//    sf::Packet identPacket;
+//    identPacket << static_cast<sf::Uint8> (m_player.getId());
+//    std::cout << "sending ident packet id = " << m_player.getId() << std::endl;
+//    m_udpManager.send(identPacket);
 
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
 
     window.setKeyRepeatEnabled(true);
     currentView = window.getView();
-
     gameLoop(&window);
 
 }
@@ -160,7 +161,7 @@ void Client::gameLoop(sf::RenderWindow *window) {
     sf::Clock clockGlobal;
     sf::Clock clockGameLoop;
     sf::Clock clockFPS;
-    int countFram = 0;
+    int countFrames = 0;
     int fps = 0;
 
     // Display info
@@ -321,7 +322,6 @@ void Client::gameLoop(sf::RenderWindow *window) {
 
         m_ship.kinematics().acceleration() = forceDePousser /* Kinematics::vectorDir(degToRad(angleDirShip))*/;
 
-
         if (!m_enablePause) {
             m_ship.update(timeLoop * m_timeSpeed);
         }
@@ -374,11 +374,11 @@ void Client::gameLoop(sf::RenderWindow *window) {
 
 
         if (clockFPS.getElapsedTime().asSeconds() >= 1) {
-            fps = countFram;
-            countFram = 0;
+            fps = countFrames;
+            countFrames = 0;
             clockFPS.restart();
         } else {
-            ++countFram;
+            ++countFrames;
         }
         window->display();
 

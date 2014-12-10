@@ -24,6 +24,7 @@ public:
     ShipView(const Ship &ship);
     virtual ~ShipView();
 
+    inline const Ship& getShip() const { return m_ship; }
 
 private:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;

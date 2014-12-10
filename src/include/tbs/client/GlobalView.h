@@ -38,8 +38,7 @@ private:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
     
-    MapHeader *m_mapHeader;
-    HeigthMap *m_heigthMap;
+    const MapHeader &m_mapHeader;
     
     // Graphic
     HeigthMapView m_heigthMapView;
@@ -51,12 +50,14 @@ private:
     DisplayInfo m_titleSfText;
     
     // World
-    sf::View m_worldView;
+    sf::View m_worldViewGraphic;
+    sf::View m_worldViewUnit;
     
     // Info
     sf::View m_infoView;
 
     // Background
+    sf::View m_backgroundView;
     sf::Texture m_backgroundTexture;
     sf::Sprite m_background;
 };
