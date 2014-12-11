@@ -30,6 +30,7 @@ void Server::receive(ServerUDPManager& udpManager, SynchronizedQueue<sf::Packet>
     std::cout << "receive thread started" << std::endl;
     while (true) {
         sf::Packet packet = udpManager.receive();
+            std::cout << "[recv]";
         if (packet.getDataSize() > 0) {
             inQueue.push(packet);
         }
@@ -46,8 +47,7 @@ void Server::start() {
     sf::Packet packet;
     packet << m_map->getWidth() << m_map->getHeight() << m_map->getSeed();
 
-    m_tcpManager.initialize(SERVER_PORT_TCP);
-    m_tcpManager.waitConnections(packet, m_players);
+    m_tcpManager.waitConnections(SERVER_PORT_TCP, packet, m_players);
 
     m_udpManager.initialize(SERVER_PORT_UDP);
 
@@ -85,15 +85,16 @@ void Server::start() {
 
             auto idPlayer = Request::popID(packetReceived);
             auto reqType = RequestData::popType(packetReceived);
-            
-            std::cout << "received ";
+
+            std::cout << "[read] from " << m_players.at(idPlayer)->getName() << " -> Action ";
+
             switch (reqType) {
                 case REQ_ACTION_TURN_HELM:
                 {
-                    std::cout << "Action Turn Helm ";
+                    std::cout << "Turn Helm ";
                     RequestTurnHelm turnHelm;
                     turnHelm.fromPacketWithoutType(packetReceived);
-//                    turnHelm << packetReceived;
+                    //                    turnHelm << packetReceived;
                     if (turnHelm.getOrientation() == reqOrientation::POSITIVE)
                         std::cout << "POSITIVE";
                     else if (turnHelm.getOrientation() == reqOrientation::NEGATIVE)
@@ -104,10 +105,10 @@ void Server::start() {
                     break;
                 case REQ_ACTION_TURN_SAIL:
                 {
-                    std::cout << "Action Turn Sail ";
+                    std::cout << "Turn Sail ";
                     RequestTurnSail turnSail;
                     turnSail.fromPacketWithoutType(packetReceived);
-//                    turnSail << packetReceived;
+                    //                    turnSail << packetReceived;
                     if (turnSail.getOrientation() == reqOrientation::POSITIVE)
                         std::cout << "POSITIVE";
                     else if (turnSail.getOrientation() == reqOrientation::NEGATIVE)
@@ -116,20 +117,25 @@ void Server::start() {
                         std::cout << "UNDEFINED (WARNING)";
                 }
                     break;
+                case REQ_DISCONNECT:
+                {
+                    std::cout << "Disconnect";
+                    m_players.erase(m_players.begin() + idPlayer);
+                }
+                    break;
                 default:
-                    std::cout << "Action UNDEFINED (WARNING)";
+                    std::cout << "UNDEFINED (WARNING)";
 
                     break;
 
             }
-
-            std::cout << "from " << m_players.at(idPlayer)->getName() << std::endl;
+            std::cout << std::endl;
 
             sf::Packet packetResponse;
             packetResponse << 0;
 
             for (ServerPlayer* p : m_players) {
-                std::cout << " sending resp to : " << p->getName() << " port = " << p->getUdpPort() << std::endl;
+                std::cout << "[send] resp to : " << p->getName() << " port = " << p->getUdpPort() << std::endl;
                 m_udpManager.send(packetResponse, p->getAddress(), p->getUdpPort());
             }
         }

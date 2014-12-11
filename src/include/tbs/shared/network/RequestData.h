@@ -12,7 +12,7 @@
 
 typedef enum {
     REQ_UNDEF,
-    REQ_DISCONECT,
+    REQ_DISCONNECT,
     REQ_NEW_PLAYER,
     REQ_IDENT,
     REQ_ACTION_TURN_HELM,

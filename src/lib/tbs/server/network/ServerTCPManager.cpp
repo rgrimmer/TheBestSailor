@@ -13,78 +13,69 @@ ServerTCPManager::~ServerTCPManager() {
 
 }
 
-bool ServerTCPManager::initialize(unsigned short port) {
+bool ServerTCPManager::send(sf::Packet packet, sf::TcpSocket* player) {
+    sf::Socket::Status status = player->send(packet);
+    return (status == sf::Socket::Done);
+}
 
-    m_port = port;
+bool ServerTCPManager::waitConnections(unsigned short port, sf::Packet mapPacket, std::vector<ServerPlayer*>& players, sf::Time timeout) {
 
-    if (m_listener.listen(m_port) != sf::Socket::Done) {
+    if (m_listener.listen(port) != sf::Socket::Done) {
         return false;
     }
     m_selector.add(m_listener);
-    return true;
-}
 
-bool ServerTCPManager::send (sf::Packet packet, sf::TcpSocket* player) {
-    sf::Socket::Status status = player->send(packet);
-    return(status == sf::Socket::Done);
-}
+    while (m_selector.wait(timeout)) {
 
-bool ServerTCPManager::waitConnections(sf::Packet mapPacket, std::vector<ServerPlayer*>& players) {
-    bool stay = true;
+        for (int i = 0; i < m_clientsCount; ++i) {
 
-    while (stay) {
-        stay = false;
+            if (m_selector.isReady(m_clients[i])) {
+                std::cout << "[recv] ";
+                sf::Packet packetNewPlayer;
+                sf::TcpSocket::Status s = m_clients[i].receive(packetNewPlayer);
 
-        if (m_selector.wait(sf::seconds(5.0f))) {
-            stay = true;
-            for (int i = 0; i < m_clientsCount; ++i) {
+                if (s == sf::TcpSocket::Done) {
+                    sf::Uint8 req;
+                    packetNewPlayer >> req;
 
-                if (m_selector.isReady(m_clients[i])) {
-                    sf::Packet packetNewPlayer;
-                    sf::TcpSocket::Status s = m_clients[i].receive(packetNewPlayer);
+                    if (req == REQ_NEW_PLAYER) {
+                        std::cout << "New Player" << std::endl;
+                        std::string name;
+                        packetNewPlayer >> name;
+                        std::cout << "added new player : " << name << std::endl;
+                        players.push_back(new ServerPlayer(i, name, &m_clients[i]));
 
-                    if (s == sf::TcpSocket::Done) {
-                        sf::Uint8 req;
-                        packetNewPlayer >> req;
-
-                        if (req == REQ_NEW_PLAYER) {
-                            std::string name;
-                            packetNewPlayer >> name;
-                            std::cout << "added new player : " << name << std::endl;
-                            players.push_back(new ServerPlayer(i, name, &m_clients[i]));
-                            
-                        } else {
-                            return false;
-                        }
-
-                    }
-                    if (s == sf::TcpSocket::Disconnected) {
-                        std::cout << "player disconnected" << std::endl;
-                        m_selector.remove(m_clients[i]);
-                        i--;
-                    } else if (s == sf::TcpSocket::Error) {
-                        std::cout << "Error recv" << std::endl;
-                        return false;
                     } else {
-                        m_clients[i].send(mapPacket);
+                        std::cout << "Undefined Request" << std::endl;
+                        return false;
                     }
-                }
-            }
 
-            if (m_clientsCount < NB_CLIENT_MAX && m_selector.isReady(m_listener)) {
-                if (m_listener.accept(m_clients[m_clientsCount]) != sf::Socket::Done) {
-                    std::cout << "Error accept" << std::endl;
+                }
+                if (s == sf::TcpSocket::Disconnected) {
+                    std::cout << "player Disconnected" << std::endl;
+                    m_selector.remove(m_clients[i]);
+                    i--;
+                } else if (s == sf::TcpSocket::Error) {
+                    std::cout << "Error recv" << std::endl;
                     return false;
+                } else {
+                    m_clients[i].send(mapPacket);
                 }
-
-                std::cout << "new player connected" << std::endl;
-                m_selector.add(m_clients[m_clientsCount]);
-                m_clientsCount++;
             }
         }
 
-    }
+        if (m_clientsCount < NB_CLIENT_MAX && m_selector.isReady(m_listener)) {
+            if (m_listener.accept(m_clients[m_clientsCount]) != sf::Socket::Done) {
+                std::cout << "Error accept" << std::endl;
+                return false;
+            }
 
+            std::cout << "new player connected" << std::endl;
+            m_selector.add(m_clients[m_clientsCount]);
+            m_clientsCount++;
+        }
+    }
+    m_selector.remove(m_listener);
     m_listener.close();
 
     return true;

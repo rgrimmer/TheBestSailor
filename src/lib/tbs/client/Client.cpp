@@ -23,6 +23,7 @@
 #include "shared/network/RequestTurnSail.h"
 #include "shared/Utils.h"
 #include "shared/Kinematics.h"
+#include "shared/network/RequestDisconnect.h"
 
 
 sf::View currentView;
@@ -165,7 +166,8 @@ void Client::gameLoop(sf::RenderWindow *window) {
         while (window->pollEvent(event)) {
 
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-//                m_udpManager->send(RequestDeconnexion)
+                // Send disconnection message
+                m_udpManager.send(Request(m_player.getId(), RequestDisconnect()).getPacket());
                 window->close();
             }
             if (event.type == sf::Event::KeyPressed) {
