@@ -4,5 +4,8 @@ build/
 #netBeans files
 nbProject/
 
+#netBeans files
+TheBestSailorNBP/
+
 # Temporary files
 *~
