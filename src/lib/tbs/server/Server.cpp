@@ -17,6 +17,7 @@
 #include "shared/network/RequestTurnHelm.h"
 
 #include "shared/Utils.h"
+#include "shared/network/RequestTurnSail.h"
 
 Server::Server() {
 }
@@ -82,38 +83,47 @@ void Server::start() {
         if (!m_inQueue.empty()) {
             sf::Packet packetReceived = m_inQueue.pop();
 
-            const sf::Uint8* reqType = static_cast<const sf::Uint8*> (packetReceived.getData());
-
-            std::cout << "received ";
+            auto idPlayer = Request::popID(packetReceived);
+            auto reqType = RequestData::popType(packetReceived);
             
-            switch (static_cast<int> (reqType[0])) {
-                case REQ_ACTION_TURN_HELM_POSITIVE:
-                    std::cout << "ACTION TURN HELM POSITIVE ";
+            std::cout << "received ";
+            switch (reqType) {
+                case REQ_ACTION_TURN_HELM:
+                {
+                    std::cout << "Action Turn Helm ";
+                    RequestTurnHelm turnHelm;
+                    turnHelm.fromPacketWithoutType(packetReceived);
+//                    turnHelm << packetReceived;
+                    if (turnHelm.getOrientation() == reqOrientation::POSITIVE)
+                        std::cout << "POSITIVE";
+                    else if (turnHelm.getOrientation() == reqOrientation::NEGATIVE)
+                        std::cout << "NEGATIVE";
+                    else
+                        std::cout << "UNDEFINED (WARNING)";
+                }
                     break;
-
-                case REQ_ACTION_TURN_HELM_NEGATIVE:
-                    std::cout << "ACTION TURN HELM NEGATIVE ";
+                case REQ_ACTION_TURN_SAIL:
+                {
+                    std::cout << "Action Turn Sail ";
+                    RequestTurnSail turnSail;
+                    turnSail.fromPacketWithoutType(packetReceived);
+//                    turnSail << packetReceived;
+                    if (turnSail.getOrientation() == reqOrientation::POSITIVE)
+                        std::cout << "POSITIVE";
+                    else if (turnSail.getOrientation() == reqOrientation::NEGATIVE)
+                        std::cout << "NEGATIVE";
+                    else
+                        std::cout << "UNDEFINED (WARNING)";
+                }
                     break;
-
-                case REQ_ACTION_TURN_SAIL_POSITIVE:
-                    std::cout << "ACTION TURN SAIL POSITIVE ";
-                    break;
-
-                case REQ_ACTION_TURN_SAIL_NEGATIVE:
-                    std::cout << "ACTION TURN SAIL NEGATIVE ";
-                    break;
-
                 default:
+                    std::cout << "Action UNDEFINED (WARNING)";
 
                     break;
 
             }
 
-            sf::Uint8 reqTypeUi8;
-            sf::Uint8 idUi8;
-
-            packetReceived >> reqTypeUi8 >> idUi8;
-            std::cout << "from " << m_players.at(static_cast<int> (idUi8))->getName() << std::endl;
+            std::cout << "from " << m_players.at(idPlayer)->getName() << std::endl;
 
             sf::Packet packetResponse;
             packetResponse << 0;

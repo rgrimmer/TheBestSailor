@@ -9,15 +9,10 @@ ClientUDPManager::~ClientUDPManager() {
 
 }
 
-void ClientUDPManager::initialize(const std::string& address, unsigned short port) {
-    m_address = address;
-    m_port = port;
-    m_socket.setBlocking(false);
-}
-
-bool ClientUDPManager::send(sf::Packet packet) {
-    sf::Socket::Status status = m_socket.send(packet, m_address, m_port);
-    return (status == sf::Socket::Done);
+void ClientUDPManager::initialize(const std::string& addressRemote, unsigned short portRemote) {
+    m_address = addressRemote;
+    m_port = portRemote;
+    m_socket.setBlocking(false); // @TODO remove ?
 }
 
 sf::Packet ClientUDPManager::receive() {
@@ -28,4 +23,9 @@ sf::Packet ClientUDPManager::receive() {
     m_socket.receive(packet, senderAddress, senderPort);
 
     return packet;
+}
+
+bool ClientUDPManager::send(sf::Packet packet) {
+    sf::Socket::Status status = m_socket.send(packet, m_address, m_port);
+    return (status == sf::Socket::Done);
 }

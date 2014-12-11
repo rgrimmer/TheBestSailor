@@ -62,24 +62,24 @@ void Client::start(const std::string & name) {
     //m_ship.kinematics().position() = posView;
     //m_ship.sail().setAngle(80.0f);
 
-//    //init TCP MANAGER
-//    if (!m_tcpManager.connect()) {
-//        std::cout << "Error connect" << std::endl;
-//        return;
-//    }
-//
-//    //send player name
-//    sf::Packet packet;
-//    packet << static_cast<sf::Uint8> (REQ_NEW_PLAYER) << name;
-//    std::cout << "sending player name : " << name << "............." << std::endl;
-//
-//    if (!m_tcpManager.send(packet)) {
-//        std::cout << "Error send" << std::endl;
-//        return;
-//    }
-//
-//    //receive the map
-//    packet = m_tcpManager.receive();
+    //init TCP MANAGER
+    if (!m_tcpManager.connect()) {
+        std::cout << "Error connect" << std::endl;
+        return;
+    }
+
+    //send player name
+    sf::Packet packet;
+    packet << static_cast<sf::Uint8> (REQ_NEW_PLAYER) << name;
+    std::cout << "sending player name : " << name << "............." << std::endl;
+
+    if (!m_tcpManager.send(packet)) {
+        std::cout << "Error send" << std::endl;
+        return;
+    }
+
+    //receive the map
+    packet = m_tcpManager.receive();
 
     int width = 200, height = 200;
     double seed = 42;
@@ -99,43 +99,42 @@ void Client::start(const std::string & name) {
 
     m_enableFolowCamera = false;
 
-    //receive players list
-//    sf::Packet playersPacket;
-//    std::cout << "receiving players list.........." << std::endl;
-//    playersPacket = m_tcpManager.receive();
-//
-//    sf::Uint8 nbPlayers;
-//    playersPacket >> nbPlayers;
-//
-//    int nbPlayersInt = static_cast<int> (nbPlayers);
-//
-//    std::cout << "players list (nbPlayer=" << nbPlayersInt << ")" << std::endl;
-//    for (int i = 0; i < nbPlayersInt; ++i) {
-//        sf::Uint8 id;
-//        std::string playerName;
-//
-//        playersPacket >> id;
-//        playersPacket >> playerName;
-//
-//        unsigned int idUInt = static_cast<unsigned int> (id);
-//        m_enableFolowCamera = false;
-//
-//        if (playerName != name) {
-//            m_otherPlayers.push_back(ClientPlayer(idUInt, playerName));
-//        } else {
-//            m_player.setId(idUInt);
-//        }
-//    }
-//
-//    m_udpManager.initialize("localhost", SERVER_PORT_UDP);
-//
-//    std::thread receiver(&receive, std::ref(m_udpManager), std::ref(m_inQueue));
-//
-//    //sending ident packet
-//    sf::Packet identPacket;
-//    identPacket << static_cast<sf::Uint8> (m_player.getId());
-//    std::cout << "sending ident packet id = " << m_player.getId() << std::endl;
-//    m_udpManager.send(identPacket);
+    // receive players list
+    sf::Packet playersPacket;
+    std::cout << "receiving players list.........." << std::endl;
+    playersPacket = m_tcpManager.receive();
+
+    sf::Uint8 nbPlayers;
+    playersPacket >> nbPlayers;
+
+    int nbPlayersInt = static_cast<int> (nbPlayers);
+
+    std::cout << "players list (nbPlayer=" << nbPlayersInt << ")" << std::endl;
+    for (int i = 0; i < nbPlayersInt; ++i) {
+        sf::Uint8 id;
+        std::string playerName;
+
+        playersPacket >> id;
+        playersPacket >> playerName;
+
+        unsigned int idUInt = static_cast<unsigned int> (id);
+
+        if (playerName != name) {
+            m_otherPlayers.push_back(ClientPlayer(idUInt, playerName));
+        } else {
+            m_player.setId(idUInt);
+        }
+    }
+
+    m_udpManager.initialize("localhost", SERVER_PORT_UDP);
+
+    std::thread receiver(&receive, std::ref(m_udpManager), std::ref(m_inQueue));
+
+    //sending ident packet
+    sf::Packet identPacket;
+    identPacket << static_cast<sf::Uint8> (m_player.getId());
+    std::cout << "sending ident packet id = " << m_player.getId() << std::endl;
+    m_udpManager.send(identPacket);
 
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
 
@@ -166,6 +165,7 @@ void Client::gameLoop(sf::RenderWindow *window) {
         while (window->pollEvent(event)) {
 
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+//                m_udpManager->send(RequestDeconnexion)
                 window->close();
             }
             if (event.type == sf::Event::KeyPressed) {
@@ -192,26 +192,26 @@ void Client::gameLoop(sf::RenderWindow *window) {
                         break;
                     case sf::Keyboard::D:
                     {
-                        m_udpManager.send(RequestTurnHelm(REQ_ACTION_TURN_HELM_POSITIVE, m_player.getId()).createPacket());
+                        m_udpManager.send(Request(m_player.getId(), RequestTurnHelm(reqOrientation::POSITIVE)).getPacket());
                         m_world.getShip().helm().turn(0.5f);
                     }
                         break;
                     case sf::Keyboard::Q:
                     {
-                        m_udpManager.send(RequestTurnHelm(REQ_ACTION_TURN_HELM_NEGATIVE, m_player.getId()).createPacket());
+                        m_udpManager.send(Request(m_player.getId(), RequestTurnHelm(reqOrientation::NEGATIVE)).getPacket());
                         m_world.getShip().helm().turn(-0.5f);
                     }
                         break;
                     case sf::Keyboard::Z:
                     {
-                        m_udpManager.send(RequestTurnSail(REQ_ACTION_TURN_SAIL_POSITIVE, m_player.getId()).createPacket());
+                        m_udpManager.send(Request(m_player.getId(), RequestTurnSail(reqOrientation::POSITIVE)).getPacket());
                         m_world.getShip().sail().setAngle(m_world.getShip().sail().getAngle() + 5.0f);
                     }
                         break;
                         
                     case sf::Keyboard::S:
                     {
-                        m_udpManager.send(RequestTurnSail(REQ_ACTION_TURN_SAIL_NEGATIVE, m_player.getId()).createPacket());
+                        m_udpManager.send(Request(m_player.getId(), RequestTurnSail(reqOrientation::NEGATIVE)).getPacket());
                         m_world.getShip().sail().setAngle(m_world.getShip().sail().getAngle() - 5.0f);
                     }
                         break;
@@ -234,7 +234,7 @@ void Client::gameLoop(sf::RenderWindow *window) {
                     case sf::Keyboard::T:
                         m_timeSpeed *= 2.0f;
                         break;
-                    case sf::Keyboard::I:
+                    case sf::Keyboard::M:
                             m_mainGraphic = (m_mainGraphic == dynamic_cast<sf::Drawable*>(m_detailsView))? dynamic_cast<sf::Drawable*>(m_globalView) : dynamic_cast<sf::Drawable*>(m_detailsView);
                         break;
                     default:

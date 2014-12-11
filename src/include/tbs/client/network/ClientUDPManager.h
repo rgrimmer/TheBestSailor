@@ -15,7 +15,7 @@ public:
     ClientUDPManager();
     ~ClientUDPManager();
 
-    void initialize(const std::string& address, unsigned short port);
+    void initialize(const std::string& addressRemote, unsigned short portRemote);
 
     bool send (sf::Packet packet);
     sf::Packet receive(void);

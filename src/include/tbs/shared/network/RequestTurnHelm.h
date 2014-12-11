@@ -8,16 +8,23 @@
 #ifndef REQUEST_TURN_HELM_H
 #define	REQUEST_TURN_HELM_H
 
-#include <shared/network/Request.h>
+#include <shared/network/RequestData.h>
 
-class RequestTurnHelm : public Request {
-    
+class RequestTurnHelm : public RequestData {
 public:
-    explicit RequestTurnHelm(reqType type, unsigned int id);
+    explicit RequestTurnHelm(reqOrientation orientation = UNDEF);
     virtual ~RequestTurnHelm();
-    
-    virtual sf::Packet createPacket(); 
+
+    reqOrientation getOrientation() const;
+    virtual reqType getType() const;
+
 private:
+    virtual void getDataFrom(sf::Packet& packet);
+    virtual void putDataIn(sf::Packet& packet) const;
+
+
+private:
+    reqOrientation m_orientation;
 
 };
 

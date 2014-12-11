@@ -10,24 +10,19 @@
 
 #include <SFML/Network.hpp>
 
-typedef enum {
-    REQ_NEW_PLAYER,
-    REQ_IDENT,
-    REQ_ACTION_TURN_HELM_POSITIVE,
-    REQ_ACTION_TURN_HELM_NEGATIVE,
-    REQ_ACTION_TURN_SAIL_POSITIVE,
-    REQ_ACTION_TURN_SAIL_NEGATIVE
-} reqType;
+#include "RequestData.h"
 
 class Request {
 public:
-    explicit Request(reqType type, unsigned int id);
+    static unsigned int popID(sf::Packet& packet);
+public:
+    explicit Request(unsigned int id, const RequestData &data);
     virtual ~Request();
 
-    virtual sf::Packet createPacket();
+    sf::Packet getPacket() const;
 protected:
-    reqType m_type;
     unsigned int m_id;
+    const RequestData *m_data;
 };
 
 #endif	/* REQUEST_H */

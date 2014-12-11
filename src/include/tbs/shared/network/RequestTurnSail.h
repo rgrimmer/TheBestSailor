@@ -8,17 +8,21 @@
 #ifndef REQUEST_TURN_SAIL_H
 #define	REQUEST_TURN_SAIL_H
 
-#include <shared/network/Request.h>
+#include <shared/network/RequestData.h>
 
-class RequestTurnSail : public Request {
-    
+class RequestTurnSail : public RequestData {
 public:
-    explicit RequestTurnSail(reqType type, unsigned int id);
+    explicit RequestTurnSail(reqOrientation orientation = UNDEF);
     virtual ~RequestTurnSail();
-    
-    virtual sf::Packet createPacket(); 
-private:
 
+    reqOrientation getOrientation() const;
+    virtual reqType getType() const;
+
+    virtual void getDataFrom(sf::Packet& packet);
+    virtual void putDataIn(sf::Packet& packet) const;
+
+private:
+    reqOrientation m_orientation;
 };
 
 #endif	/* REQUEST_TURN_HELM_H */
