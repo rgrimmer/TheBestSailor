@@ -32,12 +32,6 @@ TODO : Exigence en rapport au règle du jeux :
 
 Protocole d'une partie :
 - Une partie est créer à la fin du décompte.
-- On génère une taille de carte
-- On génère une graine pour le relief
-- On génère une graine pour le vent
-- On génère les balises
-- On génère la position pour les bateaux
-- On créé les éléments en mémoires
 - On envoi les éléments (TCP ou UDP avec validation)
 - On attent que les joueurs soit prêt par un message READY de tous les joueurs (Qu'il est créé les éléments) (TCP ou UDP avec validation)
 - Si aucune réponse d'un joueur au bout de 10s on le déconnect
@@ -49,5 +43,41 @@ Exigence pour le client :
 - Un joueur peut demander à recommencer une partie. Tous les joueurs son remis dans la file d'attente.
 - Un joueur peut quitter à tout moment.
 
+Protocole serveur :
+-1) Il lance un thread d'attente de connection.
+-2) Il lance le chrono de début de partie.
+-3)[IMPLICIT : Le chrono terminé et il y a des joueurs dans la file d'attente]
+-4) Il créer une partie.
+-5) Il "envoi la partie" aux joueurs.
+-6)[Les joueurs sont prets]
+-7) Il lance la boucle de jeu
+-8)[IMPLICIT : partie fini]
+-9) [GOTO] 2
+
+Protocole -1) Attente de connection :
+-1.1) [Attente passive d'une connection d'un joueur]
+-1.2) Enregistrement du joueur dans la liste d'attente (id, nom, socketTCP)
+-1.3) SI [Premier joueur se connectant au serveur]
+-1.3a) Signaler premier joueur au serveur (Réinisialise le chrono ou lance le chrono)
+-1.4) [GOTO] 1.1
+
+Protocole -2) Lancer le chrono de début de partie :
+-2.1) SI [Aucun joueur connecté]
+-2.1a) [Attendre une notif de connexion]
+-2.2) Lancer le chrono
+-2.3) (Attendre la fin du chrono)
+
+Protocole -4) Création d'une partie
+-4.1) On génère une taille de carte
+-4.2) On génère une graine pour le relief
+-4.3) On génère une graine pour le vent
+-4.4) On génère les balises
+-4.5) On génère la position pour les bateaux
+-4.6) On créé les éléments en mémoires
+
 
 Données transmises :
+
+
+Perspective :
+Ajout d'identification de joueurs. Dans le but d'avoir des scores persistant.
