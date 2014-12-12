@@ -1,10 +1,16 @@
+Les éléments :
+Un serveur : C'est l'élément principale, le main. C'est lui qui contiendera la partie et la file d'attente
+Un client : C'est l'élément distant avec qui le client va communiquer. C'est le joueur.
+Une partie : Une partie contient la liste des joueurs, les élément du jeux et la boucle de jeux.
+Une file d'attente : C'est là que les joueurs sont quand ils ne sont pas dans une partie.
+
 Exigence coté server :
 - Un serveur doit pouvoir tourner en permanence
-- Un joueur doit pouvoir se connecter quand il le souhaite dans la limite des capacites du serveur
-- Un joueur qui vient de se connecter est mis en attente.
-- Lorsque un joueur se déconnect d'une partie ou de la file d'attente. Il est retiré de celle-ci.
 - Un serveur ne peut avoir qu'une partie en cours à la fois.
 
+Exigence en rapport à la file d'attente :
+- Un joueur qui n'est pas en partie est forcément dans la file d'attente.
+- Lorsque un joueur se déconnecte de la file d'attente, il est retiré de celle-ci. (Il est déconnecté du serveur)
 
 Exigence en rapport à la partie :
 - Une partie commence au bout de 30s.
@@ -13,6 +19,16 @@ Exigence en rapport à la partie :
 - Une partie n'ayant plus de joueur se termine.
 - Lorsque une partie commence, tous les joueurs en file d'attente son dirigé vers la partie.
 - Lorsque une partie se termine, tous les joueurs participants son mis dans la file d'attente.
+- Lorsque un joueur se déconnecte d'une partie, il est retiré de celle-ci. (Il est déconnecté du serveur
+- Lorsqu'un joueur gagne la partie. Tous les autres joueurs son notifié par un message. 
+Au bout de 10s, tous les joueurs sont redirigé vers la file d'attente. 
+La parti se terminera car il n'y a plus de joueurs.
+
+TODO : Exigence en rapport au règle du jeux :
+- Collision avec la terre
+- Collision avec les autres
+- Condition de victoire
+- Détection de balise (checkpoint)
 
 Protocole d'une partie :
 - Une partie est créer à la fin du décompte.
@@ -27,7 +43,11 @@ Protocole d'une partie :
 - Si aucune réponse d'un joueur au bout de 10s on le déconnect
 - On démarre la boucle de jeu
 
-
 Exigence pour le client :
+- Un joueur doit pouvoir se connecter quand il le souhaite dans la limite des capacites du serveur
+- Un joueur qui vient de se connecter est mis en attente.
 - Un joueur peut demander à recommencer une partie. Tous les joueurs son remis dans la file d'attente.
 - Un joueur peut quitter à tout moment.
+
+
+Données transmises :
