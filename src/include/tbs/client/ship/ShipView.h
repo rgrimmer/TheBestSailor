@@ -33,7 +33,7 @@ private:
     const Ship& m_ship;
 
     // Graphic
-    sf::RectangleShape m_shipShap;
+    sf::RectangleShape m_shipShape;
     VectorView<float>* m_speedView;
     VectorView<float>* m_accView;
 

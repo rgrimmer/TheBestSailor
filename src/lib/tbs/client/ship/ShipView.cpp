@@ -11,12 +11,12 @@
 
 ShipView::ShipView(const Ship &ship)
 : m_ship(ship)
-, m_shipShap(sf::Vector2f(50.0f, 100.0f)) {
+, m_shipShape(sf::Vector2f(50.0f, 100.0f)) {
     m_speedView = new VectorView<float>(m_ship.kinematics().speed(), "Vship");
     m_accView = new VectorView<float>(m_ship.kinematics().acceleration(), "", sf::Color::White);
     
-    m_shipShap.setOrigin(25.0f, 50.0f);
-    m_shipShap.setFillColor(sf::Color::Red);
+    m_shipShape.setOrigin(25.0f, 50.0f);
+    m_shipShape.setFillColor(sf::Color::Red);
 
 }
 
@@ -30,14 +30,13 @@ void ShipView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     states.transform.translate(m_ship.kinematics().position());
 
     // Draw ship
-    target.draw(m_shipShap, states);
+    target.draw(m_shipShape, states);
 
     // Draw sail
     target.draw(m_ship.sail(), states);
     
     // Draw vector
     target.draw(*m_speedView, states);
-    // Draw vector
     target.draw(*m_accView, states);
     
     // Draw helm

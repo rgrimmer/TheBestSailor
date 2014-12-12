@@ -1,0 +1,33 @@
+Exigence coté server :
+- Un serveur doit pouvoir tourner en permanence
+- Un joueur doit pouvoir se connecter quand il le souhaite dans la limite des capacites du serveur
+- Un joueur qui vient de se connecter est mis en attente.
+- Lorsque un joueur se déconnect d'une partie ou de la file d'attente. Il est retiré de celle-ci.
+- Un serveur ne peut avoir qu'une partie en cours à la fois.
+
+
+Exigence en rapport à la partie :
+- Une partie commence au bout de 30s.
+- Une partie ne peut commencer sans joueurs. Si une partie doit commencer sans joueurs. Le décompte recommence.
+- L'exigence précedente pourra être améliorée en commençant le décompte qu'à la première connexion d'un joueur.
+- Une partie n'ayant plus de joueur se termine.
+- Lorsque une partie commence, tous les joueurs en file d'attente son dirigé vers la partie.
+- Lorsque une partie se termine, tous les joueurs participants son mis dans la file d'attente.
+
+Protocole d'une partie :
+- Une partie est créer à la fin du décompte.
+- On génère une taille de carte
+- On génère une graine pour le relief
+- On génère une graine pour le vent
+- On génère les balises
+- On génère la position pour les bateaux
+- On créé les éléments en mémoires
+- On envoi les éléments (TCP ou UDP avec validation)
+- On attent que les joueurs soit prêt par un message READY de tous les joueurs (Qu'il est créé les éléments) (TCP ou UDP avec validation)
+- Si aucune réponse d'un joueur au bout de 10s on le déconnect
+- On démarre la boucle de jeu
+
+
+Exigence pour le client :
+- Un joueur peut demander à recommencer une partie. Tous les joueurs son remis dans la file d'attente.
+- Un joueur peut quitter à tout moment.
