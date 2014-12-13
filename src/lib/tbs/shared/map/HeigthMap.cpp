@@ -11,15 +11,17 @@
 
 #include "shared/ValueNoise.h"
 
-HeigthMap::HeigthMap() : m_header(MapHeader(0,0)), m_container(NULL) {
+sf::Packet& operator <<(sf::Packet& packet, const HeigthMap& map)
+{
+    return packet << map.getHeader();
+}
+
+HeigthMap::HeigthMap() : m_header(0,0), m_container(NULL) {
 
 }
 
-HeigthMap::HeigthMap(const MapHeader &header) {
-
-    m_header.setWidth(header.getWidth());
-    m_header.setHeight(header.getHeight());
-    m_header.setSeed(header.getSeed());
+HeigthMap::HeigthMap(const MapHeader &header) 
+: m_header(header) {
     
     int width = header.getWidth();
     int height = header.getHeight();

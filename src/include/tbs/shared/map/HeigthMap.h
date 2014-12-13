@@ -5,8 +5,8 @@
  * Created on 10 octobre 2014, 13:39
  */
 
-#ifndef HEIGTHMAP_H
-#define	HEIGTHMAP_H
+#ifndef HEIGHTMAP_H
+#define	HEIGHTMAP_H
 
 #include <SFML/Network/Packet.hpp>
 
@@ -18,7 +18,6 @@ public:
     HeigthMap(const MapHeader &header);
     virtual ~HeigthMap();
 
-    
     float& operator()(int i, int j) {
         return m_container[i][j];
     }
@@ -26,7 +25,7 @@ public:
     float operator()(int i, int j) const {
         return m_container[i][j];
     }
-    
+
     int getSize() const;
     int getWidth() const;
     int getHeight() const;
@@ -40,5 +39,7 @@ private:
     float** m_container;
 };
 
-#endif	/* MAP_H */
+sf::Packet& operator <<(sf::Packet& packet, const HeigthMap& map);
+
+#endif	/* HEIGHTMAP_H */
 

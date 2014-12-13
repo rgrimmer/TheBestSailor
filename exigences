@@ -49,7 +49,7 @@ Protocole serveur :
 -3)[IMPLICIT : Le chrono terminé et il y a des joueurs dans la file d'attente]
 -4) Il créer une partie.
 -5) Il "envoi la partie" aux joueurs.
--6)[Les joueurs sont prets]
+-6)[IMPLICIT : Les joueurs sont prets]
 -7) Il lance la boucle de jeu
 -8)[IMPLICIT : partie fini]
 -9) [GOTO] 2
@@ -80,4 +80,5 @@ Données transmises :
 
 
 Perspective :
+Identification des joueurs par leur port/ip. Eviter la triche.
 Ajout d'identification de joueurs. Dans le but d'avoir des scores persistant.

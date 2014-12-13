@@ -14,7 +14,12 @@
 const int WindMap::maxStrength = 16;
 const int WindMap::minStrength = 1;
 
-WindMap::WindMap() : m_header(MapHeader(0,0)), m_container(NULL) {
+
+sf::Packet& operator<<(sf::Packet& packet, const WindMap& map) {
+    return packet << map.getHeader();
+}
+
+WindMap::WindMap() : m_header(MapHeader(0, 0)), m_container(NULL) {
 
 }
 
@@ -23,7 +28,7 @@ WindMap::WindMap(const MapHeader &header) {
     m_header.setWidth(header.getWidth());
     m_header.setHeight(header.getHeight());
     m_header.setSeed(header.getSeed());
-    
+
     int width = header.getWidth();
     int height = header.getHeight();
 
@@ -40,15 +45,13 @@ WindMap::WindMap(const MapHeader &header) {
     for (int i = 0; i < width; ++i) {
         for (int j = 0; j < height; ++j) {
             sf::Vector2f pnoise(i * invWidth, j * invHeight);
-            float nDirection = ValueNoise::Eval(sf::Vector2f(pnoise.x*20.0f, pnoise.y * 20.0f));
-//            float nDirection =45.0f/360.0f;
-            float nForce = ValueNoise::Eval(sf::Vector2f(pnoise.x*40.0f, pnoise.y * 40.0f));
-            m_container[i][j] = Wind(nDirection*360.0f, nForce * (maxStrength - minStrength) + minStrength);
+            float nDirection = ValueNoise::Eval(sf::Vector2f(pnoise.x * 20.0f, pnoise.y * 20.0f));
+            //            float nDirection =45.0f/360.0f;
+            float nForce = ValueNoise::Eval(sf::Vector2f(pnoise.x * 40.0f, pnoise.y * 40.0f));
+            m_container[i][j] = Wind(nDirection * 360.0f, nForce * (maxStrength - minStrength) + minStrength);
         }
     }
 }
-
-    
 
 WindMap::~WindMap() {
     for (int i = 0; i < getHeight(); ++i) {
@@ -141,4 +144,4 @@ const DrawWind& WindMap::wind(const sf::Vector2i& point) const {
 WindMap::~WindMap() {
 }
 
-*/
+ */

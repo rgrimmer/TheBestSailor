@@ -8,6 +8,8 @@
 #ifndef MAPHEADER_H
 #define	MAPHEADER_H
 
+#include <SFML/Network/Packet.hpp>
+
 class MapHeader {
 public:
     MapHeader();
