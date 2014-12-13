@@ -37,8 +37,7 @@ World::~World() {
 
 void World::initialize() {
     Gradient::initialize();
-    m_ship.kinematics().position() = {200., 200.};
-    m_ship.sail().setAngle(80.0f);
+    m_ship.initialize(sf::Vector2f(200.0f, 200.0f), sf::Vector2f(0.0f, 0.0f));
 }
 
 void World::release() {
@@ -57,9 +56,6 @@ void World::update(float dt) {
     sf::Vector2f shipVector = m_ship.kinematics().speed();
     sf::Vector2f windVector = wind.getVector();
 
-    sf::Vector2f coefSail(1.0f, 1.0f);
-    sf::Vector2f coefHelm(1.0f, 1.0f);
-
     sf::Vector2f frottement(0.001f, 0.001f);
     sf::Vector2f apparentWind = windVector - shipVector;
 
@@ -76,13 +72,9 @@ void World::update(float dt) {
 
     // Equation from https://www.ensta-bretagne.fr/jaulin/jaulincifa2004.pdf
 
-    sf::Vector2f sailVector =
-            coefSail * (
-            windVector * std::cos(shipDir + angleBeta)
-            - shipVector * std::sin(shipDir)
-            );
+    sf::Vector2f sailVector = windVector * std::cos(shipDir + angleBeta) - shipVector * std::sin(shipDir);          
 
-    sf::Vector2f helmVector = coefHelm * shipVector * std::sin(helmDir);
+    sf::Vector2f helmVector = shipVector * std::sin(helmDir);
 
     sf::Vector2f forceDePousser1 =
             (sailVector * std::sin(angleBeta)
@@ -96,9 +88,10 @@ void World::update(float dt) {
     sf::Vector2f forceDePousser2 = CONSTANTE * sinAB * angleAlpha - helmVector * std::sin(helmDir);
 
     sf::Vector2f forceDePousser = forceDePousser1;
-
+    
     m_ship.kinematics().speed() = windVector /* Kinematics::vectorDir(degToRad(angleDirShip))*/;
-
+    //m_ship.kinematics().speed() = {2.0f, 0.0f};
+        
     m_ship.update(dt);
 }
 

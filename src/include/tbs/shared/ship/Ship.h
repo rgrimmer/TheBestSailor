@@ -17,6 +17,8 @@ public:
     Ship();
     virtual ~Ship();
     
+    void initialize(const sf::Vector2f & position, const sf::Vector2f & speed);
+    
     inline Kinematics& kinematics() { return m_kinematics; }
     inline const Kinematics& kinematics() const { return m_kinematics; }
     inline Helm& helm() {return m_helm; }

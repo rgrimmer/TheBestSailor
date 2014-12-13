@@ -35,8 +35,6 @@ void DetailsView::draw(sf::RenderTarget& target, sf::RenderStates states) const 
     sf::Clock clockDraw;
     sf::Time timeDrawHeightMap, timeDrawWindMap;
     
-    
-    
     // Draw heightMap
     clockDraw.restart();
     target.draw(m_heigthMapView, states);

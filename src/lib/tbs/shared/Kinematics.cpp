@@ -9,6 +9,7 @@
 #include <complex>
 #include "shared/Kinematics.h"
 
+#include <iostream>
 
 Kinematics::Kinematics() {
 
@@ -16,6 +17,11 @@ Kinematics::Kinematics() {
 
 Kinematics::~Kinematics() {
 
+}
+
+void Kinematics::initialize(const sf::Vector2f & position, const sf::Vector2f & speed) {
+    m_position = position;
+    m_speed = speed;
 }
 
 void Kinematics::update(float dt) {
@@ -27,17 +33,23 @@ float Kinematics::direction() const {
     return Kinematics::direction(m_speed);
 }
 
-// Template : in header
-//float Kinematics::norme(const sf::Vector2<T> &vector);
+float Kinematics::degToRad(float deg) {
+    return deg / 180.0 * M_PI;
+}
 
-//sf::Vector2f Kinematics::pourcentage(const sf::Vector2f& vector) {
-//    float sum = std::abs(vector.x) + std::abs(vector.y);
-//    if(sum == 0.0f)
-//        return sf::Vector2f(0.5f, 0.5f);
-//    else
-//        return sf::Vector2f(vector.x / sum, vector.y / sum);
-//}
+float Kinematics::radToDeg(float rad) {
+    return rad * 180.0 / M_PI;
+}
+
+float Kinematics::norme(const sf::Vector2f &vector) {
+    return std::sqrt(vector.x * vector.x + vector.y * vector.y);
+}
+
+float Kinematics::direction(const sf::Vector2f &vector) {
+    float angleInRad = std::atan2(vector.y, vector.x);
+    return Kinematics::radToDeg(angleInRad);
+}
 
 sf::Vector2f Kinematics::vectorDir(float angleRad) {
-    return sf::Vector2f(std::cos(angleRad),std::sin(angleRad));
+    return sf::Vector2f(std::cos(angleRad), std::sin(angleRad));
 }

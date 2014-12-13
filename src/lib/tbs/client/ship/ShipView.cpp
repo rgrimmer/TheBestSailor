@@ -17,7 +17,7 @@ ShipView::ShipView(const Ship &ship)
     
     m_shipShape.setOrigin(25.0f, 50.0f);
     m_shipShape.setFillColor(sf::Color::Red);
-
+    //m_shipShape.setPosition(m_ship.kinematics().position());
 }
 
 ShipView::~ShipView() {

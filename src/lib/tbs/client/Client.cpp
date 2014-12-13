@@ -60,6 +60,7 @@ void Client::start(const std::string & name) {
     m_player.setName(name);
     
     m_world.initialize();
+    
     //m_ship.kinematics().position() = posView;
     //m_ship.sail().setAngle(80.0f);
 
