@@ -12,7 +12,7 @@
 #include "shared/map/MapHeader.h"
 #include "shared/map/HeigthMap.h"
 #include "shared/map/WindMap.h"
-#include <shared/ship/Ship.h>
+#include "shared/ship/Ship.h"
 
 class World {
     

@@ -24,11 +24,9 @@ Ship::~Ship() {
 
 void Ship::initialize(const sf::Vector2f & position, const sf::Vector2f & speed) {
     m_kinematics.initialize(position, speed);
-    m_sail->setAngle(80.0f);
 }
 
 void Ship::update(float dt) {
-    
     m_kinematics.update(dt);
     m_sail->update(dt);
     m_helm.update(dt);

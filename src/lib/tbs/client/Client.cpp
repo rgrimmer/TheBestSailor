@@ -283,7 +283,7 @@ void Client::gameLoop(sf::RenderWindow *window) {
 
         // Draw view
         window->draw(*m_mainGraphic);
-
+        
         // Draw vent apparent
         /*VectorView<float> ventAppView(apparentWind, "Va", sf::Color::Green);
         sf::Transform tApp;

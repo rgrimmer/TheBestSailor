@@ -10,8 +10,8 @@
 
 #include "shared/ship/Sail.h"
 
-Sail::Sail() : m_line(sf::Vector2f(2.0f, 100.0f)), m_angle(0.0f), m_position() {
-    m_line.setOrigin(1.0f,0.0f);
+Sail::Sail() : m_line(sf::Vector2f(100.0f, 2.0f)), m_angle(0.0f), m_position() {
+    m_line.setOrigin(0.0f,1.0f);
     m_line.setFillColor(sf::Color::White);
 }
 
@@ -20,8 +20,8 @@ Sail::~Sail() {
 
 void Sail::update(float dt) 
 {
-    m_line.setPosition(m_position);
-    m_line.setRotation(m_angle);
+    //m_line.setPosition(m_position);
+    //m_line.setRotation(m_angle);
 }
 
 /*virtual*/void Sail::draw(sf::RenderTarget& target, sf::RenderStates states) const {
