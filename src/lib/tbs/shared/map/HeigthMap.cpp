@@ -23,8 +23,10 @@ HeigthMap::HeigthMap() : m_header(0,0), m_container(NULL) {
 HeigthMap::HeigthMap(const MapHeader &header) 
 : m_header(header) {
     
+    
     int width = header.getWidth();
     int height = header.getHeight();
+    std::cout << width << " " << height << " " << getSeed() << std::endl;
 
     ValueNoise::GenerateValues(getSeed());
 

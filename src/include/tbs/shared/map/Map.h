@@ -35,5 +35,6 @@ private:
 };
 
 sf::Packet& operator<<(sf::Packet& packet, const Map& map);
+sf::Packet& operator>>(sf::Packet& packet, Map& map);
 
 #endif	/* MAP_H */

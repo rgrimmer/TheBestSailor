@@ -17,12 +17,14 @@ public:
     ServerTCPManager();
     ~ServerTCPManager();
 
-    bool waitConnections(unsigned short port, sf::Packet packet, std::vector<ServerPlayer*>& players, sf::Time timeout = sf::seconds(5.0f));
-    bool send (sf::Packet packet, sf::TcpSocket* player);
-    
-private:
+    bool waitConnections(unsigned short port, std::vector<ServerPlayer*>& players, sf::Time timeout = sf::seconds(5.0f));
+    bool send(sf::Packet packet, sf::TcpSocket* player);
 
-//    unsigned short m_port;
+private:
+    bool receiveNewConnection();
+    void receiveCommunication(int& index, std::vector<ServerPlayer*>& players);
+
+    //    unsigned short m_port;
     sf::TcpListener m_listener;
     sf::SocketSelector m_selector;
 

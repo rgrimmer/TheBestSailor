@@ -31,5 +31,8 @@ private:
     double m_seed;
 };
 
+sf::Packet& operator<<(sf::Packet& packet, const MapHeader& header);
+sf::Packet& operator>>(sf::Packet& packet, MapHeader& header);
+
 #endif	/* MAPHEADER_H */
 

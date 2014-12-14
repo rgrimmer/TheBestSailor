@@ -1,6 +1,6 @@
 #include <client/network/ClientTCPManager.h>
 
-#include <shared/Utils.h>
+#include <shared/network/UtilsNetwork.h>
 #include <SFML/Network/Packet.hpp>
 
 ClientTCPManager::ClientTCPManager() {

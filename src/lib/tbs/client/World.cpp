@@ -27,12 +27,12 @@ sf::Vector2f operator/(const sf::Vector2f &v1, const sf::Vector2f &v2) {
     return sf::Vector2f(v1.x / v2.x, v1.y / v2.y);
 }
 
-World::World() : m_map(nullptr), m_wind(nullptr), m_ship() {
+World::World() : m_mapmap(nullptr), m_ship() {
 
 }
 
 World::~World() {
-
+    delete m_mapmap;
 }
 
 void World::initialize() {
@@ -42,17 +42,24 @@ void World::initialize() {
 }
 
 void World::release() {
-    delete m_map;
-    delete m_wind;
+    delete m_mapmap;
+}
+
+void World::setMap(Map* map) {
+    // @TODO update graphisme
+    delete m_mapmap;
+    m_mapmap = map;
 }
 
 void World::initializeMap(int height, int width, double seed) {
-    m_map = new HeigthMap(MapHeader(height, width, seed));
-    m_wind = new WindMap(MapHeader(height, width, seed));
+    std::cout << "Unimplemented" << std::endl;
+    
+//    m_map = new HeigthMap(MapHeader(height, width, seed));
+//    m_wind = new WindMap(MapHeader(height, width, seed));
 }
 
 void World::update(float dt) {
-    Wind wind = m_wind->wind(static_cast<sf::Vector2i> (m_ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
+    Wind wind = m_mapmap->getWindMap().wind(static_cast<sf::Vector2i> (m_ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
 
     sf::Vector2f shipVector = m_ship.kinematics().speed();
     sf::Vector2f windVector = wind.getVector();
@@ -107,11 +114,11 @@ Ship& World::getShip() {
 }
 
 HeigthMap& World::getMap() const {
-    return *m_map;
+    return m_mapmap->getHeightMap();
 }
 
 WindMap& World::getWind() const {
-    return *m_wind;
+    return m_mapmap->getWindMap();
 }
 
 #endif	/* WORLD_CPP */

@@ -11,6 +11,14 @@ sf::Packet& operator<<(sf::Packet& packet, const Map& map) {
     return packet << map.getHeightMap() << map.getWindMap();
 }
 
+sf::Packet& operator>>(sf::Packet& packet, Map& map) {
+    // @TODO : Redo
+    MapHeader headerHeightMap, headerWindMap;
+    packet >> headerHeightMap >> headerWindMap;
+    map = Map(headerHeightMap);
+    return packet;
+}
+
 Map::Map() {
 }
 

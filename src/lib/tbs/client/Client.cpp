@@ -18,12 +18,14 @@
 
 #include "client/DisplayInfo.h"
 
+#include "shared/network/UtilsNetwork.h"
 #include "shared/network/Request.h"
 #include "shared/network/RequestTurnHelm.h"
 #include "shared/network/RequestTurnSail.h"
+#include "shared/network/RequestDisconnect.h"
 #include "shared/Utils.h"
 #include "shared/Kinematics.h"
-#include "shared/network/RequestDisconnect.h"
+#include "shared/map/Map.h"
 
 
 sf::View currentView;
@@ -31,10 +33,15 @@ sf::Vector2f posView(2000.0f, 2000.0f);
 float zoomValue = 1.0f;
 bool squared = true;
 
-Client::Client() : m_player(-1, "") {
+Client::Client()
+: m_enableFolowCamera(true)
+, m_enablePause(false)
+, m_timeSpeed(1.0f)
+, m_player(-1, "")
+, m_mainGraphic(nullptr)
+, m_detailsView(nullptr)
+, m_globalView(nullptr) {
     //            startPollEventThread();
-    m_enablePause = false;
-    m_timeSpeed = 1.0f;
 }
 
 Client::~Client() {
@@ -58,7 +65,7 @@ void Client::receive(ClientUDPManager& udpManager, SynchronizedQueue<sf::Packet>
 void Client::start(const std::string & name) {
 
     m_player.setName(name);
-    
+
     m_world.initialize();
     //m_ship.kinematics().position() = posView;
     //m_ship.sail().setAngle(80.0f);
@@ -84,21 +91,24 @@ void Client::start(const std::string & name) {
 
     int width = 200, height = 200;
     double seed = 42;
-   
-//    packet >> width >> height >> seed;
+
+        packet >> width >> height >> seed;
     std::cout << width << " " << height << " " << seed << std::endl;
 
     // Data
-    m_world.initializeMap(height, width, seed);
-    
+    Map *t_map = new Map(MapHeader(width, height, seed));
+//    packet >> (*t_map);
+    m_world.setMap(t_map);
+    //    m_world.initializeMap(height, width, seed);
+
     //m_map = new HeigthMap(MapHeader(height, width, seed));
     //m_wind = new WindMap(MapHeader(height, width, seed));
 
     m_globalView = new GlobalView(m_world.getMap(), m_world.getWind(), m_world.getShip());
     m_detailsView = new DetailsView(m_world.getMap(), m_world.getWind(), m_world.getShip());
-    m_mainGraphic = (m_mainGraphic == dynamic_cast<sf::Drawable*>(m_globalView))? dynamic_cast<sf::Drawable*>(m_detailsView) : dynamic_cast<sf::Drawable*>(m_globalView);
+    m_mainGraphic = dynamic_cast<sf::Drawable*> (m_globalView);
 
-    m_enableFolowCamera = false;
+    m_enableFolowCamera = true;
 
     // receive players list
     sf::Packet playersPacket;
@@ -210,14 +220,14 @@ void Client::gameLoop(sf::RenderWindow *window) {
                         m_world.getShip().sail().setAngle(m_world.getShip().sail().getAngle() + 5.0f);
                     }
                         break;
-                        
+
                     case sf::Keyboard::S:
                     {
                         m_udpManager.send(Request(m_player.getId(), RequestTurnSail(reqOrientation::NEGATIVE)).getPacket());
                         m_world.getShip().sail().setAngle(m_world.getShip().sail().getAngle() - 5.0f);
                     }
                         break;
-                        
+
                     case sf::Keyboard::A:
                         m_detailsView->switchSquared();
                         break;
@@ -237,7 +247,7 @@ void Client::gameLoop(sf::RenderWindow *window) {
                         m_timeSpeed *= 2.0f;
                         break;
                     case sf::Keyboard::M:
-                            m_mainGraphic = (m_mainGraphic == dynamic_cast<sf::Drawable*>(m_detailsView))? dynamic_cast<sf::Drawable*>(m_globalView) : dynamic_cast<sf::Drawable*>(m_detailsView);
+                        m_mainGraphic = (m_mainGraphic == dynamic_cast<sf::Drawable*> (m_detailsView)) ? dynamic_cast<sf::Drawable*> (m_globalView) : dynamic_cast<sf::Drawable*> (m_detailsView);
                         break;
                     default:
                         break;
@@ -266,7 +276,7 @@ void Client::gameLoop(sf::RenderWindow *window) {
 
         // Update world
 
-        if (!m_enablePause) {             
+        if (!m_enablePause) {
             m_world.update(timeLoop * m_timeSpeed);
         }
 
@@ -288,33 +298,33 @@ void Client::gameLoop(sf::RenderWindow *window) {
         sf::Transform tApp;
         tApp.translate(m_ship.kinematics().position());
         window->draw(ventAppView, tApp);
-        */
+         */
 
         // Display information : 
-//        DisplayInfo::setZoom(zoomValue);
-//        DisplayInfo::setTopLeftPosition(posView - sf::Vector2f(SCREEN_WIDTH / 2 * zoomValue, SCREEN_HEIGHT / 2 * zoomValue));
-//
-//        // Clocks infos
-//        DisplayInfo::draw(std::to_string(clockGlobal.getElapsedTime().asSeconds()));
-//        DisplayInfo::draw("fps : " + std::to_string(fps));
-//
-//        // Data infos
-//        DisplayInfo::draw("ship :");
-//        DisplayInfo::draw("ship :" + std::to_string(shipDir));
-//        DisplayInfo::draw("acc : " + std::to_string(m_ship.kinematics().acceleration().x) + " " + std::to_string(m_ship.kinematics().acceleration().y));
-//        DisplayInfo::draw("speed : " + std::to_string(m_ship.kinematics().speed().x) + " " + std::to_string(m_ship.kinematics().speed().y));
-//        DisplayInfo::draw("pos : " + std::to_string(m_ship.kinematics().position().x) + " " + std::to_string(m_ship.kinematics().position().y));
-//        //        DisplayInfo::draw("dir : " + std::to_string(dir.x) + " " + std::to_string(dir.y) + ". norme : " + std::to_string(Kinematics::norme(m_ship.kinematics().speed())));
-//
-//        //DisplayInfo::draw("wind : " + m_windView.force(m_ship.getPosition()).toString());
-//
-//        // Draw infos
-//        DisplayInfo::draw("Wind Direction/Force: " + std::to_string(wind.direction()) + " " + std::to_string(wind.force()));
-//        DisplayInfo::draw("WindVector: " + std::to_string(windVector.x) + " " + std::to_string(windVector.y));
-//        DisplayInfo::draw("VentApparent : " + std::to_string(apparentWind.x) + " " + std::to_string(apparentWind.y));
-//        DisplayInfo::draw("sailVector : " + std::to_string(sailVector.x) + " " + std::to_string(sailVector.y));
-//        DisplayInfo::draw("helmVector : " + std::to_string(helmVector.x) + " " + std::to_string(helmVector.y));
-//        DisplayInfo::draw("ForceDePousser : " + std::to_string(forceDePousser.x) + " " + std::to_string(forceDePousser.y));
+        //        DisplayInfo::setZoom(zoomValue);
+        //        DisplayInfo::setTopLeftPosition(posView - sf::Vector2f(SCREEN_WIDTH / 2 * zoomValue, SCREEN_HEIGHT / 2 * zoomValue));
+        //
+        //        // Clocks infos
+        //        DisplayInfo::draw(std::to_string(clockGlobal.getElapsedTime().asSeconds()));
+        //        DisplayInfo::draw("fps : " + std::to_string(fps));
+        //
+        //        // Data infos
+        //        DisplayInfo::draw("ship :");
+        //        DisplayInfo::draw("ship :" + std::to_string(shipDir));
+        //        DisplayInfo::draw("acc : " + std::to_string(m_ship.kinematics().acceleration().x) + " " + std::to_string(m_ship.kinematics().acceleration().y));
+        //        DisplayInfo::draw("speed : " + std::to_string(m_ship.kinematics().speed().x) + " " + std::to_string(m_ship.kinematics().speed().y));
+        //        DisplayInfo::draw("pos : " + std::to_string(m_ship.kinematics().position().x) + " " + std::to_string(m_ship.kinematics().position().y));
+        //        //        DisplayInfo::draw("dir : " + std::to_string(dir.x) + " " + std::to_string(dir.y) + ". norme : " + std::to_string(Kinematics::norme(m_ship.kinematics().speed())));
+        //
+        //        //DisplayInfo::draw("wind : " + m_windView.force(m_ship.getPosition()).toString());
+        //
+        //        // Draw infos
+        //        DisplayInfo::draw("Wind Direction/Force: " + std::to_string(wind.direction()) + " " + std::to_string(wind.force()));
+        //        DisplayInfo::draw("WindVector: " + std::to_string(windVector.x) + " " + std::to_string(windVector.y));
+        //        DisplayInfo::draw("VentApparent : " + std::to_string(apparentWind.x) + " " + std::to_string(apparentWind.y));
+        //        DisplayInfo::draw("sailVector : " + std::to_string(sailVector.x) + " " + std::to_string(sailVector.y));
+        //        DisplayInfo::draw("helmVector : " + std::to_string(helmVector.x) + " " + std::to_string(helmVector.y));
+        //        DisplayInfo::draw("ForceDePousser : " + std::to_string(forceDePousser.x) + " " + std::to_string(forceDePousser.y));
 
 
         if (clockFPS.getElapsedTime().asSeconds() >= 1) {

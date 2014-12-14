@@ -11,36 +11,39 @@
 #include <list>
 #include <vector>
 
-#include <SFML/Network.hpp>
+#include "shared/map/Map.h"
+#include "server/game/Game.h"
+#include "server/game/GameSpeedestWin.h"
 
-#include "server/network/ServerTCPManager.h"
-#include "server/network/ServerUDPManager.h"
-#include "server/ServerPlayer.h"
-#include "server/serverCheckpoint/ServerCheckpointManager.h"
+#include "server/network/ServerNetwork.h"
+//#include "server/serverCheckpoint/ServerCheckpointManager.h"
 
-#include "shared/map/HeigthMap.h"
-#include "shared/SynchronizedQueue.h"
+class ServerNetwork;
 
 class Server {
+    friend class ServerNetwork;
 public:
     Server();
     virtual ~Server();
 
     void start(void);
-    void waitConnections(sf::Packet packet, std::vector<ServerPlayer*>& players);
+    //    void waitConnections(sf::Packet packet, std::vector<ServerPlayer*>& players);
 
 private:
-    static void receive(ServerUDPManager& udpManager, SynchronizedQueue<sf::Packet>& inQueue);
+    void startTCPListener();
+    void startChronoAndWait();
+    void createGame();
+    void sendGame();
+    void startGame();
 
-    ServerTCPManager m_tcpManager;
-    ServerUDPManager m_udpManager;
+    Game* m_game;
+    std::vector<ServerPlayer*> m_waitingPlayers;
 
-    HeigthMap *m_map;
-    ServerCheckpointManager m_checkpointManager;
+    ServerNetwork* m_serverNetwork;
 
-    SynchronizedQueue<sf::Packet> m_inQueue;
+    //    HeigthMap *m_map;
+    //    ServerCheckpointManager m_checkpointManager;
 
-    std::vector<ServerPlayer*> m_players;
 
 };
 
