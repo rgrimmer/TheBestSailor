@@ -21,12 +21,13 @@ sf::Packet ClientUDPManager::receive() {
     unsigned short senderPort;
 
     m_socket.receive(packet, senderAddress, senderPort);
+    std::cout << "[UDP][Recv]" << std::endl;
 
     return packet;
 }
 
 bool ClientUDPManager::send(sf::Packet packet) {
     sf::Socket::Status status = m_socket.send(packet, m_address, m_port);
-    std::cout << "[send]";
+    std::cout << "[UDP][Send]" << std::endl;
     return (status == sf::Socket::Done);
 }

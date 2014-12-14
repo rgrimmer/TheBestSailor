@@ -24,9 +24,9 @@ class ServerNetwork {
 public:
     ServerNetwork(Server &server);
     virtual ~ServerNetwork();
+    
+    void initialize();
 
-    void startTCPThread();
-    void startUDPThread();
 
     // Temporary
     void waitConnection();
@@ -34,9 +34,10 @@ public:
     void mainLoop();
 
 private:
+    void startTCPThread();
+    void startUDPThread();
     void tcpReceiveLoop();
     void udpReceiveLoop();
-
 private:
     Server &m_server;
     ServerTCPManager m_tcpManager;

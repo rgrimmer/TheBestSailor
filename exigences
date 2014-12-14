@@ -24,12 +24,6 @@ Exigence en rapport à la partie :
 Au bout de 10s, tous les joueurs sont redirigé vers la file d'attente. 
 La parti se terminera car il n'y a plus de joueurs.
 
-TODO : Exigence en rapport au règle du jeux :
-- Collision avec la terre
-- Collision avec les autres
-- Condition de victoire
-- Détection de balise (checkpoint)
-
 Protocole d'une partie :
 - Une partie est créer à la fin du décompte.
 - On envoi les éléments (TCP ou UDP avec validation)
@@ -78,6 +72,13 @@ Protocole -4) Création d'une partie
 
 Données transmises :
 
+
+TODO : Exigence en rapport au règle du jeux :
+- Collision avec la terre
+- Collision avec les autres
+- Condition de victoire
+- Détection de balise (checkpoint)
+- Refactor vectorView -> add position, state translate and rotate in draw
 
 Perspective :
 Identification des joueurs par leur port/ip. Eviter la triche.

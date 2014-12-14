@@ -15,13 +15,15 @@ ServerUDPManager::~ServerUDPManager() {
 
 bool ServerUDPManager::initialize(unsigned short port) {
     m_port = port;
-
+    m_socket.setBlocking(true);
     sf::Socket::Status status = m_socket.bind(m_port);
+    std::cout << "[UDP][Init]" << std::endl;
     return status == sf::Socket::Done;
 }
 
 bool ServerUDPManager::send(sf::Packet packet, const sf::IpAddress & address, unsigned short port) {
     sf::Socket::Status status = m_socket.send(packet, address, port);
+    std::cout << "[UDP][Send]" << std::endl;
     return (status == sf::Socket::Done);
 }
 
@@ -38,11 +40,11 @@ bool ServerUDPManager::receiveIdentifyRequests(std::vector<ServerPlayer*> player
         }
 
 
-        sf::Uint8 id=0;
+        sf::Uint8 id = 0;
         packet >> id;
-        
-        std::cout << "PORT : " << senderPort << "ID : " << static_cast<int>(id) << std::endl;
-        
+
+        std::cout << "PORT : " << senderPort << "ID : " << static_cast<int> (id) << std::endl;
+
         ServerPlayer* player = nullptr;
 
         for (ServerPlayer* p : players) {
@@ -69,7 +71,9 @@ sf::Packet ServerUDPManager::receive() {
     sf::IpAddress senderAddress;
     unsigned short senderPort;
 
+    std::cout << "[UDP][Recv]" << std::endl;
     if (m_socket.receive(packet, senderAddress, senderPort) != sf::Socket::Done) {
+        std::cout << " ! Error Socket Status not Done " << std::endl;
         sf::Packet errorPacket;
         errorPacket << -1;
         return errorPacket;

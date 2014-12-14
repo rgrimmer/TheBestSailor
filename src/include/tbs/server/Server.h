@@ -30,12 +30,11 @@ public:
     //    void waitConnections(sf::Packet packet, std::vector<ServerPlayer*>& players);
 
 private:
-    void startTCPListener();
     void startChronoAndWait();
     void createGame();
     void sendGame();
     void startGame();
-
+    void initializeNetwork();
     Game* m_game;
     std::vector<ServerPlayer*> m_waitingPlayers;
 

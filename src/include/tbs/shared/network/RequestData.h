@@ -16,7 +16,8 @@ typedef enum {
     REQ_NEW_PLAYER,
     REQ_IDENT,
     REQ_ACTION_TURN_HELM,
-    REQ_ACTION_TURN_SAIL
+    REQ_ACTION_TURN_SAIL,
+    REQ_ACK
 } reqType;
 
 typedef enum {
@@ -26,27 +27,28 @@ typedef enum {
 } reqOrientation;
 
 #define ORIENTATION_SF_CAST sf::Int8
+
 class RequestData {
-public :
+public:
     static reqType popType(sf::Packet &packet);
-    
+
 public:
     RequestData();
     virtual ~RequestData();
 
-    
+
     sf::Packet& toPacketWithoutType(sf::Packet &packet) const;
     sf::Packet& toPacketWithType(sf::Packet &packet) const;
-        sf::Packet& fromPacketWithoutType(sf::Packet &packet);
-        sf::Packet& fromPacketWithType(sf::Packet &packet);
+    sf::Packet& fromPacketWithoutType(sf::Packet &packet);
+    sf::Packet& fromPacketWithType(sf::Packet &packet);
 
 public:
-    virtual reqType getType() const =0;
+    virtual reqType getType() const = 0;
 
 protected:
     sf::Packet& putSfType(sf::Packet &packet) const;
-    virtual void getDataFrom(sf::Packet &packet) =0;
-    virtual void putDataIn(sf::Packet &packet) const =0;
+    virtual void getDataFrom(sf::Packet &packet) = 0;
+    virtual void putDataIn(sf::Packet &packet) const = 0;
 };
 
 #endif	/* REQUESTDATA_H */

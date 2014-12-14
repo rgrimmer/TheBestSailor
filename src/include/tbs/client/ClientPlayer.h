@@ -11,20 +11,19 @@
 #include <string>
 
 class ClientPlayer {
-    
 public:
     ClientPlayer(const unsigned int id, const std::string & name);
     ~ClientPlayer();
-    
+
     void setName(const std::string & name);
     void setId(const unsigned int id);
-    std::string getName() const;
+    const std::string& getName() const;
     unsigned int getId() const;
-    
+
 private:
     std::string m_name;
     unsigned int m_id;
-    
+
 };
 
 #endif	/* CLIENT_PLAYER_H */

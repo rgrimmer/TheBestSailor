@@ -26,8 +26,8 @@ Server::~Server() {
 void Server::start() {
     srand(time(NULL));
 
-    startTCPListener();
-    m_serverNetwork->startUDPThread();
+    initializeNetwork();
+    
     while (true) {
         startChronoAndWait();
         createGame();
@@ -36,14 +36,11 @@ void Server::start() {
     }
 }
 
-void Server::startTCPListener() {
-//    std::cout << "[Start] TCP Listener" << std::endl;
-    // @TODO
+void Server::initializeNetwork() {
+    m_serverNetwork->initialize();
 }
 
 void Server::startChronoAndWait() {
-    std::cout << "[Start] \tChrono" << std::endl;
-    std::cout << "[Wait]  \tConnection" << std::endl;
     // @TODO : Dynamic chrono. Can be reset
 //    sleep(15);
     m_serverNetwork->waitConnection();
@@ -58,8 +55,6 @@ void Server::createGame() {
 void Server::sendGame() {
     std::cout << "[Broad] \tGame" << std::endl;
     m_serverNetwork->broadcastGame();
-
-    // @TODO : wait confirmation
 }
 
 void Server::startGame() {

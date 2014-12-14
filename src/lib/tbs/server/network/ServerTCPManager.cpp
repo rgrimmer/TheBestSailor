@@ -5,6 +5,8 @@
 
 #include <server/network/ServerTCPManager.h>
 
+#include "shared/network/Semaphore.h"
+
 ServerTCPManager::ServerTCPManager() {
     m_clientsCount = 0;
 }
@@ -16,6 +18,15 @@ ServerTCPManager::~ServerTCPManager() {
 bool ServerTCPManager::send(sf::Packet packet, sf::TcpSocket* player) {
     sf::Socket::Status status = player->send(packet);
     return (status == sf::Socket::Done);
+}
+
+bool ServerTCPManager::send(sf::Packet packet, std::vector<ServerPlayer*> players) {
+    bool isReceiveByAll = true;
+    for (const auto &player : players) {
+        if (player->getTCPSocket()->send(packet) != sf::Socket::Done)
+            isReceiveByAll = false;
+    }
+    return isReceiveByAll;
 }
 
 bool ServerTCPManager::waitConnections(unsigned short port, std::vector<ServerPlayer*>& players, sf::Time timeout) {
@@ -45,8 +56,13 @@ bool ServerTCPManager::waitConnections(unsigned short port, std::vector<ServerPl
     return true;
 }
 
+void ServerTCPManager::waitAcknowledgment(int permits) {
+    m_acknowledgment.aquire(permits);
+}
+
 bool ServerTCPManager::receiveNewConnection() {
     if (m_clientsCount < NB_CLIENT_MAX) {
+//        m_listner.a
         if (m_listener.accept(m_clients[m_clientsCount]) != sf::Socket::Done) {
             std::cout << "Error accept" << std::endl;
             return false;
@@ -56,6 +72,8 @@ bool ServerTCPManager::receiveNewConnection() {
         m_selector.add(m_clients[m_clientsCount]);
         m_clientsCount++;
         return true;
+    } else {
+        std::cout << "Error : maximum client limit" << std::endl;
     }
     return false;
 }
@@ -70,11 +88,14 @@ void ServerTCPManager::receiveCommunication(int& index, std::vector<ServerPlayer
         packetNewPlayer >> req;
 
         if (req == REQ_NEW_PLAYER) {
-            std::cout << "New Player" << std::endl;
+            std::cout << "New Player info" << std::endl;
             std::string name;
             packetNewPlayer >> name;
             std::cout << "added new player : " << name << std::endl;
             players.push_back(new ServerPlayer(index, name, &m_clients[index]));
+        } else if (req == REQ_ACK) {
+            std::cout << "Ack" << std::endl;
+            m_acknowledgment.release();
         } else {
             std::cout << "Undefined Request" << std::endl;
         }

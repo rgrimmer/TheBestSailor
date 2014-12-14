@@ -8,7 +8,6 @@
 #include "client/Client.h"
 #include "client/ClientPlayer.h"
 
-#include <thread>
 #include <iostream>
 #include <string>
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -34,10 +33,12 @@ float zoomValue = 1.0f;
 bool squared = true;
 
 Client::Client()
-: m_enableFolowCamera(true)
+: m_window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor")
+, m_enableFolowCamera(true)
 , m_enablePause(false)
 , m_timeSpeed(1.0f)
-, m_player(-1, "")
+, m_player(-1, "Unamed")
+, m_udpReceiveThread(nullptr)
 , m_mainGraphic(nullptr)
 , m_detailsView(nullptr)
 , m_globalView(nullptr) {
@@ -47,19 +48,20 @@ Client::Client()
 Client::~Client() {
     delete m_detailsView;
     delete m_globalView;
+    delete m_udpReceiveThread;
     //delete m_map;
     //delete m_wind;
 }
 
-void Client::receive(ClientUDPManager& udpManager, SynchronizedQueue<sf::Packet>& inQueue) {
-    std::cout << "receive thread started" << std::endl;
+void Client::receive() {
+    std::cout << "[Client][Start] \tUDP Receive thread started" << std::endl;
     while (true) { //TODO
-        sf::Packet packet = udpManager.receive();
+        sf::Packet packet = m_udpManager.receive();
         if (packet.getDataSize() > 0) {
-            inQueue.push(packet);
+            m_inQueue.push(packet);
         }
     }
-    std::cout << "receive thread ended" << std::endl;
+    std::cout << "[Client][Stop] \tUDP Receive thread ended" << std::endl;
 }
 
 void Client::start(const std::string & name) {
@@ -69,7 +71,23 @@ void Client::start(const std::string & name) {
     m_world.initialize();
     //m_ship.kinematics().position() = posView;
     //m_ship.sail().setAngle(80.0f);
+    
+    // Connect, Send name, Receive ID
+    initConnectionWithServer();
+    
+    bool continued = false;
+    do {
+        
+    // Wait receive map and send ack ready
+    initGame();
+    // Start gameloop
+    continued = startGame();
+    
+    } while(continued);
+    
+}
 
+void Client::initConnectionWithServer() {
     //init TCP MANAGER
     if (!m_tcpManager.connect()) {
         std::cout << "Error connect" << std::endl;
@@ -78,21 +96,25 @@ void Client::start(const std::string & name) {
 
     //send player name
     sf::Packet packet;
-    packet << static_cast<sf::Uint8> (REQ_NEW_PLAYER) << name;
-    std::cout << "sending player name : " << name << "............." << std::endl;
+    packet << static_cast<sf::Uint8> (REQ_NEW_PLAYER) << m_player.getName();
+    std::cout << "sending player name : " << m_player.getName() << "............." << std::endl;
 
     if (!m_tcpManager.send(packet)) {
         std::cout << "Error send" << std::endl;
         return;
     }
+}
 
+void Client::initGame() {
+
+    sf::Packet packetMap;
     //receive the map
-    packet = m_tcpManager.receive();
+    packetMap = m_tcpManager.receive();
 
     int width = 200, height = 200;
     double seed = 42;
 
-        packet >> width >> height >> seed;
+        packetMap >> width >> height >> seed;
     std::cout << width << " " << height << " " << seed << std::endl;
 
     // Data
@@ -130,7 +152,7 @@ void Client::start(const std::string & name) {
 
         unsigned int idUInt = static_cast<unsigned int> (id);
 
-        if (playerName != name) {
+        if (playerName != m_player.getName()) {
             m_otherPlayers.push_back(ClientPlayer(idUInt, playerName));
         } else {
             m_player.setId(idUInt);
@@ -139,7 +161,7 @@ void Client::start(const std::string & name) {
 
     m_udpManager.initialize("localhost", SERVER_PORT_UDP);
 
-    std::thread receiver(&receive, std::ref(m_udpManager), std::ref(m_inQueue));
+    m_udpReceiveThread = new std::thread(&Client::receive, this);
 
     //sending ident packet
     sf::Packet identPacket;
@@ -151,11 +173,9 @@ void Client::start(const std::string & name) {
 
     window.setKeyRepeatEnabled(true);
     currentView = window.getView();
-    gameLoop(&window);
-
 }
 
-void Client::gameLoop(sf::RenderWindow *window) {
+bool Client::startGame() {
     // Clocks
     sf::Clock clockGlobal;
     sf::Clock clockGameLoop;
@@ -165,20 +185,20 @@ void Client::gameLoop(sf::RenderWindow *window) {
 
     // Display info
 
-    while (window->isOpen()) {
+    while (m_window.isOpen()) {
 
-        window->clear();
+        m_window.clear();
 
         sf::Event event;
         //    std::cout << "start poll" << std::endl;
         //        window.waitEvent(event);
         //        processEvent(window, event);
-        while (window->pollEvent(event)) {
+        while (m_window.pollEvent(event)) {
 
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 // Send disconnection message
                 m_udpManager.send(Request(m_player.getId(), RequestDisconnect()).getPacket());
-                window->close();
+                m_window.close();
             }
             if (event.type == sf::Event::KeyPressed) {
                 switch (event.key.code) {
@@ -267,7 +287,7 @@ void Client::gameLoop(sf::RenderWindow *window) {
         } else {
             currentView.setCenter(posView);
         }
-        window->setView(currentView);
+        m_window.setView(currentView);
 
 
         // Update
@@ -288,16 +308,16 @@ void Client::gameLoop(sf::RenderWindow *window) {
         } else {
             currentView.setCenter(posView);
         }
-        window->setView(currentView);
+        m_window.setView(currentView);
 
         // Draw view
-        window->draw(*m_mainGraphic);
+        m_window.draw(*m_mainGraphic);
 
         // Draw vent apparent
         /*VectorView<float> ventAppView(apparentWind, "Va", sf::Color::Green);
         sf::Transform tApp;
         tApp.translate(m_ship.kinematics().position());
-        window->draw(ventAppView, tApp);
+        m_window.draw(ventAppView, tApp);
          */
 
         // Display information : 
@@ -334,10 +354,10 @@ void Client::gameLoop(sf::RenderWindow *window) {
         } else {
             ++countFrames;
         }
-        window->display();
+        m_window.display();
 
     }
 
     m_world.release();
-    m_tcpManager.disconnect();
+    return m_window.isOpen();
 }

@@ -15,12 +15,16 @@
 
 ServerNetwork::ServerNetwork(Server& server)
 : m_server(server) {
-
-//    startUDPThread();
-    m_udpManager.initialize(SERVER_PORT_UDP);
 }
 
 ServerNetwork::~ServerNetwork() {
+}
+
+void ServerNetwork::initialize() {
+    std::cout << "[NetW][Init]" << std::endl;
+    m_udpManager.initialize(SERVER_PORT_UDP);
+    //    startTCPThread();
+    startUDPThread();
 }
 
 void ServerNetwork::startTCPThread() {
@@ -32,32 +36,38 @@ void ServerNetwork::startUDPThread() {
 }
 
 void ServerNetwork::tcpReceiveLoop() {
-    while(true) {
+    std::cout << "[NetW][Start] \tTCP Receive Thread" << std::endl;
+    while (true) {
+        std::cout << "[TCP][Recv]" << std::endl;
     }
+    std::cout << "[NetW][Stop] \tTCP Receive Thread" << std::endl;
 }
+
 void ServerNetwork::udpReceiveLoop() {
-    std::cout << "UDP Receive thread started" << std::endl;
+    std::cout << "[NetW][Start] \tUDP Receive Thread" << std::endl;
     while (true) {
         sf::Packet packet = m_udpManager.receive();
-        std::cout << "[recv]";
         if (packet.getDataSize() > 0) {
             m_inQueue.push(packet);
+        } else {
+                std::cout << "[NetW][Warning] \tUDP Receive empty packet" << std::endl;
         }
     }
-    std::cout << "UDP Receive thread ended" << std::endl;
+    std::cout << "[NetW][Stop] \tUDP Receive Thread" << std::endl;
 }
 
 void ServerNetwork::waitConnection() {
-    m_tcpManager.waitConnections(SERVER_PORT_TCP , m_server.m_waitingPlayers);
+    std::cout << "[Wait]  \tConnection" << std::endl;
+    m_tcpManager.waitConnections(SERVER_PORT_TCP, m_server.m_waitingPlayers);
 }
 
 void ServerNetwork::broadcastGame() {
     sf::Packet packetGame;
     packetGame << m_server.m_game;
-    
-    for (const auto &player : m_server.m_game->getPlayers()) {
-        m_tcpManager.send(packetGame, player->getTCPSocket());
-    }
+
+//    tcpBroadcastToWaitingPlayers(packetGame);
+    m_tcpManager.send(packetGame, m_server.m_game->getPlayers());
+    m_tcpManager.waitAcknowledgment(m_server.m_game->getPlayers().size());
 }
 
 void ServerNetwork::mainLoop() {
@@ -82,7 +92,7 @@ void ServerNetwork::mainLoop() {
         std::cout << "Error receive identify request" << std::endl;
         return;
     }
-while (true) {
+    while (true) {
 
         //update
 
@@ -126,7 +136,7 @@ while (true) {
                 case REQ_DISCONNECT:
                 {
                     std::cout << "TODO : Disconnect";
-//                    m_players.erase(m_players.begin() + idPlayer);
+                    //                    m_players.erase(m_players.begin() + idPlayer);
                 }
                     break;
                 default:
@@ -147,9 +157,9 @@ while (true) {
         }
     }
 
-//    for (ServerPlayer* p : m_players) {
-//        delete p;
-//    }
-//
-//    m_players.empty();
+    //    for (ServerPlayer* p : m_players) {
+    //        delete p;
+    //    }
+    //
+    //    m_players.empty();
 }
