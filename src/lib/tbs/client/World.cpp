@@ -39,7 +39,7 @@ World::~World() {
 
 void World::initialize() {
     Gradient::initialize();
-    m_ship.initialize(sf::Vector2f(200.0f, 200.0f), sf::Vector2f(0.0f, 0.0f));
+    m_ship.initialize(sf::Vector2f(1000.0f, 1000.0f), sf::Vector2f(0.0f, 0.0f));
 }
 
 void World::release() {
@@ -64,12 +64,14 @@ void World::update(float dt) {
     float apparentWindAngle = Kinematics::direction(apparentWind);
     float sailAngle = m_ship.sail().getAngle();
     
+    std::cout << "angle : " << std::abs(windAngle - sailAngle) << std::endl;
     float angleToRad = Kinematics::degToRad(std::abs(windAngle - sailAngle));
     
-    //sf::Vector2f F = 0.1f * apparentWind * apparentWind * std::sin(Kinematics::degToRad(sailAngle));
-    sf::Vector2f F = 10.0f * windVector * std::sin(angleToRad) * std::sin(angleToRad);
+    sf::Vector2f P = { std::cos(Kinematics::degToRad(m_ship.getAngle())), std::sin(Kinematics::degToRad(m_ship.getAngle())) };
+    sf::Vector2f F = 0.1f * apparentWind * apparentWind * std::sin(angleToRad);
     
-    std::cout << std::sin(angleToRad) << " F.x " << F.x << " F.y " << F.y << std::endl;
+    sf::Vector2f Fm = (F.x * P.x + F.y * P.y) * P;
+    //sf::Vector2f F = 10.0f * windVector * std::sin(angleToRad) * std::sin(angleToRad);
    
     // somme des forces = ma
     // v = a*t + v0
@@ -77,7 +79,7 @@ void World::update(float dt) {
     // y = (1/2) * a.y * t * t + v0.y * t + y0
 
     //m_ship.kinematics().speed() = windVector /* Kinematics::vectorDir(degToRad(angleDirShip))*/;
-    m_ship.kinematics().speed() = F;
+    m_ship.kinematics().speed() = Fm;
 
     m_ship.update(dt);
 }

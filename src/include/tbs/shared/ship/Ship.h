@@ -25,14 +25,18 @@ public:
     inline Sail& sail() { return *m_sail; }
     inline const Sail& sail() const { return *m_sail; }
     void update(float dt);
+   
+    void setAngle(float angle);
     
     Sail* getSail(void);
+    float getAngle(void) const;
     
 private:
 
     Helm m_helm;
     Sail* m_sail;
     Kinematics m_kinematics;
+    float m_angle;
     
 };
 

@@ -16,6 +16,7 @@
 
 Ship::Ship() {
     m_sail = new Sail();
+    m_angle = 45.0f;
 }
 
 Ship::~Ship() {
@@ -32,6 +33,14 @@ void Ship::update(float dt) {
     m_helm.update(dt);
 }
 
+void Ship::setAngle(float angle) {
+    m_angle = angle;
+}
+
 Sail* Ship::getSail(void) {
     return m_sail;
+}
+
+float Ship::getAngle(void) const {
+    return m_angle;
 }

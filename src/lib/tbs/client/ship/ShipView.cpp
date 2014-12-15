@@ -12,11 +12,11 @@
 
 ShipView::ShipView(const Ship &ship)
 : m_ship(ship)
-, m_shipShape(sf::Vector2f(50.0f, 100.0f)) {
+, m_shipShape(sf::Vector2f(100.0f, 50.0f)) {
     m_speedView = new VectorView<float>(m_ship.kinematics().speed(), "Vship", sf::Color::Cyan);
     m_accView = new VectorView<float>(m_ship.kinematics().acceleration(), "", sf::Color::White);
     
-    m_shipShape.setOrigin(25.0f, 50.0f);
+    m_shipShape.setOrigin(50.0f, 25.0f);
     m_shipShape.setFillColor(sf::Color::Red);
     //m_shipShape.setPosition(m_ship.kinematics().position());
 }
@@ -27,7 +27,7 @@ ShipView::~ShipView() {
 
 void ShipView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     states.transform *= getTransform();
-    states.transform.rotate(m_ship.kinematics().direction(), m_ship.kinematics().position());
+    states.transform.rotate(m_ship.getAngle(), m_ship.kinematics().position());
     states.transform.translate(m_ship.kinematics().position());
     
     // Draw ship
