@@ -8,22 +8,38 @@
 #ifndef CLIENT_UDP_MANAGER_H
 #define	CLIENT_UDP_MANAGER_H
 
-#include <SFML/Network.hpp>
+#include <thread>
+#include <SFML/Network/Packet.hpp>
+#include <SFML/Network/UdpSocket.hpp>
+#include <SFML/Network/IpAddress.hpp>
+
+class ClientMsgQueue;
+class MessageData;
 
 class ClientUDPManager {
 public:
-    ClientUDPManager();
+    ClientUDPManager(ClientMsgQueue& msgQueue);
     ~ClientUDPManager();
 
-    void initialize(const std::string& addressRemote, unsigned short portRemote);
+    void initialize(const sf::IpAddress& addressRemote, unsigned short portRemote);
+    unsigned short getPort() const;
 
-    bool send (sf::Packet packet);
-    sf::Packet receive(void);
-    
+    void startReceiverThread();
+    bool send(const MessageData &message) const;
+
+
 private:
-    sf::IpAddress m_address;
-    sf::UdpSocket m_socket;
-    unsigned short m_port;
+    void receiver();
+
+private:
+    ClientMsgQueue& m_msgQueue;
+
+    sf::IpAddress m_addressRemote;
+    unsigned short m_portRemote;
+
+    std::thread* m_threadReceiver;
+
+    mutable sf::UdpSocket m_socket;
 
 };
 

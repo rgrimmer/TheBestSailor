@@ -1,109 +1,108 @@
 #include <iostream>
 
-#include <shared/network/Request.h>
-#include <shared/network/UtilsNetwork.h>
+#include "server/network/ServerTCPManager.h"
 
-#include <server/network/ServerTCPManager.h>
+
+#include <SFML/Network/TcpSocket.hpp>
 
 #include "shared/network/Semaphore.h"
+#include "shared/network/MessageData.h"
+#include "shared/network/MsgFactory.h"
 
-ServerTCPManager::ServerTCPManager() {
-    m_clientsCount = 0;
+#include "server/ServerPlayer.h"
+#include "server/PlayerList.h"
+#include "server/network/ServerMessageQueue.h"
+
+ServerTCPManager::ServerTCPManager(PlayerList& playerList, ServerMessageQueue& msgQueue, unsigned short portTcp)
+: m_threadReceiver(nullptr)
+, m_players(playerList)
+, m_msgQueue(msgQueue) {
+
+    // Start listener tcp
+    if (m_listener.listen(portTcp) != sf::Socket::Done) {
+        std::cerr << "ERROR : CAN'T READ TCP SOCKET" << std::endl;
+    }
+    m_selector.add(m_listener);
 }
 
 ServerTCPManager::~ServerTCPManager() {
 
 }
 
-bool ServerTCPManager::send(sf::Packet packet, sf::TcpSocket* player) {
-    sf::Socket::Status status = player->send(packet);
-    return (status == sf::Socket::Done);
+unsigned short ServerTCPManager::getPort() const {
+    return m_listener.getLocalPort();
 }
 
-bool ServerTCPManager::send(sf::Packet packet, std::vector<ServerPlayer*> players) {
-    bool isReceiveByAll = true;
-    for (const auto &player : players) {
-        if (player->getTCPSocket()->send(packet) != sf::Socket::Done)
-            isReceiveByAll = false;
-    }
-    return isReceiveByAll;
+
+void ServerTCPManager::startReceiverThread() {
+    m_threadReceiver = new std::thread(&ServerTCPManager::receiver, this);
 }
 
-bool ServerTCPManager::waitConnections(unsigned short port, std::vector<ServerPlayer*>& players, sf::Time timeout) {
-
-    if (m_listener.listen(port) != sf::Socket::Done) {
-        return false;
-    }
-    m_selector.add(m_listener);
-
-    while (m_selector.wait(timeout)) {
-
+void ServerTCPManager::receiver() {
+    while (true) {
+        m_selector.wait();
         if (m_selector.isReady(m_listener)) {
-            receiveNewConnection();
+            receiveConnection();
         }
 
+        for (auto& player : m_players.getList()) {
 
-        for (int i = 0; i < m_clientsCount; ++i) {
-
-            if (m_selector.isReady(m_clients[i])) {
-                receiveCommunication(i, players);
+            if (m_selector.isReady(player.getTCPSocket())) {
+                receiveCommunication(player);
             }
         }
     }
-    m_selector.remove(m_listener);
-    m_listener.close();
-
-    return true;
 }
 
-void ServerTCPManager::waitAcknowledgment(int permits) {
-    m_acknowledgment.aquire(permits);
+bool ServerTCPManager::send(const MessageData &message, sf::TcpSocket& player) const {
+    sf::Packet packet;
+    return (player.send(message.toPacketWithType(packet)) == sf::Socket::Done);
 }
 
-bool ServerTCPManager::receiveNewConnection() {
-    if (m_clientsCount < NB_CLIENT_MAX) {
-//        m_listner.a
-        if (m_listener.accept(m_clients[m_clientsCount]) != sf::Socket::Done) {
+bool ServerTCPManager::send(const MessageData &message, const std::vector<ServerPlayer*>& players) const {
+    bool hasReceiveByAll = true;
+    for (const auto &player : players) {
+        if (send(message, player->getTCPSocket()) != sf::Socket::Done) {
+            hasReceiveByAll = false;
+        }
+    }
+    return hasReceiveByAll;
+}
+
+bool ServerTCPManager::receiveConnection() {
+//    if (m_players.getList().size() < NB_CLIENT_MAX) {
+        // Register client
+        ServerPlayer& player = m_players.addNewPlayer();
+        if (m_listener.accept(player.getTCPSocket()) != sf::Socket::Done) {
             std::cout << "Error accept" << std::endl;
             return false;
         }
-
         std::cout << "new player connected" << std::endl;
-        m_selector.add(m_clients[m_clientsCount]);
-        m_clientsCount++;
+        m_selector.add(player.getTCPSocket());
+
         return true;
-    } else {
-        std::cout << "Error : maximum client limit" << std::endl;
-    }
-    return false;
+//    } else {
+//        std::cout << "Error : maximum client limit" << std::endl;
+//    }
+//    return false;
 }
 
-void ServerTCPManager::receiveCommunication(int& index, std::vector<ServerPlayer*>& players) {
+void ServerTCPManager::receiveCommunication(ServerPlayer &player) {
     std::cout << "[recv] ";
-    sf::Packet packetNewPlayer;
-    sf::TcpSocket::Status s = m_clients[index].receive(packetNewPlayer);
+    sf::Packet packet;
+    sf::TcpSocket::Status s = player.getTCPSocket().receive(packet);
 
     if (s == sf::TcpSocket::Done) {
-        sf::Uint8 req;
-        packetNewPlayer >> req;
 
-        if (req == REQ_NEW_PLAYER) {
-            std::cout << "New Player info" << std::endl;
-            std::string name;
-            packetNewPlayer >> name;
-            std::cout << "added new player : " << name << std::endl;
-            players.push_back(new ServerPlayer(index, name, &m_clients[index]));
-        } else if (req == REQ_ACK) {
-            std::cout << "Ack" << std::endl;
-            m_acknowledgment.release();
-        } else {
-            std::cout << "Undefined Request" << std::endl;
+        MessageData* msgData = MsgFactory::createMessage(packet);
+        if (msgData) {
+            std::pair<ServerPlayer*, MessageData*> tmp(&player, msgData);
+            m_msgQueue.push(tmp);
         }
+
     } else if (s == sf::TcpSocket::Disconnected) {
-        std::cout << "player Disconnected" << std::endl;
-        m_selector.remove(m_clients[index]);
-        // @TODO remove from players too
-        index--;
+        std::cout << "Player Disconnected" << std::endl;
+        // @TODO Remove player
     } else if (s == sf::TcpSocket::Error) {
         std::cout << "Error Recv" << std::endl;
     } else {

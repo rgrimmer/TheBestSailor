@@ -1,32 +1,51 @@
-#include <client/network/ClientTCPManager.h>
+#include <iostream>
 
-#include <shared/network/UtilsNetwork.h>
 #include <SFML/Network/Packet.hpp>
 
-ClientTCPManager::ClientTCPManager() {
-    
+#include "shared/network/MessageData.h"
+#include "shared/network/UtilsNetwork.h"
+#include "shared/network/MsgFactory.h"
+
+#include "client/network/ClientMsgQueue.h"
+#include "client/network/ClientTCPManager.h"
+
+ClientTCPManager::ClientTCPManager(ClientMsgQueue& msgQueue)
+: m_msgQueue(msgQueue)
+, m_threadReceiver(nullptr){
+
 }
 
 ClientTCPManager::~ClientTCPManager() {
-
+    delete m_threadReceiver;
 }
 
-bool ClientTCPManager::connect() {
-    sf::Socket::Status status = m_socket.connect("localhost", SERVER_PORT_TCP);    
-    return(status == sf::Socket::Done);
+bool ClientTCPManager::connect(sf::IpAddress serverAdress, unsigned short serverPortTcp) {
+    std::cout << "[Connect][TCP]\tEstablish connection with server" << std::endl;
+    sf::Socket::Status status = m_socket.connect(serverAdress, serverPortTcp);
+    return (status == sf::Socket::Done);
 }
 
 void ClientTCPManager::disconnect() {
     m_socket.disconnect();
 }
 
-bool ClientTCPManager::send(sf::Packet packet) {
-    sf::Socket::Status status = m_socket.send(packet);
-    return(status == sf::Socket::Done);
+void ClientTCPManager::startReceiverThread() {
+    m_threadReceiver = new std::thread(&ClientTCPManager::receiver, this);
 }
 
-sf::Packet ClientTCPManager::receive() {
+void ClientTCPManager::receiver() {
+    while (true) {
+        sf::Packet packet;
+        m_socket.receive(packet);
+        MessageData* msg = MsgFactory::createMessage(packet);
+        if (msg) {
+            m_msgQueue.push(msg);
+        }
+    }
+}
+
+bool ClientTCPManager::send(const MessageData& message) const {
+    std::cout << "[Send][TCP] \t" << message.getType() << std::endl;
     sf::Packet packet;
-    m_socket.receive(packet);
-    return packet;
+    return (m_socket.send(message.toPacketWithType(packet)) == sf::Socket::Done);
 }

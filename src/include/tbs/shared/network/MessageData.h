@@ -1,40 +1,42 @@
 /* 
- * File:   RequestBody.h
+ * File:   MessageData.h
  * Author: maxence
  *
  * Created on 11 décembre 2014, 16:35
  */
 
-#ifndef REQUESTDATA_H
-#define	REQUESTDATA_H
+#ifndef MESSAGEDATA_H
+#define	MESSAGEDATA_H
 
 #include <SFML/Network/Packet.hpp>
 
 typedef enum {
-    REQ_UNDEF,
-    REQ_DISCONNECT,
-    REQ_NEW_PLAYER,
-    REQ_IDENT,
-    REQ_ACTION_TURN_HELM,
-    REQ_ACTION_TURN_SAIL,
-    REQ_ACK
-} reqType;
+    MSG_UNDEF,
+    MSG_DISCONNECT,
+    MSG_CLIENT_PLAYER_INFO,
+    MSG_SERVER_PLAYER_INFO,
+    MSG_ACTION_TURN_HELM,
+    MSG_ACTION_TURN_SAIL,
+    MSG_GAME,
+    MSG_ACK
+} MsgType;
 
 typedef enum {
     UNDEF,
     POSITIVE,
     NEGATIVE
-} reqOrientation;
+} msgOrientation;
 
 #define ORIENTATION_SF_CAST sf::Int8
+#define TYPE_SF_CAST sf::Int16
 
-class RequestData {
+class MessageData {
 public:
-    static reqType popType(sf::Packet &packet);
+    static MsgType popType(sf::Packet &packet);
 
 public:
-    RequestData();
-    virtual ~RequestData();
+    MessageData();
+    virtual ~MessageData();
 
 
     sf::Packet& toPacketWithoutType(sf::Packet &packet) const;
@@ -43,7 +45,7 @@ public:
     sf::Packet& fromPacketWithType(sf::Packet &packet);
 
 public:
-    virtual reqType getType() const = 0;
+    virtual MsgType getType() const = 0;
 
 protected:
     sf::Packet& putSfType(sf::Packet &packet) const;
@@ -51,5 +53,5 @@ protected:
     virtual void putDataIn(sf::Packet &packet) const = 0;
 };
 
-#endif	/* REQUESTDATA_H */
+#endif	/* MESSAGEDATA_H */
 

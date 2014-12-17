@@ -11,23 +11,35 @@
 #include <ctime>
 #include <thread>
 
-#include "server/Server.h"
+#include <SFML/System/Time.hpp>
 
 #include "shared/Utils.h"
+#include "shared/network/MsgGame.h"
+#include "shared/network/MsgClientPlayerInfo.h"
+#include "shared/network/MsgServerPlayerInfo.h"
+#include "shared/network/MessageData.h"
 
-Server::Server() {
-    m_serverNetwork = new ServerNetwork(*this);
+#include "server/game/ServerGame.h"
+#include "server/game/ServerGameSpeedestWin.h"
+#include "server/network/ServerMessageQueue.h"
+
+#include "server/Server.h"
+#include "shared/network/UtilsNetwork.h"
+
+Server::Server()
+: m_game(nullptr)
+, m_network(m_players) {
+
 }
 
 Server::~Server() {
-    delete m_serverNetwork;
 }
 
 void Server::start() {
     srand(time(NULL));
 
     initializeNetwork();
-    
+
     while (true) {
         startChronoAndWait();
         createGame();
@@ -37,79 +49,98 @@ void Server::start() {
 }
 
 void Server::initializeNetwork() {
-    m_serverNetwork->initialize();
+    m_network.initialize();
 }
 
 void Server::startChronoAndWait() {
-    // @TODO : Dynamic chrono. Can be reset
-//    sleep(15);
-    m_serverNetwork->waitConnection();
+    sf::Time timeoutWaitPlayers = sf::milliseconds(20000);
+
+    // Main loop, game can't start without player
+    do {
+        // Wait first player
+        while (m_players.isEmpty()) {
+            pollMessagesWait();
+            if (m_players.size() == 1)
+                std::cout << "[NetW] \tFirst connection, start chrono";
+            else
+                std::cout << "[NetW] \t Warning, expect new client";
+        }
+
+        sf::Clock clockWaitPlayers;
+
+        while (clockWaitPlayers.getElapsedTime() < timeoutWaitPlayers) {
+            if (m_players.size() == 0)
+                break;
+            pollMessagesWait(timeoutWaitPlayers - clockWaitPlayers.getElapsedTime());
+        }
+    } while (m_players.size() == 0);
 }
 
 void Server::createGame() {
     std::cout << "[Create] \tGame" << std::endl;
     // @TODO : switch with different game type
-    m_game = new GameSpeedestWin(m_waitingPlayers, MapHeader(200, 200, 42));
+    m_game = new ServerGameSpeedestWin(*this, m_players, MapHeader(200, 200, 42));
 }
 
 void Server::sendGame() {
     std::cout << "[Broad] \tGame" << std::endl;
-    m_serverNetwork->broadcastGame();
+    sf::Packet packet;
+    MsgGame msgGame;
+    m_game->toPacket(packet);
+//    packet >> msgGame; @TODO
+
+    m_network.getTCPManager().send(msgGame, m_players.inGame());
+    waitAcknowledgment(m_players.inGame().size());
 }
 
 void Server::startGame() {
-    std::cout << "[Start] \tMain Loop" << std::endl;
-    m_serverNetwork->mainLoop();
-    //    m_game->startGameLoop();
+    m_game->start();
 }
 
-//void Server::receiveTCP() {
-//    std::cout << "receiveTCP thread started" << std::endl;
-//    while (true) {
-//        sf::Packet packet = udpManager.receive();
-//        std::cout << "[recv]";
-//        if (packet.getDataSize() > 0) {
-//            inQueue.push(packet);
-//        }
-//    }
-//    std::cout << "receiveTCP thread ended" << std::endl;
-//}
+bool Server::pollMessagesWait(sf::Time timeout) {
+    if (m_network.getMessageQueue().empty())
+        if (!m_network.getMessageQueue().waitEvent(timeout))
+            return false;
+    pollMessages();
+    return true;
+}
 
-//    
-//    m_map = new HeigthMap(MapHeader(NB_TILES_WIDTH, NB_TILES_HEIGHT, rand()));
-//    std::cout << "map created" << std::endl;
-//
-//    sf::Packet packet;
-//    packet << m_map->getWidth() << m_map->getHeight() << m_map->getSeed();
-//
-//    m_tcpManager.waitConnections(SERVER_PORT_TCP, packet, m_players);
-//
-//    m_udpManager.initialize(SERVER_PORT_UDP);
-//
-//    //send player list to others
-//    sf::Packet playersList;
-//
-//    playersList << static_cast<sf::Uint8> (m_players.size());
-//
-//    for (ServerPlayer* p : m_players) {
-//        playersList << static_cast<sf::Uint8> (p->getId());
-//        playersList << p->getName();
-//    }
-//
-//    std::cout << "send players list to all players.........." << std::endl;
-//    for (ServerPlayer* p : m_players) {
-//        m_tcpManager.send(playersList, p->getTCPSocket());
-//    }
-//
-//    std::cout << "receiving udp port of all players.........." << std::endl;
-//    //receiving an ident msg from other players
-//    if (!m_udpManager.receiveIdentifyRequests(m_players)) {
-//        std::cout << "Error receive identify request" << std::endl;
-//        return;
-//    }
-//
-//
-//    std::thread receiver(&receive, std::ref(m_udpManager), std::ref(m_inQueue));
-//
-//    
-//}
+void Server::pollMessages() {
+    while (!m_network.getMessageQueue().empty()) {
+        auto pair = m_network.getMessageQueue().pop();
+        read(pair.second, pair.first);
+    }
+}
+
+bool Server::read(MessageData* message, ServerPlayer * player) {
+    switch (message->getType()) {
+        case MsgType::MSG_CLIENT_PLAYER_INFO:
+        {
+            auto msg = dynamic_cast<MsgClientPlayerInfo*> (message);
+            // Receive info from Client
+            player->setName(msg->getName());
+            player->setUdpPort(msg->getPort());
+
+            // Send info to Client
+            MsgServerPlayerInfo msgServer(42, SERVER_PORT_UDP); // @TODO
+            m_network.getTCPManager().send(msgServer, player->getTCPSocket());
+        }
+            break;
+        case MsgType::MSG_ACK:
+        {
+            std::cout << "Ack" << std::endl;
+            m_acknowledgment.release();
+        }
+            break;
+        default:
+            if (m_game == nullptr)
+                return false;
+
+            return m_game->read(message, player);
+    }
+    return true;
+}
+
+void Server::waitAcknowledgment(int permits) {
+    m_acknowledgment.aquire(permits);
+}

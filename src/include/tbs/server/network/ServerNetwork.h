@@ -10,42 +10,39 @@
 
 #include <thread>
 
-#include "shared/network/UtilsNetwork.h"
-#include "shared/SynchronizedQueue.h"
-
-#include "server/Server.h"
-#include "server/network/ServerTCPManager.h"
 #include "server/network/ServerUDPManager.h"
+#include "server/network/ServerTCPManager.h"
+#include "server/network/ServerMessageQueue.h"
 
-
-class Server;
+class PlayerList;
 
 class ServerNetwork {
 public:
-    ServerNetwork(Server &server);
+    ServerNetwork(PlayerList &players);
     virtual ~ServerNetwork();
-    
+
     void initialize();
 
-
-    // Temporary
-    void waitConnection();
-    void broadcastGame();
-    void mainLoop();
+    ServerTCPManager& getTCPManager();
+    ServerUDPManager& getUDPManager();
+    ServerMessageQueue& getMessageQueue();
 
 private:
     void startTCPThread();
     void startUDPThread();
     void tcpReceiveLoop();
     void udpReceiveLoop();
+
 private:
-    Server &m_server;
+    PlayerList& m_players;
+
+    ServerMessageQueue m_messageQueue;
+
     ServerTCPManager m_tcpManager;
     ServerUDPManager m_udpManager;
-
+    
     std::thread *m_threadTCP;
     std::thread *m_threadUDP;
-    SynchronizedQueue<sf::Packet> m_inQueue;
 };
 
 #endif	/* SERVERNETWORK_H */

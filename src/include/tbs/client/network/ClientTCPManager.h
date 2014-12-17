@@ -8,21 +8,32 @@
 #ifndef CLIENT_TCP_MANAGER_H
 #define	CLIENT_TCP_MANAGER_H
 
-#include <SFML/Network.hpp>
+#include <thread>
+#include <SFML/Network/IpAddress.hpp>
+#include <SFML/Network/TcpSocket.hpp>
+
+class MessageData;
+class ClientMsgQueue;
+
 class ClientTCPManager {
-    
 public:
-    ClientTCPManager();
+    ClientTCPManager(ClientMsgQueue& msgQueue);
     ~ClientTCPManager();
-    
-    bool connect(void);
+
+    bool connect(sf::IpAddress serverAdress, unsigned short serverPortTcp);
     void disconnect(void);
-    
-    bool send (sf::Packet packet);
-    sf::Packet receive(void);
+
+    void startReceiverThread();
+    bool send(const MessageData &message) const;
+
+private:
+    void receiver();
     
 private:
-    sf::TcpSocket m_socket;
+    mutable sf::TcpSocket m_socket;
+    ClientMsgQueue& m_msgQueue;
+            
+    std::thread* m_threadReceiver;
 };
 
 

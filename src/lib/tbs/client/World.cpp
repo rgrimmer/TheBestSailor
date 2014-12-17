@@ -27,12 +27,22 @@ sf::Vector2f operator/(const sf::Vector2f &v1, const sf::Vector2f &v2) {
     return sf::Vector2f(v1.x / v2.x, v1.y / v2.y);
 }
 
-World::World() : m_mapmap(nullptr), m_ship() {
+sf::Packet& operator>>(sf::Packet& packet, World& world) {
+    world.initialize();
+
+    Map map;
+    packet >> map;
+    world.setMap(map);
+
+    // @TODO : add ship
+    return packet;
+}
+
+World::World() {
 
 }
 
 World::~World() {
-    delete m_mapmap;
 }
 
 void World::initialize() {
@@ -41,25 +51,16 @@ void World::initialize() {
     m_ship.sail().setAngle(80.0f);
 }
 
-void World::release() {
-    delete m_mapmap;
-}
-
-void World::setMap(Map* map) {
-    // @TODO update graphisme
-    delete m_mapmap;
+void World::setMap(const Map& map) {
     m_mapmap = map;
 }
 
-void World::initializeMap(int height, int width, double seed) {
-    std::cout << "Unimplemented" << std::endl;
-    
-//    m_map = new HeigthMap(MapHeader(height, width, seed));
-//    m_wind = new WindMap(MapHeader(height, width, seed));
+void World::initializeMap(int width, int height, int heightMapSeed, int windMapSeed) {
+    m_mapmap = Map(width, height, heightMapSeed, windMapSeed);
 }
 
 void World::update(float dt) {
-    Wind wind = m_mapmap->getWindMap().wind(static_cast<sf::Vector2i> (m_ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
+    Wind wind = m_mapmap.getWindMap().wind(static_cast<sf::Vector2i> (m_ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
 
     sf::Vector2f shipVector = m_ship.kinematics().speed();
     sf::Vector2f windVector = wind.getVector();
@@ -113,12 +114,28 @@ Ship& World::getShip() {
     return m_ship;
 }
 
-HeigthMap& World::getMap() const {
-    return m_mapmap->getHeightMap();
+Map& World::getMap() {
+    return m_mapmap;
 }
 
-WindMap& World::getWind() const {
-    return m_mapmap->getWindMap();
+const Map& World::getMap() const {
+    return m_mapmap;
+}
+
+HeigthMap& World::getHeightMap() {
+    return m_mapmap.getHeightMap();
+}
+
+const HeigthMap& World::getHeightMap() const {
+    return m_mapmap.getHeightMap();
+}
+
+WindMap& World::getWindMap() {
+    return m_mapmap.getWindMap();
+}
+
+const WindMap& World::getWindMap() const {
+    return m_mapmap.getWindMap();
 }
 
 #endif	/* WORLD_CPP */

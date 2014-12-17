@@ -1,6 +1,13 @@
 #include <server/ServerPlayer.h>
 
-ServerPlayer::ServerPlayer(unsigned int id, std::string name, sf::TcpSocket* socket) : m_id(id), m_name(name), m_TCPSocket(socket){
+ServerPlayer::ServerPlayer() {
+
+}
+
+ServerPlayer::ServerPlayer(unsigned int id, const std::string &name, sf::TcpSocket& socket) 
+: m_id(id)
+, m_name(name)
+, m_TCPSocket(&socket){
     m_address = m_TCPSocket->getRemoteAddress();
     m_udpPort = 0;
 }
@@ -17,8 +24,8 @@ void ServerPlayer::setUdpPort(unsigned short udpPort) {
     m_udpPort = udpPort;
 }
 
-sf::TcpSocket* ServerPlayer::getTCPSocket() const {
-    return m_TCPSocket;
+sf::TcpSocket& ServerPlayer::getTCPSocket() const {
+    return *m_TCPSocket;
 }
 
 sf::IpAddress ServerPlayer::getAddress() const {
@@ -27,6 +34,10 @@ sf::IpAddress ServerPlayer::getAddress() const {
 
 std::string ServerPlayer::getName() const {
     return m_name;
+}
+
+void ServerPlayer::setName(const std::string& name) {
+    m_name = name;
 }
 
 unsigned short ServerPlayer::getUdpPort() const{

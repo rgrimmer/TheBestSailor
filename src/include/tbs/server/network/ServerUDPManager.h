@@ -8,25 +8,38 @@
 #ifndef SERVER_UDP_MANAGER_H
 #define	SERVER_UDP_MANAGER_H
 
-#include <SFML/Network.hpp>
+#include <thread>
+#include <vector>
 
-#include <server/ServerPlayer.h>
+#include <SFML/Network/UdpSocket.hpp>
+
+#include "server/PlayerList.h"
+#include "shared/network/MessageData.h"
+#include "server/ServerPlayer.h"
+#include "server/network/ServerMessageQueue.h"
 
 class ServerUDPManager {
 public:
-    ServerUDPManager();
+    ServerUDPManager(PlayerList& players, ServerMessageQueue& msgQueue);
     ~ServerUDPManager();
 
     bool initialize(unsigned short port);
 
-    bool send(sf::Packet packet, const sf::IpAddress & address, unsigned short port);
-    
-    bool receiveIdentifyRequests(std::vector<ServerPlayer*> players);
-    sf::Packet receive(void);
-    
+    void startReceiverThread();
+    bool send(const MessageData &message, const ServerPlayer& player) const;
+    bool send(const MessageData &message, const std::vector<ServerPlayer*>& players) const;
+
+private:
+    void receiver();
+
 private:
     unsigned short m_port;
-    sf::UdpSocket m_socket;
+    mutable sf::UdpSocket m_socket;
+
+    PlayerList& m_players;
+    ServerMessageQueue& m_msgQueue;
+
+    std::thread* m_threadReceiver;
 };
 
 #endif	/* SERVER_UDP_MANAGER_H */

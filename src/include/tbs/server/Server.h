@@ -8,42 +8,41 @@
 #ifndef SERVER_H
 #define	SERVER_H
 
-#include <list>
-#include <vector>
+#include "shared/network/Semaphore.h"
 
-#include "shared/map/Map.h"
-#include "server/game/Game.h"
-#include "server/game/GameSpeedestWin.h"
-
+#include "server/PlayerList.h"
 #include "server/network/ServerNetwork.h"
-//#include "server/serverCheckpoint/ServerCheckpointManager.h"
 
-class ServerNetwork;
+class MessageData;
+class ServerPlayer;
+class ServerGame;
 
 class Server {
-    friend class ServerNetwork;
 public:
     Server();
     virtual ~Server();
 
     void start(void);
-    //    void waitConnections(sf::Packet packet, std::vector<ServerPlayer*>& players);
+    
+    void pollMessages();
+    bool pollMessagesWait(sf::Time timeout = sf::Time::Zero);
+    bool read(MessageData* message, ServerPlayer* player);
 
 private:
+    void initializeNetwork();
     void startChronoAndWait();
     void createGame();
     void sendGame();
     void startGame();
-    void initializeNetwork();
-    Game* m_game;
-    std::vector<ServerPlayer*> m_waitingPlayers;
-
-    ServerNetwork* m_serverNetwork;
-
-    //    HeigthMap *m_map;
-    //    ServerCheckpointManager m_checkpointManager;
-
-
+    
+    void waitAcknowledgment(int permits);
+    
+private :
+    ServerGame* m_game;
+    PlayerList m_players; 
+    
+    Semaphore m_acknowledgment;
+    ServerNetwork m_network;
 };
 
 #endif	/* SERVER_H */

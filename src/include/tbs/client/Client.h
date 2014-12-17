@@ -13,59 +13,46 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Thread.hpp>
 
-#include "shared/ship/Ship.h"
-#include "shared/SynchronizedQueue.h"
-
-#include "client/DetailsView.h"
-#include "client/World.h"
-#include "client/network/ClientTCPManager.h"
-#include "client/network/ClientUDPManager.h"
 #include "client/ClientPlayer.h"
-#include "GlobalView.h"
+#include "client/network/ClientNetwork.h"
+
+class MsgGame;
+class ClientGame;
+class MessageData;
+class MsgServerPlayerInfo;
 
 class Client {
 public:
     Client();
     virtual ~Client();
 
+    const ClientNetwork& getNetwork() const;
+
     void start(const std::string & name);
+
+    void pollMessages();
+
 private:
     void initConnectionWithServer();
     void initGame();
     bool startGame();
 
-    // @Temporary
+    void sendLocalPlayerInfo();
 
-    void receive();
-    void gameLoop(sf::RenderWindow *window);
+    bool pollMessagesWait(sf::Time timeout = sf::Time::Zero);
+    bool read(MessageData* message);
+    bool read(MsgGame* message);
+    bool read(MsgServerPlayerInfo* message);
 
 private:
     sf::RenderWindow m_window;
-    World m_world;
-    //HeigthMap* m_map;
-    //WindMap* m_wind;
-    //Ship m_ship;
-    bool m_enableFolowCamera;
-    bool m_enablePause;
-    float m_timeSpeed;
 
     ClientPlayer m_player;
-
-    std::thread* m_udpReceiveThread;
-    ClientTCPManager m_tcpManager;
-    ClientUDPManager m_udpManager;
+    ClientGame* m_game;
 
     std::vector<ClientPlayer> m_otherPlayers;
-    SynchronizedQueue<sf::Packet> m_inQueue;
 
-    // Graphic
-    sf::Drawable* m_mainGraphic;
-    DetailsView* m_detailsView;
-    GlobalView* m_globalView;
-    //    HeigthMapView* m_mapView;
-    //    WindMapView* m_windView;
-    //    ShipView* m_shipView;
-
+    ClientNetwork m_network;
 };
 
 #endif	/* CLIENT_H */

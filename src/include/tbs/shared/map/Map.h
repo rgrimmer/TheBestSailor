@@ -17,6 +17,7 @@
 class Map {
 public:
     Map();
+    Map(int width, int height, int heightMapSeed, int windMapSeed);
     Map(const MapHeader &m_header);
     virtual ~Map();
 

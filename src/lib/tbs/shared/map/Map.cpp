@@ -22,11 +22,17 @@ sf::Packet& operator>>(sf::Packet& packet, Map& map) {
 Map::Map() {
 }
 
+Map::Map(int width, int height, int heightMapSeed, int windMapSeed) {
+    m_header = MapHeader(width, height, heightMapSeed);
+    m_heightMap = HeigthMap(m_header);
+    m_windMap = WindMap(MapHeader(width, height, windMapSeed));
+}
+
 Map::Map(const MapHeader& header)
 : m_header(header)
 , m_heightMap(header)
 , m_windMap(header) {
-
+    // @TODO remade : generate 2 seed (1 for heightMap and 1 for windMAp) from header parameter seed
 }
 
 Map::~Map() {

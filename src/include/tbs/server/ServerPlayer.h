@@ -12,13 +12,15 @@
 
 class ServerPlayer {
 public:
-    ServerPlayer(unsigned int id, std::string name, sf::TcpSocket* socket);
+    ServerPlayer();
+    ServerPlayer(unsigned int id, const std::string &name, sf::TcpSocket& socket);
     ~ServerPlayer();
 
     void setUdpPort(unsigned short port);
-    sf::TcpSocket* getTCPSocket() const;
+    sf::TcpSocket& getTCPSocket() const;
     sf::IpAddress getAddress() const;
     std::string getName() const;
+    void setName(const std::string &name);
     unsigned int   getId() const;
     unsigned short getUdpPort() const;
     

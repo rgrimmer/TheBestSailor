@@ -8,35 +8,39 @@
 #ifndef SERVER_TCP_MANAGER_H
 #define	SERVER_TCP_MANAGER_H
 
-#include <SFML/Network.hpp>
+#include <thread>
 
-#include <server/ServerPlayer.h>
+#include <SFML/Network/TcpListener.hpp>
+#include <SFML/Network/SocketSelector.hpp>
 
-#include "shared/network/Semaphore.h"
+class PlayerList;
+class ServerMessageQueue;
+class MessageData;
+class ServerPlayer;
 
 class ServerTCPManager {
 public:
-    ServerTCPManager();
+    ServerTCPManager(PlayerList &playerList, ServerMessageQueue& msgQueue, unsigned short portTcp);
     ~ServerTCPManager();
+    
+    unsigned short getPort() const;
 
-    bool waitConnections(unsigned short port, std::vector<ServerPlayer*>& players, sf::Time timeout = sf::seconds(5.0f));
-    bool send(sf::Packet packet, sf::TcpSocket* player);
-    bool send(sf::Packet packet, std::vector<ServerPlayer*> players);
-    void waitAcknowledgment(int permits = 1);
+    void startReceiverThread();
+    bool send(const MessageData &message, sf::TcpSocket& player) const;
+    bool send(const MessageData &message, const std::vector<ServerPlayer*>& players) const;
 
 private:
-    bool receiveNewConnection();
-    void receiveCommunication(int& index, std::vector<ServerPlayer*>& players);
+    void receiver();
+    bool receiveConnection();
+    void receiveCommunication(ServerPlayer& player);
 
-    //    unsigned short m_port;
     sf::TcpListener m_listener;
     sf::SocketSelector m_selector;
 
-    sf::TcpSocket m_clients[100];
-    std::vector<sf::TcpSocket> m_clientsV;
-    int m_clientsCount;
-    
-    Semaphore m_acknowledgment;
+    std::thread* m_threadReceiver;
+
+    PlayerList &m_players;
+    ServerMessageQueue& m_msgQueue;
 };
 
 

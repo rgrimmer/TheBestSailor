@@ -17,29 +17,35 @@
 #include <shared/ship/Ship.h>
 
 class World {
-    
 public:
     explicit World();
     virtual ~World();
-    
+
     void initialize();
-    void release();
-    
-    void setMap(Map* map);
-    void initializeMap(int height, int width, double seed);
-    
+
+    void setMap(const Map& map);
+    void initializeMap(int width, int height, int heightMapSeed, int windMapSeed);
+
     void update(float dt);
-    
+
     Ship& getShip();
-    WindMap& getWind() const;
-    HeigthMap& getMap() const;
+    const Ship& getShip() const;
     
+    Map& getMap();
+    const Map& getMap() const;
+    
+    HeigthMap& getHeightMap();
+    const HeigthMap& getHeightMap() const;
+    
+    WindMap& getWindMap();
+    const WindMap& getWindMap() const;
+
 private:
-    Map* m_mapmap;
-//    HeigthMap* m_map;
-//    WindMap* m_wind;
+    Map m_mapmap;
     Ship m_ship;
 };
+
+sf::Packet& operator>>(sf::Packet& packet, World& world);
 
 #endif	/* WORLD_H */
 

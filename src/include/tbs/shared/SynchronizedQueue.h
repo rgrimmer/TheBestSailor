@@ -21,35 +21,52 @@
 #include <mutex>
 #include <queue>
 #include <condition_variable>
+#include <chrono>
+
+#include <SFML/System/Time.hpp>
 
 template<class T>
 class SynchronizedQueue {
 public:
 
     bool empty() {
-        m_qMutex.lock();
+        std::unique_lock<std::mutex> lock(m_qMutex);
         bool isEmpty = m_queue.empty();
-        m_qMutex.unlock();
         return isEmpty;
     }
 
     T pop() {
-        m_qMutex.lock();
+        std::unique_lock<std::mutex> lock(m_qMutex);
         T value = m_queue.front();
         m_queue.pop();
-        m_qMutex.unlock();
         return value;
     }
 
-    void push(T value) {
-        m_qMutex.lock();
-        m_queue.push(value);
-        m_qMutex.unlock();
+    T& peek() {
+        std::unique_lock<std::mutex> lock(m_qMutex);
+        T& value = m_queue.front();
+        return value;
     }
 
-private:
+    void push(const T& value) {
+        std::unique_lock<std::mutex> lock(m_qMutex);
+        m_queue.push(value);
+        m_cond.notify_one();
+    }
+
+    bool waitEvent(sf::Time timeout) {
+        std::unique_lock<std::mutex> lock(m_qMutex);
+        if (timeout == sf::Time::Zero)
+            m_cond.wait(lock);
+        else
+            return (m_cond.wait_for(lock, std::chrono::milliseconds(timeout.asMilliseconds())) == std::cv_status::no_timeout);
+        return true;
+    }
+
+protected:
     std::queue<T> m_queue;
     std::mutex m_qMutex;
+    std::condition_variable m_cond;
 };
 
 
