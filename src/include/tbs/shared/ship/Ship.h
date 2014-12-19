@@ -16,20 +16,30 @@ class Ship {
 public:
     Ship();
     virtual ~Ship();
-    
-    Kinematics& kinematics() { return m_kinematics; }
-    const Kinematics& kinematics() const { return m_kinematics; }
+
+    Kinematics& kinematics() {
+        return m_kinematics;
+    }
+
+    const Kinematics& kinematics() const {
+        return m_kinematics;
+    }
     Helm& getHelm();
     Sail& getSail();
     const Sail& getSail() const;
+    void initialize(const sf::Vector2f & position, const sf::Vector2f & speed);
     void update(float dt);
-    
+
+    void setAngle(float angle);
+    float getAngle(void) const;
+
 private:
 
     Helm m_helm;
     Sail m_sail;
     Kinematics m_kinematics;
-    
+    float m_angle;
+
 };
 
 #endif	/* SHIP_H */

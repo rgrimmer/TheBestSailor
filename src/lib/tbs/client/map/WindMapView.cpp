@@ -33,7 +33,8 @@ void WindMapView::load() {
 
             // define its 3 corners
             triangle[0].position = sf::Vector2f(i * TILE_SIZE, j * TILE_SIZE);
-//            Wind wind = map(i,j).direction();
+            
+            //Wind wind = map(i,j).direction();
             Wind wind = m_windMap.wind(i,j);
             float windDir = wind.direction();
             float cos1 = std::cos((windDir + 15.0f) * M_PI / 180.0f);
@@ -58,7 +59,7 @@ void WindMapView::load() {
 
 void WindMapView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     // apply the transform
-    states.transform *= getTransform();
+    states.transform.translate(TILE_SIZE/2, TILE_SIZE/2);
 
     // draw the vertex array
     target.draw(m_vertices, states);

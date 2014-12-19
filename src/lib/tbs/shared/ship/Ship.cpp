@@ -15,19 +15,28 @@
 #include "shared/Font.h"
 
 Ship::Ship() {
+    m_sail = new Sail();
+    m_angle = 45.0f;
 }
 
 Ship::~Ship() {
 }
 
-void Ship::update(float dt) {
-//    m_sail->setPosition(m_kinematics.position());
+void Ship::initialize(const sf::Vector2f & position, const sf::Vector2f & speed) {
+    m_kinematics.initialize(position, speed);
+}
 
+void Ship::update(float dt) {
     m_kinematics.update(dt);
     m_sail.update(dt);
     m_helm.update(dt);
 }
 
+void Ship::setAngle(float angle) {
+    m_angle = angle;
+}
+
+Sail* Ship::getSail(void) {
 const Sail& Ship::getSail() const {
     return m_sail;
 }
@@ -38,4 +47,7 @@ Sail& Ship::getSail() {
 
 Helm& Ship::getHelm() {
     return m_helm;
+}
+float Ship::getAngle(void) const {
+    return m_angle;
 }

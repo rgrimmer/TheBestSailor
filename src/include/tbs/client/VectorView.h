@@ -34,10 +34,13 @@ public:
     virtual ~VectorView() {
     }
 
+    sf::Vector2<T> getVector() const{
+        return m_vector;
+    }
 private:
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {
-        states.transform.rotate(Kinematics::direction(m_vector));
+
 
         // Line
         sf::RectangleShape lineVector(sf::Vector2f(Kinematics::norme(m_vector)*4, 4));
