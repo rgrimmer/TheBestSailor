@@ -17,19 +17,17 @@ public:
     Ship();
     virtual ~Ship();
     
-    inline Kinematics& kinematics() { return m_kinematics; }
-    inline const Kinematics& kinematics() const { return m_kinematics; }
-    inline Helm& helm() {return m_helm; }
-    inline Sail& sail() { return *m_sail; }
-    inline const Sail& sail() const { return *m_sail; }
+    Kinematics& kinematics() { return m_kinematics; }
+    const Kinematics& kinematics() const { return m_kinematics; }
+    Helm& getHelm();
+    Sail& getSail();
+    const Sail& getSail() const;
     void update(float dt);
-    
-    Sail* getSail(void);
     
 private:
 
     Helm m_helm;
-    Sail* m_sail;
+    Sail m_sail;
     Kinematics m_kinematics;
     
 };

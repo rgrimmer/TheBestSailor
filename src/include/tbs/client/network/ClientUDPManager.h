@@ -25,7 +25,7 @@ public:
     unsigned short getPort() const;
 
     void startReceiverThread();
-    bool send(const MessageData &message) const;
+    bool send(MessageData &message) const;
 
 
 private:

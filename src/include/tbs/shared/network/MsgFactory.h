@@ -10,11 +10,13 @@
 
 #include <SFML/Network/Packet.hpp>
 
+#include "shared/network/MsgType.h"
+
 class MessageData;
 
 class MsgFactory {
 public:
-    static MessageData* createMessage(sf::Packet& packet);
+    static MessageData* createMessage(MsgType msgType);
 private:
 
 };

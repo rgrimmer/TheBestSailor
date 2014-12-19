@@ -13,21 +13,21 @@
 
 #include <SFML/Network/UdpSocket.hpp>
 
-#include "server/PlayerList.h"
-#include "shared/network/MessageData.h"
-#include "server/ServerPlayer.h"
-#include "server/network/ServerMessageQueue.h"
+class ServerPlayers;
+class ServerMessageQueue;
+class MessageData;
+class ServerPlayer;
 
 class ServerUDPManager {
 public:
-    ServerUDPManager(PlayerList& players, ServerMessageQueue& msgQueue);
+    ServerUDPManager(ServerPlayers& players, ServerMessageQueue& msgQueue);
     ~ServerUDPManager();
 
     bool initialize(unsigned short port);
 
     void startReceiverThread();
-    bool send(const MessageData &message, const ServerPlayer& player) const;
-    bool send(const MessageData &message, const std::vector<ServerPlayer*>& players) const;
+    bool send(MessageData &message, const ServerPlayer& player) const;
+    bool send(MessageData &message, const std::vector<ServerPlayer*>& players) const;
 
 private:
     void receiver();
@@ -36,7 +36,7 @@ private:
     unsigned short m_port;
     mutable sf::UdpSocket m_socket;
 
-    PlayerList& m_players;
+    ServerPlayers& m_players;
     ServerMessageQueue& m_msgQueue;
 
     std::thread* m_threadReceiver;

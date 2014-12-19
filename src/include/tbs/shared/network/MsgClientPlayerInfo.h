@@ -15,25 +15,30 @@
 class MsgClientPlayerInfo : public MessageData {
 public:
     MsgClientPlayerInfo();
-    MsgClientPlayerInfo(unsigned short PortUDP, const std::string &name);
+    MsgClientPlayerInfo(MessageData &message);
+    MsgClientPlayerInfo(unsigned short portUDP, const std::string &name);
     virtual ~MsgClientPlayerInfo();
 
-    virtual MsgType getType() const;
-    const std::string& getName() const; 
-    unsigned short getPort() const;
+    const std::string& getName();
+    unsigned short getPort();
+
 
 private:
-    virtual void getDataFrom(sf::Packet& packet);
-    virtual void putDataIn(sf::Packet& packet) const;
-
-
+    virtual void beforeOnSend();
+    virtual void afterOnReceive();
+    
 private:
     unsigned short m_portUDP;
     std::string m_name;
-
 };
 
-sf::Packet& operator >>(sf::Packet& packet, MsgClientPlayerInfo& msg);
+//class MsgObjClientPlayerInfo {
+//    
+//    const std::string& getName() const; 
+//    unsigned short getPort() const;
+//};
+//
+//void operator>>(MsgClientPlayerInfo &msg, MsgObjClientPlayerInfo& obj);
 
 #endif	/* MSGCLIENTPLAYERINFO_H */
 

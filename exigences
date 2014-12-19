@@ -83,3 +83,171 @@ TODO : Exigence en rapport au règle du jeux :
 Perspective :
 Identification des joueurs par leur port/ip. Eviter la triche.
 Ajout d'identification de joueurs. Dans le but d'avoir des scores persistant.
+
+
+La création de message :
+- Les contraintes
+- Un message doit être mis cerialisé d'un coté et décerialisé de l'autre. 
+- On ne peut créé un message en lui donnant une classe ne parametre car celle-ci 
+n'existe que ddu coté client ou du coté server.
+
+-Solution 1 : 
+- On construit un message en utilisant ses parametres. ex : 
+1) message(string:nom, unsigned short:port, ..)
+2) packet << message;
+3) packet >> message;
+4) message.getName(), message.getPort() ..
+
+Aventage :
+- Sérialisation pour le packet à l'interieur de la classe.
+- Getter pour les données dans le message.
+
+Désaventage :
+- Sérialisation à faire pour les données. (ex: packet >> map) Meme avec cette méthode.
+- Beaucoup d'étape dont le seul du message est d'ajouter le type de message.
+
+On pourrait remplacé par l'envoi par sans soucis :
+1) packet << TypeEnvoiMap << map;
+
+
+-Solution 2 :
+Faire hérité Message de sf::Packet. Surcharger la méthode onSend pour ajouté le type
+1) MessageEnvoiMap << map
+2) pick la donnée de la socket et créé le message en fonction du type
+
+Avantage :
+1) Plus de transaparence pour l'utilisateur.
+On défini toujours les opérateur >> packet pour nos données
+
+Inconvéniant :
+1) Possibilité d'insertion de données autres que celle attendus dans le Message
+2) Séparation du code de sérialisation : exemple pour un message envoyé par le client
+packet << ClientMap  // code coté client uniquement
+packet >> ServerMap // code coté server uniquement
+
+Cas d'étude, l'envoi des info du client : class ClientPlayer
+- String            nom;
+- unsigned short    portUdp
+- socketTCP
+...
+
+Ces données sont attendu par le serveur : class ServerPlayer
+- String            nom
+- unsigned short    portUdp
+-sf::TCPSocket      socket tcp du joueur
+...
+
+Solution naive
+On peut vite se rendre compte que filement, les donnée utiles son celle qui vont être transportées.
+Pour utiliser au mieux l'orienté objet et la réutilisabilité, 
+il faut extraire les données utiles de cette classe et les mettre dans une autre.
+Et ensuite implémenté les opérateurs de flux pour cette classe.
+Pour une classe Game on aurait donc ClientGame et ServerGame qui contienne chaqu'un CommonGame
+Le problèm est que, pour la map, on transmet que le header. 
+Et que ce n'est pas la seul donnée qui est en commun entre le server et le client.
+
+Solution 3 :
+Mixer les solutions proposé : étendre les Packets et Ajouter un constructeur.
+On n'utiliserait donc plus le système d'opérateur de flux.
+On construit un message par ces parametres : ex (dimMap, dimMap, size)
+On propose des getters pour ces variables.
+On peut directement envoyer le message sans repasser par un packet
+On recoi un packet qu'on va regarder pour déterminer son type.
+On le recréé :
+MsgType = packet.getData() ...
+if(MsgType == MsgGame() )
+    On caste.
+
+Le contenu d'un Message
+Le constructeur :
+Ce qui est envoyé est un void* d'une taille défini. 
+Les données du constructeur on l'opérateur de flux défini mais certain type ne 
+sont pas constant et ne devrait pas être inscrit telle quel.
+On a deux solutions:
+1) Mettre les données dans le packet à la main comme si l'utilisateur avait utilisé 
+l'opérateur de flux en remplacement les vriables non constantes.
+2) Ne pas du tout utilisé le stockage interne prévu.
+On place les parametres dans des variables membres.
+Lors du onSend(), on utilise les variables membre pour envoyer les données.
+( En faite c'est stupide .. )
+
+Comment définir les getters ?
+Les données d'un packet son déja enregistré. 
+Tout se joue sur le onReceive(), On parse le packet .. (comment)
+
+Conclusion :
+Le problème reste le meme, si on ne peut extraire les données à envoyer des classes client et server,
+ !! Il n'est pas possible d'avoir la serialisation au meme endroit. !!
+
+Cependant, il est possible de réduire l'étape de sérialisation grace à l'héritage.
+La réception ce fait de la façon suivante : regarder qu'elle message on attend.
+Récupérer le contenu dans la classe de message qui va bien.
+On a cependant un gros problème sur les opérateurs de flux. 
+En l'état on peut mettre n'importe quel donnée dans un message.
+
+Opérateur de flux Packet >> MaClasse ou MsgMaClasse >> MaClasse.
+Le premier permet une plus forte généricité. Pas besoin de redéfinir l'opréteur pour un message différent.
+Le second offre beaucoup plus de controle.
+De plus, dans notre cas, la généricité n'apport rien.
+Si on envoi un meme objet dans un message différent, 
+c'est qu'on ne veut peut être pas envoyer les meme données.
+
+
+Conlusion :
+On va donc utiliser un système de message par héritage de packet couplé à des opérateurs de flux spécifique.
+
+
+Retour sur les messages :
+Solution envisagé : Envoyer des "objets"
+Il se trouve que j'ai un peu mélangé les données client/server et les données partagés.
+En réalité se ne sont pas des données partagées mais des données nécessaires pour la création 
+ou la modification de donnée coté client ou server.
+Cet objet est créé coté client, exemple :
+
+Shared :
+ObjWorld;
+HeaderMap;
+
+Packet << ObjWorld {
+packet << cw.getHeader();
+packet << cw.getHeightSeed();
+packet << cw.getWindSeed();
+}
+
+Packet >> ObjWorld {
+packet >> header;
+packet >> seed1;
+packet >> seed2;
+ObjWorld = ObjWorld(header, seed1, seed2)
+}
+
+packet << Header {
+packet << width;
+packet << height;
+}
+
+packet >> Header {
+packet >> width;
+packet >> height;
+}
+
+// Client
+// Données
+ClientWorld cw;
+// Local
+ObjWorld ow( cw.getHeader, cw.getSeed1, cw.getSeed2);
+send(MsgWorld(ow));
+
+// Server:
+// Données
+ServerWorld sw;
+// Local
+receive(MsgWorld)
+MsgWorld >> ObjWorld;
+
+ObjWorld;
+ObjWorld >> ServerWorld {
+ow.getHeader() >> header;
+ow.getHeightSeed() >> seed1;
+ow.getWindSeed() >> seed2;
+}

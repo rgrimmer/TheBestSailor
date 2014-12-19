@@ -14,11 +14,11 @@
 #include "server/network/ServerTCPManager.h"
 #include "server/network/ServerMessageQueue.h"
 
-class PlayerList;
+class ServerPlayers;
 
 class ServerNetwork {
 public:
-    ServerNetwork(PlayerList &players);
+    ServerNetwork(ServerPlayers &players);
     virtual ~ServerNetwork();
 
     void initialize();
@@ -34,7 +34,7 @@ private:
     void udpReceiveLoop();
 
 private:
-    PlayerList& m_players;
+    ServerPlayers& m_players;
 
     ServerMessageQueue m_messageQueue;
 

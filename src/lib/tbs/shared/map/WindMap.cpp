@@ -14,20 +14,21 @@
 const int WindMap::maxStrength = 16;
 const int WindMap::minStrength = 1;
 
-
 sf::Packet& operator<<(sf::Packet& packet, const WindMap& map) {
     return packet << map.getHeader();
 }
 
-WindMap::WindMap() : m_header(MapHeader(0, 0)), m_container(NULL) {
+WindMap::WindMap() : m_header(0, 0), m_container(nullptr) {
 
 }
 
 WindMap::WindMap(const MapHeader &header)
-: m_header(header) {
-
+: m_header(header)
+, m_container(nullptr) {
+    if(m_header.getWidth() == 0 || m_header.getHeight() == 0)
+        return;
     int width = header.getWidth();
-    int height = header.getHeight();    
+    int height = header.getHeight();
 
     ValueNoise::GenerateValues(getSeed());
 
@@ -51,10 +52,12 @@ WindMap::WindMap(const MapHeader &header)
 }
 
 WindMap::~WindMap() {
-    for (int i = 0; i < getHeight(); ++i) {
-        delete m_container[i];
-    }
-    delete m_container;
+//    if (m_container != nullptr) { // @TODO
+//        for (int i = 0; i < getHeight(); ++i) {
+//            delete m_container[i];
+//        }
+//        delete m_container;
+//    }
 }
 
 int WindMap::getSize() const {

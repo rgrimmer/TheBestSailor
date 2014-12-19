@@ -11,17 +11,17 @@
 
 ClientTCPManager::ClientTCPManager(ClientMsgQueue& msgQueue)
 : m_msgQueue(msgQueue)
-, m_threadReceiver(nullptr){
-
+, m_threadReceiver(nullptr) {
+    m_socket.setBlocking(true);
 }
 
 ClientTCPManager::~ClientTCPManager() {
     delete m_threadReceiver;
 }
 
-bool ClientTCPManager::connect(sf::IpAddress serverAdress, unsigned short serverPortTcp) {
-    std::cout << "[Connect][TCP]\tEstablish connection with server" << std::endl;
-    sf::Socket::Status status = m_socket.connect(serverAdress, serverPortTcp);
+bool ClientTCPManager::connect(sf::IpAddress serverAdress, unsigned short serverPortTcp, sf::Time timeout) {
+    std::cout << "[Conn][TCP] \tTry to establish connection with server" << std::endl;
+    sf::Socket::Status status = m_socket.connect(serverAdress, serverPortTcp, timeout);
     return (status == sf::Socket::Done);
 }
 
@@ -35,17 +35,13 @@ void ClientTCPManager::startReceiverThread() {
 
 void ClientTCPManager::receiver() {
     while (true) {
-        sf::Packet packet;
-        m_socket.receive(packet);
-        MessageData* msg = MsgFactory::createMessage(packet);
-        if (msg) {
-            m_msgQueue.push(msg);
-        }
+        MessageData* msg = new MessageData();
+        m_socket.receive(*msg);
+        m_msgQueue.push(msg);
     }
 }
 
-bool ClientTCPManager::send(const MessageData& message) const {
-    std::cout << "[Send][TCP] \t" << message.getType() << std::endl;
-    sf::Packet packet;
-    return (m_socket.send(message.toPacketWithType(packet)) == sf::Socket::Done);
+bool ClientTCPManager::send(MessageData& message) const {
+    std::cout << "[Send][TCP] \t" /*<< message.getType()*/ << std::endl;
+    return (m_socket.send(message) == sf::Socket::Done);
 }

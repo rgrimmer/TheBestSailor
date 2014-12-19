@@ -14,14 +14,10 @@
 class MsgGame : public MessageData {
 public:
     MsgGame();
-    virtual ~MsgGame();
+    MsgGame(MessageData &message);
     
-    virtual MsgType getType() const;
-    virtual GameType getGameType() const;
-
-private:
-    virtual void getDataFrom(sf::Packet& packet);
-    virtual void putDataIn(sf::Packet& packet) const;
+    GameType getGameType() const { return GameType::SPEEDEST_WIN; } // @TODO
+    virtual ~MsgGame();
 };
 
 #endif	/* MSGGAME_H */

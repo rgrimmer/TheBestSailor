@@ -18,6 +18,7 @@ public:
     virtual ~ClientNetwork();
 
     void connect();
+    void initialize();
     ClientTCPManager& getTcpManager();
     const ClientTCPManager& getTcpManager() const;
     ClientUDPManager& getUdpManager();

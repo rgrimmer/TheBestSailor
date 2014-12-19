@@ -4,49 +4,32 @@
  * 
  * Created on 11 décembre 2014, 16:35
  */
-
-#include <SFML/Config.hpp>
-
+//#include <arpa/inet.h>
+#include <iostream>
 #include "shared/network/MessageData.h"
 
-MessageData::MessageData() {
+MessageData::MessageData(MsgType msgType)
+: m_msgType(msgType) {
+    (*this) << m_msgType;
 }
 
 MessageData::~MessageData() {
 }
 
-MsgType MessageData::popType(sf::Packet& packet) {
-    TYPE_SF_CAST sfType;
-    packet >> sfType;
-    return static_cast<MsgType>(sfType);
+const void* MessageData::onSend(std::size_t& size) {
+    std::cout << "[Send][Msg] \t Send Message " << static_cast<int> (getMsgType()) << std::endl;
+    beforeOnSend(*this);
+    size = getDataSize();
+    return getData();
 }
 
-sf::Packet& MessageData::putSfType(sf::Packet& packet) const {
-    auto sfType = static_cast<TYPE_SF_CAST>(getType());
-    packet << sfType;
-    return packet;
+void MessageData::onReceive(const void* data, std::size_t size) {
+    append(data, size);
+    (*this) >> m_msgType;
+    std::cout << "[Send][Msg] \t Receive Message " << static_cast<int> (getMsgType()) << std::endl;
+    afterOnReceive(*this);
 }
 
-sf::Packet& MessageData::fromPacketWithType(sf::Packet& packet) {
-    MessageData::popType(packet);
-    getDataFrom(packet);
-    return packet;
-}
-
-sf::Packet& MessageData::fromPacketWithoutType(sf::Packet& packet) {
-    getDataFrom(packet);
-    return packet;
-}
-
-sf::Packet& MessageData::toPacketWithType(sf::Packet& packet) const {
-    putSfType(packet);
-    putDataIn(packet);
-    return packet;
-
-}
-
-sf::Packet& MessageData::toPacketWithoutType(sf::Packet& packet) const {
-    putDataIn(packet);
-    return packet;
-
+MsgType MessageData::getMsgType() const {
+    return m_msgType;
 }

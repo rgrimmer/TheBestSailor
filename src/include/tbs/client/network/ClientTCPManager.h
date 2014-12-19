@@ -11,6 +11,7 @@
 #include <thread>
 #include <SFML/Network/IpAddress.hpp>
 #include <SFML/Network/TcpSocket.hpp>
+#include <SFML/System/Time.hpp>
 
 class MessageData;
 class ClientMsgQueue;
@@ -20,11 +21,11 @@ public:
     ClientTCPManager(ClientMsgQueue& msgQueue);
     ~ClientTCPManager();
 
-    bool connect(sf::IpAddress serverAdress, unsigned short serverPortTcp);
+    bool connect(sf::IpAddress serverAdress, unsigned short serverPortTcp, sf::Time timout = sf::Time::Zero);
     void disconnect(void);
 
     void startReceiverThread();
-    bool send(const MessageData &message) const;
+    bool send(MessageData &message) const;
 
 private:
     void receiver();

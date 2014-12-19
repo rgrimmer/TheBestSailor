@@ -6,27 +6,17 @@
  */
 
 #include "shared/network/MsgGame.h"
-#include "shared/network/MsgTurnHelm.h"
 
-MsgGame::MsgGame() {
+MsgGame::MsgGame()
+: MessageData(MsgType::Game) {
+}
+
+MsgGame::MsgGame(MessageData& message)
+: MessageData(MsgType::Game) {
+    this->append(message.getData(), message.getDataSize());
+    sf::Int32 r;
+    *this >> r;
 }
 
 MsgGame::~MsgGame() {
-}
-
-MsgType MsgGame::getType() const {
-    return MsgType::MSG_GAME;
-}
-
-GameType MsgGame::getGameType() const {
-    return GameType::GAME_UNDEF;
-}
-
-
-void MsgGame::getDataFrom(sf::Packet& packet) {
-
-}
-
-void MsgGame::putDataIn(sf::Packet& packet) const {
-
 }

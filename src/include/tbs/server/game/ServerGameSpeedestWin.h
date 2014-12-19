@@ -15,14 +15,14 @@
 #include "server/game/ServerGame.h"
 
 class Server;
-class PlayerList;
+class ServerPlayers;
 class MapHeader;
 class MessageData;
 class ServerPlayer;
 
 class ServerGameSpeedestWin : public ServerGame {
 public:
-    ServerGameSpeedestWin(Server &server, PlayerList &players, const MapHeader &header);
+    ServerGameSpeedestWin(Server &server, ServerPlayers &players, const MapHeader &header);
     virtual ~ServerGameSpeedestWin();
 
     const Map& getMap() const;

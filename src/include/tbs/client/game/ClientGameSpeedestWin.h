@@ -12,7 +12,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 
-#include "client/World.h"
+#include "client/ClientWorld.h"
 #include "client/game/ClientGame.h"
 
 class DetailsView;
@@ -24,8 +24,8 @@ public:
     ClientGameSpeedestWin(Client &client, sf::RenderWindow& m_window);
     virtual ~ClientGameSpeedestWin();
 
-    void setWorld(const World &world);
-    const World& getWorld() const;
+    void setClientWorld(const ClientWorld &world);
+    const ClientWorld& getClientWorld() const;
 
 private:
     void initGame();
@@ -34,7 +34,7 @@ private:
 
 private:
     // Model
-    World m_world;
+    ClientWorld m_world;
 
     // Network
     Client& m_client;
@@ -54,7 +54,7 @@ private:
     GlobalView* m_globalView;
 };
 
-sf::Packet& operator>>(sf::Packet& packet, ClientGameSpeedestWin& game);
+MsgGame& operator>>(MsgGame &msg, ClientGameSpeedestWin& game);
 
 #endif	/* CLIENTGAMESPEEDESTWIN_H */
 

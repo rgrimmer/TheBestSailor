@@ -11,13 +11,13 @@
 #include <vector>
 
 class MessageData;
-class PlayerList;
+class ServerPlayers;
 class Server;
 class ServerPlayer;
 
 class ServerGame {
 public:
-    ServerGame(Server &server, PlayerList& players);
+    ServerGame(Server &server, ServerPlayers& players);
     virtual ~ServerGame();
 
     void start();
@@ -31,7 +31,7 @@ protected:
     
 protected:
     Server &m_server;
-    PlayerList& m_players;
+    ServerPlayers& m_players;
 };
 
 #endif	/* SERVERGAME_H */

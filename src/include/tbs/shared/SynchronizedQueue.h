@@ -18,6 +18,7 @@
 #ifndef SYNCHRONIZED_QUEUE_H
 #define SYNCHRONIZED_QUEUE_H
 
+#include <iostream>
 #include <mutex>
 #include <queue>
 #include <condition_variable>
@@ -49,8 +50,10 @@ public:
     }
 
     void push(const T& value) {
+        std::cout << "[SyncQ][Push] \t Value push in the queue started" << std::endl;
         std::unique_lock<std::mutex> lock(m_qMutex);
         m_queue.push(value);
+        std::cout << "[SyncQ][Push] \t Value push in the queue ended" << std::endl;
         m_cond.notify_one();
     }
 

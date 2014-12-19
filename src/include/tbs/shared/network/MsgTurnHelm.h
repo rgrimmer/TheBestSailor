@@ -12,20 +12,8 @@
 
 class MsgTurnHelm : public MessageData {
 public:
-    explicit MsgTurnHelm(msgOrientation orientation = UNDEF);
+    explicit MsgTurnHelm(MsgOrientation orientation = MsgOrientation::UNDEF);
     virtual ~MsgTurnHelm();
-
-    msgOrientation getOrientation() const;
-    virtual MsgType getType() const;
-
-private:
-    virtual void getDataFrom(sf::Packet& packet);
-    virtual void putDataIn(sf::Packet& packet) const;
-
-
-private:
-    msgOrientation m_orientation;
-
 };
 
 #endif	/* MSG_TURN_HELM_H */

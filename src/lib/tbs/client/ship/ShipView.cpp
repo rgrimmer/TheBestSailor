@@ -33,7 +33,7 @@ void ShipView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(m_shipShape, states);
 
     // Draw sail
-    target.draw(m_ship.sail(), states);
+    target.draw(m_ship.getSail(), states);
     
     // Draw vector
     target.draw(*m_speedView, states);

@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <SFML/System/Sleep.hpp>
 
 #include "shared/network/UtilsNetwork.h"
 
@@ -26,7 +27,16 @@ ClientMsgQueue& ClientNetwork::getMessageQueue() {
 }
 
 void ClientNetwork::connect() {
-    m_tcpManager.connect(sf::IpAddress("localhost"), SERVER_PORT_TCP);
+    while (!m_tcpManager.connect(sf::IpAddress("localhost"), SERVER_PORT_TCP)) {
+        std::cout << "[NetW][Tcp] \tCan't find server, try again in 5s" << std::endl;
+        sf::sleep(sf::milliseconds(5000));
+    }
+    std::cout << "[NetW][Tcp] \tConnection established" << std::endl;
+}
+
+void ClientNetwork::initialize() {
+    startTcpReceiverThread();
+    startUdpReceiverThread();
 }
 
 void ClientNetwork::startTcpReceiverThread() {

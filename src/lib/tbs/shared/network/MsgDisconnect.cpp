@@ -7,20 +7,9 @@
 
 #include "shared/network/MsgDisconnect.h"
 
-MsgDisconnect::MsgDisconnect() {
+MsgDisconnect::MsgDisconnect()
+: MessageData(MsgType::Disconnect) {
 }
 
 MsgDisconnect::~MsgDisconnect() {
-}
-
-MsgType MsgDisconnect::getType() const {
-    return MsgType::MSG_DISCONNECT;
-}
-
-void MsgDisconnect::getDataFrom(sf::Packet& packet) {
-
-}
-
-void MsgDisconnect::putDataIn(sf::Packet& packet) const {
-
 }

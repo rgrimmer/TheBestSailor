@@ -6,10 +6,13 @@
  */
 #include <iostream>
 
-#include "shared/network/Message.h"
+#include <SFML/System/Clock.hpp>
+#include <SFML/System/Sleep.hpp>
+
 #include "shared/network/MsgTurnHelm.h"
 #include "shared/network/MsgTurnSail.h"
 #include "shared/network/MsgDisconnect.h"
+#include "shared/network/MessageData.h"
 
 #include "server/Server.h"
 #include "server/game/ServerGameSpeedestWin.h"
@@ -18,7 +21,7 @@ sf::Packet& operator<<(sf::Packet& packet, const ServerGameSpeedestWin& game) {
     return packet << game.getMap();
 }
 
-ServerGameSpeedestWin::ServerGameSpeedestWin(Server &server, PlayerList& players, const MapHeader &header)
+ServerGameSpeedestWin::ServerGameSpeedestWin(Server &server, ServerPlayers& players, const MapHeader &header)
 : ServerGame(server, players)
 , m_map(header) {
 }
@@ -31,20 +34,7 @@ const Map& ServerGameSpeedestWin::getMap() const {
 }
 
 void ServerGameSpeedestWin::initGame() {
-    //send player list to others
-//    sf::Packet packetPlayerList;
-
-//    packetPlayerList << static_cast<sf::Uint8> (m_players.size());
-//
-//    for (const auto p : m_players.inGame()) {
-//        packetPlayerList << static_cast<sf::Uint8> (p->getId());
-//        packetPlayerList << p->getName();
-//    }
-//
-//    std::cout << "send players list to all players.........." << std::endl;
-//    for (const auto p : m_players.inGame()) {
-//        m_server.m_network.getTCPManager().send(packetPlayerList, p->getTCPSocket());
-//    }
+    // @TODO
 }
 
 void ServerGameSpeedestWin::startGameLoop() {
@@ -75,28 +65,32 @@ sf::Packet ServerGameSpeedestWin::toPacket(sf::Packet &packet) const {
 }
 
 bool ServerGameSpeedestWin::read(MessageData* message, ServerPlayer* player) {
-    switch (message->getType()) {
-        case MSG_ACTION_TURN_HELM:
+    switch (message->getMsgType()) {
+        case MsgType::ActionTurnHelm:
         {
             std::cout << "Turn Helm ";
             auto msg = dynamic_cast<MsgTurnHelm*> (message);
-
-            if (msg->getOrientation() == msgOrientation::POSITIVE)
+            sf::Int8 sfOrientation;
+            *msg >> sfOrientation;
+            MsgOrientation orientation = static_cast<MsgOrientation> (sfOrientation);
+            if (orientation == MsgOrientation::POSITIVE)
                 std::cout << "POSITIVE";
-            else if (msg->getOrientation() == msgOrientation::NEGATIVE)
+            else if (orientation == MsgOrientation::NEGATIVE)
                 std::cout << "NEGATIVE";
             else
-                std::cout << "ORIENTATION UNDEFINED (WARNING)";
+                std::cout << "UNDEFINED (WARNING)";
         }
             break;
-        case MSG_ACTION_TURN_SAIL:
+        case MsgType::ActionTurnSail:
         {
             std::cout << "Turn Sail ";
             auto msg = dynamic_cast<MsgTurnSail*> (message);
-
-            if (msg->getOrientation() == msgOrientation::POSITIVE)
+            sf::Int8 sfOrientation;
+            *msg >> sfOrientation;
+            MsgOrientation orientation = static_cast<MsgOrientation> (sfOrientation);
+            if (orientation == MsgOrientation::POSITIVE)
                 std::cout << "POSITIVE";
-            else if (msg->getOrientation() == msgOrientation::NEGATIVE)
+            else if (orientation == MsgOrientation::NEGATIVE)
                 std::cout << "NEGATIVE";
             else
                 std::cout << "UNDEFINED (WARNING)";
@@ -107,13 +101,14 @@ bool ServerGameSpeedestWin::read(MessageData* message, ServerPlayer* player) {
     }
     return true;
     std::cout << std::endl;
+    // @TODO delete message, use unique_ptr ?
 }
 
 /*
     sf::Packet packetResponse;
     packetResponse << 0;
 
-    for (ServerPlayer* p : m_playerList) {
+    for (ServerPlayer* p : m_players) {
         std::cout << "[send] resp to : " << p->getName() << " port = " << p->getUdpPort() << std::endl;
         m_network.getUDPManager().send(packetResponse, p->getAddress(), p->getUdpPort());
     }

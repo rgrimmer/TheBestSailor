@@ -1,29 +1,32 @@
 /* 
- * File:   PlayerList.h
+ * File:   ServerPlayers.h
  * Author: maxence
  *
  * Created on 15 décembre 2014, 18:28
  */
 
-#ifndef PLAYERLIST_H
-#define	PLAYERLIST_H
+#ifndef SERVERPLAYERS_H
+#define	SERVERPLAYERS_H
 
 #include <vector>
 
 #include <SFML/Network/IpAddress.hpp>
 
+#include "ServerPlayer.h"
+
 class ServerPlayer;
 
-class PlayerList {
+class ServerPlayers {
 public:
-    PlayerList();
-    virtual ~PlayerList();
+    ServerPlayers();
+    virtual ~ServerPlayers();
 
     int size() const;
     bool isEmpty() const;
     
     ServerPlayer& addNewPlayer();
     ServerPlayer* getPlayer(sf::IpAddress senderAddress, unsigned short senderPort);
+    void remove(ServerPlayer &player);
     
     const std::vector<ServerPlayer*>&  inGame() const;
     const std::vector<ServerPlayer*>&  inWait() const;
@@ -38,5 +41,5 @@ private:
 
 };
 
-#endif	/* PLAYERLIST_H */
+#endif	/* SERVERPLAYERS_H */
 

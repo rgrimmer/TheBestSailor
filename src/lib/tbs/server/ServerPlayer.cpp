@@ -1,19 +1,28 @@
 #include <server/ServerPlayer.h>
 
-ServerPlayer::ServerPlayer() {
+//MsgClientPlayerInfo operator>>(MsgClientPlayerInfo &msg, ServerPlayer player) {
+//    msg >>
+//}
+
+ServerPlayer::ServerPlayer()
+: m_id(-1)
+, m_name("Anonymous")
+, m_address(sf::IpAddress::None)
+, m_udpPort(0)
+, m_TCPSocket(nullptr) {
 
 }
 
-ServerPlayer::ServerPlayer(unsigned int id, const std::string &name, sf::TcpSocket& socket) 
+ServerPlayer::ServerPlayer(unsigned int id, const std::string &name, sf::TcpSocket& socket)
 : m_id(id)
 , m_name(name)
-, m_TCPSocket(&socket){
-    m_address = m_TCPSocket->getRemoteAddress();
-    m_udpPort = 0;
+, m_address(socket.getRemoteAddress())
+, m_udpPort(0)
+, m_TCPSocket(&socket) {
 }
 
 ServerPlayer::~ServerPlayer() {
-    
+    delete m_TCPSocket;
 }
 
 unsigned int ServerPlayer::getId() const {
@@ -40,6 +49,11 @@ void ServerPlayer::setName(const std::string& name) {
     m_name = name;
 }
 
-unsigned short ServerPlayer::getUdpPort() const{
+unsigned short ServerPlayer::getUdpPort() const {
     return m_udpPort;
+}
+
+void ServerPlayer::initialize() {
+    delete m_TCPSocket;
+    m_TCPSocket = new sf::TcpSocket();
 }

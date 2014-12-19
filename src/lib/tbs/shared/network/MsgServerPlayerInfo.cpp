@@ -7,40 +7,44 @@
 
 #include "shared/network/MsgServerPlayerInfo.h"
 
-MsgServerPlayerInfo::MsgServerPlayerInfo() {
+MsgServerPlayerInfo::MsgServerPlayerInfo()
+: MessageData(MsgType::ServerPlayerInfo) {
 
 }
 
+MsgServerPlayerInfo::MsgServerPlayerInfo(MessageData& message) {
+    afterOnReceive(message);
+}
+
 MsgServerPlayerInfo::MsgServerPlayerInfo(unsigned int ID, unsigned short portRemote)
-: m_ID(ID)
+: MessageData(MsgType::ServerPlayerInfo)
+, m_ID(ID)
 , m_portRemote(portRemote) {
 }
 
 MsgServerPlayerInfo::~MsgServerPlayerInfo() {
 }
 
-MsgType MsgServerPlayerInfo::getType() const {
-    return MSG_SERVER_PLAYER_INFO;
-}
-
-void MsgServerPlayerInfo::getDataFrom(sf::Packet& packet) {
+void MsgServerPlayerInfo::afterOnReceive(MessageData& message) {
     sf::Uint32 sfID;
     sf::Uint16 sfPort;
-    
-    packet >> sfID >> sfPort;
-    
-    m_ID = static_cast<unsigned int>(sfID);
-    m_portRemote =  static_cast<unsigned short>(sfPort);
+    if (message >> sfID >> sfPort) {
+        m_ID = static_cast<unsigned int> (sfID);
+        m_portRemote = static_cast<unsigned short> (sfPort);
+    } else {
+        std::cout << "Can't create message body" << std::endl;
+    }
+
 }
 
-void MsgServerPlayerInfo::putDataIn(sf::Packet& packet) const {
-    packet << static_cast<sf::Uint32>(m_ID);
-    packet << static_cast<sf::Uint16>(m_portRemote);
+void MsgServerPlayerInfo::beforeOnSend(MessageData& message) {
+    message << static_cast<sf::Uint32> (m_ID);
+    message << static_cast<sf::Uint16> (m_portRemote);
 }
 
 unsigned int MsgServerPlayerInfo::getID() const {
     return m_ID;
-}
+} 
 
 unsigned short MsgServerPlayerInfo::getServerPort() const {
     return m_portRemote;

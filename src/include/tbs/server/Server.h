@@ -10,7 +10,7 @@
 
 #include "shared/network/Semaphore.h"
 
-#include "server/PlayerList.h"
+#include "server/ServerPlayers.h"
 #include "server/network/ServerNetwork.h"
 
 class MessageData;
@@ -39,7 +39,7 @@ private:
     
 private :
     ServerGame* m_game;
-    PlayerList m_players; 
+    ServerPlayers m_players; 
     
     Semaphore m_acknowledgment;
     ServerNetwork m_network;

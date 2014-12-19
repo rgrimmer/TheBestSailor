@@ -8,7 +8,7 @@
 
 ClientUDPManager::ClientUDPManager(ClientMsgQueue& msgQueue)
 : m_msgQueue(msgQueue) {
-
+    m_socket.bind(sf::Socket::AnyPort);
 }
 
 ClientUDPManager::~ClientUDPManager() {
@@ -31,30 +31,26 @@ void ClientUDPManager::startReceiverThread() {
 
 void ClientUDPManager::receiver() {
     while (true) {
-        sf::Packet packet;
+        MessageData* msg = new MessageData();
         sf::IpAddress senderAddress;
         unsigned short senderPort;
 
-        m_socket.receive(packet, senderAddress, senderPort);
+        m_socket.receive(*msg, senderAddress, senderPort);
         std::cout << "[UDP][Recv] \t";
         if (senderAddress == m_addressRemote && senderPort == m_portRemote) {
-            MessageData* msg = MsgFactory::createMessage(packet);
-            if (msg) {
-                std::cout << msg->getType() << std::endl;
-                m_msgQueue.push(msg);
-            } else {
-                std::cout << "WARNING : Unreading message" << std::endl;
-            }
+
+            //                std::cout << msg->getType() << std::endl;
+            m_msgQueue.push(msg);
+
         } else {
             std::cout << "WARNING : Message Source isn't server" << std::endl;
+            delete msg;
         }
     }
 }
 
-bool ClientUDPManager::send(const MessageData& message) const {
-    sf::Packet packet;
-    message.toPacketWithType(packet);
-    sf::Socket::Status status = m_socket.send(packet, m_addressRemote, m_portRemote);
-    std::cout << "[UDP][Send] \t" << message.getType() << std::endl;
+bool ClientUDPManager::send(MessageData& message) const {
+    sf::Socket::Status status = m_socket.send(message, m_addressRemote, m_portRemote);
+    std::cout << "[UDP][Send] \t" /*<< message.getType()*/ << std::endl;
     return (status == sf::Socket::Done);
 }

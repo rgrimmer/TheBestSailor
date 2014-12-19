@@ -7,51 +7,36 @@
 
 #ifndef MESSAGEDATA_H
 #define	MESSAGEDATA_H
-
+#include <iostream>
+#include "shared/network/MsgType.h"
 #include <SFML/Network/Packet.hpp>
 
-typedef enum {
-    MSG_UNDEF,
-    MSG_DISCONNECT,
-    MSG_CLIENT_PLAYER_INFO,
-    MSG_SERVER_PLAYER_INFO,
-    MSG_ACTION_TURN_HELM,
-    MSG_ACTION_TURN_SAIL,
-    MSG_GAME,
-    MSG_ACK
-} MsgType;
-
-typedef enum {
-    UNDEF,
-    POSITIVE,
-    NEGATIVE
-} msgOrientation;
-
-#define ORIENTATION_SF_CAST sf::Int8
-#define TYPE_SF_CAST sf::Int16
-
-class MessageData {
+class MessageData : public sf::Packet {
 public:
-    static MsgType popType(sf::Packet &packet);
-
-public:
-    MessageData();
+    MessageData(MsgType msgType = MsgType::Undef);
     virtual ~MessageData();
 
-
-    sf::Packet& toPacketWithoutType(sf::Packet &packet) const;
-    sf::Packet& toPacketWithType(sf::Packet &packet) const;
-    sf::Packet& fromPacketWithoutType(sf::Packet &packet);
-    sf::Packet& fromPacketWithType(sf::Packet &packet);
-
-public:
-    virtual MsgType getType() const = 0;
+    MsgType getMsgType() const;
 
 protected:
-    sf::Packet& putSfType(sf::Packet &packet) const;
-    virtual void getDataFrom(sf::Packet &packet) = 0;
-    virtual void putDataIn(sf::Packet &packet) const = 0;
+
+    virtual void beforeOnSend(MessageData& message) {
+    std::cout << "[Msg][OnSend] \t Send be default" << std::endl;
+    }
+
+    virtual void afterOnReceive(MessageData& message) {
+    std::cout << "[Msg][OnReceive] \t Receive be default" << std::endl;
+    }
+
+private:
+    void onReceive(const void* data, std::size_t size);
+    virtual const void* onSend(std::size_t& size);
+
+
+private:
+    MsgType m_msgType;
 };
+
 
 #endif	/* MESSAGEDATA_H */
 

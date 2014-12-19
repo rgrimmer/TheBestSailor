@@ -14,12 +14,6 @@ class MsgDisconnect : public MessageData {
 public:
     MsgDisconnect();
     virtual ~MsgDisconnect();
-    
-    virtual MsgType getType() const;
-
-private:
-    virtual void getDataFrom(sf::Packet& packet);
-    virtual void putDataIn(sf::Packet& packet) const;
 
 };
 

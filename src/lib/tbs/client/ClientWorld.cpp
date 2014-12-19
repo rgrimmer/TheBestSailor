@@ -1,5 +1,5 @@
 /* 
- * File:   World.cpp
+ * File:   ClientWorld.cpp
  * Author: remy
  *
  * Created on 10 décembre 2014, 16:13
@@ -10,7 +10,7 @@
 
 #include <SFML/System/Vector2.hpp>
 
-#include "client/World.h"
+#include "client/ClientWorld.h"
 #include "client/map/Gradient.h"
 
 #include "shared/Utils.h"
@@ -27,7 +27,7 @@ sf::Vector2f operator/(const sf::Vector2f &v1, const sf::Vector2f &v2) {
     return sf::Vector2f(v1.x / v2.x, v1.y / v2.y);
 }
 
-sf::Packet& operator>>(sf::Packet& packet, World& world) {
+sf::Packet& operator>>(sf::Packet& packet, ClientWorld& world) {
     world.initialize();
 
     Map map;
@@ -38,28 +38,28 @@ sf::Packet& operator>>(sf::Packet& packet, World& world) {
     return packet;
 }
 
-World::World() {
+ClientWorld::ClientWorld() : m_mapmap(){
 
 }
 
-World::~World() {
+ClientWorld::~ClientWorld() {
 }
 
-void World::initialize() {
+void ClientWorld::initialize() {
     Gradient::initialize();
     m_ship.kinematics().position() = {200., 200.};
-    m_ship.sail().setAngle(80.0f);
+    m_ship.getSail().setAngle(80.0f);
 }
 
-void World::setMap(const Map& map) {
+void ClientWorld::setMap(const Map& map) {
     m_mapmap = map;
 }
 
-void World::initializeMap(int width, int height, int heightMapSeed, int windMapSeed) {
+void ClientWorld::initializeMap(int width, int height, int heightMapSeed, int windMapSeed) {
     m_mapmap = Map(width, height, heightMapSeed, windMapSeed);
 }
 
-void World::update(float dt) {
+void ClientWorld::update(float dt) {
     Wind wind = m_mapmap.getWindMap().wind(static_cast<sf::Vector2i> (m_ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
 
     sf::Vector2f shipVector = m_ship.kinematics().speed();
@@ -72,8 +72,8 @@ void World::update(float dt) {
     sf::Vector2f apparentWind = windVector - shipVector;
 
     float apparentWindDir = Kinematics::direction(apparentWind);
-    float sailDir = Kinematics::degToRad(m_ship.sail().getAngle());
-    float helmDir = Kinematics::degToRad(m_ship.helm().angle());
+    float sailDir = Kinematics::degToRad(m_ship.getSail().getAngle());
+    float helmDir = Kinematics::degToRad(m_ship.getHelm().angle());
     float shipDir = Kinematics::degToRad(Kinematics::direction(m_ship.kinematics().speed()));
     if (isnan(shipDir))
         shipDir = 0;
@@ -110,31 +110,31 @@ void World::update(float dt) {
     m_ship.update(dt);
 }
 
-Ship& World::getShip() {
+Ship& ClientWorld::getShip() {
     return m_ship;
 }
 
-Map& World::getMap() {
+Map& ClientWorld::getMap() {
     return m_mapmap;
 }
 
-const Map& World::getMap() const {
+const Map& ClientWorld::getMap() const {
     return m_mapmap;
 }
 
-HeigthMap& World::getHeightMap() {
+HeigthMap& ClientWorld::getHeightMap() {
     return m_mapmap.getHeightMap();
 }
 
-const HeigthMap& World::getHeightMap() const {
+const HeigthMap& ClientWorld::getHeightMap() const {
     return m_mapmap.getHeightMap();
 }
 
-WindMap& World::getWindMap() {
+WindMap& ClientWorld::getWindMap() {
     return m_mapmap.getWindMap();
 }
 
-const WindMap& World::getWindMap() const {
+const WindMap& ClientWorld::getWindMap() const {
     return m_mapmap.getWindMap();
 }
 

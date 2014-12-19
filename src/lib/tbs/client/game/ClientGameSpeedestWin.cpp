@@ -12,19 +12,21 @@
 #include "client/game/ClientGameSpeedestWin.h"
 #include "shared/network/MessageData.h"
 #include "shared/network/MsgDisconnect.h"
+#include "shared/network/MsgGame.h"
 #include "shared/network/MsgTurnHelm.h"
 #include "shared/network/MsgTurnSail.h"
 
-sf::Packet& operator>>(sf::Packet& packet, ClientGameSpeedestWin& game) {
-    World world;
-    packet >> world;
-    game.setWorld(world);
+MsgGame& operator>>(MsgGame &msg, ClientGameSpeedestWin& game) {
+    ClientWorld world;
+    msg >> world;
+    game.setClientWorld(world);
 
-    return packet;
+    return msg;
 }
 
 ClientGameSpeedestWin::ClientGameSpeedestWin(Client &client, sf::RenderWindow& window)
-: m_client(client)
+: m_world()
+, m_client(client)
 , m_window(window)
 , m_enableFolowCamera(true)
 , m_enablePause(false)
@@ -40,11 +42,11 @@ ClientGameSpeedestWin::~ClientGameSpeedestWin() {
     release();
 }
 
-const World& ClientGameSpeedestWin::getWorld() const {
+const ClientWorld& ClientGameSpeedestWin::getClientWorld() const {
     return m_world;
 }
 
-void ClientGameSpeedestWin::setWorld(const World& world) {
+void ClientGameSpeedestWin::setClientWorld(const ClientWorld& world) {
     release();
     m_world = world;
 
@@ -90,7 +92,8 @@ bool ClientGameSpeedestWin::startGameLoop() {
 
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 // Send disconnection message
-                m_client.getNetwork().getUdpManager().send(MsgDisconnect());
+                MsgDisconnect msgDiconnect;
+                m_client.getNetwork().getUdpManager().send(msgDiconnect);
                 m_window.close();
             }
             if (event.type == sf::Event::KeyPressed) {
@@ -117,27 +120,31 @@ bool ClientGameSpeedestWin::startGameLoop() {
                         break;
                     case sf::Keyboard::D:
                     {
-                        m_client.getNetwork().getUdpManager().send(MsgTurnHelm(msgOrientation::POSITIVE));
-                        m_world.getShip().helm().turn(0.5f);
+                        MsgTurnHelm msgTurnHelmP(MsgOrientation::POSITIVE);
+                        m_client.getNetwork().getUdpManager().send(msgTurnHelmP);
+                        m_world.getShip().getHelm().turn(0.5f);
                     }
                         break;
                     case sf::Keyboard::Q:
                     {
-                        m_client.getNetwork().getUdpManager().send(MsgTurnHelm(msgOrientation::NEGATIVE));
-                        m_world.getShip().helm().turn(-0.5f);
+                        MsgTurnHelm msgTurnHelmN(MsgOrientation::NEGATIVE);
+                        m_client.getNetwork().getUdpManager().send(msgTurnHelmN);
+                        m_world.getShip().getHelm().turn(-0.5f);
                     }
                         break;
                     case sf::Keyboard::Z:
                     {
-                        m_client.getNetwork().getUdpManager().send(MsgTurnSail(msgOrientation::POSITIVE));
-                        m_world.getShip().sail().setAngle(m_world.getShip().sail().getAngle() + 5.0f);
+                        MsgTurnSail msgTurnSailP(MsgOrientation::POSITIVE);
+                        m_client.getNetwork().getUdpManager().send(msgTurnSailP);
+                        m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() + 5.0f);
                     }
                         break;
 
                     case sf::Keyboard::S:
-                    {                        
-                        m_client.getNetwork().getUdpManager().send(MsgTurnSail(msgOrientation::NEGATIVE));
-                        m_world.getShip().sail().setAngle(m_world.getShip().sail().getAngle() - 5.0f);
+                    {
+                        MsgTurnSail msgTurnSailN(MsgOrientation::NEGATIVE);
+                        m_client.getNetwork().getUdpManager().send(msgTurnSailN);
+                        m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() - 5.0f);
                     }
                         break;
 

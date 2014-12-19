@@ -14,45 +14,45 @@
 #include "shared/network/MsgTurnHelm.h"
 #include "shared/network/MsgTurnSail.h"
 
-MessageData* MsgFactory::createMessage(sf::Packet& packet) {
-    MsgType msgType = MessageData::popType(packet);
+MessageData* MsgFactory::createMessage(MsgType msgType) {
     MessageData* message;
-//    MsgTurnHelm* msgHelm = new MsgTurnHelm();
-//    switch (msgType) {
-//        case MsgType::MSG_ACK:
-//            message = nullptr;
-//            break;
-//        case MsgType::MSG_ACTION_TURN_HELM:
-//            packet >> *msgHelm;
-//            message = msg;
-//            break;
-//        case MsgType::MSG_ACTION_TURN_SAIL:
-//            MsgTurnSail* msg = new MsgTurnSail();
-//            packet >> *msg;
-//            message = msg;
-//            break;
-//        case MsgType::MSG_CLIENT_PLAYER_INFO:
-//            MsgClientPlayerInfo* msg = new MsgClientPlayerInfo();
-//            packet >> *msg;
-//            message = msg;
-//            break;
-//        case MsgType::MSG_SERVER_PLAYER_INFO:
-//            auto* msg = new MsgServerPlayerInfo();
-//            packet >> *msg;
-//            message = msg;
-//            break;
-//        case MsgType::MSG_DISCONNECT:
-//            auto* msg = new MsgDisconnect();
-//            packet >> *msg;
-//            message = msg;
-//            break;
-//        case MsgType::MSG_UNDEF:
-//            std::cout << "Undefined Type" << std::endl;
-//            message = nullptr;
-//            break;
-//        default:
-//            std::cerr << "Unexist Type" << std::endl;
-//            message = nullptr;
-//    }
+    // @TODO
+    //    MsgTurnHelm* msgHelm = new MsgTurnHelm();
+    //    switch (msgType) {
+    //        case MsgType::MSG_ACK:
+    //            message = nullptr;
+    //            break;
+    //        case MsgType::MSG_ACTION_TURN_HELM:
+    //            packet >> *msgHelm;
+    //            message = msg;
+    //            break;
+    //        case MsgType::MSG_ACTION_TURN_SAIL:
+    //            MsgTurnSail* msg = new MsgTurnSail();
+    //            packet >> *msg;
+    //            message = msg;
+    //            break;
+    //        case MsgType::MSG_CLIENT_PLAYER_INFO:
+    //            MsgClientPlayerInfo* msg = new MsgClientPlayerInfo();
+    //            packet >> *msg;
+    //            message = msg;
+    //            break;
+    //        case MsgType::MSG_SERVER_PLAYER_INFO:
+    //            auto* msg = new MsgServerPlayerInfo();
+    //            packet >> *msg;
+    //            message = msg;
+    //            break;
+    //        case MsgType::MSG_DISCONNECT:
+    //            auto* msg = new MsgDisconnect();
+    //            packet >> *msg;
+    //            message = msg;
+    //            break;
+    //        case MsgType::MSG_UNDEF:
+    //            std::cout << "Undefined Type" << std::endl;
+    //            message = nullptr;
+    //            break;
+    //        default:
+    //            std::cerr << "Unexist Type" << std::endl;
+    //            message = nullptr;
+    //    }
     return message;
 }

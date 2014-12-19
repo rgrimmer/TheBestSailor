@@ -11,19 +11,19 @@
 
 #include "shared/ValueNoise.h"
 
-sf::Packet& operator <<(sf::Packet& packet, const HeigthMap& map)
-{
+sf::Packet& operator<<(sf::Packet& packet, const HeigthMap& map) {
     return packet << map.getHeader();
 }
 
-HeigthMap::HeigthMap() : m_header(0,0), m_container(NULL) {
+HeigthMap::HeigthMap() : m_header(0, 0), m_container(nullptr) {
 
 }
 
-HeigthMap::HeigthMap(const MapHeader &header) 
-: m_header(header) {
-    
-    
+HeigthMap::HeigthMap(const MapHeader &header)
+: m_header(header)
+, m_container(nullptr) {
+
+
     int width = header.getWidth();
     int height = header.getHeight();
     std::cout << width << " " << height << " " << getSeed() << std::endl;
@@ -49,13 +49,13 @@ HeigthMap::HeigthMap(const MapHeader &header)
     }
 }
 
-    
-
 HeigthMap::~HeigthMap() {
-    for (int i = 0; i < getHeight(); ++i) {
-        delete m_container[i];
-    }
-    delete m_container;
+//    if (m_container != nullptr) { // @TODO
+//        for (int i = 0; i < getHeight(); ++i) {
+//            delete m_container[i];
+//        }
+//        delete m_container;
+//    }
 }
 
 int HeigthMap::getSize() const {

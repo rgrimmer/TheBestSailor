@@ -10,11 +10,11 @@
 #include "shared/network/MessageData.h"
 
 #include "server/ServerPlayer.h"
-#include "server/PlayerList.h"
+#include "server/ServerPlayers.h"
 #include "server/Server.h"
 #include "server/game/ServerGame.h"
 
-ServerGame::ServerGame(Server& server, PlayerList& players)
+ServerGame::ServerGame(Server& server, ServerPlayers& players)
 : m_server(server)
 , m_players(players) {
     m_players.putPlayersInGame();

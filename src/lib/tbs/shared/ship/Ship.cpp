@@ -15,21 +15,27 @@
 #include "shared/Font.h"
 
 Ship::Ship() {
-    m_sail = new Sail();
 }
 
 Ship::~Ship() {
-    delete m_sail;
 }
 
 void Ship::update(float dt) {
 //    m_sail->setPosition(m_kinematics.position());
 
     m_kinematics.update(dt);
-    m_sail->update(dt);
+    m_sail.update(dt);
     m_helm.update(dt);
 }
 
-Sail* Ship::getSail(void) {
+const Sail& Ship::getSail() const {
     return m_sail;
+}
+
+Sail& Ship::getSail() {
+    return m_sail;
+}
+
+Helm& Ship::getHelm() {
+    return m_helm;
 }

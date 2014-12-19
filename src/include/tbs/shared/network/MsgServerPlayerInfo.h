@@ -16,17 +16,16 @@
 class MsgServerPlayerInfo : public MessageData {
 public:
     MsgServerPlayerInfo();
+    MsgServerPlayerInfo(MessageData& message);
     MsgServerPlayerInfo(unsigned int ID, unsigned short portRemote);
     virtual ~MsgServerPlayerInfo();
-
-    virtual MsgType getType() const;
-    unsigned int getID() const;
+    
+        unsigned int getID() const;
     unsigned short getServerPort() const;
-
-
+    
 private:
-    virtual void getDataFrom(sf::Packet& packet);
-    virtual void putDataIn(sf::Packet& packet) const;
+    virtual void beforeOnSend(MessageData& message);
+    virtual void afterOnReceive(MessageData& message);
 
 private:
     unsigned int m_ID;

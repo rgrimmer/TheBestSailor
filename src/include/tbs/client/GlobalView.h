@@ -49,7 +49,7 @@ private:
     sf::View m_titleView;
     DisplayInfo m_titleSfText;
     
-    // World
+    // ClientWorld
     sf::View m_worldViewGraphic;
     sf::View m_worldViewUnit;
     

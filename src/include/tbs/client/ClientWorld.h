@@ -1,5 +1,5 @@
 /* 
- * File:   World.h
+ * File:   ClientWorld.h
  * Author: remy
  *
  * Created on 10 décembre 2014, 16:15
@@ -16,10 +16,10 @@
 #include "shared/map/Map.h"
 #include <shared/ship/Ship.h>
 
-class World {
+class ClientWorld {
 public:
-    explicit World();
-    virtual ~World();
+    explicit ClientWorld();
+    virtual ~ClientWorld();
 
     void initialize();
 
@@ -45,7 +45,7 @@ private:
     Ship m_ship;
 };
 
-sf::Packet& operator>>(sf::Packet& packet, World& world);
+sf::Packet& operator>>(sf::Packet& packet, ClientWorld& world);
 
 #endif	/* WORLD_H */
 

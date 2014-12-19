@@ -13,21 +13,22 @@
 #include <SFML/Network/TcpListener.hpp>
 #include <SFML/Network/SocketSelector.hpp>
 
-class PlayerList;
+class ServerPlayers;
 class ServerMessageQueue;
 class MessageData;
 class ServerPlayer;
 
 class ServerTCPManager {
 public:
-    ServerTCPManager(PlayerList &playerList, ServerMessageQueue& msgQueue, unsigned short portTcp);
+    ServerTCPManager(ServerPlayers &players, ServerMessageQueue& msgQueue);
     ~ServerTCPManager();
     
     unsigned short getPort() const;
 
+    void initialize(unsigned short portTcp);
     void startReceiverThread();
-    bool send(const MessageData &message, sf::TcpSocket& player) const;
-    bool send(const MessageData &message, const std::vector<ServerPlayer*>& players) const;
+    bool send(MessageData &message, sf::TcpSocket& player) const;
+    bool send(MessageData &message, const std::vector<ServerPlayer*>& players) const;
 
 private:
     void receiver();
@@ -39,7 +40,7 @@ private:
 
     std::thread* m_threadReceiver;
 
-    PlayerList &m_players;
+    ServerPlayers &m_players;
     ServerMessageQueue& m_msgQueue;
 };
 

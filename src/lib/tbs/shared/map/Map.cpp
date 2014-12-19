@@ -22,10 +22,10 @@ sf::Packet& operator>>(sf::Packet& packet, Map& map) {
 Map::Map() {
 }
 
-Map::Map(int width, int height, int heightMapSeed, int windMapSeed) {
-    m_header = MapHeader(width, height, heightMapSeed);
-    m_heightMap = HeigthMap(m_header);
-    m_windMap = WindMap(MapHeader(width, height, windMapSeed));
+Map::Map(int width, int height, int heightMapSeed, int windMapSeed)
+: m_header(width, height, heightMapSeed)
+, m_heightMap(m_header)
+, m_windMap(MapHeader(width, height, windMapSeed)) {
 }
 
 Map::Map(const MapHeader& header)

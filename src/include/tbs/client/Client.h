@@ -38,11 +38,12 @@ private:
     bool startGame();
 
     void sendLocalPlayerInfo();
+    void waitServerPlayerInfo();
 
     bool pollMessagesWait(sf::Time timeout = sf::Time::Zero);
-    bool read(MessageData* message);
-    bool read(MsgGame* message);
-    bool read(MsgServerPlayerInfo* message);
+    bool read(MessageData& message);
+    bool read(MsgGame& message);
+    bool read(MsgServerPlayerInfo& message);
 
 private:
     sf::RenderWindow m_window;
