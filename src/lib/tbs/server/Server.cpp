@@ -157,6 +157,7 @@ bool Server::read(MessageData* message, ServerPlayer * player) {
             return m_game->read(message, player);
     }
     return true;
+    // @TODO delete messages
 }
 
 void Server::waitAcknowledgment(int permits) {

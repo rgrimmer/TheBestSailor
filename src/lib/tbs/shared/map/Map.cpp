@@ -61,3 +61,11 @@ HeigthMap& Map::getHeightMap() {
 WindMap& Map::getWindMap() {
     return m_windMap;
 }
+
+Wind& Map::getWind(const sf::Vector2i& windPos) {
+    return m_windMap.wind(windPos);
+}
+
+const Wind Map::getWind(const sf::Vector2i& windPos) const {
+    return m_windMap.wind(windPos);
+}

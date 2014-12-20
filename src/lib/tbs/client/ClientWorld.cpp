@@ -38,7 +38,7 @@ sf::Packet& operator>>(sf::Packet& packet, ClientWorld& world) {
     return packet;
 }
 
-ClientWorld::ClientWorld() : m_mapmap(){
+ClientWorld::ClientWorld() : m_mapmap() {
 
 }
 
@@ -47,8 +47,7 @@ ClientWorld::~ClientWorld() {
 
 void ClientWorld::initialize() {
     Gradient::initialize();
-    m_ship.kinematics().position() = {200., 200.};
-    m_ship.getSail().setAngle(80.0f);
+    m_ship.initialize(sf::Vector2f(1000.0f, 1000.0f), sf::Vector2f(0.0f, 0.0f));
 }
 
 void ClientWorld::setMap(const Map& map) {
@@ -60,55 +59,37 @@ void ClientWorld::initializeMap(int width, int height, int heightMapSeed, int wi
 }
 
 void ClientWorld::update(float dt) {
-    Wind wind = m_mapmap.getWindMap().wind(static_cast<sf::Vector2i> (m_ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
+    Wind wind = m_mapmap.getWind(static_cast<sf::Vector2i> (m_ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
 
     sf::Vector2f shipVector = m_ship.kinematics().speed();
     sf::Vector2f windVector = wind.getVector();
 
-    sf::Vector2f coefSail(1.0f, 1.0f);
-    sf::Vector2f coefHelm(1.0f, 1.0f);
-
-    sf::Vector2f frottement(0.001f, 0.001f);
     sf::Vector2f apparentWind = windVector - shipVector;
 
-    float apparentWindDir = Kinematics::direction(apparentWind);
-    float sailDir = Kinematics::degToRad(m_ship.getSail().getAngle());
-    float helmDir = Kinematics::degToRad(m_ship.getHelm().angle());
-    float shipDir = Kinematics::degToRad(Kinematics::direction(m_ship.kinematics().speed()));
-    if (isnan(shipDir))
-        shipDir = 0;
+    float windAngle = Kinematics::direction(windVector);
+    float apparentWindAngle = Kinematics::direction(apparentWind);
+    float sailAngle = m_ship.getSail().getAngle();
 
-    float angleAlpha = 0.0f; // @TODO angle ventApparent - voile
-    //        float angleAlpha = 
-    float angleBeta = shipDir - sailDir; // @TODO angle axe du bateau - voile 
+    std::cout << "angle : " << std::abs(windAngle - sailAngle) << std::endl;
+    float angleToRad = Kinematics::degToRad(std::abs(windAngle - sailAngle));
 
-    // Equation from https://www.ensta-bretagne.fr/jaulin/jaulincifa2004.pdf
+    //sf::Vector2f F = 0.1f * apparentWind * apparentWind * std::sin(Kinematics::degToRad(sailAngle));
+    sf::Vector2f P = { std::cos(Kinematics::degToRad(m_ship.getAngle())), std::sin(Kinematics::degToRad(m_ship.getAngle())) };
+    sf::Vector2f F = 0.1f * apparentWind * apparentWind * std::sin(angleToRad);
 
-    sf::Vector2f sailVector =
-            coefSail * (
-            windVector * std::cos(shipDir + angleBeta)
-            - shipVector * std::sin(shipDir)
-            );
+    sf::Vector2f Fm = (F.x * P.x + F.y * P.y) * P;
+    //sf::Vector2f F = 10.0f * windVector * std::sin(angleToRad) * std::sin(angleToRad);
 
-    sf::Vector2f helmVector = coefHelm * shipVector * std::sin(helmDir);
+    // somme des forces = ma
+    // v = a*t + v0
+    // x = (1/2) * a.x * t * t + v0.x * t + x0
+    // y = (1/2) * a.y * t * t + v0.y * t + y0
 
-    sf::Vector2f forceDePousser1 =
-            (sailVector * std::sin(angleBeta)
-            - helmVector * std::sin(helmDir)
-            - shipVector * frottement)
-            / 1.0f; // Masse
-
-    // Equation from wikipedia
-    sf::Vector2f CONSTANTE(0.1f, 0.1f);
-    float sinAB = std::sin(angleAlpha + angleBeta);
-    sf::Vector2f forceDePousser2 = CONSTANTE * sinAB * angleAlpha - helmVector * std::sin(helmDir);
-
-    sf::Vector2f forceDePousser = forceDePousser1;
-
-    m_ship.kinematics().speed() = windVector /* Kinematics::vectorDir(degToRad(angleDirShip))*/;
+    //m_ship.kinematics().speed() = windVector /* Kinematics::vectorDir(degToRad(angleDirShip))*/;
+    m_ship.kinematics().speed() = Fm;
 
     m_ship.update(dt);
-}
+ }
 
 Ship& ClientWorld::getShip() {
     return m_ship;

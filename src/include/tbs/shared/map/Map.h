@@ -28,6 +28,9 @@ public:
     HeigthMap& getHeightMap();
     WindMap& getWindMap();
 
+    Wind& getWind(const sf::Vector2i&windPos);
+    const Wind getWind(const sf::Vector2i&windPos) const;
+
 private:
     MapHeader m_header;
     HeigthMap m_heightMap;

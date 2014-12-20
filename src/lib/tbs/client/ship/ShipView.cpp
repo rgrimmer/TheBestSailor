@@ -23,6 +23,7 @@ ShipView::ShipView(const Ship &ship)
 
 ShipView::~ShipView() {
     delete m_speedView;
+    delete m_accView;
 }
 
 void ShipView::draw(sf::RenderTarget& target, sf::RenderStates states) const {

@@ -122,14 +122,14 @@ bool ClientGameSpeedestWin::startGameLoop() {
                     {
                         MsgTurnHelm msgTurnHelmP(MsgOrientation::POSITIVE);
                         m_client.getNetwork().getUdpManager().send(msgTurnHelmP);
-                        m_world.getShip().getHelm().turn(0.5f);
+                        m_world.getShip().setAngle(m_world.getShip().getAngle() + 5.0f);
                     }
                         break;
                     case sf::Keyboard::Q:
                     {
                         MsgTurnHelm msgTurnHelmN(MsgOrientation::NEGATIVE);
                         m_client.getNetwork().getUdpManager().send(msgTurnHelmN);
-                        m_world.getShip().getHelm().turn(-0.5f);
+                        m_world.getShip().setAngle(m_world.getShip().getAngle() - 5.0f);
                     }
                         break;
                     case sf::Keyboard::Z:
