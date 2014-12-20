@@ -15,7 +15,6 @@
 #include "shared/Font.h"
 
 Ship::Ship() {
-    m_sail = new Sail();
     m_angle = 45.0f;
 }
 
@@ -36,7 +35,6 @@ void Ship::setAngle(float angle) {
     m_angle = angle;
 }
 
-Sail* Ship::getSail(void) {
 const Sail& Ship::getSail() const {
     return m_sail;
 }

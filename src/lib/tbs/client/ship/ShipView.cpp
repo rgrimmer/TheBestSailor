@@ -35,7 +35,7 @@ void ShipView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
     states.transform = states.transform.Identity;
     states.transform.translate(m_ship.kinematics().position());
-    states.transform.rotate(m_ship.sail().getAngle());
+    states.transform.rotate(m_ship.getSail().getAngle());
     
     // Draw sail
     target.draw(m_ship.getSail(), states);
