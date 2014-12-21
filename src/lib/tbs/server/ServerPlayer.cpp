@@ -38,7 +38,7 @@ sf::TcpSocket& ServerPlayer::getTCPSocket() const {
 }
 
 sf::IpAddress ServerPlayer::getAddress() const {
-    return m_address;
+    return m_TCPSocket->getRemoteAddress();
 }
 
 std::string ServerPlayer::getName() const {

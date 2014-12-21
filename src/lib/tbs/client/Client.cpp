@@ -63,8 +63,12 @@ void Client::initConnectionWithServer() {
 
 void Client::sendLocalPlayerInfo() {
     std::cout << "[Client][SendLPI] \t Envoi des informations du joueurs" << std::endl;
-    MsgClientPlayerInfo msg(m_network.getUdpManager().getPort(), m_player.getName());
+    //    MsgClientPlayerInfo msg(m_network.getUdpManager().getPort(), m_player.getName());
+    //    std::cout << "[Client][SendLPI] \t Send : name(" << msg.getName() << ") port("<< msg.getPort() << ")" << std::endl;
+    MessageData msg;
+    msg << MsgType::ClientPlayerInfo << static_cast<sf::Uint16> (m_network.getUdpManager().getPort()) << m_player.getName();
     m_network.getTcpManager().send(msg);
+    std::cout << "[Client][SendLPI] \t Send : name(" << m_player.getName() << ") port(" << m_network.getUdpManager().getPort() << ")" << std::endl;
 }
 
 void Client::waitServerPlayerInfo() {
@@ -104,57 +108,97 @@ bool Client::pollMessagesWait(sf::Time timeout) {
     return true;
 }
 
-bool Client::read(MsgGame& message) {
-    std::cout << "[Client][Read] \t Read Game Message" << std::endl;
-    ClientWorld world;
-    sf::Int32 width, height, seedHeight, seedWind;
-    message >> width >> height >> seedHeight >> seedWind;
-    std::cout << "RECEIVE map(" << width << ", " << height<< ", " <<seedHeight<< ", " <<seedWind<< ")" << std::endl;
-    world.initializeMap(width, height, seedHeight, seedWind);
-    world.initialize();
-    auto *gameSpeedest = new ClientGameSpeedestWin(*this, m_window);
-    gameSpeedest->setClientWorld(world);
-    m_game = gameSpeedest;
-//    switch (message.getGameType()) { // @TODO
-//        case GameType::SPEEDEST_WIN:
-//        {
-//            auto CGSW = new ClientGameSpeedestWin(*this, m_window);
-//            message >> *CGSW;
-//            m_game = CGSW;
-//        }
-//            break;
-//        default:
-//            std::cout << "Game Type Invalide" << std::endl;
-//            return false;
-//    }
-    return true;
-}
-
 bool Client::read(MessageData& message) {
-    std::cout << "[Client][Read] \t Read Default Message" << std::endl;
-    switch (message.getMsgType()) {
+    MsgType msgType;
+    message >> msgType;
+    switch (msgType) {
         case MsgType::Game:
         {
-            m_game = new ClientGameSpeedestWin(*this, m_window);
-            auto tmp = static_cast<MsgGame> (message);
-            read(tmp);
+            //            auto tmp = static_cast<MsgGame> (message);
+            //            read(tmp);
+            readMsgGame(message);
         }
             break;
         case MsgType::ServerPlayerInfo:
         {
-            auto tmp = static_cast<MsgServerPlayerInfo> (message);
-            read(tmp);
+            //            auto tmp = static_cast<MsgServerPlayerInfo> (message);
+            //            read(tmp);
+            readMsgServerPlayerInfo(message);
         }
             break;
         default:
+            std::cout << "[Client][Read] \t UnReadable Message(" << static_cast<int>(msgType) << ")" << std::endl;
             return false;
     }
     return true;
 }
 
-bool Client::read(MsgServerPlayerInfo& message) {
-    std::cout << "[Client][Read] \t Read Server Player Info Message" << std::endl;
-    m_network.getUdpManager().initialize("localhost", SERVER_PORT_UDP/*message->getServerPort()*/); // @TODO
+bool Client::readMsgServerPlayerInfo(MessageData &message) {
+    sf::Uint16 port;
+    message >> port;
+    std::cout << "[Client][Read] \t Read Server Player Info Message. serverUdpPort(" << port << ")" << std::endl;
+    m_network.getUdpManager().initialize("localhost", port); // @TODO
     m_network.getUdpManager().startReceiverThread();
     return true;
 }
+
+bool Client::readMsgGame(MessageData& message) {
+    std::cout << "[Client][Read] \t Read Game Message" << std::endl;
+    GameType gameType;
+    message >> gameType;
+    switch (gameType) {
+        case GameType::SpeedestWin:
+        {
+            sf::Int32 width, height, seedHeight, seedWind;
+            auto CGSW = new ClientGameSpeedestWin(*this, m_window);
+            message >> width >> height >> seedHeight >> seedWind;
+            ClientWorld world;
+            std::cout << "RECEIVE map(" << width << ", " << height << ", " << seedHeight << ", " << seedWind << ")" << std::endl;
+            world.initializeMap(width, height, seedHeight, seedWind);
+            world.initialize();
+            CGSW->setClientWorld(world);
+            m_game = CGSW;
+        }
+            break;
+        default:
+            std::cout << "Game Type Invalide" << std::endl;
+            return false;
+    }
+    return true;
+}
+/*
+bool Client::read(MsgServerPlayerInfo& message) {
+    sf::Uint16 port;
+    message >> port;
+    std::cout << "[Client][Read] \t Read Server Player Info Message" << std::endl;
+    m_network.getUdpManager().initialize("localhost", port); // @TODO
+    m_network.getUdpManager().startReceiverThread();
+    return true;
+}
+
+bool Client::read(MsgGame& message) {
+    std::cout << "[Client][Read] \t Read Game Message" << std::endl;
+    ClientWorld world;
+    sf::Int32 width, height, seedHeight, seedWind;
+    message >> width >> height >> seedHeight >> seedWind;
+    std::cout << "RECEIVE map(" << width << ", " << height << ", " << seedHeight << ", " << seedWind << ")" << std::endl;
+    world.initializeMap(width, height, seedHeight, seedWind);
+    world.initialize();
+    auto *gameSpeedest = new ClientGameSpeedestWin(*this, m_window);
+    gameSpeedest->setClientWorld(world);
+    m_game = gameSpeedest;
+    //    switch (message.getGameType()) { // @TODO
+    //        case GameType::SPEEDEST_WIN:
+    //        {
+    //            auto CGSW = new ClientGameSpeedestWin(*this, m_window);
+    //            message >> *CGSW;
+    //            m_game = CGSW;
+    //        }
+    //            break;
+    //        default:
+    //            std::cout << "Game Type Invalide" << std::endl;
+    //            return false;
+    //    }
+    return true;
+}
+ */

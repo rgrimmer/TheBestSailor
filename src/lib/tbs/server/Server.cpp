@@ -81,11 +81,8 @@ void Server::createGame() {
 
 void Server::sendGame() {
     std::cout << "[Broad] \tGame" << std::endl;
-    sf::Packet packet;
-    MsgGame msgGame;
-//    m_game->toPacket(packet);
-    msgGame << sf::Int32(200) << sf::Int32(200) << sf::Int32(42) << sf::Int32(42);
-    //    packet >> msgGame;// @TODO
+    MessageData msgGame;
+    msgGame << MsgType::Game << GameType::SpeedestWin << sf::Int32(200) << sf::Int32(200) << sf::Int32(42) << sf::Int32(42);
 
     m_network.getTCPManager().send(msgGame, m_players.inGame());
     waitAcknowledgment(m_players.inGame().size());
@@ -118,22 +115,26 @@ void Server::pollMessages() {
 }
 
 bool Server::read(MessageData* message, ServerPlayer * player) {
-    std::cout << "[Serv][Read][Start] \t Read message from " << player->getName() << std::endl;
-    switch (message->getMsgType()) {
+    MsgType msgType;
+    *message >> msgType;
+    std::cout << "[Serv][Read][Start] \t Read message(" << static_cast<int> (msgType) << ") from " << player->getName() << std::endl;
+    switch (msgType) {
         case MsgType::ClientPlayerInfo:
         {
-            std::cout << "[Serv][Read] \t Read ClientPlayerInfo" << std::endl;
-            auto msgCPI = static_cast<MsgClientPlayerInfo> (*message);
             // Receive info from Client
-//            std::cout << "[Serv][Read] \t cast done : " << msgCPI << std::endl;
-            player->setUdpPort(msgCPI.getPort());
-            std::cout << "[Serv][Read] \t getPort done" << std::endl;
-            std::string name = msgCPI.getName();
-            std::cout << "[Serv][Read] \t getName done" << std::endl;
+            std::cout << "[Serv][Read] \t Read ClientPlayerInfo" << std::endl;
+            //            auto msgCPI = static_cast<MsgClientPlayerInfo> (*message);
+            sf::Uint16 sfPort;
+            std::string name;
+            *message >> sfPort >> name;
+            //            std::cout << "[Serv][Read] \t cast done : " << msgCPI << std::endl;
+            player->setUdpPort(sfPort);
             player->setName(name);
-            std::cout << "[Serv][Read] \t Read info client : " << player->getName() << ":" << player->getUdpPort() << std::endl;
+            std::cout << "[Serv][Read] \t Read info client(" << player->getName() << "@" << player->getAddress().toString() << ":" << player->getUdpPort() << ")" << std::endl;
             // Send info to Client
-            MsgServerPlayerInfo msgServer(42, SERVER_PORT_UDP); // @TODO
+            MessageData msgServer; //(42, SERVER_PORT_UDP); // @TODO
+
+            msgServer << MsgType::ServerPlayerInfo << sf::Uint16(SERVER_PORT_UDP);
             m_network.getTCPManager().send(msgServer, player->getTCPSocket());
         }
             break;

@@ -55,6 +55,7 @@ void ServerTCPManager::receiver() {
         for (auto& player : m_players.getList()) {
 
             if (m_selector.isReady(player.getTCPSocket())) {
+                std::cout << "[TCP][Thread] \t Socket of "<< player.getName() << ":"<<player.getAddress()<<" is ready" << std::endl;
                 receiveCommunication(player);
             }
         }
@@ -101,12 +102,11 @@ bool ServerTCPManager::receiveConnection() {
 void ServerTCPManager::receiveCommunication(ServerPlayer &player) {
     MessageData *message = new MessageData();
     sf::TcpSocket::Status s = player.getTCPSocket().receive(*message);
-    
-    std::cout << "[TCP][Recv] \t Receive message from "<< player.getName() ;
+
+    std::cout << "[TCP][Recv] \t Receive message from " << player.getName() << std::endl;
 
     if (s == sf::TcpSocket::Done) {
-        m_msgQueue.push(std::pair<ServerPlayer*, MessageData*>(&player, message) );
-        std::cout << std::endl;
+        m_msgQueue.push(std::pair<ServerPlayer*, MessageData*>(&player, message));
 
     } else if (s == sf::TcpSocket::Disconnected) {
         std::cout << "Player Disconnected" << std::endl;

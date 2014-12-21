@@ -8,7 +8,7 @@ include(GNUInstallDirs)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(SFML2 REQUIRED sfml-graphics>=2.1 sfml-audio>=2.1 sfml-network>=2.1)
 
-add_definitions(-Wall -g -O2)
+add_definitions(-Wall -g -O3)
 add_definitions(-std=c++11)
 #add_definitions(-pthread)
 

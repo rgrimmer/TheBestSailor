@@ -13,7 +13,8 @@
 
 class MessageData : public sf::Packet {
 public:
-    MessageData(MsgType msgType = MsgType::Undef);
+    MessageData();
+    MessageData(MsgType msgType);
     virtual ~MessageData();
 
     MsgType getMsgType() const;
@@ -29,8 +30,8 @@ protected:
     }
 
 private:
-    void onReceive(const void* data, std::size_t size);
-    virtual const void* onSend(std::size_t& size);
+//    void onReceive(const void* data, std::size_t size);
+//    virtual const void* onSend(std::size_t& size);
 
 
 private:

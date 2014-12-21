@@ -18,10 +18,7 @@ MsgClientPlayerInfo::MsgClientPlayerInfo()
 
 MsgClientPlayerInfo::MsgClientPlayerInfo(MessageData& message)
 : MessageData(MsgType::ClientPlayerInfo) {
-    sf::Uint16 sfPort;
-    message >> sfPort >> m_name;
-    m_portUDP = static_cast<unsigned short> (sfPort);
-    std::cout << "[Msg][OnReceive] \t Receive name(" << m_name << ") port(" << m_portUDP << ")" << std::endl;
+    afterOnReceive(message);
 }
 
 
@@ -31,19 +28,20 @@ MsgClientPlayerInfo::MsgClientPlayerInfo(unsigned short portUDP, const std::stri
 , m_name(name) {
 }
 
-void MsgClientPlayerInfo::beforeOnSend() {
-    (*this) << static_cast<sf::Uint16> (m_portUDP) << m_name;
+MsgClientPlayerInfo::~MsgClientPlayerInfo() {
+}
+
+void MsgClientPlayerInfo::beforeOnSend(MessageData& message) {
+//    (*this) << static_cast<sf::Uint16> (m_portUDP) << m_name;
     std::cout << "[Msg][OnSend] \t Send name(" << m_name << ") port(" << m_portUDP << ")" << std::endl;
 }
 
-void MsgClientPlayerInfo::afterOnReceive() {
+void MsgClientPlayerInfo::afterOnReceive(MessageData& message) {
     sf::Uint16 sfPort;
-    (*this) >> sfPort >> m_name;
+    sf::Int32 t;
+    (*this) >> t >> sfPort >> m_name;
     m_portUDP = static_cast<unsigned short> (sfPort);
-    std::cout << "[Msg][OnReceive] \t Receive name(" << m_name << ") port(" << m_portUDP << ")" << std::endl;
-}
-
-MsgClientPlayerInfo::~MsgClientPlayerInfo() {
+    std::cout << "[Msg][OnReceive] \t Receive size("<< this->getDataSize() << "), name(" << m_name << ") port(" << m_portUDP << ")" << std::endl;
 }
 
 const std::string& MsgClientPlayerInfo::getName() {

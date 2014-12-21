@@ -61,6 +61,6 @@ void ClientTCPManager::receiver() {
 }
 
 bool ClientTCPManager::send(MessageData& message) const {
-    std::cout << "[Send][TCP] \t" /*<< message.getType()*/ << std::endl;
+    std::cout << "[Send][TCP] \t" /*<< message.getMsgType()*/ << std::endl;
     return (m_socket.send(message) == sf::Socket::Done);
 }

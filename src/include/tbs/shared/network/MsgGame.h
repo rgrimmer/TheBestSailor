@@ -16,7 +16,7 @@ public:
     MsgGame();
     MsgGame(MessageData &message);
     
-    GameType getGameType() const { return GameType::SPEEDEST_WIN; } // @TODO
+    GameType getGameType() const { return GameType::SpeedestWin; } // @TODO
     virtual ~MsgGame();
 };
 

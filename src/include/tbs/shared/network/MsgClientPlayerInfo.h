@@ -22,11 +22,9 @@ public:
     const std::string& getName();
     unsigned short getPort();
 
+    virtual void afterOnReceive(MessageData& message);
+    virtual void beforeOnSend(MessageData& message);
 
-private:
-    virtual void beforeOnSend();
-    virtual void afterOnReceive();
-    
 private:
     unsigned short m_portUDP;
     std::string m_name;
