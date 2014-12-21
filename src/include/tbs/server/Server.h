@@ -25,8 +25,8 @@ public:
     void start(void);
     
     void pollMessages();
-    bool pollMessagesWait(sf::Time timeout = sf::Time::Zero);
-    bool read(MessageData* message, ServerPlayer* player);
+    bool readMessagesWait(sf::Time timeout = sf::Time::Zero);
+    bool read(MessageData* message, ServerPlayer& player);
 
 private:
     void initializeNetwork();

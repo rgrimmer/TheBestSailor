@@ -24,8 +24,8 @@ enum class MsgType : sf::Int16 {
 
 enum class MsgOrientation : sf::Int8 {
     UNDEF,
-    POSITIVE,
-    NEGATIVE
+    Positive,
+    Negative
 };
 
 sf::Packet& operator>>(sf::Packet& packet, MsgType& en);

@@ -56,7 +56,7 @@ void Server::startChronoAndWait() {
         std::cout << "[Serv][WaitP] \tWait players" << std::endl;
         // Wait first player
         while (m_players.isEmpty()) {
-            pollMessagesWait();
+            readMessagesWait();
             if (m_players.size() == 1)
                 std::cout << "[Serv][WaitP] \tFirst connection, start chrono" << std::endl;
             else
@@ -68,7 +68,7 @@ void Server::startChronoAndWait() {
         while (clockWaitPlayers.getElapsedTime() < timeoutWaitPlayers) {
             if (m_players.size() == 0)
                 break;
-            pollMessagesWait(timeoutWaitPlayers - clockWaitPlayers.getElapsedTime());
+            readMessagesWait(timeoutWaitPlayers - clockWaitPlayers.getElapsedTime());
         }
     } while (m_players.size() == 0);
 }
@@ -92,7 +92,7 @@ void Server::startGame() {
     m_game->start();
 }
 
-bool Server::pollMessagesWait(sf::Time timeout) {
+bool Server::readMessagesWait(sf::Time timeout) {
     std::cout << "[Serv][PollM][Start] \t Poll messages started (With wait)" << std::endl;
     if (m_network.getMessageQueue().empty())
         if (!m_network.getMessageQueue().waitEvent(timeout)) {
@@ -109,15 +109,15 @@ void Server::pollMessages() {
     //    std::cout << "[Serv][PollM][Start] \t Poll messages started" << std::endl;
     while (!m_network.getMessageQueue().empty()) {
         auto pair = m_network.getMessageQueue().pop();
-        read(pair.second, pair.first);
+        read(pair.second, *(pair.first));
     }
     //    std::cout << "[Serv][PollM][End] \t Poll messages ended" << std::endl;
 }
 
-bool Server::read(MessageData* message, ServerPlayer * player) {
+bool Server::read(MessageData* message, ServerPlayer &player) {
     MsgType msgType;
     *message >> msgType;
-    std::cout << "[Serv][Read][Start] \t Read message(" << static_cast<int> (msgType) << ") from " << player->getName() << std::endl;
+    std::cout << "[Serv][Read][Start] \t Read message(" << static_cast<int> (msgType) << ") from " << player.getName() << std::endl;
     switch (msgType) {
         case MsgType::ClientPlayerInfo:
         {
@@ -128,14 +128,14 @@ bool Server::read(MessageData* message, ServerPlayer * player) {
             std::string name;
             *message >> sfPort >> name;
             //            std::cout << "[Serv][Read] \t cast done : " << msgCPI << std::endl;
-            player->setUdpPort(sfPort);
-            player->setName(name);
-            std::cout << "[Serv][Read] \t Read info client(" << player->getName() << "@" << player->getAddress().toString() << ":" << player->getUdpPort() << ")" << std::endl;
+            player.setUdpPort(sfPort);
+            player.setName(name);
+            std::cout << "[Serv][Read] \t Read info client(" << player.getName() << "@" << player.getAddress().toString() << ":" << player.getUdpPort() << ")" << std::endl;
             // Send info to Client
             MessageData msgServer; //(42, SERVER_PORT_UDP); // @TODO
 
             msgServer << MsgType::ServerPlayerInfo << sf::Uint16(SERVER_PORT_UDP);
-            m_network.getTCPManager().send(msgServer, player->getTCPSocket());
+            m_network.getTCPManager().send(msgServer, player.getTCPSocket());
         }
             break;
         case MsgType::Acknowledgment:
@@ -155,7 +155,7 @@ bool Server::read(MessageData* message, ServerPlayer * player) {
             if (m_game == nullptr)
                 return false;
 
-            return m_game->read(message, player);
+            return m_game->read(*message, player);
     }
     return true;
     // @TODO delete messages

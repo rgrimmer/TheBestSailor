@@ -8,17 +8,18 @@
 #ifndef GAMESPEEDESTWIN_H
 #define	GAMESPEEDESTWIN_H
 
+#include <map>
 #include <SFML/Network/Packet.hpp>
 
 #include "shared/map/Map.h"
-
 #include "server/game/ServerGame.h"
 
 class Server;
+class ServerPlayer;
 class ServerPlayers;
 class MapHeader;
 class MessageData;
-class ServerPlayer;
+class Ship;
 
 class ServerGameSpeedestWin : public ServerGame {
 public:
@@ -27,16 +28,23 @@ public:
 
     const Map& getMap() const;
 
-    virtual bool read(MessageData* message, ServerPlayer* player);
-    virtual sf::Packet toPacket(sf::Packet& packet) const;
-
 protected:
-    virtual void initGame();
-    virtual void startGameLoop();
+    virtual sf::Packet toPacket(sf::Packet& packet) const;
+    virtual bool read(MessageData& message, ServerPlayer& player);
 
+    virtual void init();
+    virtual void update(float dt);
+    virtual void sendInfo();
+    virtual bool gameIsEnded();
+
+private:
+    void updateShipVelocity(Ship& ship);
+    void readTurnHelm(MessageData& msg);
+    void readTurnSail(MessageData& msg);
 
 private:
     Map m_map;
+    std::map<ServerPlayer, Ship> m_ships;
 };
 
 sf::Packet& operator<<(sf::Packet& packet, const ServerGameSpeedestWin& game);
