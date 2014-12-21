@@ -85,15 +85,9 @@ bool ClientGameSpeedestWin::startGameLoop() {
         m_window.clear();
 
         sf::Event event;
-        //    std::cout << "start poll" << std::endl;
-        //        window.waitEvent(event);
-        //        processEvent(window, event);
         while (m_window.pollEvent(event)) {
 
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-                // Send disconnection message
-                MsgDisconnect msgDiconnect;
-                m_client.getNetwork().getUdpManager().send(msgDiconnect);
                 m_window.close();
             }
             if (event.type == sf::Event::KeyPressed) {
@@ -120,30 +114,23 @@ bool ClientGameSpeedestWin::startGameLoop() {
                         break;
                     case sf::Keyboard::D:
                     {
-                        MsgTurnHelm msgTurnHelmP(MsgOrientation::Positive);
-                        m_client.getNetwork().getUdpManager().send(msgTurnHelmP);
                         m_world.getShip().setAngle(m_world.getShip().getAngle() + 5.0f);
                     }
                         break;
                     case sf::Keyboard::Q:
                     {
-                        MsgTurnHelm msgTurnHelmN(MsgOrientation::Negative);
                         m_client.getNetwork().getUdpManager().send(msgTurnHelmN);
                         m_world.getShip().setAngle(m_world.getShip().getAngle() - 5.0f);
                     }
                         break;
                     case sf::Keyboard::Z:
                     {
-                        MsgTurnSail msgTurnSailP(MsgOrientation::Positive);
-                        m_client.getNetwork().getUdpManager().send(msgTurnSailP);
                         m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() + 5.0f);
                     }
                         break;
 
                     case sf::Keyboard::S:
                     {
-                        MsgTurnSail msgTurnSailN(MsgOrientation::Negative);
-                        m_client.getNetwork().getUdpManager().send(msgTurnSailN);
                         m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() - 5.0f);
                     }
                         break;

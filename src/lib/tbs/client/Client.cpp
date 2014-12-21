@@ -42,12 +42,18 @@ const ClientNetwork& Client::getNetwork() const {
 }
 
 void Client::start(const std::string & name) {
-    m_player.setName(name);
-    initConnectionWithServer();
+//    m_player.setName(name);
+//    initConnectionWithServer();
+    auto* gameTmp = new ClientGameSpeedestWin(*this, m_window);
+    ClientWorld world;
+    world.initializeMap(200,200,42,42);
+    world.initialize();
+    gameTmp->setClientWorld(world);
+    m_game = gameTmp;
 
     bool continued = false;
     do {
-        initGame();
+//        initGame();
         continued = startGame();
     } while (continued);
 
