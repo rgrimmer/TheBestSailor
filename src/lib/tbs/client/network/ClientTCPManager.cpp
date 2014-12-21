@@ -36,8 +36,27 @@ void ClientTCPManager::startReceiverThread() {
 void ClientTCPManager::receiver() {
     while (true) {
         MessageData* msg = new MessageData();
-        m_socket.receive(*msg);
-        m_msgQueue.push(msg);
+        switch (m_socket.receive(*msg)) {
+            case sf::Socket::Status::Done:
+            {
+                m_msgQueue.push(msg);
+            }
+                break;
+            case sf::Socket::Status::Disconnected:
+            {
+                // @TODO
+                std::cout << "[TCP][Recv] \t TCP Server connection disconnected" << std::endl;
+                exit(-1);
+            }
+                break;
+            case sf::Socket::Status::Error:
+            {
+                std::cout << "[TCP][Recv] \t TCP receive error" << std::endl;
+            }
+                break;
+            default :
+                std::cout << "[TCP][Recv] \t TCP Unknow status error" << std::endl;
+        }
     }
 }
 
