@@ -17,10 +17,11 @@
 #include "client/map/HeigthMapView.h"
 #include "client/map/WindMapView.h"
 #include "client/ship/ShipView.h"
+#include "ClientWorld.h"
 
 class DetailsView : public sf::Drawable {
 public:
-    DetailsView(const HeigthMap &heigthMap, const WindMap &windMap, const Ship &ship);
+    DetailsView(const ClientWorld &world, const HeigthMap &heigthMap, const WindMap &windMap, const Ship &ship);
     virtual ~DetailsView();
 
     bool switchEnableWind();
@@ -32,6 +33,7 @@ private:
 
 private:
     // Graphic
+    const ClientWorld& m_world;
     HeigthMapView m_heigthMapView;
     WindMapView m_windMapView;
     ShipView m_shipView;

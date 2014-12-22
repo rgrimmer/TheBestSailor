@@ -23,9 +23,7 @@ sf::Vector2f operator*(const sf::Vector2f &v1, float coef) {
     return sf::Vector2f(v1.x * coef, v1.y * coef);
 }
 
-sf::Vector2f operator/(const sf::Vector2f &v1, const sf::Vector2f &v2) {
-    return sf::Vector2f(v1.x / v2.x, v1.y / v2.y);
-}
+sf::Vector2f operator/(const sf::Vector2f &v1, const sf::Vector2f &v2);
 
 sf::Packet& operator>>(sf::Packet& packet, ClientWorld& world) {
     world.initialize();
@@ -66,18 +64,19 @@ void ClientWorld::update(float dt) {
 
     sf::Vector2f apparentWind = windVector - shipVector;
 
+
     float windAngle = Kinematics::direction(windVector);
     float apparentWindAngle = Kinematics::direction(apparentWind);
     float sailAngle = m_ship.getSail().getAngle();
 
-    std::cout << "angle : " << std::abs(windAngle - sailAngle) << std::endl;
+    std::cout << "angle : " << std::abs(apparentWindAngle - sailAngle) << std::endl;
     float angleToRad = Kinematics::degToRad(std::abs(windAngle - sailAngle));
 
     //sf::Vector2f F = 0.1f * apparentWind * apparentWind * std::sin(Kinematics::degToRad(sailAngle));
-    sf::Vector2f P = { std::cos(Kinematics::degToRad(m_ship.getAngle())), std::sin(Kinematics::degToRad(m_ship.getAngle())) };
-    sf::Vector2f F = 0.1f * apparentWind * apparentWind * std::sin(angleToRad);
+    sf::Vector2f P(std::cos(Kinematics::degToRad(m_ship.getAngle())), std::sin(Kinematics::degToRad(m_ship.getAngle())));
+    sf::Vector2f F = apparentWind * apparentWind * std::sin(apparentWindAngle);
 
-    sf::Vector2f Fm = (F.x * P.x + F.y * P.y) * P;
+    sf::Vector2f Fm = (F.x * P.x + F.y * P.y) * P - (m_ship.kinematics().speed() * m_ship.kinematics().speed());
     //sf::Vector2f F = 10.0f * windVector * std::sin(angleToRad) * std::sin(angleToRad);
 
     // somme des forces = ma
@@ -89,10 +88,22 @@ void ClientWorld::update(float dt) {
     m_ship.kinematics().speed() = Fm;
 
     m_ship.update(dt);
- }
+}
 
 Ship& ClientWorld::getShip() {
     return m_ship;
+}
+
+const Ship& ClientWorld::getShip() const {
+    return m_ship;
+}
+
+bool ClientWorld::windComeFromFront(const Wind &wind) const {
+    return (static_cast<int> (450 - m_ship.getAngle() + wind.direction()) % 360 < 180);
+}
+
+bool ClientWorld::windComeFromTribord(const Wind &wind) const {
+    return (static_cast<int> (360 - m_ship.getAngle() + wind.direction()) % 360 < 180);
 }
 
 Map& ClientWorld::getMap() {

@@ -19,6 +19,12 @@ ShipView::ShipView(const Ship &ship)
     m_shipShape.setOrigin(50.0f, 25.0f);
     m_shipShape.setFillColor(sf::Color::Red);
     //m_shipShape.setPosition(m_ship.kinematics().position());
+    m_shipVertex.setPrimitiveType(sf::PrimitiveType::TrianglesStrip);
+    m_shipVertex.append(sf::Vertex(sf::Vector2f(50.0f, 0.0f), sf::Color::Red));
+    m_shipVertex.append(sf::Vertex(sf::Vector2f(25.0f, 25.0f), sf::Color::Red));
+    m_shipVertex.append(sf::Vertex(sf::Vector2f(25.0f, -25.0f), sf::Color::Red));
+    m_shipVertex.append(sf::Vertex(sf::Vector2f(-50.0f, 25.0f), sf::Color::Red));
+    m_shipVertex.append(sf::Vertex(sf::Vector2f(-50.0f, -25.0f), sf::Color::Red));
 }
 
 ShipView::~ShipView() {
@@ -32,7 +38,7 @@ void ShipView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     states.transform.translate(m_ship.kinematics().position());
     
     // Draw ship
-    target.draw(m_shipShape, states);
+    target.draw(m_shipVertex, states);
 
     states.transform = states.transform.Identity;
     states.transform.translate(m_ship.kinematics().position());

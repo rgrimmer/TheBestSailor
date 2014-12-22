@@ -30,13 +30,16 @@ public:
 
     Ship& getShip();
     const Ship& getShip() const;
-    
+
+    bool windComeFromTribord(const Wind &wind) const;
+    bool windComeFromFront(const Wind &wind) const;
+
     Map& getMap();
     const Map& getMap() const;
-    
+
     HeigthMap& getHeightMap();
     const HeigthMap& getHeightMap() const;
-    
+
     WindMap& getWindMap();
     const WindMap& getWindMap() const;
 

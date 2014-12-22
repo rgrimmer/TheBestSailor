@@ -29,7 +29,7 @@ ClientGameSpeedestWin::ClientGameSpeedestWin(Client &client, sf::RenderWindow& w
 , m_client(client)
 , m_window(window)
 , m_enableFolowCamera(true)
-, m_enablePause(false)
+, m_enablePause(true)
 , m_timeSpeed(1.0f)
 , m_zoomValue(1.0f)
 , m_mainGraphic(nullptr)
@@ -61,8 +61,8 @@ void ClientGameSpeedestWin::release() {
 void ClientGameSpeedestWin::initGame() {
 
     m_globalView = new GlobalView(m_world.getHeightMap(), m_world.getWindMap(), m_world.getShip());
-    m_detailsView = new DetailsView(m_world.getHeightMap(), m_world.getWindMap(), m_world.getShip());
-    m_mainGraphic = dynamic_cast<sf::Drawable*> (m_globalView);
+    m_detailsView = new DetailsView(m_world, m_world.getHeightMap(), m_world.getWindMap(), m_world.getShip());
+    m_mainGraphic = dynamic_cast<sf::Drawable*> (m_detailsView);
 
     m_enableFolowCamera = true;
     //    m_posView = m_
@@ -119,7 +119,6 @@ bool ClientGameSpeedestWin::startGameLoop() {
                         break;
                     case sf::Keyboard::Q:
                     {
-                        m_client.getNetwork().getUdpManager().send(msgTurnHelmN);
                         m_world.getShip().setAngle(m_world.getShip().getAngle() - 5.0f);
                     }
                         break;
@@ -174,8 +173,7 @@ bool ClientGameSpeedestWin::startGameLoop() {
 
 
         // Update
-        float timeLoop = clockGameLoop.getElapsedTime().asSeconds();
-        clockGameLoop.restart();
+        float timeLoop = clockGameLoop.restart().asSeconds();
 
         // Update world
 

@@ -251,3 +251,14 @@ ow.getHeader() >> header;
 ow.getHeightSeed() >> seed1;
 ow.getWindSeed() >> seed2;
 }
+
+
+Règle de positionnement de la voile :
+Tout d'abord, on détermine si la voile est  à babord ou tribord en fonction du vent (apparent ou non).
+Ensuite l'angle entre la voile et le bateau ne peut dépasser l'angle entre le vent apparent et le bateau.
+L'angle entre la voile et le bateau ne peut être contraint à moins de 5-10°.
+Cela implique que lorsque le bateau remonte trop le vent, le vent n'a plus d'effet sur la voile.
+
+( !!! FAUX !!! ) Ensuite l'angle entre le bateau et la voile ne peut faire qu'un angle de 90°. Un angle plus important n'est pas
+possible en réalité sur une voile contrainte (Containte dans le sens : On veut que le vent pousse sur la voile)
+Une voile non contrainte (laissé au vent sans contrainte) pourrait l'être mais cela n'a aucun intéret.

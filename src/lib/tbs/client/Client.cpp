@@ -95,7 +95,6 @@ bool Client::startGame() {
 }
 
 void Client::pollMessages() {
-    std::cout << "[Client][PoolM] \t start to pull messages" << std::endl;
     while (!m_network.getMessageQueue().empty()) {
         auto message = m_network.getMessageQueue().pop();
         read(*message);
