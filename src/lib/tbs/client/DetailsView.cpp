@@ -59,11 +59,11 @@ void DetailsView::draw(sf::RenderTarget& target, sf::RenderStates states) const 
     target.draw(DisplayInfo("WindMap : " + std::to_string(timeDrawWindMap.asMilliseconds())));
     Wind wind = m_world.getMap().getWind(static_cast<sf::Vector2i> (m_world.getShip().kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
     target.draw(DisplayInfo("Wind(f:" + std::to_string(wind.force()) + ".d:" + std::to_string(wind.direction())+")"));
-    if (m_world.windComeFromFront())
+    if (m_world.windComeFromFront(wind))
         target.draw(DisplayInfo("Wind come from front"));
     else
         target.draw(DisplayInfo("Wind come from back"));
-    if (m_world.windComeFromTribord())
+    if (m_world.windComeFromTribord(wind))
         target.draw(DisplayInfo("Wind come from tribord"));
     else
         target.draw(DisplayInfo("Wind come from babord"));

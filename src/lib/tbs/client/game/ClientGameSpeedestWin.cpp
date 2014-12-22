@@ -29,7 +29,7 @@ ClientGameSpeedestWin::ClientGameSpeedestWin(Client &client, sf::RenderWindow& w
 , m_client(client)
 , m_window(window)
 , m_enableFolowCamera(true)
-, m_enablePause(true)
+, m_enablePause(false)
 , m_timeSpeed(1.0f)
 , m_zoomValue(1.0f)
 , m_mainGraphic(nullptr)

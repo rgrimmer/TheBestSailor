@@ -20,6 +20,10 @@ float& Wind::direction() {
     return m_direction;
 }
 
+float Wind::getDirection() const {
+    return m_direction;
+}
+
 float& Wind::force() {
     return m_force;
 }

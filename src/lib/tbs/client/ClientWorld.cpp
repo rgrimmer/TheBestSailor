@@ -85,7 +85,7 @@ void ClientWorld::update(float dt) {
     // y = (1/2) * a.y * t * t + v0.y * t + y0
 
     //m_ship.kinematics().speed() = windVector /* Kinematics::vectorDir(degToRad(angleDirShip))*/;
-    m_ship.kinematics().speed() = Fm;
+    m_ship.kinematics().speed() = wind.getVector();
 
     m_ship.update(dt);
 }
@@ -99,11 +99,11 @@ const Ship& ClientWorld::getShip() const {
 }
 
 bool ClientWorld::windComeFromFront(const Wind &wind) const {
-    return (static_cast<int> (450 - m_ship.getAngle() + wind.direction()) % 360 < 180);
+    return (static_cast<int> (450 - m_ship.getAngle() + wind.getDirection()) % 360 < 180);
 }
 
 bool ClientWorld::windComeFromTribord(const Wind &wind) const {
-    return (static_cast<int> (360 - m_ship.getAngle() + wind.direction()) % 360 < 180);
+    return (static_cast<int> (360 - m_ship.getAngle() + wind.getDirection()) % 360 < 180);
 }
 
 Map& ClientWorld::getMap() {

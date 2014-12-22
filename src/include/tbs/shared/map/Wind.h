@@ -16,6 +16,7 @@ public:
     virtual ~Wind();
     
     float& direction();
+    float getDirection() const;
     float& force();
     sf::Vector2f getVector() const;
 private:
