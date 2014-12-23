@@ -96,15 +96,17 @@ sf::Vector2f ClientWorld::getShipVelocity() const {
 
 sf::Vector2f ClientWorld::getShipVelocity(sf::Vector2f& outWindVector, sf::Vector2f& outApparantWind, sf::Vector2f& outP, sf::Vector2f& outF, sf::Vector2f& outFM) const {
     Wind wind = m_mapmap.getWind(static_cast<sf::Vector2i> (m_ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
+    float alphaRad, apDir;
     outWindVector = wind.getVector();
     outApparantWind = outWindVector - m_ship.kinematics().speed();
     outP = sf::Vector2f(std::cos(Kinematics::degToRad(m_ship.getAngle())), std::sin(Kinematics::degToRad(m_ship.getAngle())));
-    float apDir = Kinematics::direction(outApparantWind);
-    float alphaRad = Kinematics::degToRad(std::abs(apDir - m_ship.getSail().getAngle()));
-    outF = outApparantWind * outApparantWind * std::sin(alphaRad);
-    outFM = std::sqrt(outF.x * outF.x + outF.y * outF.y) * outP - (m_ship.kinematics().speed() * 0.1f);
-    //sf::Vector2f Fm = (F.x * P.x + F.y * P.y) * P - (m_ship.kinematics().speed() * m_ship.kinematics().speed());
-    return wind.getVector();
+    apDir = Kinematics::direction(outApparantWind);
+//    alphaRad = Kinematics::degToRad(std::abs(apDir - m_ship.getSail().getAngle()));
+    alphaRad = Kinematics::degToRad(m_ship.getAngle());
+    outF = 0.1f * outApparantWind * outApparantWind * std::sin(alphaRad);
+//    outFM = std::sqrt(outF.x * outF.x + outF.y * outF.y) * outP - (m_ship.kinematics().speed() * 0.1f);
+    outFM = (outF.x * outP.x + outF.y * outP.y) * outP;
+    return outFM;
 }
 
 Ship& ClientWorld::getShip() {

@@ -48,10 +48,10 @@ void ShipView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(m_ship.getSail(), states);
 
     // Draw speed vector
-    target.draw(*m_speedView, states);
+    target.draw(*m_speedView);
 
     // Draw acceleration vector
-    target.draw(*m_accView, states);
+    target.draw(*m_accView);
 
     /*
     // Draw helm
