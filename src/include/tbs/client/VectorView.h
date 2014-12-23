@@ -18,51 +18,31 @@
 
 //using namespace std;
 
-template < typename T>
 class VectorView : public sf::Drawable {
 public:
 
-    VectorView(const sf::Vector2<T>& vector, const std::string &vectorName = "", const sf::Color &color = sf::Color::Black)
-    : m_vector(vector), m_vectorName(vectorName), m_color(color) {
-        if (!m_vectorName.empty()) {
-            m_textVector = sf::Text(m_vectorName, Font::getFont());
-            m_textVector.setOrigin(-4, m_textVector.getCharacterSize());
-            m_textVector.setColor(m_color);
-        }
-    }
+    VectorView(const sf::Vector2f& origin, const sf::Vector2f& vector, const std::string &vectorName = "", const sf::Color &color = sf::Color::Black);
+    VectorView(const sf::Vector2f& vector, const std::string &vectorName = "", const sf::Color &color = sf::Color::Black);
+    virtual ~VectorView();
 
-    virtual ~VectorView() {
-    }
-
-    sf::Vector2<T> getVector() const{
-        return m_vector;
-    }
+    sf::Vector2f getVector() const;
 private:
-
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {
-
-
-        // Line
-        sf::RectangleShape lineVector(sf::Vector2f(Kinematics::norme(m_vector)*4, 4));
-        lineVector.setFillColor(m_color);
-        target.draw(lineVector, states);
-
-        // Text
-        if (!m_vectorName.empty()) {
-            states.transform.translate(lineVector.getPoint(2));
-            target.draw(m_textVector, states);
-        }
-    }
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 
 private:
-    const sf::Vector2<T>& m_vector;
+    static const sf::Vector2f defaultOrigin;
+    const sf::Vector2f& m_origin;
+    const sf::Vector2f& m_vector;
     std::string m_vectorName;
+
+    bool originIsLocal = true;
 
     // Graphic
     sf::Text m_textVector;
     const sf::Color m_color;
 };
+
 
 #endif	/* VECTORVIEW_H */
 

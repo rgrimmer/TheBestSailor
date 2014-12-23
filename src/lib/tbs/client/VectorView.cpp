@@ -9,5 +9,45 @@
 
 #include "client/VectorView.h"
 
+const sf::Vector2f VectorView::defaultOrigin(0, 0);
 
-// Template function : in header
+VectorView::VectorView(const sf::Vector2f& origin, const sf::Vector2f& vector, const std::string& vectorName, const sf::Color& color)
+: m_origin(origin)
+, m_vector(vector)
+, m_vectorName(vectorName)
+, m_color(color) {
+    if (!m_vectorName.empty()) {
+        m_textVector = sf::Text(m_vectorName, Font::getFont());
+        m_textVector.setOrigin(-4, m_textVector.getCharacterSize());
+        m_textVector.setColor(m_color);
+    }
+}
+
+VectorView::VectorView(const sf::Vector2f& vector, const std::string& vectorName, const sf::Color& color)
+: VectorView(defaultOrigin, vector, vectorName, color) {
+}
+
+VectorView::~VectorView() {
+
+}
+
+sf::Vector2f VectorView::getVector() const {
+    return m_vector;
+}
+
+void VectorView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+    states.transform.translate(m_origin);
+    states.transform.rotate(Kinematics::direction(m_vector));
+    
+    // Line
+    sf::RectangleShape lineVector(sf::Vector2f(Kinematics::norme(m_vector)*4, 4));
+    lineVector.setFillColor(m_color);
+    target.draw(lineVector, states);
+
+    // Text
+    if (!m_vectorName.empty()) {
+        states.transform.translate(lineVector.getPoint(2));
+        target.draw(m_textVector, states);
+    }
+}
+

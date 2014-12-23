@@ -34,8 +34,8 @@ private:
 
     // Graphic
     sf::RectangleShape m_shipShape;
-    VectorView<float>* m_speedView;
-    VectorView<float>* m_accView;
+    VectorView* m_speedView;
+    VectorView* m_accView;
     sf::VertexArray m_shipVertex;
 
 
