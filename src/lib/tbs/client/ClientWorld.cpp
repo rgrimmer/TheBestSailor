@@ -64,6 +64,34 @@ void ClientWorld::update(float dt) {
 
     sf::Vector2f apparentWind = windVector - shipVector;
 
+    float angleShip = m_ship.getAngle();
+    float diff = 360.0f - angleShip;
+    float windDir = wind.getDirection() + diff;
+    if (windDir >= 360.0f)
+        windDir -= 360.0f;
+    float sailDir = m_ship.getSail().getAngle() + diff;
+    if (sailDir >= 360.0f)
+        sailDir -= 360.0f;
+
+    float diffSailWind = sailDir - windDir;
+    if (windComeFromTribord(wind)) {
+        if (sailDir < 180.0f)
+            m_ship.getSail().setAngle(m_ship.getSail().getAngle() + (180.0f - sailDir)*2.0f);
+        if (diffSailWind > 0.0f)
+            m_ship.getSail().setAngle(m_ship.getSail().getAngle() - diffSailWind);
+
+    } else {
+        if (sailDir > 180.0f)
+            m_ship.getSail().setAngle(m_ship.getSail().getAngle() - (sailDir - 180.0f)*2.0f);
+        if (diffSailWind < 0.0f)
+            m_ship.getSail().setAngle(m_ship.getSail().getAngle() - diffSailWind);
+    }
+    std::cout << "shipSail(" << m_ship.getSail().getAngle()
+            << ") diff(" << std::to_string(diff)
+            << ") windDir(" << std::to_string(windDir)
+            << ") sailDir(" << std::to_string(sailDir)
+            << ") diffSailWind(" << std::to_string(diffSailWind)
+            << ")" << std::endl;
 
     float windAngle = Kinematics::direction(windVector);
     float apparentWindAngle = Kinematics::direction(apparentWind);
@@ -101,12 +129,16 @@ sf::Vector2f ClientWorld::getShipVelocity(sf::Vector2f& outWindVector, sf::Vecto
     outApparantWind = outWindVector - m_ship.kinematics().speed();
     outP = sf::Vector2f(std::cos(Kinematics::degToRad(m_ship.getAngle())), std::sin(Kinematics::degToRad(m_ship.getAngle())));
     apDir = Kinematics::direction(outApparantWind);
-//    alphaRad = Kinematics::degToRad(std::abs(apDir - m_ship.getSail().getAngle()));
-    alphaRad = Kinematics::degToRad(m_ship.getAngle());
+    alphaRad = Kinematics::degToRad(std::abs(apDir - m_ship.getSail().getAngle()));
+    //    alphaRad = Kinematics::degToRad(m_ship.getAngle());
     outF = 0.1f * outApparantWind * outApparantWind * std::sin(alphaRad);
-//    outFM = std::sqrt(outF.x * outF.x + outF.y * outF.y) * outP - (m_ship.kinematics().speed() * 0.1f);
-    outFM = (outF.x * outP.x + outF.y * outP.y) * outP;
-    return outFM;
+    outFM = std::sqrt(outF.x * outF.x + outF.y * outF.y) * outP - (m_ship.kinematics().speed() * 0.1f);
+    //    outFM = (outF.x * outP.x + outF.y * outP.y) * outP;
+
+    // Temporary equation 
+    sf::Vector2f windForce = wind.getVector() * std::sin(Kinematics::degToRad(std::abs(m_ship.getSail().getAngle() - wind.getDirection())));
+    sf::Vector2f velocity = std::sqrt(windForce.x * windForce.x + windForce.y * windForce.y) * outP;
+    return velocity;
 }
 
 Ship& ClientWorld::getShip() {
@@ -118,11 +150,11 @@ const Ship& ClientWorld::getShip() const {
 }
 
 bool ClientWorld::windComeFromFront(const Wind &wind) const {
-    return (static_cast<int> (450 - m_ship.getAngle() + wind.getDirection()) % 360 < 180);
+    return (static_cast<int> (450 - m_ship.getAngle() + wind.getDirection()) % 360 > 180);
 }
 
 bool ClientWorld::windComeFromTribord(const Wind &wind) const {
-    return (static_cast<int> (360 - m_ship.getAngle() + wind.getDirection()) % 360 < 180);
+    return (static_cast<int> (360 - m_ship.getAngle() + wind.getDirection()) % 360 > 180);
 }
 
 Map& ClientWorld::getMap() {

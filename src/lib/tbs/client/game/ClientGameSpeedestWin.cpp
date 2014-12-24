@@ -176,7 +176,6 @@ bool ClientGameSpeedestWin::startGameLoop() {
         float timeLoop = clockGameLoop.restart().asSeconds();
 
         // Update world
-
         if (!m_enablePause) {
             m_world.update(timeLoop * m_timeSpeed);
         }

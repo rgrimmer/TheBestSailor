@@ -32,6 +32,10 @@ void Ship::update(float dt) {
 }
 
 void Ship::setAngle(float angle) {
+    while (angle < 0)
+        angle += 360.0f;
+    while (angle >= 360.0f)
+        angle -= 360.0f;
     m_angle = angle;
 }
 
@@ -46,6 +50,7 @@ Sail& Ship::getSail() {
 Helm& Ship::getHelm() {
     return m_helm;
 }
+
 float Ship::getAngle(void) const {
     return m_angle;
 }

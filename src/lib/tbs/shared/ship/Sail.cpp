@@ -33,6 +33,10 @@ void Sail::setPosition(const sf::Vector2f & pos) {
 }
 
 void Sail::setAngle(float angle) {
+    while(angle < 0.0f)
+        angle += 360.0f;
+    while(angle > 360.0f)
+        angle -= 360.0f;
     m_angle = angle;
 }
 

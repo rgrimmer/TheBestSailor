@@ -36,7 +36,7 @@ void WindMapView::load() {
             
             //Wind wind = map(i,j).direction();
             Wind wind = m_windMap.wind(i,j);
-            float windDir = wind.direction();
+            float windDir = wind.direction() + 180.0f;
             float cos1 = std::cos((windDir + 15.0f) * M_PI / 180.0f);
             float sin1 = std::sin((windDir + 15.0f) * M_PI / 180.0f);
             float cos2 = std::cos((windDir - 15.0f) * M_PI / 180.0f);
