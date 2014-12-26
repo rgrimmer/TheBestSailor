@@ -116,7 +116,7 @@ void ServerGameSpeedestWin::sendInfo() {
     float speedY;
 
     for (auto& ship : m_ships) {
-        id = ship.first.getId();
+        id = ship.first->getId();
         shipAngle = ship.second.getAngle();
         sailAngle = ship.second.getSail().getAngle();
         sf::Vector2f posShip = ship.second.kinematics().position();
