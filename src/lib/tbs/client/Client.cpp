@@ -42,18 +42,11 @@ const ClientNetwork& Client::getNetwork() const {
 }
 
 void Client::start(const std::string & name) {
-//    m_player.setName(name);
-//    initConnectionWithServer();
-    auto* gameTmp = new ClientGameSpeedestWin(*this, m_window);
-    ClientWorld world;
-    world.initializeMap(200,200,42,42);
-    world.initialize();
-    gameTmp->setClientWorld(world);
-    m_game = gameTmp;
-
+    m_player.setName(name);
+    initConnectionWithServer();
     bool continued = false;
     do {
-//        initGame();
+        initGame();
         continued = startGame();
     } while (continued);
 
@@ -132,7 +125,7 @@ bool Client::read(MessageData& message) {
         }
             break;
         default:
-            std::cout << "[Client][Read] \t UnReadable Message(" << static_cast<int>(msgType) << ")" << std::endl;
+            std::cout << "[Client][Read] \t UnReadable Message(" << static_cast<int> (msgType) << ")" << std::endl;
             return false;
     }
     return true;

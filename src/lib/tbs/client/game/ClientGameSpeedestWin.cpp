@@ -29,7 +29,7 @@ ClientGameSpeedestWin::ClientGameSpeedestWin(Client &client, sf::RenderWindow& w
 , m_client(client)
 , m_window(window)
 , m_enableFolowCamera(true)
-, m_enablePause(true)
+, m_enablePause(false)
 , m_timeSpeed(1.0f)
 , m_zoomValue(1.0f)
 , m_mainGraphic(nullptr)
@@ -62,7 +62,7 @@ void ClientGameSpeedestWin::initGame() {
 
     m_globalView = new GlobalView(m_world.getHeightMap(), m_world.getWindMap(), m_world.getShip());
     m_detailsView = new DetailsView(m_world, m_world.getHeightMap(), m_world.getWindMap(), m_world.getShip());
-    m_mainGraphic = dynamic_cast<sf::Drawable*> (m_detailsView);
+    m_mainGraphic = dynamic_cast<sf::Drawable*> (m_globalView);
 
     m_enableFolowCamera = true;
     //    m_posView = m_
@@ -85,9 +85,15 @@ bool ClientGameSpeedestWin::startGameLoop() {
         m_window.clear();
 
         sf::Event event;
+        //    std::cout << "start poll" << std::endl;
+        //        window.waitEvent(event);
+        //        processEvent(window, event);
         while (m_window.pollEvent(event)) {
 
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                // Send disconnection message
+                MsgDisconnect msgDiconnect;
+                m_client.getNetwork().getUdpManager().send(msgDiconnect);
                 m_window.close();
             }
             if (event.type == sf::Event::KeyPressed) {
@@ -114,22 +120,30 @@ bool ClientGameSpeedestWin::startGameLoop() {
                         break;
                     case sf::Keyboard::D:
                     {
+                        MsgTurnHelm msgTurnHelmP(MsgOrientation::Positive);
+                        m_client.getNetwork().getUdpManager().send(msgTurnHelmP);
                         m_world.getShip().setAngle(m_world.getShip().getAngle() + 5.0f);
                     }
                         break;
                     case sf::Keyboard::Q:
                     {
+                        MsgTurnHelm msgTurnHelmN(MsgOrientation::Negative);
+                        m_client.getNetwork().getUdpManager().send(msgTurnHelmN);
                         m_world.getShip().setAngle(m_world.getShip().getAngle() - 5.0f);
                     }
                         break;
                     case sf::Keyboard::Z:
                     {
+                        MsgTurnSail msgTurnSailP(MsgOrientation::Positive);
+                        m_client.getNetwork().getUdpManager().send(msgTurnSailP);
                         m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() + 5.0f);
                     }
                         break;
 
                     case sf::Keyboard::S:
                     {
+                        MsgTurnSail msgTurnSailN(MsgOrientation::Negative);
+                        m_client.getNetwork().getUdpManager().send(msgTurnSailN);
                         m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() - 5.0f);
                     }
                         break;
@@ -173,9 +187,11 @@ bool ClientGameSpeedestWin::startGameLoop() {
 
 
         // Update
-        float timeLoop = clockGameLoop.restart().asSeconds();
+        float timeLoop = clockGameLoop.getElapsedTime().asSeconds();
+        clockGameLoop.restart();
 
         // Update world
+
         if (!m_enablePause) {
             m_world.update(timeLoop * m_timeSpeed);
         }
