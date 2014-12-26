@@ -155,15 +155,8 @@ bool Client::readMsgGame(MessageData& message) {
     switch (gameType) {
         case GameType::SpeedestWin:
         {
-            sf::Int32 width, height, seedHeight, seedWind;
-            auto CGSW = new ClientGameSpeedestWin(*this, m_window);
-            message >> width >> height >> seedHeight >> seedWind;
-            ClientWorld world;
-            std::cout << "RECEIVE map(" << width << ", " << height << ", " << seedHeight << ", " << seedWind << ")" << std::endl;
-            world.initializeMap(width, height, seedHeight, seedWind);
-            world.initialize();
-            CGSW->setClientWorld(world);
-            m_game = CGSW;
+            m_game = new ClientGameSpeedestWin(*this, m_window);
+            m_game->readInitGame(message);
         }
             break;
         default:

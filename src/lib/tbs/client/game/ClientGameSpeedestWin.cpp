@@ -60,6 +60,17 @@ void ClientGameSpeedestWin::release() {
     delete m_detailsView;
 }
 
+bool ClientGameSpeedestWin::readInitGame(MessageData& msg) {
+            sf::Int32 width, height, seedHeight, seedWind;
+            msg >> width >> height >> seedHeight >> seedWind;
+            ClientWorld world;
+            std::cout << "RECEIVE map(" << width << ", " << height << ", " << seedHeight << ", " << seedWind << ")" << std::endl;
+            world.initializeMap(width, height, seedHeight, seedWind);
+            world.initialize();
+            setClientWorld(world);
+            return true;
+}
+
 void ClientGameSpeedestWin::initGame() {
 
     m_globalView = new GlobalView(m_world.getHeightMap(), m_world.getWindMap(), m_world.getShip());
