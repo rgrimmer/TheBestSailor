@@ -15,6 +15,7 @@
 
 #include "server/ServerPlayer.h"
 #include "server/ServerPlayers.h"
+#include "server/Server.h"
 #include "server/game/ServerGameSpeedestWin.h"
 #include "server/network/ServerNetwork.h"
 
@@ -128,7 +129,7 @@ void ServerGameSpeedestWin::sendInfo() {
         msgGameInfo << id << shipAngle << sailAngle << positionX << positionY << speedX << speedY;
     }
    
-    //m_server.getNetwork()->getUDPManager().send(msgGameInfo, m_players);
+    m_server.getNetwork()->getUDPManager().send(msgGameInfo, m_players.inGame());
 }
 
 sf::Packet ServerGameSpeedestWin::toPacket(sf::Packet &packet) const {
