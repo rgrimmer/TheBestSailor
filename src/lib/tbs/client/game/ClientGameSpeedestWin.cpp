@@ -127,6 +127,8 @@ bool ClientGameSpeedestWin::startGameLoop() {
                         /*MsgTurnHelm msgTurnHelmP(MsgOrientation::Positive);
                         m_client.getNetwork().getUdpManager().send(msgTurnHelmP);
                         m_world.getShip().setAngle(m_world.getShip().getAngle() + 5.0f);*/
+                        m_world.getShip().setAngle(m_world.getShip().getAngle() + 5.0f);
+                        m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() + 5.0f);
                     }
                         break;
                     case sf::Keyboard::Q:
@@ -135,6 +137,9 @@ bool ClientGameSpeedestWin::startGameLoop() {
                         /*MsgTurnHelm msgTurnHelmN(MsgOrientation::Negative);
                         m_client.getNetwork().getUdpManager().send(msgTurnHelmN);
                         m_world.getShip().setAngle(m_world.getShip().getAngle() - 5.0f);*/
+
+                        m_world.getShip().setAngle(m_world.getShip().getAngle() - 5.0f);
+                        m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() - 5.0f);
                     }
                         break;
                     case sf::Keyboard::Z:
