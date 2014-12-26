@@ -44,7 +44,7 @@ private:
 
 private:
     Map m_map;
-    std::map<ServerPlayer, Ship> m_ships;
+    std::map<ServerPlayer*, Ship> m_ships;
 };
 
 sf::Packet& operator<<(sf::Packet& packet, const ServerGameSpeedestWin& game);
