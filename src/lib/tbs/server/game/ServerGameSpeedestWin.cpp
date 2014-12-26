@@ -36,6 +36,8 @@ sf::Packet& operator<<(sf::Packet& packet, const ServerGameSpeedestWin& game) {
 ServerGameSpeedestWin::ServerGameSpeedestWin(Server &server, ServerPlayers& players, const MapHeader &header)
 : ServerGame(server, players)
 , m_map(header) {
+    
+    
 }
 
 ServerGameSpeedestWin::~ServerGameSpeedestWin() {
@@ -101,7 +103,7 @@ sf::Packet ServerGameSpeedestWin::toPacket(sf::Packet &packet) const {
 }
 
 bool ServerGameSpeedestWin::read(MessageData& message, ServerPlayer& player) {
-    MsgType msgType;
+    /*MsgType msgType;
     message >> msgType;
     switch (msgType) {
         case MsgType::ActionTurnHelm:
@@ -112,7 +114,7 @@ bool ServerGameSpeedestWin::read(MessageData& message, ServerPlayer& player) {
             break;
         default:
             return false;
-    }
+    }*/
     return true;
     // @TODO delete message, use unique_ptr ?
 }

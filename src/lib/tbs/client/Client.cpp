@@ -64,8 +64,8 @@ void Client::sendLocalPlayerInfo() {
     std::cout << "[Client][SendLPI] \t Envoi des informations du joueurs" << std::endl;
     //    MsgClientPlayerInfo msg(m_network.getUdpManager().getPort(), m_player.getName());
     //    std::cout << "[Client][SendLPI] \t Send : name(" << msg.getName() << ") port("<< msg.getPort() << ")" << std::endl;
-    MessageData msg;
-    msg << MsgType::ClientPlayerInfo << static_cast<sf::Uint16> (m_network.getUdpManager().getPort()) << m_player.getName();
+        MessageData msg;
+        msg << MsgType::ClientPlayerInfo << static_cast<sf::Uint16> (m_network.getUdpManager().getPort()) << m_player.getName();
     m_network.getTcpManager().send(msg);
     std::cout << "[Client][SendLPI] \t Send : name(" << m_player.getName() << ") port(" << m_network.getUdpManager().getPort() << ")" << std::endl;
 }

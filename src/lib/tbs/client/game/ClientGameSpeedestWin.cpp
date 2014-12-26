@@ -5,6 +5,7 @@
  * Created on 14 décembre 2014, 19:15
  */
 #include <SFML/Window/Event.hpp>
+#include <bitset>
 
 #include "client/Client.h"
 #include "client/DetailsView.h"
@@ -15,6 +16,7 @@
 #include "shared/network/MsgGame.h"
 #include "shared/network/MsgTurnHelm.h"
 #include "shared/network/MsgTurnSail.h"
+#include "shared/network/MsgAction.h"
 
 MsgGame& operator>>(MsgGame &msg, ClientGameSpeedestWin& game) {
     ClientWorld world;
@@ -75,11 +77,12 @@ bool ClientGameSpeedestWin::startGameLoop() {
     sf::Clock clockGlobal;
     sf::Clock clockGameLoop;
     sf::Clock clockFPS;
+    unsigned int counter = 0;
     int countFrames = 0;
     int fps = 0;
+    std::bitset<4> keys;
 
     // Display info
-
     while (m_window.isOpen()) {
 
         m_window.clear();
@@ -120,31 +123,35 @@ bool ClientGameSpeedestWin::startGameLoop() {
                         break;
                     case sf::Keyboard::D:
                     {
-                        MsgTurnHelm msgTurnHelmP(MsgOrientation::Positive);
+                        keys.set(TURN_HELM_POSITIVE, true);
+                        /*MsgTurnHelm msgTurnHelmP(MsgOrientation::Positive);
                         m_client.getNetwork().getUdpManager().send(msgTurnHelmP);
-                        m_world.getShip().setAngle(m_world.getShip().getAngle() + 5.0f);
+                        m_world.getShip().setAngle(m_world.getShip().getAngle() + 5.0f);*/
                     }
                         break;
                     case sf::Keyboard::Q:
                     {
-                        MsgTurnHelm msgTurnHelmN(MsgOrientation::Negative);
+                        keys.set(TURN_HELM_NEGATIVE, true);
+                        /*MsgTurnHelm msgTurnHelmN(MsgOrientation::Negative);
                         m_client.getNetwork().getUdpManager().send(msgTurnHelmN);
-                        m_world.getShip().setAngle(m_world.getShip().getAngle() - 5.0f);
+                        m_world.getShip().setAngle(m_world.getShip().getAngle() - 5.0f);*/
                     }
                         break;
                     case sf::Keyboard::Z:
                     {
-                        MsgTurnSail msgTurnSailP(MsgOrientation::Positive);
+                        keys.set(TURN_SAIL_POSITIVE, true);
+                       /* MsgTurnSail msgTurnSailP(MsgOrientation::Positive);
                         m_client.getNetwork().getUdpManager().send(msgTurnSailP);
-                        m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() + 5.0f);
+                        m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() + 5.0f);*/
                     }
                         break;
 
                     case sf::Keyboard::S:
                     {
-                        MsgTurnSail msgTurnSailN(MsgOrientation::Negative);
+                        keys.set(TURN_SAIL_NEGATIVE, true);
+                       /* MsgTurnSail msgTurnSailN(MsgOrientation::Negative);
                         m_client.getNetwork().getUdpManager().send(msgTurnSailN);
-                        m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() - 5.0f);
+                        m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() - 5.0f);*/
                     }
                         break;
 
@@ -172,9 +179,34 @@ bool ClientGameSpeedestWin::startGameLoop() {
                     default:
                         break;
                 }
+            } else if (event.type == sf::Event::KeyReleased) {
+                switch (event.key.code) {
+                    case sf::Keyboard::D:
+                        keys.set(TURN_HELM_POSITIVE, false);
+                        break;
+                    case sf::Keyboard::Q:
+                        keys.set(TURN_HELM_NEGATIVE, false);
+                        break;
+                    case sf::Keyboard::Z:
+                        keys.set(TURN_SAIL_POSITIVE, false);
+                        break;
+                    case sf::Keyboard::S:
+                        keys.set(TURN_SAIL_NEGATIVE, false);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
+        counter++;
+        if (counter % 30 == 0) {
+            counter = 0;
+            MessageData msg;
+            msg << MsgType::Action << static_cast<sf::Uint8>(keys.to_ulong());
+            m_client.getNetwork().getUdpManager().send(msg);
+        }
+        
         m_client.pollMessages();
 
         // Set view position

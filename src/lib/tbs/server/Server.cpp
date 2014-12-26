@@ -9,10 +9,12 @@
 
 #include <SFML/System/Time.hpp>
 #include <SFML/System/Clock.hpp>
+#include <bitset>
 
 #include "shared/network/MsgGame.h"
 #include "shared/network/MsgClientPlayerInfo.h"
 #include "shared/network/MsgServerPlayerInfo.h"
+#include "shared/network/MsgAction.h"
 #include "shared/network/MessageData.h"
 #include "shared/network/UtilsNetwork.h"
 
@@ -93,15 +95,15 @@ void Server::startGame() {
 }
 
 bool Server::readMessagesWait(sf::Time timeout) {
-    std::cout << "[Serv][PollM][Start] \t Poll messages started (With wait)" << std::endl;
+    //std::cout << "[Serv][PollM][Start] \t Poll messages started (With wait)" << std::endl;
     if (m_network.getMessageQueue().empty())
         if (!m_network.getMessageQueue().waitEvent(timeout)) {
-            std::cout << "[Serv][PollM][End] \t Poll messages ended (With timeout)" << std::endl;
+            //std::cout << "[Serv][PollM][End] \t Poll messages ended (With timeout)" << std::endl;
             return false;
 
         }
     pollMessages();
-    std::cout << "[Serv][PollM][End] \t Poll messages ended (With receive message)" << std::endl;
+    //std::cout << "[Serv][PollM][End] \t Poll messages ended (With receive message)" << std::endl;
     return true;
 }
 
@@ -144,6 +146,30 @@ bool Server::read(MessageData* message, ServerPlayer &player) {
             m_acknowledgment.release();
         }
             break;
+
+        case MsgType::Action:
+        {
+            sf::Uint8 keysUI8;
+            *message >> keysUI8;
+            std::bitset<4> keys = keysUI8;
+
+            if (keys.test(TURN_HELM_NEGATIVE)) {
+               
+            }
+            if (keys.test(TURN_HELM_POSITIVE)) {
+
+            }
+            if (keys.test(TURN_SAIL_NEGATIVE)) {
+
+            }
+            if (keys.test(TURN_SAIL_POSITIVE)) {
+
+            }
+
+            std::cout << "Action " << keys.to_ulong() << std::endl;
+        }
+            break;
+
         case MsgType::Undef:
         {
             std::cout << "Undefined" << std::endl;
