@@ -48,7 +48,14 @@ const Map& ServerGameSpeedestWin::getMap() const {
 }
 
 void ServerGameSpeedestWin::init() {
-    // @TODO
+    sf::Vector2f position(1000.0f,1000.0f);
+    for(auto* player : m_players.inGame()) {
+        Ship ship;
+        position.x += 32.0f;
+        ship.kinematics().position() = position;
+        ship.setAngle(90.0f);
+        m_ships[player] = ship;
+    }
 }
 
 void ServerGameSpeedestWin::update(float dt) {
