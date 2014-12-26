@@ -8,6 +8,7 @@
 #ifndef WORLD_H
 #define	WORLD_H
 
+#include <map>
 #include <iostream>
 
 #include "shared/map/MapHeader.h"
@@ -28,8 +29,12 @@ public:
 
     void update(float dt);
 
-    Ship& getShip();
-    const Ship& getShip() const;
+    std::map<int, Ship>& getShips();
+    const std::map<int, Ship>& getShips() const;
+    void setClientShip(Ship* ship);
+    
+    Ship& getClientShip();
+    const Ship& getClientShip() const;
 
     bool windComeFromTribord(const Wind &wind) const;
     bool windComeFromFront(const Wind &wind) const;
@@ -45,7 +50,8 @@ public:
 
 private:
     Map m_mapmap;
-    Ship m_ship;
+    Ship* m_ship;
+    std::map<int, Ship> m_ships;
 };
 
 sf::Packet& operator>>(sf::Packet& packet, ClientWorld& world);

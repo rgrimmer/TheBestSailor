@@ -73,10 +73,13 @@ bool ClientGameSpeedestWin::readInitGame(MessageData& msg) {
 
 void ClientGameSpeedestWin::initGame() {
 
-    m_globalView = new GlobalView(m_world.getHeightMap(), m_world.getWindMap(), m_world.getShip());
-    m_detailsView = new DetailsView(m_world, m_world.getHeightMap(), m_world.getWindMap(), m_world.getShip());
+    Ship *s = new Ship();
+    s->initialize({1000,1000},{0,0});
+    m_world.setClientShip(s); // @TODO remove, it's temporary
+    
+    m_globalView = new GlobalView(m_world.getHeightMap(), m_world.getWindMap(), m_world.getClientShip());
+    m_detailsView = new DetailsView(m_world);
     m_mainGraphic = dynamic_cast<sf::Drawable*> (m_globalView);
-
     m_enableFolowCamera = true;
     //    m_posView = m_
     m_window.setKeyRepeatEnabled(true);
@@ -138,8 +141,8 @@ bool ClientGameSpeedestWin::startGameLoop() {
                         /*MsgTurnHelm msgTurnHelmP(MsgOrientation::Positive);
                         m_client.getNetwork().getUdpManager().send(msgTurnHelmP);
                         m_world.getShip().setAngle(m_world.getShip().getAngle() + 5.0f);*/
-                        m_world.getShip().setAngle(m_world.getShip().getAngle() + 5.0f);
-                        m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() + 5.0f);
+                        m_world.getClientShip().setAngle(m_world.getClientShip().getAngle() + 5.0f);
+                        m_world.getClientShip().getSail().setAngle(m_world.getClientShip().getSail().getAngle() + 5.0f);
                     }
                         break;
                     case sf::Keyboard::Q:
@@ -149,8 +152,8 @@ bool ClientGameSpeedestWin::startGameLoop() {
                         m_client.getNetwork().getUdpManager().send(msgTurnHelmN);
                         m_world.getShip().setAngle(m_world.getShip().getAngle() - 5.0f);*/
 
-                        m_world.getShip().setAngle(m_world.getShip().getAngle() - 5.0f);
-                        m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() - 5.0f);
+                        m_world.getClientShip().setAngle(m_world.getClientShip().getAngle() - 5.0f);
+                        m_world.getClientShip().getSail().setAngle(m_world.getClientShip().getSail().getAngle() - 5.0f);
                     }
                         break;
                     case sf::Keyboard::Z:
@@ -227,7 +230,7 @@ bool ClientGameSpeedestWin::startGameLoop() {
 
         // Set view position
         if (m_enableFolowCamera) {
-            currentView.setCenter(m_world.getShip().kinematics().position());
+            currentView.setCenter(m_world.getClientShip().kinematics().position());
         } else {
             currentView.setCenter(m_posView);
         }
@@ -248,7 +251,7 @@ bool ClientGameSpeedestWin::startGameLoop() {
 
         // Set view position
         if (m_enableFolowCamera) {
-            currentView.setCenter(m_world.getShip().kinematics().position());
+            currentView.setCenter(m_world.getClientShip().kinematics().position());
         } else {
             currentView.setCenter(m_posView);
         }

@@ -21,7 +21,7 @@
 
 class DetailsView : public sf::Drawable {
 public:
-    DetailsView(const ClientWorld &world, const HeigthMap &heigthMap, const WindMap &windMap, const Ship &ship);
+    DetailsView(const ClientWorld &world);
     virtual ~DetailsView();
 
     bool switchEnableWind();

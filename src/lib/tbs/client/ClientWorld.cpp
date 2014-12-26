@@ -45,7 +45,6 @@ ClientWorld::~ClientWorld() {
 
 void ClientWorld::initialize() {
     Gradient::initialize();
-    m_ship.initialize(sf::Vector2f(1000.0f, 1000.0f), sf::Vector2f(0.0f, 0.0f));
 }
 
 void ClientWorld::setMap(const Map& map) {
@@ -57,23 +56,36 @@ void ClientWorld::initializeMap(int width, int height, int heightMapSeed, int wi
 }
 
 void ClientWorld::update(float dt) {
-    m_ship.update(dt);
+    for (auto& pairShip : m_ships)
+        pairShip.second.update(dt);
 }
 
-Ship& ClientWorld::getShip() {
-    return m_ship;
+std::map<int, Ship>& ClientWorld::getShips() {
+    return m_ships;
 }
 
-const Ship& ClientWorld::getShip() const {
-    return m_ship;
+const std::map<int, Ship>& ClientWorld::getShips() const {
+    return m_ships;
+}
+
+Ship& ClientWorld::getClientShip() {
+    return *m_ship;
+}
+
+const Ship& ClientWorld::getClientShip() const {
+    return *m_ship;
+}
+
+void ClientWorld::setClientShip(Ship* ship) {
+    m_ship = ship;
 }
 
 bool ClientWorld::windComeFromFront(const Wind &wind) const {
-    return (static_cast<int> (450 - m_ship.getAngle() + wind.getDirection()) % 360 > 180);
+    return (static_cast<int> (450 - m_ship->getAngle() + wind.getDirection()) % 360 > 180);
 }
 
 bool ClientWorld::windComeFromTribord(const Wind &wind) const {
-    return (static_cast<int> (360 - m_ship.getAngle() + wind.getDirection()) % 360 > 180);
+    return (static_cast<int> (360 - m_ship->getAngle() + wind.getDirection()) % 360 > 180);
 }
 
 Map& ClientWorld::getMap() {
