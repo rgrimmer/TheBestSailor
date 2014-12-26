@@ -136,7 +136,8 @@ bool Server::read(MessageData* message, ServerPlayer &player) {
             // Send info to Client
             MessageData msgServer; //(42, SERVER_PORT_UDP); // @TODO
 
-            msgServer << MsgType::ServerPlayerInfo << sf::Uint16(SERVER_PORT_UDP);
+            msgServer << MsgType::ServerPlayerInfo << sf::Uint16(SERVER_PORT_UDP) << sf::Int16(player.getId());
+            std::cout << "[Serv][Read] \t Send info serv. ServUdpPort(), playerId(" << sf::Int16(player.getId()) << ")" << std::endl;
             m_network.getTCPManager().send(msgServer, player.getTCPSocket());
         }
             break;
@@ -154,7 +155,7 @@ bool Server::read(MessageData* message, ServerPlayer &player) {
             std::bitset<4> keys = keysUI8;
 
             if (keys.test(TURN_HELM_NEGATIVE)) {
-               
+
             }
             if (keys.test(TURN_HELM_POSITIVE)) {
 

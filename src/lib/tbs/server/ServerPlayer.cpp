@@ -5,7 +5,7 @@
 //}
 
 ServerPlayer::ServerPlayer()
-: m_id(-1)
+: m_id(0)
 , m_name("Anonymous")
 , m_udpPort(0) {
 
@@ -16,6 +16,10 @@ ServerPlayer::~ServerPlayer() {
 
 unsigned int ServerPlayer::getId() const {
     return m_id;
+}
+
+void ServerPlayer::setId(unsigned int id) {
+    m_id = id;
 }
 
 void ServerPlayer::setUdpPort(unsigned short udpPort) {

@@ -9,6 +9,8 @@
 #include "server/ServerPlayer.h"
 #include "server/ServerPlayers.h"
 
+std::atomic<unsigned int> ServerPlayers::s_nextId(1);
+
 ServerPlayers::ServerPlayers() {
 }
 
@@ -31,6 +33,7 @@ ServerPlayer& ServerPlayers::addNewPlayer() {
         std::cout << p << " " << p->getName() << std::endl;
     
     ServerPlayer *m_player = m_players[m_players.size() - 1];
+    m_player->setId(ServerPlayers::s_nextId++);
     m_inWaitPlayers.push_back(m_player);
     std::cout << "[Players][End] \t Add new player done" << std::endl;
     return *m_player;

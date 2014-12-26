@@ -7,7 +7,7 @@
 
 #ifndef SERVERPLAYERS_H
 #define	SERVERPLAYERS_H
-
+#include <atomic>
 #include <vector>
 
 #include <SFML/Network/IpAddress.hpp>
@@ -17,6 +17,9 @@
 class ServerPlayer;
 
 class ServerPlayers {
+private:
+    static std::atomic<unsigned int> s_nextId;
+    
 public:
     ServerPlayers();
     virtual ~ServerPlayers();

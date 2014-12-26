@@ -24,6 +24,7 @@ public:
     std::string getName() const;
     void setName(const std::string &name);
     unsigned int getId() const;
+    void setId(unsigned int id);
     unsigned short getUdpPort() const;
 
 private:

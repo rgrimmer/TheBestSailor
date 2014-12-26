@@ -64,8 +64,8 @@ void Client::sendLocalPlayerInfo() {
     std::cout << "[Client][SendLPI] \t Envoi des informations du joueurs" << std::endl;
     //    MsgClientPlayerInfo msg(m_network.getUdpManager().getPort(), m_player.getName());
     //    std::cout << "[Client][SendLPI] \t Send : name(" << msg.getName() << ") port("<< msg.getPort() << ")" << std::endl;
-        MessageData msg;
-        msg << MsgType::ClientPlayerInfo << static_cast<sf::Uint16> (m_network.getUdpManager().getPort()) << m_player.getName();
+    MessageData msg;
+    msg << MsgType::ClientPlayerInfo << static_cast<sf::Uint16> (m_network.getUdpManager().getPort()) << m_player.getName();
     m_network.getTcpManager().send(msg);
     std::cout << "[Client][SendLPI] \t Send : name(" << m_player.getName() << ") port(" << m_network.getUdpManager().getPort() << ")" << std::endl;
 }
@@ -124,14 +124,14 @@ bool Client::read(MessageData& message) {
             readMsgServerPlayerInfo(message);
         }
             break;
-            
+
         case MsgType::GameInfo:
         {
             std::cout << "GameInfo" << std::endl;
-        
+
         }
-        break;
-        
+            break;
+
         default:
             std::cout << "[Client][Read] \t UnReadable Message(" << static_cast<int> (msgType) << ")" << std::endl;
             return false;
@@ -140,9 +140,10 @@ bool Client::read(MessageData& message) {
 }
 
 bool Client::readMsgServerPlayerInfo(MessageData &message) {
-    sf::Uint16 port;
-    message >> port;
-    std::cout << "[Client][Read] \t Read Server Player Info Message. serverUdpPort(" << port << ")" << std::endl;
+    sf::Uint16 port, id;
+    message >> port >> id;
+    std::cout << "[Client][Read] \t Read Server Player Info Message. id(" << id << "), serverUdpPort(" << port << ")" << std::endl;
+    m_player.setId(id);
     m_network.getUdpManager().initialize("localhost", port); // @TODO
     m_network.getUdpManager().startReceiverThread();
     return true;
