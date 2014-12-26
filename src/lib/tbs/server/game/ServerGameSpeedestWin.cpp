@@ -16,6 +16,7 @@
 #include "server/ServerPlayer.h"
 #include "server/ServerPlayers.h"
 #include "server/game/ServerGameSpeedestWin.h"
+#include "server/network/ServerNetwork.h"
 
 sf::Vector2f operator*(const sf::Vector2f &v1, const sf::Vector2f &v2) {
     return sf::Vector2f(v1.x * v2.x, v1.y * v2.y);
@@ -36,8 +37,8 @@ sf::Packet& operator<<(sf::Packet& packet, const ServerGameSpeedestWin& game) {
 ServerGameSpeedestWin::ServerGameSpeedestWin(Server &server, ServerPlayers& players, const MapHeader &header)
 : ServerGame(server, players)
 , m_map(header) {
-    
-    
+
+
 }
 
 ServerGameSpeedestWin::~ServerGameSpeedestWin() {
@@ -96,6 +97,31 @@ bool ServerGameSpeedestWin::gameIsEnded() {
 
 void ServerGameSpeedestWin::sendInfo() {
     // @TODO
+    MessageData msgGameInfo;
+    msgGameInfo << MsgType::GameInfo;
+
+    int id;
+    float shipAngle;
+    float sailAngle;
+    float positionX;
+    float positionY;
+    float speedX;
+    float speedY;
+
+    for (auto& ship : m_ships) {
+        id = ship.first.getId();
+        shipAngle = ship.second.getAngle();
+        sailAngle = ship.second.getSail().getAngle();
+        sf::Vector2f posShip = ship.second.kinematics().position();
+        positionX = posShip.x;
+        positionY = posShip.y;
+        sf::Vector2f speedShip = ship.second.kinematics().speed();
+        speedX = speedShip.x;
+        speedY = speedShip.y;
+        msgGameInfo << id << shipAngle << sailAngle << positionX << positionY << speedX << speedY;
+    }
+   
+    //m_server.getNetwork()->getUDPManager().send(msgGameInfo, m_players);
 }
 
 sf::Packet ServerGameSpeedestWin::toPacket(sf::Packet &packet) const {

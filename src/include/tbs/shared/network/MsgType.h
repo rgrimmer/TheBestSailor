@@ -17,9 +17,8 @@ enum class MsgType : sf::Int16 {
     ClientPlayerInfo,
     ServerPlayerInfo,
     Action,
-    ActionTurnHelm,
-    ActionTurnSail,
     Game,
+    GameInfo,
     Acknowledgment
 };
 

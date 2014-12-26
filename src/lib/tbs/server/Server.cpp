@@ -190,3 +190,8 @@ bool Server::read(MessageData* message, ServerPlayer &player) {
 void Server::waitAcknowledgment(int permits) {
     m_acknowledgment.aquire(permits);
 }
+
+ServerNetwork* Server::getNetwork() {
+    return &m_network;
+}
+

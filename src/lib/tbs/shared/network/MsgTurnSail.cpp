@@ -1,7 +1,7 @@
 #include "shared/network/MsgTurnSail.h"
 
 MsgTurnSail::MsgTurnSail(MsgOrientation orientation)
-: MessageData(MsgType::ActionTurnSail) {
+: MessageData() {
     (*this) << static_cast<sf::Int8> (orientation);
 }
 

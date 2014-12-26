@@ -15,8 +15,8 @@
 
 class MessageData;
 class ServerPlayers;
-class Server;
 class ServerPlayer;
+class Server;
 
 class ServerGame {
 public:

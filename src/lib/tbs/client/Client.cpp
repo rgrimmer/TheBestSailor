@@ -124,6 +124,14 @@ bool Client::read(MessageData& message) {
             readMsgServerPlayerInfo(message);
         }
             break;
+            
+        case MsgType::GameInfo:
+        {
+            std::cout << "GameInfo" << std::endl;
+        
+        }
+        break;
+        
         default:
             std::cout << "[Client][Read] \t UnReadable Message(" << static_cast<int> (msgType) << ")" << std::endl;
             return false;

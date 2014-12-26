@@ -28,6 +28,8 @@ public:
     bool readMessagesWait(sf::Time timeout = sf::Time::Zero);
     bool read(MessageData* message, ServerPlayer& player);
 
+    ServerNetwork*  getNetwork();
+    
 private:
     void initializeNetwork();
     void startChronoAndWait();

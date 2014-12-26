@@ -1,7 +1,7 @@
 #include <shared/network/MsgTurnHelm.h>
 
 MsgTurnHelm::MsgTurnHelm(MsgOrientation orientation)
-: MessageData(MsgType::ActionTurnHelm) {
+: MessageData() {
     (*this) << static_cast<sf::Int8> (orientation);
 }
 
