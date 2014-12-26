@@ -50,8 +50,8 @@ const Map& ServerGameSpeedestWin::getMap() const {
 }
 
 void ServerGameSpeedestWin::init() {
-    sf::Vector2f position(1000.0f,1000.0f);
-    for(auto* player : m_players.inGame()) {
+    sf::Vector2f position(1000.0f, 1000.0f);
+    for (auto* player : m_players.inGame()) {
         Ship ship;
         position.x += 32.0f;
         ship.kinematics().position() = position;
@@ -62,41 +62,55 @@ void ServerGameSpeedestWin::init() {
 
 void ServerGameSpeedestWin::update(float dt) {
     for (auto& test : m_ships) {
+        updateSail(test.second);
         updateShipVelocity(test.second);
         test.second.update(dt);
     }
 }
 
+void ServerGameSpeedestWin::updateSail(Ship& ship) {
+    Wind wind = m_map.getWind(static_cast<sf::Vector2i> (ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
+    float angleShip = ship.getAngle();
+    float diff = 360.0f - angleShip;
+    float windDir = wind.getDirection() + diff;
+    if (windDir >= 360.0f)
+        windDir -= 360.0f;
+    float sailDir = ship.getSail().getAngle() + diff;
+    if (sailDir >= 360.0f)
+        sailDir -= 360.0f;
+
+    float diffSailWind = sailDir - windDir;
+    if (windComeFromTribord(ship, wind)) {
+        if (sailDir < 180.0f)
+            ship.getSail().setAngle(ship.getSail().getAngle() + (180.0f - sailDir)*2.0f);
+        if (diffSailWind > 0.0f)
+            ship.getSail().setAngle(ship.getSail().getAngle() - diffSailWind);
+
+    } else {
+        if (sailDir > 180.0f)
+            ship.getSail().setAngle(ship.getSail().getAngle() - (sailDir - 180.0f)*2.0f);
+        if (diffSailWind < 0.0f)
+            ship.getSail().setAngle(ship.getSail().getAngle() - diffSailWind);
+    }
+}
+
 void ServerGameSpeedestWin::updateShipVelocity(Ship& ship) {
     Wind wind = m_map.getWind(static_cast<sf::Vector2i> (ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
+    float shipDirRad = Kinematics::degToRad(ship.getAngle());
+    sf::Vector2f outP(std::cos(shipDirRad), std::sin(shipDirRad));
 
-    sf::Vector2f shipVector = ship.kinematics().speed();
-    sf::Vector2f windVector = wind.getVector();
+    // Temporary equation 
+    sf::Vector2f windForce = wind.getVector() * std::sin(Kinematics::degToRad(std::abs(ship.getSail().getAngle() - wind.getDirection())));
+    sf::Vector2f velocity = std::sqrt(windForce.x * windForce.x + windForce.y * windForce.y) * outP;
+    ship.kinematics().speed() = velocity;
+}
 
-    sf::Vector2f apparentWind = windVector - shipVector;
+bool ServerGameSpeedestWin::windComeFromFront(const Ship& ship, const Wind& wind) const {
+    return (static_cast<int> (450 - ship.getAngle() + wind.getDirection()) % 360 > 180);
+}
 
-    float windAngle = Kinematics::direction(windVector);
-    float apparentWindAngle = Kinematics::direction(apparentWind);
-    float sailAngle = ship.getSail().getAngle();
-
-    std::cout << "angle : " << std::abs(windAngle - sailAngle) << std::endl;
-    float angleToRad = Kinematics::degToRad(std::abs(windAngle - sailAngle));
-
-    //sf::Vector2f F = 0.1f * apparentWind * apparentWind * std::sin(Kinematics::degToRad(sailAngle));
-    sf::Vector2f P = {std::cos(Kinematics::degToRad(ship.getAngle())), std::sin(Kinematics::degToRad(ship.getAngle()))};
-    sf::Vector2f F = 0.1f * apparentWind * apparentWind * std::sin(angleToRad);
-
-    sf::Vector2f Fm = (F.x * P.x + F.y * P.y) * P;
-    //sf::Vector2f F = 10.0f * windVector * std::sin(angleToRad) * std::sin(angleToRad);
-
-    // somme des forces = ma
-    // v = a*t + v0
-    // x = (1/2) * a.x * t * t + v0.x * t + x0
-    // y = (1/2) * a.y * t * t + v0.y * t + y0
-
-    //m_ship.kinematics().speed() = windVector /* Kinematics::vectorDir(degToRad(angleDirShip))*/;
-    ship.kinematics().speed() = Fm;
-
+bool ServerGameSpeedestWin::windComeFromTribord(const Ship& ship, const Wind& wind) const {
+    return (static_cast<int> (360 - ship.getAngle() + wind.getDirection()) % 360 > 180);
 }
 
 bool ServerGameSpeedestWin::gameIsEnded() {
@@ -128,7 +142,7 @@ void ServerGameSpeedestWin::sendInfo() {
         speedY = speedShip.y;
         msgGameInfo << id << shipAngle << sailAngle << positionX << positionY << speedX << speedY;
     }
-   
+
     m_server.getNetwork()->getUDPManager().send(msgGameInfo, m_players.inGame());
 }
 

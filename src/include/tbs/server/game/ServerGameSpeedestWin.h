@@ -38,9 +38,13 @@ protected:
     virtual bool gameIsEnded();
 
 private:
+    void updateSail(Ship& ship);
     void updateShipVelocity(Ship& ship);
     void readTurnHelm(MessageData& msg);
     void readTurnSail(MessageData& msg);
+    
+    bool windComeFromTribord(const Ship& ship, const Wind &wind) const;
+    bool windComeFromFront(const Ship& ship, const Wind &wind) const;
 
 private:
     Map m_map;

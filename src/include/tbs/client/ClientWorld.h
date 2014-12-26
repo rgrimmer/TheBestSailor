@@ -31,9 +31,6 @@ public:
     Ship& getShip();
     const Ship& getShip() const;
 
-    sf::Vector2f getShipVelocity() const;
-    sf::Vector2f getShipVelocity(sf::Vector2f& outWindVector, sf::Vector2f& outApparantWind, sf::Vector2f& outP, sf::Vector2f& outF, sf::Vector2f& outFM) const;
-
     bool windComeFromTribord(const Wind &wind) const;
     bool windComeFromFront(const Wind &wind) const;
 
