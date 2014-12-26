@@ -30,12 +30,12 @@ public:
     
     const std::vector<ServerPlayer*>&  inGame() const;
     const std::vector<ServerPlayer*>&  inWait() const;
-    std::vector<ServerPlayer>& getList();
+    std::vector<ServerPlayer*>& getList();
     
     void putPlayersInGame();
 
 private:
-    std::vector<ServerPlayer> m_players;
+    std::vector<ServerPlayer*> m_players;
     std::vector<ServerPlayer*> m_inWaitPlayers;
     std::vector<ServerPlayer*> m_inGamePlayers;
 

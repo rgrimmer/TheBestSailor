@@ -52,11 +52,11 @@ void ServerTCPManager::receiver() {
             receiveConnection();
         }
 
-        for (auto& player : m_players.getList()) {
+        for (auto* player : m_players.getList()) {
 
-            if (m_selector.isReady(player.getTCPSocket())) {
-                std::cout << "[TCP][Thread] \t Socket of "<< player.getName() << ":"<<player.getAddress()<<" is ready" << std::endl;
-                receiveCommunication(player);
+            if (m_selector.isReady(player->getTCPSocket())) {
+                std::cout << "[TCP][Thread] \t " << player << " " << player->getName() << "@" << player->getAddress() << ":"<< player->getTCPSocket().getRemotePort()<< " is ready" << std::endl;
+                receiveCommunication(*player);
             }
         }
     }
@@ -70,7 +70,7 @@ bool ServerTCPManager::send(MessageData &message, sf::TcpSocket& player) const {
 
 bool ServerTCPManager::send(MessageData &message, const std::vector<ServerPlayer*>& players) const {
     bool hasReceiveByAll = true;
-    for (const auto &player : players) {
+    for (auto &player : players) {
         if (send(message, player->getTCPSocket()) != sf::Socket::Done) {
             hasReceiveByAll = false;
         }
@@ -84,19 +84,16 @@ bool ServerTCPManager::receiveConnection() {
 
     std::cout << "[TCP][Recv][Con][Start] \t Receveive connection started" << std::endl;
     ServerPlayer& player = m_players.addNewPlayer();
+    sf::TcpSocket& playerSocket = player.getTCPSocket();
     std::cout << "[TCP][Recv][Con] \t Add new player done" << std::endl;
-    if (m_listener.accept(player.getTCPSocket()) != sf::Socket::Done) {
+    if (m_listener.accept(playerSocket) != sf::Socket::Done) {
         std::cout << "Error accept" << std::endl;
         return false;
+    } else {
+        m_selector.add(playerSocket);
+        std::cout << "[TCP][Recv][Con][End] \t Receive connection done" << std::endl;
+        return true;
     }
-    m_selector.add(player.getTCPSocket());
-    std::cout << "[TCP][Recv][Con][End] \t Receive connection done" << std::endl;
-
-    return true;
-    //    } else {
-    //        std::cout << "Error : maximum client limit" << std::endl;
-    //    }
-    //    return false;
 }
 
 void ServerTCPManager::receiveCommunication(ServerPlayer &player) {
