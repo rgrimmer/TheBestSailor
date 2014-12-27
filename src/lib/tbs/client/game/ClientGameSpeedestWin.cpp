@@ -131,8 +131,8 @@ bool ClientGameSpeedestWin::startGameLoop() {
                         /*MsgTurnHelm msgTurnHelmP(MsgOrientation::Positive);
                         m_client.getNetwork().getUdpManager().send(msgTurnHelmP);
                         m_world.getShip().setAngle(m_world.getShip().getAngle() + 5.0f);*/
-                        m_world.getClientShip().setAngle(m_world.getClientShip().getAngle() + 5.0f);
-                        m_world.getClientShip().getSail().setAngle(m_world.getClientShip().getSail().getAngle() + 5.0f);
+                        //m_world.getClientShip().setAngle(m_world.getClientShip().getAngle() + 5.0f);
+                        //m_world.getClientShip().getSail().setAngle(m_world.getClientShip().getSail().getAngle() + 5.0f);
                     }
                         break;
                     case sf::Keyboard::Q:
@@ -142,8 +142,8 @@ bool ClientGameSpeedestWin::startGameLoop() {
                         m_client.getNetwork().getUdpManager().send(msgTurnHelmN);
                         m_world.getShip().setAngle(m_world.getShip().getAngle() - 5.0f);*/
 
-                        m_world.getClientShip().setAngle(m_world.getClientShip().getAngle() - 5.0f);
-                        m_world.getClientShip().getSail().setAngle(m_world.getClientShip().getSail().getAngle() - 5.0f);
+                        //m_world.getClientShip().setAngle(m_world.getClientShip().getAngle() - 5.0f);
+                        //m_world.getClientShip().getSail().setAngle(m_world.getClientShip().getSail().getAngle() - 5.0f);
                     }
                         break;
                     case sf::Keyboard::Z:
@@ -208,8 +208,9 @@ bool ClientGameSpeedestWin::startGameLoop() {
             }
         }
 
+        // @TODO
         counter++;
-        if (counter % 30 == 0) {
+        if (counter % 10 == 0) {
             counter = 0;
             MessageData msg;
             msg << MsgType::Action << static_cast<sf::Uint8> (keys.to_ulong());
