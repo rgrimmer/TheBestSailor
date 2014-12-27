@@ -186,35 +186,5 @@ bool ServerGameSpeedestWin::readAction(MessageData& msg, ServerPlayer& player) {
         m_ships[&player].getSail().turnPositive();
     }
 
-    std::cout << "Action " << keys.to_ulong() << std::endl;
     return true;
-}
-
-void ServerGameSpeedestWin::readTurnHelm(MessageData& msg) {
-    std::cout << "Turn Helm ";
-
-    MsgOrientation orientation;
-    float angle;
-    msg >> orientation >> angle;
-
-    if (orientation == MsgOrientation::Positive)
-        std::cout << "Positive(" << angle << ")" << std::endl;
-    else if (orientation == MsgOrientation::Negative)
-        std::cout << "Negative(" << angle << ")" << std::endl;
-    else
-        std::cout << "undefined(WARNING)" << std::endl;
-}
-
-void ServerGameSpeedestWin::readTurnSail(MessageData& msg) {
-    std::cout << "Turn Sail ";
-    sf::Int8 sfOrientation;
-    float angle;
-    msg >> sfOrientation >> angle;
-    MsgOrientation orientation = static_cast<MsgOrientation> (sfOrientation);
-    if (orientation == MsgOrientation::Positive)
-        std::cout << "Positive(" << angle << ")" << std::endl;
-    else if (orientation == MsgOrientation::Negative)
-        std::cout << "Negative(" << angle << ")" << std::endl;
-    else
-        std::cout << "undefined(WARNING)" << std::endl;
 }

@@ -29,8 +29,7 @@
 #include "client/ClientWorld.h"
 
 Client::Client()
-: m_window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor")
-, m_player(-1, "Unamed")
+: m_player(-1, "Unamed")
 , m_game(nullptr) {
 }
 
@@ -142,6 +141,7 @@ bool Client::readMsgGame(MessageData& message) {
     switch (gameType) {
         case GameType::SpeedestWin:
         {
+            m_window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
             m_game = new ClientGameSpeedestWin(*this, m_player, m_window);
             m_game->readInitGame(message);
         }
