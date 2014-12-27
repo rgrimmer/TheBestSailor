@@ -17,9 +17,11 @@ DetailsView::DetailsView(const ClientWorld &world)
 : m_world(world)
 , m_heigthMapView(world.getHeightMap())
 , m_windMapView(world.getWindMap())
-, m_shipView(world.getClientShip())
 , m_enableWind(true) {
 
+    for (auto& ship : world.getShips()) {
+        m_shipsView.push_back(ShipView(ship.second));
+    }
 }
 
 bool DetailsView::switchEnableWind() {
@@ -43,9 +45,9 @@ void DetailsView::draw(sf::RenderTarget& target, sf::RenderStates states) const 
     target.draw(m_heigthMapView, states);
     timeDrawHeightMap = clockDraw.restart();
 
-    // Draw Ship
-    target.draw(m_shipView, states);
-    clockDraw.restart();
+    // Draw Ships
+    for(auto& shipView : m_shipsView)
+        target.draw(shipView, states);
 
     // Draw Wind
     if (m_enableWind) {

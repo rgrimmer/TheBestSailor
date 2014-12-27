@@ -54,11 +54,12 @@ void ServerGameSpeedestWin::init() {
     sf::Vector2f position(1000.0f, 1000.0f);
     for (auto* player : m_players.inGame()) {
         Ship ship;
-        position.x += 32.0f;
         ship.kinematics().position() = position;
         ship.setAngle(90.0f);
         m_ships[player] = ship;
+        position.x += 32.0f;
     }
+    sendInfo();
 }
 
 void ServerGameSpeedestWin::update(float dt) {
@@ -123,7 +124,7 @@ void ServerGameSpeedestWin::sendInfo() {
     MessageData msgGameInfo;
     msgGameInfo << MsgType::GameInfo;
 
-    int id;
+    sf::Uint8 id;
     float shipAngle;
     float sailAngle;
     float positionX;
@@ -142,6 +143,7 @@ void ServerGameSpeedestWin::sendInfo() {
         speedX = speedShip.x;
         speedY = speedShip.y;
         msgGameInfo << id << shipAngle << sailAngle << positionX << positionY << speedX << speedY;
+        std::cout << "Send ship(" << static_cast<unsigned int> (id) << ") pos(" << positionX << "," << positionY << ") speed(" << speedX << "," << speedY << ")" << std::endl;
     }
 
     m_server.getNetwork()->getUDPManager().send(msgGameInfo, m_players.inGame());

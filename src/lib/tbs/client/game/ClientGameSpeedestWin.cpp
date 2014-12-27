@@ -26,9 +26,10 @@ MsgGame& operator>>(MsgGame &msg, ClientGameSpeedestWin& game) {
     return msg;
 }
 
-ClientGameSpeedestWin::ClientGameSpeedestWin(Client &client, sf::RenderWindow& window)
+ClientGameSpeedestWin::ClientGameSpeedestWin(Client& client, ClientPlayer& player, sf::RenderWindow& window)
 : m_world()
 , m_client(client)
+, m_player(player)
 , m_window(window)
 , m_enableFolowCamera(true)
 , m_enablePause(false)
@@ -62,16 +63,13 @@ void ClientGameSpeedestWin::release() {
 
 void ClientGameSpeedestWin::initGame() {
 
-    Ship *s = new Ship();
-    s->initialize({1000, 1000},
-    {
-        0, 0
-    });
+    Ship *s = &(m_world.getShips()[m_player.getId()]);
+    s->initialize({1000, 1000}, {0, 0});
     m_world.setClientShip(s); // @TODO remove, it's temporary
 
     m_globalView = new GlobalView(m_world.getHeightMap(), m_world.getWindMap(), m_world.getClientShip());
     m_detailsView = new DetailsView(m_world);
-    m_mainGraphic = dynamic_cast<sf::Drawable*> (m_globalView);
+    m_mainGraphic = dynamic_cast<sf::Drawable*> (m_detailsView);
     m_enableFolowCamera = true;
     //    m_posView = m_
     m_window.setKeyRepeatEnabled(true);
@@ -266,8 +264,38 @@ bool ClientGameSpeedestWin::startGameLoop() {
     return m_window.isOpen();
 }
 
+bool ClientGameSpeedestWin::readGameInfo(MessageData& msg) {
+    std::cout << "GameInfo" << std::endl;
+    while (msg) {
+        sf::Uint8 id;
+        float shipAngle;
+        float sailAngle;
+        float positionX;
+        float positionY;
+        float speedX;
+        float speedY;
+
+        msg >> id >> shipAngle >> sailAngle >> positionX >> positionY >> speedX >> speedY;
+
+        Ship &ship = m_world.getShips()[static_cast<unsigned int> (id)];
+        ship.setAngle(shipAngle);
+        ship.getSail().setAngle(shipAngle);
+        ship.kinematics().position() = {positionX, positionY};
+        ship.kinematics().speed() = {speedX, speedY};
+        std::cout << "Recv ship(" << static_cast<unsigned int> (id) << ") pos(" << positionX << "," << positionY << ") speed(" << speedX << "," << speedY << ")" << std::endl;
+    }
+    return true;
+}
+
 bool ClientGameSpeedestWin::read(MessageData& msg) {
-    return false;
+    MsgType msgType;
+    msg >> msgType;
+    switch (msgType) {
+        case MsgType::GameInfo:
+            return readGameInfo(msg);
+        default:
+            return false;
+    }
 }
 
 bool ClientGameSpeedestWin::readInitGame(MessageData& msg) {

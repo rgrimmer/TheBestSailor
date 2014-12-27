@@ -19,7 +19,7 @@
 #include "shared/ship/Ship.h"
 #include "client/VectorView.h"
 
-class ShipView : public sf::Drawable, public sf::Transformable {
+class ShipView : public sf::Drawable {
 public:
     ShipView(const Ship &ship);
     virtual ~ShipView();

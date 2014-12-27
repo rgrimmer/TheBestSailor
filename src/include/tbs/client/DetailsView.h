@@ -8,6 +8,7 @@
 #ifndef DETAILSVIEW_H
 #define	DETAILSVIEW_H
 
+#include <vector>
 #include <SFML/Graphics/Drawable.hpp>
 
 #include "shared/map/HeigthMap.h"
@@ -36,7 +37,7 @@ private:
     const ClientWorld& m_world;
     HeigthMapView m_heigthMapView;
     WindMapView m_windMapView;
-    ShipView m_shipView;
+    std::vector<ShipView> m_shipsView;
 
     // Enable
     bool m_enableWind;

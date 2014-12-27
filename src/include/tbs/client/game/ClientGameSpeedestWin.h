@@ -21,7 +21,7 @@ class Client;
 
 class ClientGameSpeedestWin : public ClientGame {
 public:
-    ClientGameSpeedestWin(Client &client, sf::RenderWindow& m_window);
+    ClientGameSpeedestWin(Client &client, ClientPlayer& player, sf::RenderWindow& m_window);
     virtual ~ClientGameSpeedestWin();
 
     virtual bool read(MessageData& msg);
@@ -36,11 +36,15 @@ private:
     void release();
 
 private:
+    bool readGameInfo(MessageData& msg);
+    
+private:
     // Model
     ClientWorld m_world;
 
     // Network
     Client& m_client;
+    ClientPlayer& m_player;
     //    ClientNetwork& m_network;
 
     // Graphic

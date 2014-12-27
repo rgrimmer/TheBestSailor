@@ -84,7 +84,7 @@ void GlobalView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.setView(m_infoView);
     target.draw(DisplayInfo("Information", 60, TypeAlign::Center, sf::Text::Underlined));
     target.draw(DisplayInfo("Position", 40, TypeAlign::Regular, sf::Text::Italic));
-    target.draw(DisplayInfo("x : " + std::to_string(m_shipView.getPosition().x) + "\ny : " + std::to_string(m_shipView.getPosition().y)));
+    target.draw(DisplayInfo("x : " + std::to_string(m_shipView.getShip().kinematics().position().x) + "\ny : " + std::to_string(m_shipView.getShip().kinematics().position().y)));
 
     // Reset normal view
     target.setView(curView);
