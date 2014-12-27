@@ -31,15 +31,20 @@ public:
     void setAngle(float angle);
     float getAngle(void) const;
     
-    void turnPositive(float angle = 5.0f);
-    void turnNegative(float angle = 5.0f);
+    void turnPositive(float angle);
+    void turnNegative(float angle);
+    bool isTurningPositive() const;
+    bool isTurningNegative() const;
+    void setTurningPositive(bool value);
+    void setTurningNegative(bool value);
 
     void initialize(const sf::Vector2f & position, const sf::Vector2f & speed);
     void update(float dt);
 
 
 private:
-
+    bool m_turnPositive;
+    bool m_turnNegative;
     Helm m_helm;
     Sail m_sail;
     Kinematics m_kinematics;

@@ -10,20 +10,15 @@
 
 #include "shared/ship/Sail.h"
 
-Sail::Sail() : m_line(sf::Vector2f(100.0f, 2.0f)), m_angle(0.0f), m_position() {
-    m_line.setOrigin(0.0f,1.0f);
-    m_line.setFillColor(sf::Color::White);
+Sail::Sail() 
+: m_angle(0.0f) {
 }
 
 Sail::~Sail() {
 }
 
-void Sail::update(float dt) 
-{
-    //m_line.setPosition(m_position);
-    //m_line.setRotation(m_angle);
+void Sail::update(float dt) {
 }
-
 
 void Sail::turnNegative(float angle) {
     setAngle(m_angle - angle);
@@ -33,18 +28,26 @@ void Sail::turnPositive(float angle) {
     setAngle(m_angle + angle);
 }
 
-/*virtual*/void Sail::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-    target.draw(m_line, states);
+bool Sail::isTurningPositive() const {
+    return m_turnPositive;
 }
 
-void Sail::setPosition(const sf::Vector2f & pos) {
-    m_position = pos;
+bool Sail::isTurningNegative() const {
+    return m_turnNegative;
+}
+
+void Sail::setTurningPositive(bool value) {
+    m_turnPositive = value;
+}
+
+void Sail::setTurningNegative(bool value) {
+    m_turnNegative = value;
 }
 
 void Sail::setAngle(float angle) {
-    while(angle < 0.0f)
+    while (angle < 0.0f)
         angle += 360.0f;
-    while(angle > 360.0f)
+    while (angle > 360.0f)
         angle -= 360.0f;
     m_angle = angle;
 }

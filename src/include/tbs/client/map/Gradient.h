@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SFML/Graphics/Color.hpp>
+
 #define NB_COLORS 9
 #define NB_STEPS 255
 

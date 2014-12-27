@@ -8,27 +8,30 @@
 #ifndef SAIL_H
 #define	SAIL_H
 
-#include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/System/Vector2.hpp>
 
-class Sail : public sf::Drawable {
+class Sail {
 public:
     Sail();
     virtual ~Sail();
 
     void update(float dt);
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
     void turnNegative(float angle = 5.0f);
     void turnPositive(float angle = 5.0f);
-    void setPosition(const sf::Vector2f & pos);
+    bool isTurningPositive() const;
+    bool isTurningNegative() const;
+    void setTurningPositive(bool value);
+    void setTurningNegative(bool value);
+    
     void setAngle(float angle);
     float getAngle(void) const;
 
 private:
-    sf::RectangleShape m_line;
+    bool m_turnPositive;
+    bool m_turnNegative;
+
     float m_angle;
-    sf::Vector2f m_position;
 };
 
 #endif	/* SAIL_H */

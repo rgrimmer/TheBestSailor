@@ -64,9 +64,27 @@ void ServerGameSpeedestWin::init() {
 
 void ServerGameSpeedestWin::update(float dt) {
     for (auto& test : m_ships) {
+        updateShipState(test.second, dt);
         updateSail(test.second);
         updateShipVelocity(test.second);
         test.second.update(dt);
+    }
+}
+
+void ServerGameSpeedestWin::updateShipState(Ship& ship, float dt) {
+    if (ship.isTurningNegative()) {
+        ship.turnNegative(45.0f * dt);
+        ship.getSail().turnNegative(45.0f * dt);
+    }
+    if (ship.isTurningPositive()) {
+        ship.turnPositive(45.0f * dt);
+        ship.getSail().turnPositive(45.0f * dt);
+    }
+    if (ship.getSail().isTurningNegative()) {
+        ship.getSail().turnNegative(45.0f * dt);
+    }
+    if (ship.getSail().isTurningPositive()) {
+        ship.getSail().turnPositive(45.0f * dt);
     }
 }
 
@@ -156,7 +174,7 @@ sf::Packet ServerGameSpeedestWin::toPacket(sf::Packet &packet) const {
 bool ServerGameSpeedestWin::read(MessageData& message, ServerPlayer& player) {
     MsgType msgType;
     message >> msgType;
-    
+
     switch (msgType) {
         case MsgType::Action:
             return readAction(message, player);
@@ -171,20 +189,10 @@ bool ServerGameSpeedestWin::readAction(MessageData& msg, ServerPlayer& player) {
     msg >> keysUI8;
     std::bitset<4> keys = keysUI8;
 
-    if (keys.test(TURN_HELM_NEGATIVE)) {
-        m_ships[&player].turnNegative();
-    }
-    if (keys.test(TURN_HELM_POSITIVE)) {
-        m_ships[&player].turnPositive();
-
-    }
-    if (keys.test(TURN_SAIL_NEGATIVE)) {
-
-        m_ships[&player].getSail().turnNegative();
-    }
-    if (keys.test(TURN_SAIL_POSITIVE)) {
-        m_ships[&player].getSail().turnPositive();
-    }
+    m_ships[&player].setTurningNegative(keys.test(TURN_HELM_NEGATIVE));
+    m_ships[&player].setTurningPositive(keys.test(TURN_HELM_POSITIVE));
+    m_ships[&player].getSail().setTurningNegative(keys.test(TURN_SAIL_NEGATIVE));
+    m_ships[&player].getSail().setTurningPositive(keys.test(TURN_SAIL_POSITIVE));
 
     return true;
 }

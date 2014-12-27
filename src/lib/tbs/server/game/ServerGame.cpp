@@ -30,7 +30,7 @@ void ServerGame::start() {
     
     // @TODO This is a test. Make update only when info send or after read message
     sf::Clock sendInfoClock;
-    sf::Time minimunSendLimit = sf::seconds(1.0f / 30.0f);
+    sf::Time minimunSendLimit = sf::seconds(1.0f / 10.0f);
     while (!gameIsEnded()) {
         sendInfoClock.restart();
         doUpdate();

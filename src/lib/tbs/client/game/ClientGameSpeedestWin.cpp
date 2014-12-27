@@ -64,7 +64,10 @@ void ClientGameSpeedestWin::release() {
 void ClientGameSpeedestWin::initGame() {
 
     Ship *s = &(m_world.getShips()[m_player.getId()]);
-    s->initialize({1000, 1000}, {0, 0});
+    s->initialize({1000, 1000},
+    {
+        0, 0
+    });
     m_world.setClientShip(s); // @TODO remove, it's temporary
 
     m_globalView = new GlobalView(m_world.getHeightMap(), m_world.getWindMap(), m_world.getClientShip());
@@ -72,7 +75,7 @@ void ClientGameSpeedestWin::initGame() {
     m_mainGraphic = dynamic_cast<sf::Drawable*> (m_detailsView);
     m_enableFolowCamera = true;
     //    m_posView = m_
-    m_window.setKeyRepeatEnabled(true);
+    m_window.setKeyRepeatEnabled(false);
 }
 
 bool ClientGameSpeedestWin::startGameLoop() {
@@ -85,6 +88,7 @@ bool ClientGameSpeedestWin::startGameLoop() {
     int countFrames = 0;
     int fps = 0;
     std::bitset<4> keys;
+    bool stateChange(false);
 
     // Display info
     while (m_window.isOpen()) {
@@ -128,6 +132,7 @@ bool ClientGameSpeedestWin::startGameLoop() {
                     case sf::Keyboard::D:
                     {
                         keys.set(TURN_HELM_POSITIVE, true);
+                        stateChange = true;
                         /*MsgTurnHelm msgTurnHelmP(MsgOrientation::Positive);
                         m_client.getNetwork().getUdpManager().send(msgTurnHelmP);
                         m_world.getShip().setAngle(m_world.getShip().getAngle() + 5.0f);*/
@@ -138,6 +143,7 @@ bool ClientGameSpeedestWin::startGameLoop() {
                     case sf::Keyboard::Q:
                     {
                         keys.set(TURN_HELM_NEGATIVE, true);
+                        stateChange = true;
                         /*MsgTurnHelm msgTurnHelmN(MsgOrientation::Negative);
                         m_client.getNetwork().getUdpManager().send(msgTurnHelmN);
                         m_world.getShip().setAngle(m_world.getShip().getAngle() - 5.0f);*/
@@ -149,6 +155,7 @@ bool ClientGameSpeedestWin::startGameLoop() {
                     case sf::Keyboard::Z:
                     {
                         keys.set(TURN_SAIL_POSITIVE, true);
+                        stateChange = true;
                         /* MsgTurnSail msgTurnSailP(MsgOrientation::Positive);
                          m_client.getNetwork().getUdpManager().send(msgTurnSailP);
                          m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() + 5.0f);*/
@@ -158,6 +165,7 @@ bool ClientGameSpeedestWin::startGameLoop() {
                     case sf::Keyboard::S:
                     {
                         keys.set(TURN_SAIL_NEGATIVE, true);
+                        stateChange = true;
                         /* MsgTurnSail msgTurnSailN(MsgOrientation::Negative);
                          m_client.getNetwork().getUdpManager().send(msgTurnSailN);
                          m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() - 5.0f);*/
@@ -192,15 +200,19 @@ bool ClientGameSpeedestWin::startGameLoop() {
                 switch (event.key.code) {
                     case sf::Keyboard::D:
                         keys.set(TURN_HELM_POSITIVE, false);
+                        stateChange = true;
                         break;
                     case sf::Keyboard::Q:
                         keys.set(TURN_HELM_NEGATIVE, false);
+                        stateChange = true;
                         break;
                     case sf::Keyboard::Z:
                         keys.set(TURN_SAIL_POSITIVE, false);
+                        stateChange = true;
                         break;
                     case sf::Keyboard::S:
                         keys.set(TURN_SAIL_NEGATIVE, false);
+                        stateChange = true;
                         break;
                     default:
                         break;
@@ -210,8 +222,9 @@ bool ClientGameSpeedestWin::startGameLoop() {
 
         // @TODO
         counter++;
-        if (counter % 10 == 0) {
+        if (counter % 10 == 0 || stateChange) {
             counter = 0;
+            stateChange = false;
             MessageData msg;
             msg << MsgType::Action << static_cast<sf::Uint8> (keys.to_ulong());
             m_client.getNetwork().getUdpManager().send(msg);

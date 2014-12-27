@@ -112,6 +112,7 @@ void Server::pollMessages() {
     while (!m_network.getMessageQueue().empty()) {
         auto pair = m_network.getMessageQueue().pop();
         read(pair.second, *(pair.first));
+        delete pair.second;
     }
     //    std::cout << "[Serv][PollM][End] \t Poll messages ended" << std::endl;
 }

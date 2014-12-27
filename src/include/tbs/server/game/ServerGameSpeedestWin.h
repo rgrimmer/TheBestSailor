@@ -38,8 +38,10 @@ protected:
     virtual bool gameIsEnded();
 
 private:
+    void updateShipState(Ship& ship, float dt);
     void updateSail(Ship& ship);
     void updateShipVelocity(Ship& ship);
+    
     bool readAction(MessageData& msg, ServerPlayer& player);
 
     bool windComeFromTribord(const Ship& ship, const Wind &wind) const;

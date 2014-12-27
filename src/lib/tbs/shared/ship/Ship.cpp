@@ -14,7 +14,9 @@
 #include "shared/ship/Ship.h"
 #include "shared/Font.h"
 
-Ship::Ship() {
+Ship::Ship()
+: m_turnPositive(false)
+, m_turnNegative(false) {
     m_angle = 45.0f;
 }
 
@@ -37,6 +39,22 @@ void Ship::turnNegative(float angle) {
 
 void Ship::turnPositive(float angle) {
     setAngle(m_angle + angle);
+}
+
+bool Ship::isTurningPositive() const {
+    return m_turnPositive;
+}
+
+bool Ship::isTurningNegative() const {
+    return m_turnNegative;
+}
+
+void Ship::setTurningPositive(bool value) {
+    m_turnPositive = value;
+}
+
+void Ship::setTurningNegative(bool value) {
+    m_turnNegative = value;
 }
 
 void Ship::setAngle(float angle) {

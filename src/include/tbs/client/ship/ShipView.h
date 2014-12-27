@@ -16,8 +16,9 @@
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
-#include "shared/ship/Ship.h"
-#include "client/VectorView.h"
+
+class Ship;
+class VectorView;
 
 class ShipView : public sf::Drawable {
 public:
@@ -33,10 +34,11 @@ private:
     const Ship& m_ship;
 
     // Graphic
-    sf::RectangleShape m_shipShape;
     VectorView* m_speedView;
     VectorView* m_accView;
+    
     sf::VertexArray m_shipVertex;
+    sf::RectangleShape m_sailShape;
 
 
 };
