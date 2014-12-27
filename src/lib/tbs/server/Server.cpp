@@ -118,6 +118,8 @@ void Server::pollMessages() {
 
 bool Server::read(MessageData* message, ServerPlayer &player) {
     MsgType msgType;
+    MessageData messageCopy = *message;
+    
     *message >> msgType;
     std::cout << "[Serv][Read][Start] \t Read message(" << static_cast<int> (msgType) << ") from " << player.getName() << std::endl;
     switch (msgType) {
@@ -154,11 +156,13 @@ bool Server::read(MessageData* message, ServerPlayer &player) {
         }
             break;
         default:
-            std::cout << "[Serv][Read][Err] \t Server can't read this message" << std::endl;
+        {
+            //std::cout << "[Serv][Read][Err] \t Server can't read this message" << std::endl;
             if (m_game == nullptr)
                 return false;
 
-            return m_game->read(*message, player);
+            return m_game->read(messageCopy, player);
+        }
     }
     return true;
     // @TODO delete messages

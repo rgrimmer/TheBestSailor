@@ -156,6 +156,7 @@ sf::Packet ServerGameSpeedestWin::toPacket(sf::Packet &packet) const {
 bool ServerGameSpeedestWin::read(MessageData& message, ServerPlayer& player) {
     MsgType msgType;
     message >> msgType;
+    
     switch (msgType) {
         case MsgType::Action:
             return readAction(message, player);
