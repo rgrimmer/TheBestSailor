@@ -60,23 +60,15 @@ void ClientGameSpeedestWin::release() {
     delete m_detailsView;
 }
 
-bool ClientGameSpeedestWin::readInitGame(MessageData& msg) {
-            sf::Int32 width, height, seedHeight, seedWind;
-            msg >> width >> height >> seedHeight >> seedWind;
-            ClientWorld world;
-            std::cout << "RECEIVE map(" << width << ", " << height << ", " << seedHeight << ", " << seedWind << ")" << std::endl;
-            world.initializeMap(width, height, seedHeight, seedWind);
-            world.initialize();
-            setClientWorld(world);
-            return true;
-}
-
 void ClientGameSpeedestWin::initGame() {
 
     Ship *s = new Ship();
-    s->initialize({1000,1000},{0,0});
+    s->initialize({1000, 1000},
+    {
+        0, 0
+    });
     m_world.setClientShip(s); // @TODO remove, it's temporary
-    
+
     m_globalView = new GlobalView(m_world.getHeightMap(), m_world.getWindMap(), m_world.getClientShip());
     m_detailsView = new DetailsView(m_world);
     m_mainGraphic = dynamic_cast<sf::Drawable*> (m_globalView);
@@ -159,18 +151,18 @@ bool ClientGameSpeedestWin::startGameLoop() {
                     case sf::Keyboard::Z:
                     {
                         keys.set(TURN_SAIL_POSITIVE, true);
-                       /* MsgTurnSail msgTurnSailP(MsgOrientation::Positive);
-                        m_client.getNetwork().getUdpManager().send(msgTurnSailP);
-                        m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() + 5.0f);*/
+                        /* MsgTurnSail msgTurnSailP(MsgOrientation::Positive);
+                         m_client.getNetwork().getUdpManager().send(msgTurnSailP);
+                         m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() + 5.0f);*/
                     }
                         break;
 
                     case sf::Keyboard::S:
                     {
                         keys.set(TURN_SAIL_NEGATIVE, true);
-                       /* MsgTurnSail msgTurnSailN(MsgOrientation::Negative);
-                        m_client.getNetwork().getUdpManager().send(msgTurnSailN);
-                        m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() - 5.0f);*/
+                        /* MsgTurnSail msgTurnSailN(MsgOrientation::Negative);
+                         m_client.getNetwork().getUdpManager().send(msgTurnSailN);
+                         m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() - 5.0f);*/
                     }
                         break;
 
@@ -222,10 +214,10 @@ bool ClientGameSpeedestWin::startGameLoop() {
         if (counter % 30 == 0) {
             counter = 0;
             MessageData msg;
-            msg << MsgType::Action << static_cast<sf::Uint8>(keys.to_ulong());
+            msg << MsgType::Action << static_cast<sf::Uint8> (keys.to_ulong());
             m_client.getNetwork().getUdpManager().send(msg);
         }
-        
+
         m_client.pollMessages();
 
         // Set view position
@@ -260,40 +252,6 @@ bool ClientGameSpeedestWin::startGameLoop() {
         // Draw view
         m_window.draw(*m_mainGraphic);
 
-        // Draw vent apparent
-        /*VectorView<float> ventAppView(apparentWind, "Va", sf::Color::Green);
-        sf::Transform tApp;
-        tApp.translate(m_ship.kinematics().position());
-        m_window.draw(ventAppView, tApp);
-         */
-
-        // Display information : 
-        //        DisplayInfo::setZoom(zoomValue);
-        //        DisplayInfo::setTopLeftPosition(posView - sf::Vector2f(SCREEN_WIDTH / 2 * zoomValue, SCREEN_HEIGHT / 2 * zoomValue));
-        //
-        //        // Clocks infos
-        //        DisplayInfo::draw(std::to_string(clockGlobal.getElapsedTime().asSeconds()));
-        //        DisplayInfo::draw("fps : " + std::to_string(fps));
-        //
-        //        // Data infos
-        //        DisplayInfo::draw("ship :");
-        //        DisplayInfo::draw("ship :" + std::to_string(shipDir));
-        //        DisplayInfo::draw("acc : " + std::to_string(m_ship.kinematics().acceleration().x) + " " + std::to_string(m_ship.kinematics().acceleration().y));
-        //        DisplayInfo::draw("speed : " + std::to_string(m_ship.kinematics().speed().x) + " " + std::to_string(m_ship.kinematics().speed().y));
-        //        DisplayInfo::draw("pos : " + std::to_string(m_ship.kinematics().position().x) + " " + std::to_string(m_ship.kinematics().position().y));
-        //        //        DisplayInfo::draw("dir : " + std::to_string(dir.x) + " " + std::to_string(dir.y) + ". norme : " + std::to_string(Kinematics::norme(m_ship.kinematics().speed())));
-        //
-        //        //DisplayInfo::draw("wind : " + m_windView.force(m_ship.getPosition()).toString());
-        //
-        //        // Draw infos
-        //        DisplayInfo::draw("Wind Direction/Force: " + std::to_string(wind.direction()) + " " + std::to_string(wind.force()));
-        //        DisplayInfo::draw("WindVector: " + std::to_string(windVector.x) + " " + std::to_string(windVector.y));
-        //        DisplayInfo::draw("VentApparent : " + std::to_string(apparentWind.x) + " " + std::to_string(apparentWind.y));
-        //        DisplayInfo::draw("sailVector : " + std::to_string(sailVector.x) + " " + std::to_string(sailVector.y));
-        //        DisplayInfo::draw("helmVector : " + std::to_string(helmVector.x) + " " + std::to_string(helmVector.y));
-        //        DisplayInfo::draw("ForceDePousser : " + std::to_string(forceDePousser.x) + " " + std::to_string(forceDePousser.y));
-
-
         if (clockFPS.getElapsedTime().asSeconds() >= 1) {
             fps = countFrames;
             countFrames = 0;
@@ -306,4 +264,19 @@ bool ClientGameSpeedestWin::startGameLoop() {
     }
 
     return m_window.isOpen();
+}
+
+bool ClientGameSpeedestWin::read(MessageData& msg) {
+    return false;
+}
+
+bool ClientGameSpeedestWin::readInitGame(MessageData& msg) {
+    sf::Int32 width, height, seedHeight, seedWind;
+    msg >> width >> height >> seedHeight >> seedWind;
+    ClientWorld world;
+    std::cout << "RECEIVE map(" << width << ", " << height << ", " << seedHeight << ", " << seedWind << ")" << std::endl;
+    world.initializeMap(width, height, seedHeight, seedWind);
+    world.initialize();
+    setClientWorld(world);
+    return true;
 }

@@ -5,7 +5,9 @@
  * Created on 26 décembre 2014, 13:51
  */
 
-#ifndef MSG_ACTION_H
+#ifndef MSGACTION_H
+#define	MSGACTION_H
+
 #include <bitset>
 #include "shared/network/MessageData.h"
 #include "shared/network/MsgType.h"

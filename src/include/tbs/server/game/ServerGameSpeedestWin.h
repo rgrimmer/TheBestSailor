@@ -40,9 +40,10 @@ protected:
 private:
     void updateSail(Ship& ship);
     void updateShipVelocity(Ship& ship);
+    bool readAction(MessageData& msg, ServerPlayer& player);
     void readTurnHelm(MessageData& msg);
     void readTurnSail(MessageData& msg);
-    
+
     bool windComeFromTribord(const Ship& ship, const Wind &wind) const;
     bool windComeFromFront(const Ship& ship, const Wind &wind) const;
 

@@ -26,7 +26,7 @@ public:
     void start();
 
     void doUpdate();
-    
+
     virtual bool read(MessageData& message, ServerPlayer& player) = 0;
     virtual sf::Packet toPacket(sf::Packet& packet) const = 0;
 
@@ -35,16 +35,16 @@ protected:
     virtual void init() = 0;
     virtual void update(float dt) = 0;
     virtual void sendInfo() = 0;
-    virtual bool gameIsEnded() =0;
-    
-private :
+    virtual bool gameIsEnded() = 0;
+
+private:
     void startReaderThread();
     void readerLoop();
 
 protected:
     Server &m_server;
     ServerPlayers& m_players;
-    
+
 private:
     std::thread *m_readerThread;
     sf::Clock m_updateClock;

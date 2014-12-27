@@ -15,18 +15,16 @@ class Sail : public sf::Drawable {
 public:
     Sail();
     virtual ~Sail();
-    
+
     void update(float dt);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-    float getAngleWith(const sf::Vector2f &direction) { return 10; }
-private:
 
-public:
-
+    void turnNegative(float angle = 5.0f);
+    void turnPositive(float angle = 5.0f);
     void setPosition(const sf::Vector2f & pos);
     void setAngle(float angle);
     float getAngle(void) const;
-    
+
 private:
     sf::RectangleShape m_line;
     float m_angle;

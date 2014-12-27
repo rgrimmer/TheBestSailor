@@ -147,30 +147,6 @@ bool Server::read(MessageData* message, ServerPlayer &player) {
             m_acknowledgment.release();
         }
             break;
-
-        case MsgType::Action:
-        {
-            sf::Uint8 keysUI8;
-            *message >> keysUI8;
-            std::bitset<4> keys = keysUI8;
-
-            if (keys.test(TURN_HELM_NEGATIVE)) {
-
-            }
-            if (keys.test(TURN_HELM_POSITIVE)) {
-
-            }
-            if (keys.test(TURN_SAIL_NEGATIVE)) {
-
-            }
-            if (keys.test(TURN_SAIL_POSITIVE)) {
-
-            }
-
-            std::cout << "Action " << keys.to_ulong() << std::endl;
-        }
-            break;
-
         case MsgType::Undef:
         {
             std::cout << "Undefined" << std::endl;

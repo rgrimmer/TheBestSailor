@@ -24,6 +24,15 @@ void Sail::update(float dt)
     //m_line.setRotation(m_angle);
 }
 
+
+void Sail::turnNegative(float angle) {
+    setAngle(m_angle - angle);
+}
+
+void Sail::turnPositive(float angle) {
+    setAngle(m_angle + angle);
+}
+
 /*virtual*/void Sail::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(m_line, states);
 }

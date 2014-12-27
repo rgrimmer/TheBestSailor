@@ -10,6 +10,7 @@
 #include "shared/network/MsgTurnHelm.h"
 #include "shared/network/MsgTurnSail.h"
 #include "shared/network/MsgDisconnect.h"
+#include "shared/network/MsgAction.h"
 #include "shared/network/MessageData.h"
 #include "shared/ship/Ship.h"
 
@@ -151,20 +152,39 @@ sf::Packet ServerGameSpeedestWin::toPacket(sf::Packet &packet) const {
 }
 
 bool ServerGameSpeedestWin::read(MessageData& message, ServerPlayer& player) {
-    /*MsgType msgType;
+    MsgType msgType;
     message >> msgType;
     switch (msgType) {
-        case MsgType::ActionTurnHelm:
-            readTurnHelm(message);
-            break;
-        case MsgType::ActionTurnSail:
-            readTurnSail(message);
-            break;
+        case MsgType::Action:
+            return readAction(message, player);
         default:
             return false;
-    }*/
-    return true;
+    }
     // @TODO delete message, use unique_ptr ?
+}
+
+bool ServerGameSpeedestWin::readAction(MessageData& msg, ServerPlayer& player) {
+    sf::Uint8 keysUI8;
+    msg >> keysUI8;
+    std::bitset<4> keys = keysUI8;
+
+    if (keys.test(TURN_HELM_NEGATIVE)) {
+        m_ships[&player].turnNegative();
+    }
+    if (keys.test(TURN_HELM_POSITIVE)) {
+        m_ships[&player].turnPositive();
+
+    }
+    if (keys.test(TURN_SAIL_NEGATIVE)) {
+
+        m_ships[&player].getSail().turnNegative();
+    }
+    if (keys.test(TURN_SAIL_POSITIVE)) {
+        m_ships[&player].getSail().turnPositive();
+    }
+
+    std::cout << "Action " << keys.to_ulong() << std::endl;
+    return true;
 }
 
 void ServerGameSpeedestWin::readTurnHelm(MessageData& msg) {

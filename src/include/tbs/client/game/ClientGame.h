@@ -16,8 +16,9 @@ public:
     virtual ~ClientGame();
 
     bool start();
+    virtual bool read(MessageData& msg) = 0;
     virtual bool readInitGame(MessageData& msg) = 0;
-
+    
 protected:
     virtual void initGame() = 0;
     virtual bool startGameLoop() = 0;

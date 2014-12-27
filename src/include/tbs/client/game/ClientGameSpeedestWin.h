@@ -24,6 +24,7 @@ public:
     ClientGameSpeedestWin(Client &client, sf::RenderWindow& m_window);
     virtual ~ClientGameSpeedestWin();
 
+    virtual bool read(MessageData& msg);
     virtual bool readInitGame(MessageData& msg);
 
     void setClientWorld(const ClientWorld &world);

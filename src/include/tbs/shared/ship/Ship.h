@@ -27,11 +27,16 @@ public:
     Helm& getHelm();
     Sail& getSail();
     const Sail& getSail() const;
-    void initialize(const sf::Vector2f & position, const sf::Vector2f & speed);
-    void update(float dt);
 
     void setAngle(float angle);
     float getAngle(void) const;
+    
+    void turnPositive(float angle = 5.0f);
+    void turnNegative(float angle = 5.0f);
+
+    void initialize(const sf::Vector2f & position, const sf::Vector2f & speed);
+    void update(float dt);
+
 
 private:
 

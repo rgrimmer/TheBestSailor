@@ -48,7 +48,7 @@ void ServerGame::readerLoop() {
     // Wile game is not ended, we read messages. And check ended each 5s
     while (!gameIsEnded()) {
         // If we read somthing, we update world
-        if (m_server.readMessagesWait(sf::microseconds(5000))) {
+        if (m_server.readMessagesWait(sf::milliseconds(5000))) {
             doUpdate();
         }
     }

@@ -31,6 +31,14 @@ void Ship::update(float dt) {
     m_helm.update(dt);
 }
 
+void Ship::turnNegative(float angle) {
+    setAngle(m_angle - angle);
+}
+
+void Ship::turnPositive(float angle) {
+    setAngle(m_angle + angle);
+}
+
 void Ship::setAngle(float angle) {
     while (angle < 0)
         angle += 360.0f;
