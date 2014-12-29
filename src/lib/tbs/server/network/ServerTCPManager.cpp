@@ -12,6 +12,7 @@
 #include "server/ServerPlayer.h"
 #include "server/ServerPlayers.h"
 #include "server/network/ServerMessageQueue.h"
+#include "shared/network/MsgDisconnect.h"
 
 ServerTCPManager::ServerTCPManager(ServerPlayers& players, ServerMessageQueue& msgQueue)
 : m_threadReceiver(nullptr)
@@ -55,7 +56,7 @@ void ServerTCPManager::receiver() {
         for (auto* player : m_players.getList()) {
 
             if (m_selector.isReady(player->getTCPSocket())) {
-                std::cout << "[TCP][Thread] \t " << player << " " << player->getName() << "@" << player->getAddress() << ":"<< player->getTCPSocket().getRemotePort()<< " is ready" << std::endl;
+                std::cout << "[TCP][Thread] \t " << player << " " << player->getName() << "@" << player->getAddress() << ":" << player->getTCPSocket().getRemotePort() << " is ready" << std::endl;
                 receiveCommunication(*player);
             }
         }
@@ -107,12 +108,15 @@ void ServerTCPManager::receiveCommunication(ServerPlayer &player) {
 
     } else if (s == sf::TcpSocket::Disconnected) {
         std::cout << "Player Disconnected" << std::endl;
-        m_players.remove(player);
-        exit(-1);
-        // @TODO Remove player
+        m_selector.remove(player.getTCPSocket());
+        *message << MsgType::Disconnect;
+        m_msgQueue.push(std::pair<ServerPlayer*, MessageData*>(&player, message));
+
     } else if (s == sf::TcpSocket::Error) {
         std::cout << "Error Recv" << std::endl;
+        delete message;
     } else {
         std::cout << "Error Invalide status : " << s << std::endl;
+        delete message;
     }
 }

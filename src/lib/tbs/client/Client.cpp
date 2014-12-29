@@ -40,6 +40,10 @@ const ClientNetwork& Client::getNetwork() const {
     return m_network;
 }
 
+ClientNetwork& Client::getNetwork() {
+    return m_network;
+}
+
 void Client::start(const std::string & name) {
     m_player.setName(name);
     initConnectionWithServer();

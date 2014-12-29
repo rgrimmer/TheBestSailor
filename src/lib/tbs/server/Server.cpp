@@ -111,17 +111,21 @@ void Server::pollMessages() {
     //    std::cout << "[Serv][PollM][Start] \t Poll messages started" << std::endl;
     while (!m_network.getMessageQueue().empty()) {
         auto pair = m_network.getMessageQueue().pop();
-        read(pair.second, *(pair.first));
+        read(*(pair.second), *(pair.first));
         delete pair.second;
     }
     //    std::cout << "[Serv][PollM][End] \t Poll messages ended" << std::endl;
 }
 
-bool Server::read(MessageData* message, ServerPlayer &player) {
+bool Server::read(MessageData& message, ServerPlayer &player) {
     MsgType msgType;
-    MessageData messageCopy = *message;
+    MessageData messageCopy(message);
     
-    *message >> msgType;
+    bool isRead(false);
+    if (m_game)
+        isRead = m_game->read(messageCopy, player);
+    
+    message >> msgType;
     std::cout << "[Serv][Read][Start] \t Read message(" << static_cast<int> (msgType) << ") from " << player.getName() << std::endl;
     switch (msgType) {
         case MsgType::ClientPlayerInfo:
@@ -131,7 +135,7 @@ bool Server::read(MessageData* message, ServerPlayer &player) {
             //            auto msgCPI = static_cast<MsgClientPlayerInfo> (*message);
             sf::Uint16 sfPort;
             std::string name;
-            *message >> sfPort >> name;
+            message >> sfPort >> name;
             //            std::cout << "[Serv][Read] \t cast done : " << msgCPI << std::endl;
             player.setUdpPort(sfPort);
             player.setName(name);
@@ -142,31 +146,44 @@ bool Server::read(MessageData* message, ServerPlayer &player) {
             msgServer << MsgType::ServerPlayerInfo << sf::Uint16(SERVER_PORT_UDP) << sf::Int16(player.getId());
             std::cout << "[Serv][Read] \t Send info serv. ServUdpPort(), playerId(" << sf::Int16(player.getId()) << ")" << std::endl;
             m_network.getTCPManager().send(msgServer, player.getTCPSocket());
+            isRead = true;
         }
             break;
         case MsgType::Acknowledgment:
         {
             std::cout << "Ack" << std::endl;
             m_acknowledgment.release();
+            isRead = true;
+        }
+            break;
+        case MsgType::Disconnect:
+        {
+            isRead |= readDisconnect(message, player);
         }
             break;
         case MsgType::Undef:
         {
             std::cout << "Undefined" << std::endl;
-            return false;
         }
             break;
         default:
         {
-            //std::cout << "[Serv][Read][Err] \t Server can't read this message" << std::endl;
-            if (m_game == nullptr)
-                return false;
-
-            return m_game->read(messageCopy, player);
         }
     }
-    return true;
+    return isRead;
     // @TODO delete messages
+}
+
+bool Server::readDisconnect(MessageData& msg, ServerPlayer& player) {
+    std::cout << "Disconnect" << std::endl;
+    auto idPlayer = static_cast<sf::Uint8> (player.getId());
+
+    m_players.remove(player);
+
+    MessageData msgDisconnect;
+    msgDisconnect << MsgType::Disconnect << idPlayer;
+    m_network.getTCPManager().send(msgDisconnect, m_players.getList());
+    return true;
 }
 
 void Server::waitAcknowledgment(int permits) {

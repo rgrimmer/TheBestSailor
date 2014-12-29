@@ -29,8 +29,8 @@ public:
 
     void update(float dt);
 
-    std::map<int, Ship>& getShips();
-    const std::map<int, Ship>& getShips() const;
+    std::map<unsigned int, Ship>& getShips();
+    const std::map<unsigned int, Ship>& getShips() const;
     void setClientShip(Ship* ship);
     
     Ship& getClientShip();
@@ -51,7 +51,7 @@ public:
 private:
     Map m_mapmap;
     Ship* m_ship;
-    std::map<int, Ship> m_ships;
+    std::map<unsigned int, Ship> m_ships;
 };
 
 sf::Packet& operator>>(sf::Packet& packet, ClientWorld& world);

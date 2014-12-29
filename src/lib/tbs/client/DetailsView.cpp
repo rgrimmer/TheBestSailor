@@ -36,6 +36,13 @@ bool DetailsView::switchSquared() {
 DetailsView::~DetailsView() {
 }
 
+void DetailsView::updateShips(void) {
+    m_shipsView.clear();
+    for (auto& ship : m_world.getShips()) {
+        m_shipsView.push_back(ShipView(ship.second));
+    }
+}
+
 void DetailsView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
     sf::Clock clockDraw;

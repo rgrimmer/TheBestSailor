@@ -103,8 +103,7 @@ bool ClientGameSpeedestWin::startGameLoop() {
 
             if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 // Send disconnection message
-                MsgDisconnect msgDiconnect;
-                m_client.getNetwork().getUdpManager().send(msgDiconnect);
+                m_client.getNetwork().getTcpManager().disconnect();
                 m_window.close();
             }
             if (event.type == sf::Event::KeyPressed) {
@@ -278,9 +277,33 @@ bool ClientGameSpeedestWin::startGameLoop() {
     return m_window.isOpen();
 }
 
+bool ClientGameSpeedestWin::read(MessageData& msg) {
+    MsgType msgType;
+    msg >> msgType;
+    switch (msgType) {
+        case MsgType::GameInfo:
+            return readGameInfo(msg);
+        case MsgType::Disconnect:
+            return readDisconnect(msg);
+        default:
+            return false;
+    }
+}
+
+bool ClientGameSpeedestWin::readInitGame(MessageData& msg) {
+    sf::Int32 width, height, seedHeight, seedWind;
+    msg >> width >> height >> seedHeight >> seedWind;
+    ClientWorld world;
+    std::cout << "RECEIVE map(" << width << ", " << height << ", " << seedHeight << ", " << seedWind << ")" << std::endl;
+    world.initializeMap(width, height, seedHeight, seedWind);
+    world.initialize();
+    setClientWorld(world);
+    return true;
+}
+
 bool ClientGameSpeedestWin::readGameInfo(MessageData& msg) {
     std::cout << "GameInfo" << std::endl;
-    while (msg) {
+    while (!msg.endOfPacket()) {
         sf::Uint8 id;
         float shipAngle;
         float sailAngle;
@@ -301,24 +324,12 @@ bool ClientGameSpeedestWin::readGameInfo(MessageData& msg) {
     return true;
 }
 
-bool ClientGameSpeedestWin::read(MessageData& msg) {
-    MsgType msgType;
-    msg >> msgType;
-    switch (msgType) {
-        case MsgType::GameInfo:
-            return readGameInfo(msg);
-        default:
-            return false;
-    }
-}
-
-bool ClientGameSpeedestWin::readInitGame(MessageData& msg) {
-    sf::Int32 width, height, seedHeight, seedWind;
-    msg >> width >> height >> seedHeight >> seedWind;
-    ClientWorld world;
-    std::cout << "RECEIVE map(" << width << ", " << height << ", " << seedHeight << ", " << seedWind << ")" << std::endl;
-    world.initializeMap(width, height, seedHeight, seedWind);
-    world.initialize();
-    setClientWorld(world);
+bool ClientGameSpeedestWin::readDisconnect(MessageData& msg) {
+    sf::Uint8 id;
+    msg >> id;
+    std::cout << m_world.getShips().erase(static_cast<unsigned int>(id)) << std::endl;
+    m_detailsView->updateShips();
+    std::cout << "Ship of player "<< static_cast<unsigned int>(id) << " remove and view update" << std::endl;
     return true;
 }
+

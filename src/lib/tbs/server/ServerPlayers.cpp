@@ -31,7 +31,7 @@ ServerPlayer& ServerPlayers::addNewPlayer() {
     std::cout << "player list : " << std::endl;
     for (const auto& p : m_players)
         std::cout << p << " " << p->getName() << std::endl;
-    
+
     ServerPlayer *m_player = m_players[m_players.size() - 1];
     m_player->setId(ServerPlayers::s_nextId++);
     m_inWaitPlayers.push_back(m_player);
@@ -40,7 +40,7 @@ ServerPlayer& ServerPlayers::addNewPlayer() {
 }
 
 ServerPlayer* ServerPlayers::getPlayer(sf::IpAddress senderAddress, unsigned short senderPort) {
-//    std::cout << "search ("<< senderAddress.toString() << ":" << senderPort << ")"<< std::endl;
+    //    std::cout << "search ("<< senderAddress.toString() << ":" << senderPort << ")"<< std::endl;
     for (ServerPlayer* player : m_players) {
         if (player->getAddress() == senderAddress && player->getUdpPort() == senderPort)
             return player;
@@ -53,11 +53,18 @@ std::vector<ServerPlayer*>& ServerPlayers::getList() {
 }
 
 void ServerPlayers::remove(ServerPlayer& playerToRemove) {
-    //    for(auto playerInList : m_inGamePlayers) {
-    //        if(&playerToRemove == playerInList) {
-    //            m_inGamePlayers.
-    //        }
-    //    } @TODO
+    auto itInGame = std::find(m_inGamePlayers.begin(), m_inGamePlayers.end(), &playerToRemove);
+    if (itInGame != m_inGamePlayers.end()) {
+        std::cout << "Find in game " << &playerToRemove << " = " << *itInGame << " : " << (*itInGame)->getId() << " " << (*itInGame)->getName() << std::endl;
+        m_inGamePlayers.erase(itInGame);
+    } else {
+        auto itInWait = std::find(m_inWaitPlayers.begin(), m_inWaitPlayers.end(), &playerToRemove);
+        m_inWaitPlayers.erase(itInWait);
+    }
+    auto itPlayer = std::find(m_players.begin(), m_players.end(), &playerToRemove);
+    std::cout << "Find player " << &playerToRemove << " = " << *itPlayer << " : " << (*itPlayer)->getId() << " " << (*itPlayer)->getName() << std::endl;
+    delete *itPlayer;
+    m_players.erase(itPlayer);
 }
 
 const std::vector<ServerPlayer*>& ServerPlayers::inWait() const {

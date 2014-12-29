@@ -23,26 +23,29 @@ public:
     virtual ~Server();
 
     void start(void);
-    
+
     void pollMessages();
     bool readMessagesWait(sf::Time timeout = sf::Time::Zero);
-    bool read(MessageData* message, ServerPlayer& player);
+    bool read(MessageData& message, ServerPlayer& player);
 
-    ServerNetwork*  getNetwork();
-    
+    ServerNetwork* getNetwork();
+
 private:
     void initializeNetwork();
     void startChronoAndWait();
     void createGame();
     void sendGame();
     void startGame();
-    
+
     void waitAcknowledgment(int permits);
-    
-private :
+
+    bool readDisconnect(MessageData& msg, ServerPlayer& player);
+
+
+private:
     ServerGame* m_game;
-    ServerPlayers m_players; 
-    
+    ServerPlayers m_players;
+
     Semaphore m_acknowledgment;
     ServerNetwork m_network;
 };

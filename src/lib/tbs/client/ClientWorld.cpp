@@ -60,11 +60,11 @@ void ClientWorld::update(float dt) {
         pairShip.second.update(dt);
 }
 
-std::map<int, Ship>& ClientWorld::getShips() {
+std::map<unsigned int, Ship>& ClientWorld::getShips() {
     return m_ships;
 }
 
-const std::map<int, Ship>& ClientWorld::getShips() const {
+const std::map<unsigned int, Ship>& ClientWorld::getShips() const {
     return m_ships;
 }
 

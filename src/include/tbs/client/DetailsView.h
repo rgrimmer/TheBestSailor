@@ -27,6 +27,7 @@ public:
 
     bool switchEnableWind();
     bool switchSquared();
+    void updateShips(void);
 
 private:
 

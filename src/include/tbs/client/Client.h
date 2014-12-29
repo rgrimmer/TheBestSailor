@@ -26,6 +26,7 @@ public:
     Client();
     virtual ~Client();
 
+    ClientNetwork& getNetwork();
     const ClientNetwork& getNetwork() const;
 
     void start(const std::string & name);
@@ -55,7 +56,7 @@ private:
     ClientPlayer m_player;
     ClientGame* m_game;
 
-    std::vector<ClientPlayer> m_otherPlayers;
+    //    std::vector<ClientPlayer> m_otherPlayers;
 
     ClientNetwork m_network;
 };

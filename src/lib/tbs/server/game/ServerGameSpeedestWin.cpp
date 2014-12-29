@@ -134,7 +134,7 @@ bool ServerGameSpeedestWin::windComeFromTribord(const Ship& ship, const Wind& wi
 }
 
 bool ServerGameSpeedestWin::gameIsEnded() {
-    return false;
+    return m_players.inGame().size() == 0;
 }
 
 void ServerGameSpeedestWin::sendInfo() {
@@ -178,10 +178,20 @@ bool ServerGameSpeedestWin::read(MessageData& message, ServerPlayer& player) {
     switch (msgType) {
         case MsgType::Action:
             return readAction(message, player);
+        case MsgType::Disconnect:
+            return readDisconnect(message, player);
         default:
             return false;
     }
     // @TODO delete message, use unique_ptr ?
+}
+
+bool ServerGameSpeedestWin::readDisconnect(MessageData& msg, ServerPlayer& player) {
+    std::cout << "Remove " << m_ships.erase(&player) << " ship" << std::endl;
+    for (auto& ship : m_ships) {
+        std::cout << "Stay ship of " << ship.first->getId() << " " << ship.first->getName() << std::endl;
+    }
+    return true;
 }
 
 bool ServerGameSpeedestWin::readAction(MessageData& msg, ServerPlayer& player) {

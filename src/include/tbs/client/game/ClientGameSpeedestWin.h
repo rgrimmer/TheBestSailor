@@ -37,6 +37,7 @@ private:
 
 private:
     bool readGameInfo(MessageData& msg);
+    bool readDisconnect(MessageData& msg);
     
 private:
     // Model

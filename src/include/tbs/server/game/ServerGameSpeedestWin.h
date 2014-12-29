@@ -43,6 +43,7 @@ private:
     void updateShipVelocity(Ship& ship);
     
     bool readAction(MessageData& msg, ServerPlayer& player);
+    bool readDisconnect(MessageData& msg, ServerPlayer& player);
 
     bool windComeFromTribord(const Ship& ship, const Wind &wind) const;
     bool windComeFromFront(const Ship& ship, const Wind &wind) const;
