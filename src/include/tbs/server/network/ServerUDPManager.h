@@ -15,7 +15,7 @@
 
 class ServerPlayers;
 class ServerMessageQueue;
-class MessageData;
+class MsgData;
 class ServerPlayer;
 
 class ServerUDPManager {
@@ -26,8 +26,8 @@ public:
     bool initialize(unsigned short port);
 
     void startReceiverThread();
-    bool send(MessageData &message, const ServerPlayer& player) const;
-    bool send(MessageData &message, const std::vector<ServerPlayer*>& players) const;
+    bool send(MsgData &message, const ServerPlayer& player) const;
+    bool send(MsgData &message, const std::vector<ServerPlayer*>& players) const;
 
 private:
     void receiver();

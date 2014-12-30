@@ -2,7 +2,7 @@
 
 #include <SFML/Network/Packet.hpp>
 
-#include "shared/network/MessageData.h"
+#include "shared/network/MsgData.h"
 #include "shared/network/UtilsNetwork.h"
 #include "shared/network/MsgFactory.h"
 
@@ -35,7 +35,7 @@ void ClientTCPManager::startReceiverThread() {
 
 void ClientTCPManager::receiver() {
     while (true) {
-        MessageData* msg = new MessageData();
+        MsgData* msg = new MsgData();
         switch (m_socket.receive(*msg)) {
             case sf::Socket::Status::Done:
             {
@@ -60,7 +60,7 @@ void ClientTCPManager::receiver() {
     }
 }
 
-bool ClientTCPManager::send(MessageData& message) const {
+bool ClientTCPManager::send(MsgData& message) const {
     std::cout << "[Send][TCP] \t" /*<< message.getMsgType()*/ << std::endl;
     return (m_socket.send(message) == sf::Socket::Done);
 }

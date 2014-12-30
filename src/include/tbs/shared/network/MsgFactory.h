@@ -12,11 +12,11 @@
 
 #include "shared/network/MsgType.h"
 
-class MessageData;
+class MsgData;
 
 class MsgFactory {
 public:
-    static MessageData* createMessage(MsgType msgType);
+    static MsgData* createMessage(MsgType msgType);
 private:
 
 };

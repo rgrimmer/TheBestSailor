@@ -18,7 +18,7 @@ class Server;
 class ServerPlayer;
 class ServerPlayers;
 class MapHeader;
-class MessageData;
+class MsgData;
 class Ship;
 
 class ServerGameSpeedestWin : public ServerGame {
@@ -30,7 +30,7 @@ public:
 
 protected:
     virtual sf::Packet toPacket(sf::Packet& packet) const;
-    virtual bool read(MessageData& message, ServerPlayer& player);
+    virtual bool read(MsgData& message, ServerPlayer& player);
 
     virtual void init();
     virtual void update(float dt);
@@ -42,8 +42,8 @@ private:
     void updateSail(Ship& ship);
     void updateShipVelocity(Ship& ship);
 
-    bool readAction(MessageData& msg, ServerPlayer& player);
-    bool readDisconnect(MessageData& msg, ServerPlayer& player);
+    bool readAction(MsgData& msg, ServerPlayer& player);
+    bool readDisconnect(MsgData& msg, ServerPlayer& player);
 
     bool windComeFromTribord(const Ship& ship, const Wind &wind) const;
     bool windComeFromFront(const Ship& ship, const Wind &wind) const;

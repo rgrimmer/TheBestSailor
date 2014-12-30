@@ -8,10 +8,10 @@
 #ifndef MSG_TURN_SAIL_H
 #define	MSG_TURN_SAIL_H
 
-#include "shared/network/MessageData.h"
+#include "shared/network/MsgData.h"
 #include "shared/network/MsgType.h"
 
-class MsgTurnSail : public MessageData {
+class MsgTurnSail : public MsgData {
 public:
     explicit MsgTurnSail(MsgOrientation orientation = MsgOrientation::UNDEF);
     virtual ~MsgTurnSail();

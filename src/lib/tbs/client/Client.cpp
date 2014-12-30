@@ -18,7 +18,7 @@
 #include "shared/Utils.h"
 #include "shared/Kinematics.h"
 #include "shared/network/MsgGame.h"
-#include "shared/network/MessageData.h"
+#include "shared/network/MsgData.h"
 #include "shared/network/MsgTurnHelm.h"
 #include "shared/network/MsgTurnSail.h"
 #include "shared/network/MsgDisconnect.h"
@@ -67,7 +67,7 @@ void Client::sendLocalPlayerInfo() {
     std::cout << "[Client][SendLPI] \t Envoi des informations du joueurs" << std::endl;
     //    MsgClientPlayerInfo msg(m_network.getUdpManager().getPort(), m_player.getName());
     //    std::cout << "[Client][SendLPI] \t Send : name(" << msg.getName() << ") port("<< msg.getPort() << ")" << std::endl;
-    MessageData msg;
+    MsgData msg;
     msg << MsgType::ClientPlayerInfo << static_cast<sf::Uint16> (m_network.getUdpManager().getPort()) << m_player.getName();
     m_network.getTcpManager().send(msg);
     std::cout << "[Client][SendLPI] \t Send : name(" << m_player.getName() << ") port(" << m_network.getUdpManager().getPort() << ")" << std::endl;
@@ -109,8 +109,8 @@ bool Client::pollMessagesWait(sf::Time timeout) {
     return true;
 }
 
-bool Client::read(MessageData& message) {
-    MessageData msgCopy(message);
+bool Client::read(MsgData& message) {
+    MsgData msgCopy(message);
     MsgType msgType;
     message >> msgType;
     switch (msgType) {
@@ -128,7 +128,7 @@ bool Client::read(MessageData& message) {
     return true;
 }
 
-bool Client::readMsgServerPlayerInfo(MessageData &message) {
+bool Client::readMsgServerPlayerInfo(MsgData &message) {
     sf::Uint16 port, id;
     message >> port >> id;
     std::cout << "[Client][Read] \t Read Server Player Info Message. id(" << id << "), serverUdpPort(" << port << ")" << std::endl;
@@ -138,7 +138,7 @@ bool Client::readMsgServerPlayerInfo(MessageData &message) {
     return true;
 }
 
-bool Client::readMsgGame(MessageData& message) {
+bool Client::readMsgGame(MsgData& message) {
     std::cout << "[Client][Read] \t Read Game Message" << std::endl;
     GameType gameType;
     message >> gameType;

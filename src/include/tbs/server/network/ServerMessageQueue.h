@@ -9,14 +9,14 @@
 #define	SERVERMESSAGEQUEUE_H
 
 #include "shared/SynchronizedQueue.h"
-//#include "shared/network/MessageData.h"
+//#include "shared/network/MsgData.h"
 
 //#include "server/ServerPlayer.h"
 
 class ServerPlayer;
-class MessageData;
+class MsgData;
 
-class ServerMessageQueue : public SynchronizedQueue<std::pair<ServerPlayer*, MessageData*> > {
+class ServerMessageQueue : public SynchronizedQueue<std::pair<ServerPlayer*, MsgData*> > {
 public:
     ServerMessageQueue();
     virtual ~ServerMessageQueue();

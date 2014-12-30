@@ -15,7 +15,7 @@
 
 class ServerPlayers;
 class ServerMessageQueue;
-class MessageData;
+class MsgData;
 class ServerPlayer;
 
 class ServerTCPManager {
@@ -27,8 +27,8 @@ public:
 
     void initialize(unsigned short portTcp);
     void startReceiverThread();
-    bool send(MessageData &message, sf::TcpSocket& player) const;
-    bool send(MessageData &message, const std::vector<ServerPlayer*>& players) const;
+    bool send(MsgData &message, sf::TcpSocket& player) const;
+    bool send(MsgData &message, const std::vector<ServerPlayer*>& players) const;
 
 private:
     void receiver();

@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "shared/network/MessageData.h"
+#include "shared/network/MsgData.h"
 
 #include "server/ServerPlayer.h"
 #include "server/ServerPlayers.h"
@@ -34,7 +34,7 @@ void ServerUDPManager::startReceiverThread() {
 
 void ServerUDPManager::receiver() {
     while (true) {
-        MessageData *message = new MessageData();
+        MsgData *message = new MsgData();
         sf::IpAddress senderAddress;
         unsigned short senderPort;
 
@@ -50,7 +50,7 @@ void ServerUDPManager::receiver() {
 
         // Check validity
         if (player) {
-            m_msgQueue.push(std::pair<ServerPlayer*, MessageData*>(player, message));
+            m_msgQueue.push(std::pair<ServerPlayer*, MsgData*>(player, message));
 
         } else if (!player) {
             std::cout << "\tAucun player pour : " << senderAddress.toString() << ":" << senderPort;
@@ -61,13 +61,13 @@ void ServerUDPManager::receiver() {
     }
 }
 
-bool ServerUDPManager::send(MessageData &message, const ServerPlayer& player) const {
+bool ServerUDPManager::send(MsgData &message, const ServerPlayer& player) const {
     sf::Socket::Status status = m_socket.send(message, player.getAddress(), player.getUdpPort());
     std::cout << "[UDP][Send] \t" /*<< message.getMsgType()*/ << std::endl;
     return (status == sf::Socket::Done);
 }
 
-bool ServerUDPManager::send(MessageData &message, const std::vector<ServerPlayer*>& players) const {
+bool ServerUDPManager::send(MsgData &message, const std::vector<ServerPlayer*>& players) const {
     bool receivedByAll = true;
     for (const auto player : players) {
         if (!send(message, *player)) {

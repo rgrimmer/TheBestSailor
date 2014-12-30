@@ -9,12 +9,12 @@
 #define	MSGGAME_H
 
 #include "shared/game/GameType.h"
-#include "shared/network/MessageData.h"
+#include "shared/network/MsgData.h"
 
-class MsgGame : public MessageData {
+class MsgGame : public MsgData {
 public:
     MsgGame();
-    MsgGame(MessageData &message);
+    MsgGame(MsgData &message);
     
     GameType getGameType() const { return GameType::SpeedestWin; } // @TODO
     virtual ~MsgGame();

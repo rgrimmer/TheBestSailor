@@ -13,7 +13,7 @@
 #include <SFML/Network/TcpSocket.hpp>
 #include <SFML/System/Time.hpp>
 
-class MessageData;
+class MsgData;
 class ClientMsgQueue;
 
 class ClientTCPManager {
@@ -25,7 +25,7 @@ public:
     void disconnect(void);
 
     void startReceiverThread();
-    bool send(MessageData &message) const;
+    bool send(MsgData &message) const;
 
 private:
     void receiver();

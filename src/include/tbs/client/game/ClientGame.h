@@ -8,7 +8,7 @@
 #ifndef CLIENTGAME_H
 #define	CLIENTGAME_H
 
-class MessageData;
+class MsgData;
 
 class ClientGame {
 public:
@@ -16,8 +16,8 @@ public:
     virtual ~ClientGame();
 
     bool start();
-    virtual bool read(MessageData& msg) = 0;
-    virtual bool readInitGame(MessageData& msg) = 0;
+    virtual bool read(MsgData& msg) = 0;
+    virtual bool readInitGame(MsgData& msg) = 0;
     
 protected:
     virtual void initGame() = 0;

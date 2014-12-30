@@ -8,9 +8,9 @@
 #ifndef MSG_TURN_HELM_H
 #define	MSG_TURN_HELM_H
 
-#include <shared/network/MessageData.h>
+#include <shared/network/MsgData.h>
 
-class MsgTurnHelm : public MessageData {
+class MsgTurnHelm : public MsgData {
 public:
     explicit MsgTurnHelm(MsgOrientation orientation = MsgOrientation::UNDEF);
     virtual ~MsgTurnHelm();

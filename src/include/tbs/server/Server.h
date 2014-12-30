@@ -8,12 +8,14 @@
 #ifndef SERVER_H
 #define	SERVER_H
 
+#include <thread>
+
 #include "shared/network/Semaphore.h"
 
 #include "server/ServerPlayers.h"
 #include "server/network/ServerNetwork.h"
 
-class MessageData;
+class MsgData;
 class ServerPlayer;
 class ServerGame;
 
@@ -26,9 +28,11 @@ public:
 
     void pollMessages();
     bool readMessagesWait(sf::Time timeout = sf::Time::Zero);
-    bool read(MessageData& message, ServerPlayer& player);
+    bool read(MsgData& message, ServerPlayer& player);
 
     ServerNetwork* getNetwork();
+    void startReaderThread();
+    void stopReaderThread();
 
 private:
     void initializeNetwork();
@@ -37,9 +41,11 @@ private:
     void sendGame();
     void startGame();
 
+    void readerLoop();
+    
     void waitAcknowledgment(int permits);
 
-    bool readDisconnect(MessageData& msg, ServerPlayer& player);
+    bool readDisconnect(MsgData& msg, ServerPlayer& player);
 
 
 private:
@@ -48,6 +54,9 @@ private:
 
     Semaphore m_acknowledgment;
     ServerNetwork m_network;
+    
+    std::thread *m_readerThread;
+    bool m_threadRun;
 };
 
 #endif	/* SERVER_H */

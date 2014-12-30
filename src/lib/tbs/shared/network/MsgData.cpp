@@ -1,26 +1,26 @@
 /* 
- * File:   MessageData.cpp
+ * File:   MsgData.cpp
  * Author: maxence
  * 
  * Created on 11 décembre 2014, 16:35
  */
 //#include <arpa/inet.h>
 #include <iostream>
-#include "shared/network/MessageData.h"
+#include "shared/network/MsgData.h"
 
-MessageData::MessageData() {
+MsgData::MsgData() {
 
 }
 
-MessageData::MessageData(MsgType msgType)
+MsgData::MsgData(MsgType msgType)
 : m_msgType(msgType) {
     //    (*this) << m_msgType;
 }
 
-MessageData::~MessageData() {
+MsgData::~MsgData() {
 }
 
-bool MessageData::checkValidity(const sf::Time& recvTime, sf::Time& localTime) {
+bool MsgData::checkValidity(const sf::Time& recvTime, sf::Time& localTime) {
     if (recvTime < localTime)
         return false;
 
@@ -28,14 +28,14 @@ bool MessageData::checkValidity(const sf::Time& recvTime, sf::Time& localTime) {
     return true;
 }
 
-//const void* MessageData::onSend(std::size_t& size) {
+//const void* MsgData::onSend(std::size_t& size) {
 //    std::cout << "[Send][Msg] \t Send Message " << static_cast<int> (getMsgType()) << ", size ("<<getDataSize() <<  ")"<< std::endl;
 //    beforeOnSend(*this);
 //    size = getDataSize();
 //    return getData();
 //}
 
-//void MessageData::onReceive(const void* data, std::size_t size) {
+//void MsgData::onReceive(const void* data, std::size_t size) {
 //    clear();
 //    append(data, size);
 //    (*this) >> m_msgType;
@@ -43,6 +43,6 @@ bool MessageData::checkValidity(const sf::Time& recvTime, sf::Time& localTime) {
 //    std::cout << "[Send][Msg] \t Receive Message " << static_cast<int> (getMsgType()) << "size("<< getDataSize()<<")"<< std::endl;
 //}
 
-MsgType MessageData::getMsgType() const {
+MsgType MsgData::getMsgType() const {
     return m_msgType;
 }

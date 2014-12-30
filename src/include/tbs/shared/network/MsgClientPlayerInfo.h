@@ -10,20 +10,20 @@
 
 #include <string>
 #include <SFML/Network/Packet.hpp>
-#include "MessageData.h"
+#include "MsgData.h"
 
-class MsgClientPlayerInfo : public MessageData {
+class MsgClientPlayerInfo : public MsgData {
 public:
     MsgClientPlayerInfo();
-    MsgClientPlayerInfo(MessageData &message);
+    MsgClientPlayerInfo(MsgData &message);
     MsgClientPlayerInfo(unsigned short portUDP, const std::string &name);
     virtual ~MsgClientPlayerInfo();
 
     const std::string& getName();
     unsigned short getPort();
 
-    virtual void afterOnReceive(MessageData& message);
-    virtual void beforeOnSend(MessageData& message);
+    virtual void afterOnReceive(MsgData& message);
+    virtual void beforeOnSend(MsgData& message);
 
 private:
     unsigned short m_portUDP;

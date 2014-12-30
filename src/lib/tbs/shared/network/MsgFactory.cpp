@@ -7,15 +7,15 @@
 #include <iostream>
 
 #include "shared/network/MsgFactory.h"
-#include "shared/network/MessageData.h"
+#include "shared/network/MsgData.h"
 #include "shared/network/MsgClientPlayerInfo.h"
 #include "shared/network/MsgServerPlayerInfo.h"
 #include "shared/network/MsgDisconnect.h"
 #include "shared/network/MsgTurnHelm.h"
 #include "shared/network/MsgTurnSail.h"
 
-MessageData* MsgFactory::createMessage(MsgType msgType) {
-    MessageData* message;
+MsgData* MsgFactory::createMessage(MsgType msgType) {
+    MsgData* message;
     // @TODO
     //    MsgTurnHelm* msgHelm = new MsgTurnHelm();
     //    switch (msgType) {

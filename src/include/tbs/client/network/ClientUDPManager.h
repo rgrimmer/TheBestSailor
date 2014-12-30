@@ -14,7 +14,7 @@
 #include <SFML/Network/IpAddress.hpp>
 
 class ClientMsgQueue;
-class MessageData;
+class MsgData;
 
 class ClientUDPManager {
 public:
@@ -25,7 +25,7 @@ public:
     unsigned short getPort() const;
 
     void startReceiverThread();
-    bool send(MessageData &message) const;
+    bool send(MsgData &message) const;
 
 
 private:

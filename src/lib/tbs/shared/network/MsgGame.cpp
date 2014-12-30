@@ -8,11 +8,11 @@
 #include "shared/network/MsgGame.h"
 
 MsgGame::MsgGame()
-: MessageData(MsgType::Game) {
+: MsgData(MsgType::Game) {
 }
 
-MsgGame::MsgGame(MessageData& message)
-: MessageData(MsgType::Game) {
+MsgGame::MsgGame(MsgData& message)
+: MsgData(MsgType::Game) {
     this->append(message.getData(), message.getDataSize());
     sf::Int32 r;
     *this >> r;

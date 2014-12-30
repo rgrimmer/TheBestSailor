@@ -9,7 +9,7 @@
 #define	MSGACTION_H
 
 #include <bitset>
-#include "shared/network/MessageData.h"
+#include "shared/network/MsgData.h"
 #include "shared/network/MsgType.h"
 
 #define TURN_HELM_NEGATIVE 0
@@ -17,7 +17,7 @@
 #define TURN_SAIL_NEGATIVE 2
 #define TURN_SAIL_POSITIVE 3
 
-class MsgAction : public MessageData {
+class MsgAction : public MsgData {
 public:
     explicit MsgAction(std::bitset<4> keys);
     virtual ~MsgAction();

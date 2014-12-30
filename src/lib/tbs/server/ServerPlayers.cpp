@@ -34,7 +34,7 @@ ServerPlayer& ServerPlayers::addNewPlayer() {
 
     ServerPlayer *m_player = m_players[m_players.size() - 1];
     m_player->setId(ServerPlayers::s_nextId++);
-    m_inWaitPlayers.push_back(m_player);
+    m_inWaitPlayers.insert(m_player);
     std::cout << "[Players][End] \t Add new player done" << std::endl;
     return *m_player;
 }
@@ -53,30 +53,56 @@ std::vector<ServerPlayer*>& ServerPlayers::getList() {
 }
 
 void ServerPlayers::remove(ServerPlayer& playerToRemove) {
-    auto itInGame = std::find(m_inGamePlayers.begin(), m_inGamePlayers.end(), &playerToRemove);
-    if (itInGame != m_inGamePlayers.end()) {
-        std::cout << "Find in game " << &playerToRemove << " = " << *itInGame << " : " << (*itInGame)->getId() << " " << (*itInGame)->getName() << std::endl;
-        m_inGamePlayers.erase(itInGame);
-    } else {
-        auto itInWait = std::find(m_inWaitPlayers.begin(), m_inWaitPlayers.end(), &playerToRemove);
-        m_inWaitPlayers.erase(itInWait);
+    if (m_inGamePlayers.erase(&playerToRemove)) {
+        std::cout << "Find in game " << std::endl;
     }
+    if (m_inWaitPlayers.erase(&playerToRemove)) {
+        std::cout << "Find in wait " << std::endl;
+    }
+    if (m_inConnectionPlayers.erase(&playerToRemove)) {
+        std::cout << "Find in connection " << std::endl;
+    }
+    
+    /*
+auto itInGame = std::find(m_inGamePlayers.begin(), m_inGamePlayers.end(), &playerToRemove);
+if (itInGame != m_inGamePlayers.end()) {
+    std::cout << "Find in game " << &playerToRemove << " = " << *itInGame << " : " << (*itInGame)->getId() << " " << (*itInGame)->getName() << std::endl;
+    std::cout << "erase " << (m_inGamePlayers.erase(itInGame) != m_inGamePlayers.end()) << " players in game" << std::endl;
+} else {
+    auto itInWait = std::find(m_inWaitPlayers.begin(), m_inWaitPlayers.end(), &playerToRemove);
+    if (itInWait != m_inWaitPlayers.end()) {
+        std::cout << "Find in wait " << &playerToRemove << " = " << *itInWait << " : " << (*itInWait)->getId() << " " << (*itInWait)->getName() << std::endl;
+        m_inWaitPlayers.erase(itInWait);
+    } else {
+        if (m_inConnectionPlayers.erase(&playerToRemove) == 1) {
+            std::cout << "Find in connection " << playerToRemove.getId() << " " << playerToRemove.getName() << std::endl;
+        } else {
+            std::cout << "Unfineable player" << std::endl;
+        }
+    }
+}
+     */
     auto itPlayer = std::find(m_players.begin(), m_players.end(), &playerToRemove);
     std::cout << "Find player " << &playerToRemove << " = " << *itPlayer << " : " << (*itPlayer)->getId() << " " << (*itPlayer)->getName() << std::endl;
     delete *itPlayer;
     m_players.erase(itPlayer);
 }
 
-const std::vector<ServerPlayer*>& ServerPlayers::inWait() const {
+const std::unordered_set<ServerPlayer*>& ServerPlayers::inWait() const {
     return m_inWaitPlayers;
 }
 
-const std::vector<ServerPlayer*>& ServerPlayers::inGame() const {
+const std::unordered_set<ServerPlayer*>& ServerPlayers::inGame() const {
     return m_inGamePlayers;
 }
 
 void ServerPlayers::putPlayersInGame() {
     m_inWaitPlayers.swap(m_inGamePlayers);
+}
+
+void ServerPlayers::setPlayerReady(ServerPlayer &player) {
+    m_inConnectionPlayers.erase(&player);
+    m_inWaitPlayers.insert(&player);
 }
 
 

@@ -8,7 +8,7 @@
 #include "shared/network/MsgDisconnect.h"
 
 MsgDisconnect::MsgDisconnect()
-: MessageData(MsgType::Disconnect) {
+: MsgData(MsgType::Disconnect) {
 }
 
 MsgDisconnect::~MsgDisconnect() {

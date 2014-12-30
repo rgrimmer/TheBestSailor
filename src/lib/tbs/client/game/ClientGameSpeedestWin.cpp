@@ -11,7 +11,7 @@
 #include "client/DetailsView.h"
 #include "client/GlobalView.h"
 #include "client/game/ClientGameSpeedestWin.h"
-#include "shared/network/MessageData.h"
+#include "shared/network/MsgData.h"
 #include "shared/network/MsgDisconnect.h"
 #include "shared/network/MsgGame.h"
 #include "shared/network/MsgTurnHelm.h"
@@ -224,7 +224,7 @@ bool ClientGameSpeedestWin::startGameLoop() {
         if (counter % 10 == 0 || stateChange) {
             counter = 0;
             stateChange = false;
-            MessageData msg;
+            MsgData msg;
             msg << MsgType::Action << static_cast<sf::Uint8> (keys.to_ulong()) << m_clockGame.getElapsedTime().asMilliseconds();
             m_client.getNetwork().getUdpManager().send(msg);
         }
@@ -277,7 +277,7 @@ bool ClientGameSpeedestWin::startGameLoop() {
     return m_window.isOpen();
 }
 
-bool ClientGameSpeedestWin::read(MessageData& msg) {
+bool ClientGameSpeedestWin::read(MsgData& msg) {
     MsgType msgType;
     msg >> msgType;
     switch (msgType) {
@@ -290,7 +290,7 @@ bool ClientGameSpeedestWin::read(MessageData& msg) {
     }
 }
 
-bool ClientGameSpeedestWin::readInitGame(MessageData& msg) {
+bool ClientGameSpeedestWin::readInitGame(MsgData& msg) {
     sf::Int32 width, height, seedHeight, seedWind;
     msg >> width >> height >> seedHeight >> seedWind;
     ClientWorld world;
@@ -301,11 +301,11 @@ bool ClientGameSpeedestWin::readInitGame(MessageData& msg) {
     return true;
 }
 
-bool ClientGameSpeedestWin::readGameInfo(MessageData& msg) {
+bool ClientGameSpeedestWin::readGameInfo(MsgData& msg) {
     std::cout << "GameInfo" << std::endl;
     sf::Int32 time;
     msg >> time;
-    if (!MessageData::checkValidity(sf::milliseconds(time), m_lastGameInfo))
+    if (!MsgData::checkValidity(sf::milliseconds(time), m_lastGameInfo))
         return false;
 
     while (!msg.endOfPacket()) {
@@ -330,7 +330,7 @@ bool ClientGameSpeedestWin::readGameInfo(MessageData& msg) {
     return true;
 }
 
-bool ClientGameSpeedestWin::readDisconnect(MessageData& msg) {
+bool ClientGameSpeedestWin::readDisconnect(MsgData& msg) {
     sf::Uint8 id;
     msg >> id;
     std::cout << m_world.getShips().erase(static_cast<unsigned int> (id)) << std::endl;

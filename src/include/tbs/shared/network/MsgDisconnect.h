@@ -8,9 +8,9 @@
 #ifndef MSGDISCONNECT_H
 #define	MSGDISCONNECT_H
 
-#include "MessageData.h"
+#include "MsgData.h"
 
-class MsgDisconnect : public MessageData {
+class MsgDisconnect : public MsgData {
 public:
     MsgDisconnect();
     virtual ~MsgDisconnect();

@@ -10,9 +10,9 @@
 
 #include "shared/SynchronizedQueue.h"
 
-class MessageData;
+class MsgData;
 
-class ClientMsgQueue : public SynchronizedQueue<MessageData*> {
+class ClientMsgQueue : public SynchronizedQueue<MsgData*> {
 public:
     ClientMsgQueue();
     virtual ~ClientMsgQueue();

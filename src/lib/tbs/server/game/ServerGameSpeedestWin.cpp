@@ -11,7 +11,7 @@
 #include "shared/network/MsgTurnSail.h"
 #include "shared/network/MsgDisconnect.h"
 #include "shared/network/MsgAction.h"
-#include "shared/network/MessageData.h"
+#include "shared/network/MsgData.h"
 #include "shared/ship/Ship.h"
 
 #include "server/ServerPlayer.h"
@@ -134,13 +134,14 @@ bool ServerGameSpeedestWin::windComeFromTribord(const Ship& ship, const Wind& wi
 }
 
 bool ServerGameSpeedestWin::gameIsEnded() {
+    std::cout << "Nb players in game(" << m_players.inGame().size() << ")" << std::endl;
     return m_players.inGame().size() == 0;
 }
 
 void ServerGameSpeedestWin::sendInfo() {
     sf::Int32 timeGame = m_gameClock.getElapsedTime().asMilliseconds();
 
-    MessageData msgGameInfo;
+    MsgData msgGameInfo;
     msgGameInfo << MsgType::GameInfo << timeGame;
 
     sf::Uint8 id;
@@ -165,14 +166,14 @@ void ServerGameSpeedestWin::sendInfo() {
         std::cout << "Send ship(" << static_cast<unsigned int> (id) << ") pos(" << positionX << "," << positionY << ") speed(" << speedX << "," << speedY << ") clock(" << timeGame << ")" << std::endl;
     }
 
-    m_server.getNetwork()->getUDPManager().send(msgGameInfo, m_players.inGame());
+    m_server.getNetwork()->getUDPManager().send(msgGameInfo, std::vector<ServerPlayer*>(m_players.inGame().begin(), m_players.inGame().end()));
 }
 
 sf::Packet ServerGameSpeedestWin::toPacket(sf::Packet &packet) const {
     return packet << m_map;
 }
 
-bool ServerGameSpeedestWin::read(MessageData& message, ServerPlayer& player) {
+bool ServerGameSpeedestWin::read(MsgData& message, ServerPlayer& player) {
     MsgType msgType;
     message >> msgType;
 
@@ -186,7 +187,7 @@ bool ServerGameSpeedestWin::read(MessageData& message, ServerPlayer& player) {
     }
 }
 
-bool ServerGameSpeedestWin::readDisconnect(MessageData& msg, ServerPlayer& player) {
+bool ServerGameSpeedestWin::readDisconnect(MsgData& msg, ServerPlayer& player) {
     std::cout << "Remove " << m_ships.erase(&player) << " ship" << std::endl;
     for (auto& ship : m_ships) {
         std::cout << "Stay ship of " << ship.first->getId() << " " << ship.first->getName() << std::endl;
@@ -194,13 +195,13 @@ bool ServerGameSpeedestWin::readDisconnect(MessageData& msg, ServerPlayer& playe
     return true;
 }
 
-bool ServerGameSpeedestWin::readAction(MessageData& msg, ServerPlayer& player) {
+bool ServerGameSpeedestWin::readAction(MsgData& msg, ServerPlayer& player) {
     sf::Uint8 keysUI8;
     sf::Int32 sfTime;
     msg >> keysUI8 >> sfTime;
     std::bitset<4> keys = keysUI8;
 
-    if (!MessageData::checkValidity(sf::milliseconds(sfTime), m_lastAction[&player]))
+    if (!MsgData::checkValidity(sf::milliseconds(sfTime), m_lastAction[&player]))
         return false;
 
     Ship& ship = m_ships[&player];
@@ -209,6 +210,6 @@ bool ServerGameSpeedestWin::readAction(MessageData& msg, ServerPlayer& player) {
     ship.getSail().setTurningNegative(keys.test(TURN_SAIL_NEGATIVE));
     ship.getSail().setTurningPositive(keys.test(TURN_SAIL_POSITIVE));
 
-
+    doUpdate();
     return true;
 }

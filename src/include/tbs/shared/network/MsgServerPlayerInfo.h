@@ -11,12 +11,12 @@
 #include <string>
 #include <SFML/Network/IpAddress.hpp>
 
-#include "MessageData.h"
+#include "MsgData.h"
 
-class MsgServerPlayerInfo : public MessageData {
+class MsgServerPlayerInfo : public MsgData {
 public:
     MsgServerPlayerInfo();
-    MsgServerPlayerInfo(MessageData& message);
+    MsgServerPlayerInfo(MsgData& message);
     MsgServerPlayerInfo(unsigned int ID, unsigned short portRemote);
     virtual ~MsgServerPlayerInfo();
     
@@ -24,8 +24,8 @@ public:
     unsigned short getServerPort() const;
     
 private:
-    virtual void beforeOnSend(MessageData& message);
-    virtual void afterOnReceive(MessageData& message);
+    virtual void beforeOnSend(MsgData& message);
+    virtual void afterOnReceive(MsgData& message);
 
 private:
     unsigned int m_ID;

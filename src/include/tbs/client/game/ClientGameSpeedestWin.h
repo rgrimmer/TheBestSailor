@@ -24,8 +24,8 @@ public:
     ClientGameSpeedestWin(Client &client, ClientPlayer& player, sf::RenderWindow& m_window);
     virtual ~ClientGameSpeedestWin();
 
-    virtual bool read(MessageData& msg);
-    virtual bool readInitGame(MessageData& msg);
+    virtual bool read(MsgData& msg);
+    virtual bool readInitGame(MsgData& msg);
 
     void setClientWorld(const ClientWorld &world);
     const ClientWorld& getClientWorld() const;
@@ -36,8 +36,8 @@ private:
     void release();
 
 private:
-    bool readGameInfo(MessageData& msg);
-    bool readDisconnect(MessageData& msg);
+    bool readGameInfo(MsgData& msg);
+    bool readDisconnect(MsgData& msg);
     
 private:
     // Model

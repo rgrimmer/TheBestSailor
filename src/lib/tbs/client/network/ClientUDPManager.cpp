@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "shared/network/MsgFactory.h"
-#include "shared/network/MessageData.h"
+#include "shared/network/MsgData.h"
 
 #include "client/network/ClientMsgQueue.h"
 #include "client/network/ClientUDPManager.h"
@@ -31,7 +31,7 @@ void ClientUDPManager::startReceiverThread() {
 
 void ClientUDPManager::receiver() {
     while (true) {
-        MessageData* msg = new MessageData();
+        MsgData* msg = new MsgData();
         sf::IpAddress senderAddress;
         unsigned short senderPort;
 
@@ -49,7 +49,7 @@ void ClientUDPManager::receiver() {
     }
 }
 
-bool ClientUDPManager::send(MessageData& message) const {
+bool ClientUDPManager::send(MsgData& message) const {
     sf::Socket::Status status = m_socket.send(message, m_addressRemote, m_portRemote);
     std::cout << "[UDP][Send] \t" /*<< message.getType()*/ << std::endl;
     return (status == sf::Socket::Done);

@@ -8,16 +8,16 @@
 #include "shared/network/MsgServerPlayerInfo.h"
 
 MsgServerPlayerInfo::MsgServerPlayerInfo()
-: MessageData(MsgType::ServerPlayerInfo) {
+: MsgData(MsgType::ServerPlayerInfo) {
 
 }
 
-MsgServerPlayerInfo::MsgServerPlayerInfo(MessageData& message) {
+MsgServerPlayerInfo::MsgServerPlayerInfo(MsgData& message) {
     afterOnReceive(message);
 }
 
 MsgServerPlayerInfo::MsgServerPlayerInfo(unsigned int ID, unsigned short portRemote)
-: MessageData(MsgType::ServerPlayerInfo)
+: MsgData(MsgType::ServerPlayerInfo)
 , m_ID(ID)
 , m_portRemote(portRemote) {
 }
@@ -25,7 +25,7 @@ MsgServerPlayerInfo::MsgServerPlayerInfo(unsigned int ID, unsigned short portRem
 MsgServerPlayerInfo::~MsgServerPlayerInfo() {
 }
 
-void MsgServerPlayerInfo::afterOnReceive(MessageData& message) {
+void MsgServerPlayerInfo::afterOnReceive(MsgData& message) {
     sf::Uint32 sfID;
     sf::Uint16 sfPort;
     if (message >> sfID >> sfPort) {
@@ -37,7 +37,7 @@ void MsgServerPlayerInfo::afterOnReceive(MessageData& message) {
 
 }
 
-void MsgServerPlayerInfo::beforeOnSend(MessageData& message) {
+void MsgServerPlayerInfo::beforeOnSend(MsgData& message) {
     message << static_cast<sf::Uint32> (m_ID);
     message << static_cast<sf::Uint16> (m_portRemote);
 }

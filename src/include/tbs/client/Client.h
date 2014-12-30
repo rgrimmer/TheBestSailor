@@ -18,7 +18,7 @@
 
 class MsgGame;
 class ClientGame;
-class MessageData;
+class MsgData;
 class MsgServerPlayerInfo;
 
 class Client {
@@ -43,9 +43,9 @@ private:
 
     bool pollMessagesWait(sf::Time timeout = sf::Time::Zero);
 
-    bool read(MessageData& message);
-    bool readMsgServerPlayerInfo(MessageData &message);
-    bool readMsgGame(MessageData& message);
+    bool read(MsgData& message);
+    bool readMsgServerPlayerInfo(MsgData &message);
+    bool readMsgGame(MsgData& message);
 
     //    bool read(MsgGame& message);
     //    bool read(MsgServerPlayerInfo& message);
