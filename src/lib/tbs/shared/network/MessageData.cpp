@@ -14,10 +14,18 @@ MessageData::MessageData() {
 
 MessageData::MessageData(MsgType msgType)
 : m_msgType(msgType) {
-//    (*this) << m_msgType;
+    //    (*this) << m_msgType;
 }
 
 MessageData::~MessageData() {
+}
+
+bool MessageData::checkValidity(const sf::Time& recvTime, sf::Time& localTime) {
+    if (recvTime < localTime)
+        return false;
+
+    localTime = recvTime;
+    return true;
 }
 
 //const void* MessageData::onSend(std::size_t& size) {

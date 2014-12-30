@@ -41,16 +41,20 @@ private:
     void updateShipState(Ship& ship, float dt);
     void updateSail(Ship& ship);
     void updateShipVelocity(Ship& ship);
-    
+
     bool readAction(MessageData& msg, ServerPlayer& player);
     bool readDisconnect(MessageData& msg, ServerPlayer& player);
 
     bool windComeFromTribord(const Ship& ship, const Wind &wind) const;
     bool windComeFromFront(const Ship& ship, const Wind &wind) const;
 
+    
 private:
     Map m_map;
     std::map<ServerPlayer*, Ship> m_ships;
+    
+    sf::Clock m_gameClock;
+    std::map<ServerPlayer*, sf::Time> m_lastAction;
 };
 
 sf::Packet& operator<<(sf::Packet& packet, const ServerGameSpeedestWin& game);

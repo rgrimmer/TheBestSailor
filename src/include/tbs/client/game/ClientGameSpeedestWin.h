@@ -46,7 +46,8 @@ private:
     // Network
     Client& m_client;
     ClientPlayer& m_player;
-    //    ClientNetwork& m_network;
+    sf::Clock m_clockGame;
+    sf::Time m_lastGameInfo;
 
     // Graphic
     sf::RenderWindow& m_window;

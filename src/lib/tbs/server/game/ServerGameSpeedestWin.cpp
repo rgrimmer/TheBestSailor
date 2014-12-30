@@ -138,9 +138,10 @@ bool ServerGameSpeedestWin::gameIsEnded() {
 }
 
 void ServerGameSpeedestWin::sendInfo() {
-    // @TODO
+    sf::Int32 timeGame = m_gameClock.getElapsedTime().asMilliseconds();
+
     MessageData msgGameInfo;
-    msgGameInfo << MsgType::GameInfo;
+    msgGameInfo << MsgType::GameInfo << timeGame;
 
     sf::Uint8 id;
     float shipAngle;
@@ -161,7 +162,7 @@ void ServerGameSpeedestWin::sendInfo() {
         speedX = speedShip.x;
         speedY = speedShip.y;
         msgGameInfo << id << shipAngle << sailAngle << positionX << positionY << speedX << speedY;
-        std::cout << "Send ship(" << static_cast<unsigned int> (id) << ") pos(" << positionX << "," << positionY << ") speed(" << speedX << "," << speedY << ")" << std::endl;
+        std::cout << "Send ship(" << static_cast<unsigned int> (id) << ") pos(" << positionX << "," << positionY << ") speed(" << speedX << "," << speedY << ") clock(" << timeGame << ")" << std::endl;
     }
 
     m_server.getNetwork()->getUDPManager().send(msgGameInfo, m_players.inGame());
@@ -183,7 +184,6 @@ bool ServerGameSpeedestWin::read(MessageData& message, ServerPlayer& player) {
         default:
             return false;
     }
-    // @TODO delete message, use unique_ptr ?
 }
 
 bool ServerGameSpeedestWin::readDisconnect(MessageData& msg, ServerPlayer& player) {
@@ -196,13 +196,19 @@ bool ServerGameSpeedestWin::readDisconnect(MessageData& msg, ServerPlayer& playe
 
 bool ServerGameSpeedestWin::readAction(MessageData& msg, ServerPlayer& player) {
     sf::Uint8 keysUI8;
-    msg >> keysUI8;
+    sf::Int32 sfTime;
+    msg >> keysUI8 >> sfTime;
     std::bitset<4> keys = keysUI8;
 
-    m_ships[&player].setTurningNegative(keys.test(TURN_HELM_NEGATIVE));
-    m_ships[&player].setTurningPositive(keys.test(TURN_HELM_POSITIVE));
-    m_ships[&player].getSail().setTurningNegative(keys.test(TURN_SAIL_NEGATIVE));
-    m_ships[&player].getSail().setTurningPositive(keys.test(TURN_SAIL_POSITIVE));
+    if (!MessageData::checkValidity(sf::milliseconds(sfTime), m_lastAction[&player]))
+        return false;
+
+    Ship& ship = m_ships[&player];
+    ship.setTurningNegative(keys.test(TURN_HELM_NEGATIVE));
+    ship.setTurningPositive(keys.test(TURN_HELM_POSITIVE));
+    ship.getSail().setTurningNegative(keys.test(TURN_SAIL_NEGATIVE));
+    ship.getSail().setTurningPositive(keys.test(TURN_SAIL_POSITIVE));
+
 
     return true;
 }

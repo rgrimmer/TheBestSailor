@@ -225,7 +225,7 @@ bool ClientGameSpeedestWin::startGameLoop() {
             counter = 0;
             stateChange = false;
             MessageData msg;
-            msg << MsgType::Action << static_cast<sf::Uint8> (keys.to_ulong());
+            msg << MsgType::Action << static_cast<sf::Uint8> (keys.to_ulong()) << m_clockGame.getElapsedTime().asMilliseconds();
             m_client.getNetwork().getUdpManager().send(msg);
         }
 
@@ -303,7 +303,13 @@ bool ClientGameSpeedestWin::readInitGame(MessageData& msg) {
 
 bool ClientGameSpeedestWin::readGameInfo(MessageData& msg) {
     std::cout << "GameInfo" << std::endl;
+    sf::Int32 time;
+    msg >> time;
+    if (!MessageData::checkValidity(sf::milliseconds(time), m_lastGameInfo))
+        return false;
+
     while (!msg.endOfPacket()) {
+
         sf::Uint8 id;
         float shipAngle;
         float sailAngle;
@@ -327,9 +333,9 @@ bool ClientGameSpeedestWin::readGameInfo(MessageData& msg) {
 bool ClientGameSpeedestWin::readDisconnect(MessageData& msg) {
     sf::Uint8 id;
     msg >> id;
-    std::cout << m_world.getShips().erase(static_cast<unsigned int>(id)) << std::endl;
+    std::cout << m_world.getShips().erase(static_cast<unsigned int> (id)) << std::endl;
     m_detailsView->updateShips();
-    std::cout << "Ship of player "<< static_cast<unsigned int>(id) << " remove and view update" << std::endl;
+    std::cout << "Ship of player " << static_cast<unsigned int> (id) << " remove and view update" << std::endl;
     return true;
 }
 
