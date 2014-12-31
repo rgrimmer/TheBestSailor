@@ -7,7 +7,7 @@
 
 #include "shared/Font.h"
 
-sf::Font *Font::g_font = 0;
+sf::Font *Font::g_font = nullptr;
 
 Font::Font() {
 }
@@ -16,7 +16,7 @@ Font::~Font() {
 }
 
 sf::Font& Font::getFont() {
-    if(g_font == 0) {
+    if(g_font == nullptr) {
         g_font = new sf::Font;
 //        if (!g_font->loadFromFile("/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-R.ttf"))
         if (!g_font->loadFromFile(getFontString(1)))

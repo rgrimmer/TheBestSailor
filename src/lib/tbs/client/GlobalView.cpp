@@ -21,7 +21,7 @@
 #include "client/GlobalView.h"
 
 GlobalView::GlobalView(const HeigthMap& heigthMap, const WindMap& windMap, const Ship& ship)
-: m_titleSfText("The Best Sailor", 130, Center) 
+: m_titleSfText("The Best Sailor", 130, Center)
 , m_mapHeader(heigthMap.getHeader())
 , m_heigthMapView(heigthMap)
 , m_windMapView(windMap)
@@ -69,7 +69,6 @@ void GlobalView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     // Set ship on view
     target.setView(m_worldViewUnit);
     sf::CircleShape ship(1.0f);
-    //    ship.setOrigin(0.5f, 0.5f);
     const sf::Vector2f &shipPosView = m_shipView.getShip().kinematics().position();
     ship.setPosition(shipPosView.x / TILE_SIZE, shipPosView.y / TILE_SIZE);
     target.draw(ship);

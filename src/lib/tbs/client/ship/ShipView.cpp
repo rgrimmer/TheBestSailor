@@ -56,15 +56,15 @@ void ShipView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     // Draw sail
     states.transform = states.transform.Identity;
     states.transform.translate(m_ship.kinematics().position());
-    states.transform.translate(0, 16);
     states.transform.rotate(m_ship.getSail().getAngle());
+    states.transform.translate(16, 0);
     target.draw(m_sailShape, states);
 
     // Draw speed vector
     target.draw(*m_speedView);
 
     // Draw acceleration vector
-    //    target.draw(*m_accView);
+    target.draw(*m_accView);
 
     /*
     // Draw helm
