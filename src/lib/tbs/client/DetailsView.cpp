@@ -20,7 +20,7 @@ DetailsView::DetailsView(const ClientWorld &world)
 , m_enableWind(true) {
 
     for (auto& ship : world.getShips()) {
-        m_shipsView.push_back(ShipView(ship.second));
+        m_shipsView.emplace_back(ship.second);
     }
 }
 
@@ -39,7 +39,7 @@ DetailsView::~DetailsView() {
 void DetailsView::updateShips(void) {
     m_shipsView.clear();
     for (auto& ship : m_world.getShips()) {
-        m_shipsView.push_back(ShipView(ship.second));
+        m_shipsView.emplace_back(ship.second);
     }
 }
 

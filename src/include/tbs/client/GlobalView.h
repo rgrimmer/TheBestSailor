@@ -10,22 +10,21 @@
 
 #include <string>
 
-#include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
+#include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
-#include "shared/map/MapHeader.h"
-#include "shared/map/HeigthMap.h"
-#include "shared/map/WindMap.h"
-#include "shared/ship/Ship.h"
-
+#include "client/DisplayInfo.h"
+#include "client/BackgroundView.h"
 #include "client/map/HeigthMapView.h"
 #include "client/map/WindMapView.h"
 #include "client/ship/ShipView.h"
-#include "DisplayInfo.h"
 
-//#include "sha"D
+class MapHeader;
+class HeigthMap;
+class WindMap;
+class Ship;
 
 class GlobalView : public sf::Drawable {
 public:
@@ -33,21 +32,24 @@ public:
     virtual ~GlobalView();
     
     void loadInformation();
+    
 private:
-
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-
     
-    const MapHeader &m_mapHeader;
-    
-    // Graphic
-    HeigthMapView m_heigthMapView;
-    WindMapView m_windMapView;
-    ShipView m_shipView;
+    // Background
+    BackgroundView m_backgroundView;
     
     // Title
     sf::View m_titleView;
     DisplayInfo m_titleSfText;
+    
+    // World
+    const MapHeader &m_mapHeader;
+    
+    // Graphic world
+    HeigthMapView m_heigthMapView;
+    WindMapView m_windMapView;
+    ShipView m_shipView;
     
     // ClientWorld
     sf::View m_worldViewGraphic;
@@ -56,10 +58,6 @@ private:
     // Info
     sf::View m_infoView;
 
-    // Background
-    sf::View m_backgroundView;
-    sf::Texture m_backgroundTexture;
-    sf::Sprite m_background;
 };
 
 #endif	/* GLOBALVIEW_H */

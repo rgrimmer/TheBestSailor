@@ -9,14 +9,14 @@
 
 #include "shared/ship/Ship.h"
 
-#include "client/ship/ShipView.h"
 #include "client/VectorView.h"
+#include "client/ship/ShipView.h"
 
 ShipView::ShipView(const Ship &ship)
 : m_ship(ship)
 , m_sailShape({100.0f, 2.0f}) {
-    //    m_speedView = new VectorView(m_ship.kinematics().position(), m_ship.kinematics().speed(), "Vship", sf::Color::Cyan);
-    //    m_accView = new VectorView(m_ship.kinematics().position(), m_ship.kinematics().acceleration(), "", sf::Color::White);
+    m_speedView = new VectorView(m_ship.kinematics().position(), m_ship.kinematics().speed(), "Vship", sf::Color::Cyan);
+    m_accView = new VectorView(m_ship.kinematics().position(), m_ship.kinematics().acceleration(), "", sf::Color::White);
 
     // Ship base
     m_shipVertex.setPrimitiveType(sf::PrimitiveType::TrianglesStrip);
@@ -31,9 +31,19 @@ ShipView::ShipView(const Ship &ship)
     m_sailShape.setFillColor(sf::Color::White);
 }
 
+ShipView::ShipView(const ShipView& other)
+: m_ship(other.m_ship)
+, m_speedView(other.m_speedView)
+, m_accView(other.m_accView)
+, m_shipVertex(other.m_shipVertex)
+, m_sailShape(other.m_sailShape) {
+    m_speedView = new VectorView(m_ship.kinematics().position(), m_ship.kinematics().speed(), "Vship", sf::Color::Cyan);
+    m_accView = new VectorView(m_ship.kinematics().position(), m_ship.kinematics().acceleration(), "", sf::Color::White);
+}
+
 ShipView::~ShipView() {
-    //    delete m_speedView;
-    //    delete m_accView;
+    delete m_speedView;
+    delete m_accView;
 }
 
 void ShipView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -46,11 +56,12 @@ void ShipView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     // Draw sail
     states.transform = states.transform.Identity;
     states.transform.translate(m_ship.kinematics().position());
+    states.transform.translate(0, 16);
     states.transform.rotate(m_ship.getSail().getAngle());
     target.draw(m_sailShape, states);
 
     // Draw speed vector
-    //    target.draw(*m_speedView);
+    target.draw(*m_speedView);
 
     // Draw acceleration vector
     //    target.draw(*m_accView);
@@ -62,4 +73,8 @@ void ShipView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     sf::RectangleShape helm(sf::Vector2f(20.0f, 5.0f));
     target.draw(helm, states);*/
 
+}
+
+const Ship& ShipView::getShip() const {
+    return m_ship;
 }

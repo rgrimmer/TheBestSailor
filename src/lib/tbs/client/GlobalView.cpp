@@ -5,23 +5,27 @@
  * Created on 7 décembre 2014, 11:54
  */
 
+#include <iostream>
 
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/View.hpp>
-#include <iostream>
 
 #include "shared/Utils.h"
+#include "shared/map/MapHeader.h"
+//#include "shared/map/HeigthMap.h"
+//#include "shared/map/WindMap.h"
+#include "shared/ship/Ship.h"
 
-#include "client/GlobalView.h"
 #include "client/DisplayInfo.h"
+#include "client/GlobalView.h"
 
 GlobalView::GlobalView(const HeigthMap& heigthMap, const WindMap& windMap, const Ship& ship)
-: m_mapHeader(heigthMap.getHeader())
+: m_titleSfText("The Best Sailor", 130, Center) 
+, m_mapHeader(heigthMap.getHeader())
 , m_heigthMapView(heigthMap)
 , m_windMapView(windMap)
-, m_shipView(ship)
-, m_titleSfText("The Best Sailor", 130, Center) {
+, m_shipView(ship) {
     // Set title view
     m_titleView.setViewport(sf::FloatRect(0.01f, 0.0f, 1.0f, 1.0f));
 
@@ -41,27 +45,18 @@ GlobalView::GlobalView(const HeigthMap& heigthMap, const WindMap& windMap, const
     float widthInfo = 1 - leftInfo - leftMargin;
     float heightInfo = worldViewport.height;
     m_infoView.setViewport(sf::FloatRect(leftInfo, topInfo, widthInfo, heightInfo));
-
-    // Set background view
-    if (!m_backgroundTexture.loadFromFile("share/tbs/textures/wood1.png")) {
-        std::cout << "Impossible de charger la texture de background";
-    }
-    m_background.setTexture(m_backgroundTexture);
-    m_backgroundView = sf::View(sf::FloatRect(0.0f, 0.0f, m_backgroundTexture.getSize().x, m_backgroundTexture.getSize().y));
 }
 
 GlobalView::~GlobalView() {
 
 }
-#include <SFML/Graphics/RenderStates.hpp>
 
 void GlobalView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     // Save current view state
     sf::View curView = target.getView();
 
-    // Draw background on static view
-    target.setView(m_backgroundView);
-    target.draw(m_background);
+    // Draw background
+    target.draw(m_backgroundView);
 
     // Draw title
     target.setView(m_titleView);

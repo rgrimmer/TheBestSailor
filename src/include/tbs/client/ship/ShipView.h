@@ -23,9 +23,11 @@ class VectorView;
 class ShipView : public sf::Drawable {
 public:
     ShipView(const Ship &ship);
+    ShipView(const ShipView& other);
+
     virtual ~ShipView();
 
-    const Ship& getShip() const { return m_ship; }
+    const Ship& getShip() const;
 
 private:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
