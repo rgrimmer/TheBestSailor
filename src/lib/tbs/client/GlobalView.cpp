@@ -17,7 +17,7 @@
 //#include "shared/map/WindMap.h"
 #include "shared/ship/Ship.h"
 
-#include "client/DisplayInfo.h"
+#include "client/TextView.h"
 #include "client/GlobalView.h"
 
 GlobalView::GlobalView(const HeigthMap& heigthMap, const WindMap& windMap, const Ship& ship)
@@ -74,11 +74,11 @@ void GlobalView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(ship);
 
     // Draw info
-    DisplayInfo::setAbs(false);
+    TextView::setAbs(false);
     target.setView(m_infoView);
-    target.draw(DisplayInfo("Information", 60, TypeAlign::Center, sf::Text::Underlined));
-    target.draw(DisplayInfo("Position", 40, TypeAlign::Regular, sf::Text::Italic));
-    target.draw(DisplayInfo("x : " + std::to_string(m_shipView.getShip().kinematics().position().x) + "\ny : " + std::to_string(m_shipView.getShip().kinematics().position().y)));
+    target.draw(TextView("Information", 60, TypeAlign::Center, sf::Text::Underlined));
+    target.draw(TextView("Position", 40, TypeAlign::Regular, sf::Text::Italic));
+    target.draw(TextView("x : " + std::to_string(m_shipView.getShip().kinematics().position().x) + "\ny : " + std::to_string(m_shipView.getShip().kinematics().position().y)));
 
     // Reset normal view
     target.setView(curView);

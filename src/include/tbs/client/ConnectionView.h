@@ -15,7 +15,7 @@
 #include <SFML/Graphics/RenderStates.hpp>
 
 #include "client/BackgroundView.h"
-#include "DisplayInfo.h"
+#include "TextView.h"
 
 class ConnectionView : public sf::Drawable {
 public:
@@ -28,11 +28,11 @@ private:
     BackgroundView m_backgroundView;
 
     sf::View m_titleView;
-    DisplayInfo m_titleSfText;
+    TextView m_titleSfText;
     
     sf::View m_ipAddressSfView;
-    DisplayInfo m_fixedTextView;
-    DisplayInfo m_ipAddressView;
+    TextView m_fixedTextView;
+    TextView m_ipAddressView;
 };
 
 #endif	/* CONNECTIONVIEW_H */

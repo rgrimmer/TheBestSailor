@@ -1,12 +1,12 @@
 /* 
- * File:   DisplayInfo.h
+ * File:   TextView.h
  * Author: maxence
  *
  * Created on 1 novembre 2014, 11:37
  */
 
-#ifndef DISPLAYINFO_H
-#define	DISPLAYINFO_H
+#ifndef TEXTVIEW_H
+#define	TEXTVIEW_H
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Drawable.hpp>
@@ -20,10 +20,10 @@ enum TypeAlign {
     Center,
 };
 
-class DisplayInfo : public sf::Drawable {
+class TextView : public sf::Drawable {
 public:
-    DisplayInfo(const std::string text, int size = 30, TypeAlign type = Regular, sf::Uint32 = sf::Text::Style::Regular);
-    virtual ~DisplayInfo();
+    TextView(const std::string text, int size = 30, TypeAlign type = Regular, sf::Uint32 = sf::Text::Style::Regular);
+    virtual ~TextView();
     
     static void update();
     static void setAbs(bool drawAbs);
@@ -46,5 +46,5 @@ private:
 
 };
 
-#endif	/* DISPLAYINFO_H */
+#endif	/* TEXTVIEW_H */
 

@@ -9,7 +9,7 @@
 
 #include "shared/Font.h"
 
-#include "client/DisplayInfo.h"
+#include "client/TextView.h"
 #include "client/ConnectionView.h"
 
 ConnectionView::ConnectionView(const std::string& ipAddressText)

@@ -4,7 +4,7 @@
  * 
  * Created on 7 décembre 2014, 18:02
  */
-#include "client/DisplayInfo.h"
+#include "client/TextView.h"
 
 #include "client/DetailsView.h"
 #include "client/ClientWorld.h"
@@ -61,10 +61,10 @@ void DetailsView::draw(sf::RenderTarget& target, sf::RenderStates states) const 
         target.draw(m_windMapView, states);
         timeDrawWindMap = clockDraw.restart();
     }
-    DisplayInfo::update();
-    DisplayInfo::setAbs(true);
-    target.draw(DisplayInfo("Draw(ms)"));
-    target.draw(DisplayInfo("HeightMap : " + std::to_string(timeDrawHeightMap.asMilliseconds())));
-    target.draw(DisplayInfo("WindMap : " + std::to_string(timeDrawWindMap.asMilliseconds())));
+    TextView::update();
+    TextView::setAbs(true);
+    target.draw(TextView("Draw(ms)"));
+    target.draw(TextView("HeightMap : " + std::to_string(timeDrawHeightMap.asMilliseconds())));
+    target.draw(TextView("WindMap : " + std::to_string(timeDrawWindMap.asMilliseconds())));
 }
 

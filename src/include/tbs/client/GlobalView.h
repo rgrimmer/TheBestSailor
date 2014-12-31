@@ -15,7 +15,7 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
-#include "client/DisplayInfo.h"
+#include "client/TextView.h"
 #include "client/BackgroundView.h"
 #include "client/map/HeigthMapView.h"
 #include "client/map/WindMapView.h"
@@ -41,7 +41,7 @@ private:
     
     // Title
     sf::View m_titleView;
-    DisplayInfo m_titleSfText;
+    TextView m_titleSfText;
     
     // World
     const MapHeader &m_mapHeader;

@@ -47,8 +47,9 @@ ShipView::~ShipView() {
 }
 
 void ShipView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-    states.transform.rotate(m_ship.getAngle(), m_ship.kinematics().position());
+    states.transform = states.transform.Identity;
     states.transform.translate(m_ship.kinematics().position());
+    states.transform.rotate(m_ship.getAngle());
 
     // Draw ship
     target.draw(m_shipVertex, states);
@@ -57,7 +58,7 @@ void ShipView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     states.transform = states.transform.Identity;
     states.transform.translate(m_ship.kinematics().position());
     states.transform.rotate(m_ship.getSail().getAngle());
-    states.transform.translate(16, 0);
+//    states.transform.translate(m_ship.kinematics().position());
     target.draw(m_sailShape, states);
 
     // Draw speed vector
