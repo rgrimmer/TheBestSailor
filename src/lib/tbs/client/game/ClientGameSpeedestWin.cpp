@@ -5,7 +5,6 @@
  * Created on 14 décembre 2014, 19:15
  */
 #include <SFML/Window/Event.hpp>
-#include <bitset>
 
 #include "client/Client.h"
 #include "client/DetailsView.h"
@@ -17,27 +16,20 @@
 #include "shared/network/MsgTurnHelm.h"
 #include "shared/network/MsgTurnSail.h"
 #include "shared/network/MsgAction.h"
+#include "client/game/ClientGameConnection.h"
 
-MsgGame& operator>>(MsgGame &msg, ClientGameSpeedestWin& game) {
-    ClientWorld world;
-    msg >> world;
-    game.setClientWorld(world);
-
-    return msg;
-}
-
-ClientGameSpeedestWin::ClientGameSpeedestWin(Client& client, ClientPlayer& player, sf::RenderWindow& window)
-: m_world()
-, m_client(client)
+ClientGameSpeedestWin::ClientGameSpeedestWin(sf::RenderWindow& window, Client& client, ClientPlayer& player)
+: ClientGame(window, client)
+, m_world()
 , m_player(player)
-, m_window(window)
 , m_enableFolowCamera(true)
 , m_enablePause(false)
 , m_timeSpeed(1.0f)
 , m_zoomValue(1.0f)
 , m_mainGraphic(nullptr)
 , m_detailsView(nullptr)
-, m_globalView(nullptr) {
+, m_globalView(nullptr)
+, m_currentView(m_window.getView()) {
 
 }
 
@@ -61,7 +53,7 @@ void ClientGameSpeedestWin::release() {
     delete m_detailsView;
 }
 
-void ClientGameSpeedestWin::initGame() {
+void ClientGameSpeedestWin::init() {
 
     Ship *s = &(m_world.getShips()[m_player.getId()]);
     s->initialize({1000, 1000},
@@ -78,209 +70,145 @@ void ClientGameSpeedestWin::initGame() {
     m_window.setKeyRepeatEnabled(false);
 }
 
-bool ClientGameSpeedestWin::startGameLoop() {
-    sf::View currentView = m_window.getView();
-    // Clocks
-    sf::Clock clockGlobal;
-    sf::Clock clockGameLoop;
-    sf::Clock clockFPS;
-    unsigned int counter = 0;
-    int countFrames = 0;
-    int fps = 0;
-    std::bitset<4> keys;
-    bool stateChange(false);
-
-    // Display info
-    while (m_window.isOpen()) {
-
-        m_window.clear();
-
-        sf::Event event;
-        //    std::cout << "start poll" << std::endl;
-        //        window.waitEvent(event);
-        //        processEvent(window, event);
-        while (m_window.pollEvent(event)) {
-
-            if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-                // Send disconnection message
-                m_client.getNetwork().getTcpManager().disconnect();
-                m_window.close();
-            }
-            if (event.type == sf::Event::KeyPressed) {
-                switch (event.key.code) {
-                    case sf::Keyboard::Left:
-                        m_posView.x -= 500.0f;
-                        break;
-                    case sf::Keyboard::Right:
-                        m_posView.x += 500.0f;
-                        break;
-                    case sf::Keyboard::Up:
-                        m_posView.y -= 500.0f;
-                        break;
-                    case sf::Keyboard::Down:
-                        m_posView.y += 500.0f;
-                        break;
-                    case sf::Keyboard::Subtract:
-                        m_zoomValue *= 2.0f;
-                        currentView = sf::View(sf::FloatRect(m_posView.x, m_posView.y, SCREEN_WIDTH * m_zoomValue, SCREEN_HEIGHT * m_zoomValue));
-                        break;
-                    case sf::Keyboard::Add:
-                        m_zoomValue /= 2.0f;
-                        currentView = sf::View(sf::FloatRect(m_posView.x, m_posView.y, SCREEN_WIDTH * m_zoomValue, SCREEN_HEIGHT * m_zoomValue));
-                        break;
-                    case sf::Keyboard::D:
-                    {
-                        keys.set(TURN_HELM_POSITIVE, true);
-                        stateChange = true;
-                        /*MsgTurnHelm msgTurnHelmP(MsgOrientation::Positive);
-                        m_client.getNetwork().getUdpManager().send(msgTurnHelmP);
-                        m_world.getShip().setAngle(m_world.getShip().getAngle() + 5.0f);*/
-                        //m_world.getClientShip().setAngle(m_world.getClientShip().getAngle() + 5.0f);
-                        //m_world.getClientShip().getSail().setAngle(m_world.getClientShip().getSail().getAngle() + 5.0f);
-                    }
-                        break;
-                    case sf::Keyboard::Q:
-                    {
-                        keys.set(TURN_HELM_NEGATIVE, true);
-                        stateChange = true;
-                        /*MsgTurnHelm msgTurnHelmN(MsgOrientation::Negative);
-                        m_client.getNetwork().getUdpManager().send(msgTurnHelmN);
-                        m_world.getShip().setAngle(m_world.getShip().getAngle() - 5.0f);*/
-
-                        //m_world.getClientShip().setAngle(m_world.getClientShip().getAngle() - 5.0f);
-                        //m_world.getClientShip().getSail().setAngle(m_world.getClientShip().getSail().getAngle() - 5.0f);
-                    }
-                        break;
-                    case sf::Keyboard::Z:
-                    {
-                        keys.set(TURN_SAIL_POSITIVE, true);
-                        stateChange = true;
-                        /* MsgTurnSail msgTurnSailP(MsgOrientation::Positive);
-                         m_client.getNetwork().getUdpManager().send(msgTurnSailP);
-                         m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() + 5.0f);*/
-                    }
-                        break;
-
-                    case sf::Keyboard::S:
-                    {
-                        keys.set(TURN_SAIL_NEGATIVE, true);
-                        stateChange = true;
-                        /* MsgTurnSail msgTurnSailN(MsgOrientation::Negative);
-                         m_client.getNetwork().getUdpManager().send(msgTurnSailN);
-                         m_world.getShip().getSail().setAngle(m_world.getShip().getSail().getAngle() - 5.0f);*/
-                    }
-                        break;
-
-                    case sf::Keyboard::A:
-                        m_detailsView->switchSquared();
-                        break;
-                    case sf::Keyboard::W:
-                        m_detailsView->switchEnableWind();
-                        break;
-                    case sf::Keyboard::C:
-                        m_enableFolowCamera = !m_enableFolowCamera;
-                        break;
-                    case sf::Keyboard::P:
-                        m_enablePause = !m_enablePause;
-                        break;
-                    case sf::Keyboard::R:
-                        m_timeSpeed /= 2.0f;
-                        break;
-                    case sf::Keyboard::T:
-                        m_timeSpeed *= 2.0f;
-                        break;
-                    case sf::Keyboard::M:
-                        m_mainGraphic = (m_mainGraphic == dynamic_cast<sf::Drawable*> (m_detailsView)) ? dynamic_cast<sf::Drawable*> (m_globalView) : dynamic_cast<sf::Drawable*> (m_detailsView);
-                        break;
-                    default:
-                        break;
-                }
-            } else if (event.type == sf::Event::KeyReleased) {
-                switch (event.key.code) {
-                    case sf::Keyboard::D:
-                        keys.set(TURN_HELM_POSITIVE, false);
-                        stateChange = true;
-                        break;
-                    case sf::Keyboard::Q:
-                        keys.set(TURN_HELM_NEGATIVE, false);
-                        stateChange = true;
-                        break;
-                    case sf::Keyboard::Z:
-                        keys.set(TURN_SAIL_POSITIVE, false);
-                        stateChange = true;
-                        break;
-                    case sf::Keyboard::S:
-                        keys.set(TURN_SAIL_NEGATIVE, false);
-                        stateChange = true;
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        // @TODO
-        counter++;
-        if (counter % 10 == 0 || stateChange) {
-            counter = 0;
-            stateChange = false;
-            MsgData msg;
-            msg << MsgType::Action << static_cast<sf::Uint8> (keys.to_ulong()) << m_clockGame.getElapsedTime().asMilliseconds();
-            m_client.getNetwork().getUdpManager().send(msg);
-        }
-
-        m_client.pollMessages();
-
-        // Set view position
-        if (m_enableFolowCamera) {
-            currentView.setCenter(m_world.getClientShip().kinematics().position());
-        } else {
-            currentView.setCenter(m_posView);
-        }
-        m_window.setView(currentView);
-
-
-        // Update
-        float timeLoop = clockGameLoop.getElapsedTime().asSeconds();
-        clockGameLoop.restart();
-
-        // Update world
-
-        if (!m_enablePause) {
-            m_world.update(timeLoop * m_timeSpeed);
-        }
-
-        // Draw
-
-        // Set view position
-        if (m_enableFolowCamera) {
-            currentView.setCenter(m_world.getClientShip().kinematics().position());
-        } else {
-            currentView.setCenter(m_posView);
-        }
-        m_window.setView(currentView);
-
-        // Draw view
-        m_window.draw(*m_mainGraphic);
-
-        if (clockFPS.getElapsedTime().asSeconds() >= 1) {
-            fps = countFrames;
-            countFrames = 0;
-            clockFPS.restart();
-        } else {
-            ++countFrames;
-        }
-        m_window.display();
-
+void ClientGameSpeedestWin::update(float dt) {
+    // Update world
+    if (!m_enablePause) {
+        m_world.update(dt * m_timeSpeed);
     }
-
-    return m_window.isOpen();
 }
 
-bool ClientGameSpeedestWin::read(MsgData& msg) {
+void ClientGameSpeedestWin::draw() {
+    // Set view position
+    if (m_enableFolowCamera) {
+        m_currentView.setCenter(m_world.getClientShip().kinematics().position());
+    } else {
+        m_currentView.setCenter(m_posView);
+    }
+    m_window.setView(m_currentView);
+    
+    // Draw view
+    m_window.draw(*m_mainGraphic);
+}
+
+bool ClientGameSpeedestWin::isEnded() {
+    return false;
+}
+
+void ClientGameSpeedestWin::sendInfo() {
+        MsgData msg;
+        msg << MsgType::Action << static_cast<sf::Uint8> (m_keys.to_ulong()) << m_clockGame.getElapsedTime().asMilliseconds();
+        m_client.getNetwork().getUdpManager().send(msg);
+}
+
+bool ClientGameSpeedestWin::read(sf::Event& event) {
+    if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+        // Send disconnection message
+        m_client.getNetwork().getTcpManager().disconnect();
+        m_window.close();
+    }
+    if (event.type == sf::Event::KeyPressed) {
+        switch (event.key.code) {
+            case sf::Keyboard::Left:
+                m_posView.x -= 500.0f;
+                break;
+            case sf::Keyboard::Right:
+                m_posView.x += 500.0f;
+                break;
+            case sf::Keyboard::Up:
+                m_posView.y -= 500.0f;
+                break;
+            case sf::Keyboard::Down:
+                m_posView.y += 500.0f;
+                break;
+            case sf::Keyboard::Subtract:
+                m_zoomValue *= 2.0f;
+                m_currentView = sf::View(sf::FloatRect(m_posView.x, m_posView.y, SCREEN_WIDTH * m_zoomValue, SCREEN_HEIGHT * m_zoomValue));
+                break;
+            case sf::Keyboard::Add:
+                m_zoomValue /= 2.0f;
+                m_currentView = sf::View(sf::FloatRect(m_posView.x, m_posView.y, SCREEN_WIDTH * m_zoomValue, SCREEN_HEIGHT * m_zoomValue));
+                break;
+            case sf::Keyboard::D:
+            {
+                m_keys.set(TURN_HELM_POSITIVE, true);
+                m_hasInfoToSend = true;
+            }
+                break;
+            case sf::Keyboard::Q:
+            {
+                m_keys.set(TURN_HELM_NEGATIVE, true);
+                m_hasInfoToSend = true;
+            }
+                break;
+            case sf::Keyboard::Z:
+            {
+                m_keys.set(TURN_SAIL_POSITIVE, true);
+                m_hasInfoToSend = true;
+            }
+                break;
+
+            case sf::Keyboard::S:
+            {
+                m_keys.set(TURN_SAIL_NEGATIVE, true);
+                m_hasInfoToSend = true;
+            }
+                break;
+
+            case sf::Keyboard::A:
+                m_detailsView->switchSquared();
+                break;
+            case sf::Keyboard::W:
+                m_detailsView->switchEnableWind();
+                break;
+            case sf::Keyboard::C:
+                m_enableFolowCamera = !m_enableFolowCamera;
+                break;
+            case sf::Keyboard::P:
+                m_enablePause = !m_enablePause;
+                break;
+            case sf::Keyboard::R:
+                m_timeSpeed /= 2.0f;
+                break;
+            case sf::Keyboard::T:
+                m_timeSpeed *= 2.0f;
+                break;
+            case sf::Keyboard::M:
+                m_mainGraphic = (m_mainGraphic == dynamic_cast<sf::Drawable*> (m_detailsView)) ? dynamic_cast<sf::Drawable*> (m_globalView) : dynamic_cast<sf::Drawable*> (m_detailsView);
+                break;
+            default:
+                return false;
+        }
+    } else if (event.type == sf::Event::KeyReleased) {
+        switch (event.key.code) {
+            case sf::Keyboard::D:
+                m_keys.set(TURN_HELM_POSITIVE, false);
+                m_hasInfoToSend = true;
+                break;
+            case sf::Keyboard::Q:
+                m_keys.set(TURN_HELM_NEGATIVE, false);
+                m_hasInfoToSend = true;
+                break;
+            case sf::Keyboard::Z:
+                m_keys.set(TURN_SAIL_POSITIVE, false);
+                m_hasInfoToSend = true;
+                break;
+            case sf::Keyboard::S:
+                m_keys.set(TURN_SAIL_NEGATIVE, false);
+                m_hasInfoToSend = true;
+                break;
+            default:
+                return false;
+        }
+    }
+    return true;
+}
+
+bool ClientGameSpeedestWin::read(MsgData & msg) {
     MsgType msgType;
     msg >> msgType;
     switch (msgType) {
+        case MsgType::Game:
+            return readInitGame(msg);
         case MsgType::GameInfo:
             return readGameInfo(msg);
         case MsgType::Disconnect:
@@ -290,7 +218,7 @@ bool ClientGameSpeedestWin::read(MsgData& msg) {
     }
 }
 
-bool ClientGameSpeedestWin::readInitGame(MsgData& msg) {
+bool ClientGameSpeedestWin::readInitGame(MsgData & msg) {
     sf::Int32 width, height, seedHeight, seedWind;
     msg >> width >> height >> seedHeight >> seedWind;
     ClientWorld world;
@@ -301,7 +229,7 @@ bool ClientGameSpeedestWin::readInitGame(MsgData& msg) {
     return true;
 }
 
-bool ClientGameSpeedestWin::readGameInfo(MsgData& msg) {
+bool ClientGameSpeedestWin::readGameInfo(MsgData & msg) {
     std::cout << "GameInfo" << std::endl;
     sf::Int32 time;
     msg >> time;
@@ -330,7 +258,7 @@ bool ClientGameSpeedestWin::readGameInfo(MsgData& msg) {
     return true;
 }
 
-bool ClientGameSpeedestWin::readDisconnect(MsgData& msg) {
+bool ClientGameSpeedestWin::readDisconnect(MsgData & msg) {
     sf::Uint8 id;
     msg >> id;
     std::cout << m_world.getShips().erase(static_cast<unsigned int> (id)) << std::endl;

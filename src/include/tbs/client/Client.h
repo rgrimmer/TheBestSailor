@@ -36,7 +36,7 @@ public:
 private:
     void initConnectionWithServer();
     void initGame();
-    bool startGame();
+    void startGame();
 
     void sendLocalPlayerInfo();
     void waitServerPlayerInfo();

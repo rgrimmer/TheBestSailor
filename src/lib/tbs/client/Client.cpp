@@ -47,10 +47,10 @@ ClientNetwork& Client::getNetwork() {
 void Client::start(const std::string & name) {
     m_player.setName(name);
     initConnectionWithServer();
-    bool continued = false;
+    bool continued = true;
     do {
         initGame();
-        continued = startGame();
+        startGame();
     } while (continued);
 
 }
@@ -86,8 +86,8 @@ void Client::initGame() {
     }
 }
 
-bool Client::startGame() {
-    return m_game->start();
+void Client::startGame() {
+    m_game->start();
 }
 
 void Client::pollMessages() {
@@ -140,14 +140,15 @@ bool Client::readMsgServerPlayerInfo(MsgData &message) {
 
 bool Client::readMsgGame(MsgData& message) {
     std::cout << "[Client][Read] \t Read Game Message" << std::endl;
+    MsgData msgCopy(message);
     GameType gameType;
     message >> gameType;
     switch (gameType) {
         case GameType::SpeedestWin:
         {
             m_window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
-            m_game = new ClientGameSpeedestWin(*this, m_player, m_window);
-            m_game->readInitGame(message);
+            m_game = new ClientGameSpeedestWin(m_window, *this, m_player);
+            m_game->read(msgCopy);
         }
             break;
         default:
