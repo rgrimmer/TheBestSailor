@@ -36,6 +36,7 @@ protected:
 
     virtual void init();
     virtual void update(float dt);
+    virtual void sendGame();
     virtual void sendInfo();
     virtual bool gameIsEnded();
 

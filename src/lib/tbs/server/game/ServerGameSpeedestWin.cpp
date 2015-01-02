@@ -6,6 +6,7 @@
  */
 #include <iostream>
 
+#include "shared/game/GameType.h"
 #include "shared/Utils.h"
 #include "shared/network/MsgTurnHelm.h"
 #include "shared/network/MsgTurnSail.h"
@@ -138,6 +139,22 @@ bool ServerGameSpeedestWin::windComeFromTribord(const Ship& ship, const Wind& wi
 bool ServerGameSpeedestWin::gameIsEnded() {
     std::cout << "Nb players in game(" << m_players.inGame().size() << ")" << std::endl;
     return m_players.inGame().size() == 0;
+}
+
+void ServerGameSpeedestWin::sendGame() {
+    MsgData msgGame;
+    msgGame << MsgType::Game << GameType::SpeedestWin << sf::Int32(NB_TILES_HEIGHT) << sf::Int32(NB_TILES_WIDTH) << sf::Int32(m_server.getSeed()) << sf::Int32(m_server.getSeed());
+    
+    msgGame << sf::Int32(m_checkPointManager.getCheckPointCount());
+    
+    for (int i = 0 ; i < m_checkPointManager.getCheckPointCount(); ++i) {
+        ServerCheckpoint* checkpoint = m_checkPointManager.getCheckPoint(i);
+        
+        sf::Vector2i position = checkpoint->getPosition();
+        msgGame << sf::Int32(position.x) << sf::Int32(position.y);
+    }
+    
+    m_server.getNetwork()->getTCPManager().send(msgGame, std::vector<ServerPlayer*>(m_players.inGame().begin(), m_players.inGame().end()));
 }
 
 void ServerGameSpeedestWin::sendInfo() {

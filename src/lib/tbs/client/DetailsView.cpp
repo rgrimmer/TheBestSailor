@@ -17,6 +17,7 @@ DetailsView::DetailsView(const ClientWorld &world)
 : m_world(world)
 , m_heigthMapView(world.getHeightMap())
 , m_windMapView(world.getWindMap())
+//, m_checkPointManager(world.getCheckPointManager())
 , m_enableWind(true) {
 
     for (auto& ship : world.getShips()) {
@@ -52,15 +53,23 @@ void DetailsView::draw(sf::RenderTarget& target, sf::RenderStates states) const 
     target.draw(m_heigthMapView, states);
     timeDrawHeightMap = clockDraw.restart();
 
+    // Draw checkpoints
+    //std::cout << m_world.getCheckPointManager().getCheckPointCount() << std::endl;
+    /*for (int i = 0; i < m_world.getCheckPointManager().getCheckPointCount(); i++) {
+        //m_world.getCheckPointManager().getCheckPoint(i);
+        target.draw(*m_world.getCheckPointManager().getCheckPoint(i), states);
+    }*/
+    
     // Draw Ships
-    for(auto& shipView : m_shipsView)
+    for (auto& shipView : m_shipsView)
         target.draw(shipView, states);
-
+    
     // Draw Wind
     if (m_enableWind) {
         target.draw(m_windMapView, states);
         timeDrawWindMap = clockDraw.restart();
     }
+    
     DisplayInfo::update();
     DisplayInfo::setAbs(true);
     target.draw(DisplayInfo("Draw(ms)"));

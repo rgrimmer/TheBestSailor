@@ -87,10 +87,7 @@ void Server::createGame() {
 
 void Server::sendGame() {
     std::cout << "[Broad] \tGame" << std::endl;
-    MsgData msgGame;
-    msgGame << MsgType::Game << GameType::SpeedestWin << sf::Int32(NB_TILES_HEIGHT) << sf::Int32(NB_TILES_WIDTH) << sf::Int32(m_seed) << sf::Int32(m_seed);
-
-    m_network.getTCPManager().send(msgGame, std::vector<ServerPlayer*>(m_players.inGame().begin(), m_players.inGame().end()));
+    m_game->sendGame();
     waitAcknowledgment(m_players.inGame().size());
 }
 
@@ -211,6 +208,10 @@ bool Server::readDisconnect(MsgData& msg, ServerPlayer& player) {
 void Server::waitAcknowledgment(int permits) {
 
     m_acknowledgment.aquire(permits);
+}
+
+int Server::getSeed() {
+    return m_seed;
 }
 
 ServerNetwork* Server::getNetwork() {

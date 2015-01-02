@@ -68,3 +68,12 @@ void ServerCheckpointManager::release() {
 
     m_checkpoints.clear();
 }
+
+ServerCheckpoint* ServerCheckpointManager::getCheckPoint(int index) {
+    return m_checkpoints.at(index);
+}
+
+int ServerCheckpointManager::getCheckPointCount() {
+    return m_checkpoints.size();
+}
+

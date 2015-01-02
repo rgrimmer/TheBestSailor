@@ -292,10 +292,22 @@ bool ClientGameSpeedestWin::read(MsgData& msg) {
 
 bool ClientGameSpeedestWin::readInitGame(MsgData& msg) {
     sf::Int32 width, height, seedHeight, seedWind;
+    sf::Int32 checkPointCount;
     msg >> height >> width >> seedHeight >> seedWind;
     ClientWorld world;
+    ClientCheckPointManager checkPointManager;
+    
     std::cout << "RECEIVE map(" << height << ", " << width << ", " << seedHeight << ", " << seedWind << ")" << std::endl;
     world.initializeMap(width, height, seedHeight, seedWind);
+    
+    msg >> checkPointCount;
+    for (int i = 0; i < checkPointCount; ++i) {
+        sf::Vector2i posCheckPoint;
+        msg >> posCheckPoint.x >> posCheckPoint.y;
+        
+        world.addCheckPoint(posCheckPoint);
+    }
+    
     world.initialize();
     setClientWorld(world);
     return true;

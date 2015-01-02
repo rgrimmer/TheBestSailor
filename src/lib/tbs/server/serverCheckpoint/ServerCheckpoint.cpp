@@ -15,3 +15,7 @@ ServerCheckpoint::ServerCheckpoint(const sf::Vector2i & pos)
 ServerCheckpoint::~ServerCheckpoint() {
 
 }
+
+sf::Vector2i ServerCheckpoint::getPosition() const {
+    return m_position;
+}

@@ -25,7 +25,8 @@ public:
     void start();
 
     void doUpdate();
-
+    
+    virtual void sendGame() = 0;
     virtual bool read(MsgData& message, ServerPlayer& player) = 0;
     virtual sf::Packet toPacket(sf::Packet& packet) const = 0;
 

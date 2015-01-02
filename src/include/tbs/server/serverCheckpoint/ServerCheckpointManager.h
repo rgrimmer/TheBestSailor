@@ -19,8 +19,11 @@ public:
 
     void initialise(Map* map);
     void release(void);
+    
+    int getCheckPointCount();
+    ServerCheckpoint* getCheckPoint(int index);
 
 private:
-    std::list<ServerCheckpoint*> m_checkpoints;
+    std::vector<ServerCheckpoint*> m_checkpoints;
 
 };
