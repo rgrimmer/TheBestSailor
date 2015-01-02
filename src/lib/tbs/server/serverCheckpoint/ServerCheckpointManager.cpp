@@ -47,17 +47,14 @@ void ServerCheckpointManager::initialise(Map *map) {
                 // new map
                 std::cout << "No path found, changing map" << std::endl;
                 delete map;
-                std::cout << "Deleted" << std::endl;
                 map = new Map(MapHeader(NB_TILES_HEIGHT, NB_TILES_WIDTH, rand()));
-                std::cout << "New" << std::endl;
                 restart = true;
                 break;
             }
         }
 
     } while (restart);
-
-    std::cout << "This map is good !" << std::endl;
+    
     for (int i = 0; i < 4; ++i) {
         ServerCheckpoint* c = new ServerCheckpoint(checkpointsPos[i]);
         m_checkpoints.push_back(c);
