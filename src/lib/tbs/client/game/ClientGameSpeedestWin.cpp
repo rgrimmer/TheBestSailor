@@ -292,9 +292,9 @@ bool ClientGameSpeedestWin::read(MsgData& msg) {
 
 bool ClientGameSpeedestWin::readInitGame(MsgData& msg) {
     sf::Int32 width, height, seedHeight, seedWind;
-    msg >> width >> height >> seedHeight >> seedWind;
+    msg >> height >> width >> seedHeight >> seedWind;
     ClientWorld world;
-    std::cout << "RECEIVE map(" << width << ", " << height << ", " << seedHeight << ", " << seedWind << ")" << std::endl;
+    std::cout << "RECEIVE map(" << height << ", " << width << ", " << seedHeight << ", " << seedWind << ")" << std::endl;
     world.initializeMap(width, height, seedHeight, seedWind);
     world.initialize();
     setClientWorld(world);

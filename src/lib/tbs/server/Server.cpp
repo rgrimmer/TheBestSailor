@@ -11,6 +11,7 @@
 #include <SFML/System/Clock.hpp>
 #include <bitset>
 
+#include "shared/Utils.h"
 #include "shared/network/MsgGame.h"
 #include "shared/network/MsgClientPlayerInfo.h"
 #include "shared/network/MsgServerPlayerInfo.h"
@@ -80,13 +81,14 @@ void Server::startChronoAndWait() {
 void Server::createGame() {
     std::cout << "[Create] \tGame" << std::endl;
     // @TODO : switch with different game type
-    m_game = new ServerGameSpeedestWin(*this, m_players, MapHeader(200, 200, 42));
+    m_seed = rand();
+    m_game = new ServerGameSpeedestWin(*this, m_players, MapHeader(NB_TILES_HEIGHT, NB_TILES_WIDTH, m_seed));
 }
 
 void Server::sendGame() {
     std::cout << "[Broad] \tGame" << std::endl;
     MsgData msgGame;
-    msgGame << MsgType::Game << GameType::SpeedestWin << sf::Int32(200) << sf::Int32(200) << sf::Int32(42) << sf::Int32(42);
+    msgGame << MsgType::Game << GameType::SpeedestWin << sf::Int32(NB_TILES_HEIGHT) << sf::Int32(NB_TILES_WIDTH) << sf::Int32(m_seed) << sf::Int32(m_seed);
 
     m_network.getTCPManager().send(msgGame, std::vector<ServerPlayer*>(m_players.inGame().begin(), m_players.inGame().end()));
     waitAcknowledgment(m_players.inGame().size());

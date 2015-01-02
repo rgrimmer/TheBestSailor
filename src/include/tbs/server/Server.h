@@ -57,6 +57,7 @@ private:
     
     std::thread *m_readerThread;
     bool m_threadRun;
+    int m_seed;
 };
 
 #endif	/* SERVER_H */

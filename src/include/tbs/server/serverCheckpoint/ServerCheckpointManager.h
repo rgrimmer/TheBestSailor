@@ -10,14 +10,14 @@
 #include <list>
 
 #include "server/serverCheckpoint/ServerCheckpoint.h"
-#include "shared/map/HeigthMap.h"
+#include "shared/map/Map.h"
 
 class ServerCheckpointManager {
 public:
     ServerCheckpointManager();
     virtual ~ServerCheckpointManager();
 
-    void initialise(HeigthMap* m_map);
+    void initialise(Map* map);
     void release(void);
 
 private:

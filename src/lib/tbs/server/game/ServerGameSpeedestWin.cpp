@@ -38,8 +38,10 @@ sf::Packet& operator<<(sf::Packet& packet, const ServerGameSpeedestWin& game) {
 
 ServerGameSpeedestWin::ServerGameSpeedestWin(Server &server, ServerPlayers& players, const MapHeader &header)
 : ServerGame(server, players)
-, m_map(header) {
+{
 
+    m_map = new Map(header);
+    m_checkPointManager.initialise(m_map);
 
 }
 
@@ -47,7 +49,7 @@ ServerGameSpeedestWin::~ServerGameSpeedestWin() {
 }
 
 const Map& ServerGameSpeedestWin::getMap() const {
-    return m_map;
+    return *m_map;
 }
 
 void ServerGameSpeedestWin::init() {
@@ -89,7 +91,7 @@ void ServerGameSpeedestWin::updateShipState(Ship& ship, float dt) {
 }
 
 void ServerGameSpeedestWin::updateSail(Ship& ship) {
-    Wind wind = m_map.getWind(static_cast<sf::Vector2i> (ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
+    Wind wind = m_map->getWind(static_cast<sf::Vector2i> (ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
     float angleShip = ship.getAngle();
     float diff = 360.0f - angleShip;
     float windDir = wind.getDirection() + diff;
@@ -115,7 +117,7 @@ void ServerGameSpeedestWin::updateSail(Ship& ship) {
 }
 
 void ServerGameSpeedestWin::updateShipVelocity(Ship& ship) {
-    Wind wind = m_map.getWind(static_cast<sf::Vector2i> (ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
+    Wind wind = m_map->getWind(static_cast<sf::Vector2i> (ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
     float shipDirRad = Kinematics::degToRad(ship.getAngle());
     sf::Vector2f outP(std::cos(shipDirRad), std::sin(shipDirRad));
 
@@ -170,7 +172,7 @@ void ServerGameSpeedestWin::sendInfo() {
 }
 
 sf::Packet ServerGameSpeedestWin::toPacket(sf::Packet &packet) const {
-    return packet << m_map;
+    return packet << *m_map;
 }
 
 bool ServerGameSpeedestWin::read(MsgData& message, ServerPlayer& player) {

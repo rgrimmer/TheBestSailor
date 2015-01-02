@@ -12,6 +12,8 @@
 #include <SFML/Network/Packet.hpp>
 
 #include "shared/map/Map.h"
+
+#include "server/serverCheckpoint/ServerCheckpointManager.h"
 #include "server/game/ServerGame.h"
 
 class Server;
@@ -50,7 +52,8 @@ private:
 
     
 private:
-    Map m_map;
+    Map* m_map;
+    ServerCheckpointManager m_checkPointManager;
     std::map<ServerPlayer*, Ship> m_ships;
     
     sf::Clock m_gameClock;
