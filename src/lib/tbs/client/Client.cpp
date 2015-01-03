@@ -51,8 +51,9 @@ void Client::start(const std::string & name) {
     do {
         initGame();
         startGame();
-    } while (continued);
-
+        m_game = nullptr;
+    } while (continued && m_window.isOpen());
+    doDisconnection();
 }
 
 void Client::initConnectionWithServer() {
@@ -65,8 +66,6 @@ void Client::initConnectionWithServer() {
 
 void Client::sendLocalPlayerInfo() {
     std::cout << "[Client][SendLPI] \t Envoi des informations du joueurs" << std::endl;
-    //    MsgClientPlayerInfo msg(m_network.getUdpManager().getPort(), m_player.getName());
-    //    std::cout << "[Client][SendLPI] \t Send : name(" << msg.getName() << ") port("<< msg.getPort() << ")" << std::endl;
     MsgData msg;
     msg << MsgType::ClientPlayerInfo << static_cast<sf::Uint16> (m_network.getUdpManager().getPort()) << m_player.getName();
     m_network.getTcpManager().send(msg);
@@ -74,7 +73,7 @@ void Client::sendLocalPlayerInfo() {
 }
 
 void Client::waitServerPlayerInfo() {
-    std::cout << "[Client][WSPI] \t Attente des infos du serveur" << std::endl;
+    std::cout << "[Client][WSPI] \t Wait information from server" << std::endl;
     pollMessagesWait(sf::Time::Zero);
 }
 
@@ -88,6 +87,10 @@ void Client::initGame() {
 
 void Client::startGame() {
     m_game->start();
+}
+
+void Client::doDisconnection() {
+    m_network.getTcpManager().disconnect();
 }
 
 void Client::pollMessages() {
@@ -140,7 +143,6 @@ bool Client::readMsgServerPlayerInfo(MsgData &message) {
 
 bool Client::readMsgGame(MsgData& message) {
     std::cout << "[Client][Read] \t Read Game Message" << std::endl;
-    MsgData msgCopy(message);
     GameType gameType;
     message >> gameType;
     switch (gameType) {
@@ -148,9 +150,9 @@ bool Client::readMsgGame(MsgData& message) {
         {
             m_window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
             m_game = new ClientGameSpeedestWin(m_window, *this, m_player);
-            m_game->read(msgCopy);
+            m_game->readInitGame(message);
+            return true;
         }
-            break;
         default:
             std::cout << "Game Type Invalide" << std::endl;
             return false;

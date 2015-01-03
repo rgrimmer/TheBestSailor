@@ -7,7 +7,6 @@
 #include "shared/map/HeigthMap.h"
 
 class HeigthMapView : public sf::Drawable {
-    
 public:
     HeigthMapView(const HeigthMap &heigthMap);
     bool switchSquared();
@@ -19,7 +18,7 @@ private:
 
     // Model 
     const HeigthMap &m_heigthMap;
-    
+
     // Graphic 
     bool m_squared;
     sf::VertexArray m_vertices;

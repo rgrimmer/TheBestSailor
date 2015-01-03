@@ -54,19 +54,11 @@ void ClientGameSpeedestWin::release() {
 }
 
 void ClientGameSpeedestWin::init() {
-
-    Ship *s = &(m_world.getShips()[m_player.getId()]);
-    s->initialize({1000, 1000},
-    {
-        0, 0
-    });
-    m_world.setClientShip(s); // @TODO remove, it's temporary
-
+    sf::sleep(sf::milliseconds(100));
     m_globalView = new GlobalView(m_world.getHeightMap(), m_world.getWindMap(), m_world.getClientShip());
     m_detailsView = new DetailsView(m_world);
     m_mainGraphic = dynamic_cast<sf::Drawable*> (m_detailsView);
     m_enableFolowCamera = true;
-    //    m_posView = m_
     m_window.setKeyRepeatEnabled(false);
 }
 
@@ -78,6 +70,10 @@ void ClientGameSpeedestWin::update(float dt) {
 }
 
 void ClientGameSpeedestWin::draw() {
+    
+    if(&(m_world.getClientShip()) == nullptr)
+        return;
+    
     // Set view position
     if (m_enableFolowCamera) {
         m_currentView.setCenter(m_world.getClientShip().kinematics().position());
@@ -85,9 +81,10 @@ void ClientGameSpeedestWin::draw() {
         m_currentView.setCenter(m_posView);
     }
     m_window.setView(m_currentView);
-    
+
     // Draw view
-    m_window.draw(*m_mainGraphic);
+    if (m_mainGraphic)
+        m_window.draw(*m_mainGraphic);
 }
 
 bool ClientGameSpeedestWin::isEnded() {
@@ -95,15 +92,13 @@ bool ClientGameSpeedestWin::isEnded() {
 }
 
 void ClientGameSpeedestWin::sendInfo() {
-        MsgData msg;
-        msg << MsgType::Action << static_cast<sf::Uint8> (m_keys.to_ulong()) << m_clockGame.getElapsedTime().asMilliseconds();
-        m_client.getNetwork().getUdpManager().send(msg);
+    MsgData msg;
+    msg << MsgType::Action << static_cast<sf::Uint8> (m_keys.to_ulong()) << m_clockGame.getElapsedTime().asMilliseconds();
+    m_client.getNetwork().getUdpManager().send(msg);
 }
 
 bool ClientGameSpeedestWin::read(sf::Event& event) {
-    if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-        // Send disconnection message
-        m_client.getNetwork().getTcpManager().disconnect();
+    if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
         m_window.close();
     }
     if (event.type == sf::Event::KeyPressed) {
@@ -255,6 +250,7 @@ bool ClientGameSpeedestWin::readGameInfo(MsgData & msg) {
         ship.kinematics().speed() = {speedX, speedY};
         std::cout << "Recv ship(" << static_cast<unsigned int> (id) << ") pos(" << positionX << "," << positionY << ") speed(" << speedX << "," << speedY << ")" << std::endl;
     }
+    m_world.setClientShip(&m_world.getShips()[m_player.getId()]);
     return true;
 }
 

@@ -28,7 +28,7 @@ void ClientGame::start() {
     init();
     sf::Clock clockGame, clockUpdate;
     std::cout << "[Client][Game][Start]" << std::endl;
-    while (!isEnded()) {
+    while (!isEnded() && m_window.isOpen()) {
         sf::Event event;
         while (m_window.pollEvent(event))
             read(event);
@@ -59,6 +59,7 @@ void ClientGame::displayView() {
             ++m_countFrames;
         }
         
+        TextView::setAbs(true);
         m_window.draw(TextView(std::to_string(m_lastCoutFrames) + " FPS"));
         m_window.display();
 }

@@ -47,8 +47,7 @@ private:
     bool readMsgServerPlayerInfo(MsgData &message);
     bool readMsgGame(MsgData& message);
 
-    //    bool read(MsgGame& message);
-    //    bool read(MsgServerPlayerInfo& message);
+    void doDisconnection();
 
 private:
     sf::RenderWindow m_window;

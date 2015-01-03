@@ -21,6 +21,7 @@ public:
 
     void start();
     virtual bool read(MsgData& msg) = 0;
+    virtual bool readInitGame(MsgData& msg){ return false;}
     virtual void setUpdateTime(const sf::Time& updateTime);
 
 protected:

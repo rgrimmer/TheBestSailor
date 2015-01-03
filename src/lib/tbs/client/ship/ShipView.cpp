@@ -58,7 +58,6 @@ void ShipView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     states.transform = states.transform.Identity;
     states.transform.translate(m_ship.kinematics().position());
     states.transform.rotate(m_ship.getSail().getAngle());
-//    states.transform.translate(m_ship.kinematics().position());
     target.draw(m_sailShape, states);
 
     // Draw speed vector

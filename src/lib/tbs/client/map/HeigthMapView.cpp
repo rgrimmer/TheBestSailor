@@ -22,17 +22,16 @@ bool HeigthMapView::switchSquared() {
     return m_squared;
 }
 
-
 void HeigthMapView::load() {
 
     int height = m_heigthMap.getHeight();
     int width = m_heigthMap.getWidth();
-    
+
     sf::Color mapColor[width][height];
 
     for (int i = 0; i < width; ++i) {
         for (int j = 0; j < height; ++j) {
-            float tileValue = m_heigthMap(i,j);
+            float tileValue = m_heigthMap(i, j);
             mapColor[i][j] = Gradient::gradient[(int) (tileValue * 255)]; //g.getColor((int) (tileValue * 255));
         }
     }
@@ -63,10 +62,10 @@ void HeigthMapView::load() {
                 quad[3].color = c;
             } else {
                 if (i < width && j < height) {
-                    quad[0].color = mapColor[i][j];// + j * width];
-                    quad[1].color = mapColor[i+1][j];// + j * width + 1];
-                    quad[2].color = mapColor[i+1][j+1];// + (j + 1) * width + 1];
-                    quad[3].color = mapColor[i][j+1];// + (j + 1) * width];
+                    quad[0].color = mapColor[i][j]; // + j * width];
+                    quad[1].color = mapColor[i + 1][j]; // + j * width + 1];
+                    quad[2].color = mapColor[i + 1][j + 1]; // + (j + 1) * width + 1];
+                    quad[3].color = mapColor[i][j + 1]; // + (j + 1) * width];
                 }
             }
 
@@ -75,9 +74,7 @@ void HeigthMapView::load() {
 }
 
 void HeigthMapView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-    // apply the transform
-    //states.transform *= getTransform();
-
+    std::cout << "map : " << m_heigthMap.getWidth() << " " << m_heigthMap.getHeight() << std::endl;
     // draw the vertex array
     target.draw(m_vertices, states);
 }
