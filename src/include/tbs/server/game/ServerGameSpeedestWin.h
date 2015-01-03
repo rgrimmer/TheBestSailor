@@ -26,12 +26,12 @@ class Ship;
 class ServerGameSpeedestWin : public ServerGame {
 public:
     ServerGameSpeedestWin(Server &server, ServerPlayers &players, const MapHeader &header);
+    ServerGameSpeedestWin(const ServerGameSpeedestWin& other);
     virtual ~ServerGameSpeedestWin();
 
     const Map& getMap() const;
 
 protected:
-    virtual sf::Packet toPacket(sf::Packet& packet) const;
     virtual bool read(MsgData& message, ServerPlayer& player);
 
     virtual void init();
@@ -53,7 +53,7 @@ private:
 
     
 private:
-    Map* m_map;
+    Map m_map;
     ServerCheckpointManager m_checkPointManager;
     std::map<ServerPlayer*, Ship> m_ships;
     

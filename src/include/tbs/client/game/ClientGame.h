@@ -7,7 +7,7 @@
 
 #ifndef CLIENTGAME_H
 #define	CLIENTGAME_H
-
+#include <iostream>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
@@ -21,7 +21,9 @@ public:
 
     void start();
     virtual bool read(MsgData& msg) = 0;
-    virtual bool readInitGame(MsgData& msg){ return false;}
+    virtual bool readInitGame(MsgData& msg){
+        std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
+        return false;}
     virtual void setUpdateTime(const sf::Time& updateTime);
 
 protected:

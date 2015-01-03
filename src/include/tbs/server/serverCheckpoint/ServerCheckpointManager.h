@@ -7,23 +7,25 @@
 
 #pragma once
 
-#include <list>
+#include <vector>
 
 #include "server/serverCheckpoint/ServerCheckpoint.h"
-#include "shared/map/Map.h"
+
+class HeigthMap;
 
 class ServerCheckpointManager {
 public:
     ServerCheckpointManager();
     virtual ~ServerCheckpointManager();
 
-    void initialise(Map* map);
+    void initialise(HeigthMap& map);
     void release(void);
     
     int getCheckPointCount();
-    ServerCheckpoint* getCheckPoint(int index);
+    ServerCheckpoint& getCheckPoint(int index);
+    std::vector<ServerCheckpoint>& getCheckPoints(void);
 
 private:
-    std::vector<ServerCheckpoint*> m_checkpoints;
+    std::vector<ServerCheckpoint> m_checkpoints;
 
 };

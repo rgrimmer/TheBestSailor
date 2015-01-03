@@ -16,6 +16,7 @@ class HeigthMap {
 public:
     HeigthMap();
     HeigthMap(const MapHeader &header);
+    HeigthMap(const HeigthMap& other);
     virtual ~HeigthMap();
 
     float& operator()(int i, int j) {
@@ -33,6 +34,7 @@ public:
     const MapHeader& getHeader() const;
     MapHeader& getHeader();
     //void setHeader(const MapHeader& mapHeader);
+    float getValue(int x, int y) const;
 
 private:
     MapHeader m_header;

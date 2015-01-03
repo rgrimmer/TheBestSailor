@@ -39,18 +39,19 @@ sf::Packet& operator<<(sf::Packet& packet, const ServerGameSpeedestWin& game) {
 
 ServerGameSpeedestWin::ServerGameSpeedestWin(Server &server, ServerPlayers& players, const MapHeader &header)
 : ServerGame(server, players)
-{
+, m_map(header) {
+    m_checkPointManager.initialise(m_map.getHeightMap());
+}
 
-    m_map = new Map(header);
-    m_checkPointManager.initialise(m_map);
-
+ServerGameSpeedestWin::ServerGameSpeedestWin(const ServerGameSpeedestWin& other) :
+ServerGameSpeedestWin(other.m_server, m_players, m_map.getHeader()) {
 }
 
 ServerGameSpeedestWin::~ServerGameSpeedestWin() {
 }
 
 const Map& ServerGameSpeedestWin::getMap() const {
-    return *m_map;
+    return m_map;
 }
 
 void ServerGameSpeedestWin::init() {
@@ -92,7 +93,7 @@ void ServerGameSpeedestWin::updateShipState(Ship& ship, float dt) {
 }
 
 void ServerGameSpeedestWin::updateSail(Ship& ship) {
-    Wind wind = m_map->getWind(static_cast<sf::Vector2i> (ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
+    Wind wind = m_map.getWind(static_cast<sf::Vector2i> (ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
     float angleShip = ship.getAngle();
     float diff = 360.0f - angleShip;
     float windDir = wind.getDirection() + diff;
@@ -118,7 +119,7 @@ void ServerGameSpeedestWin::updateSail(Ship& ship) {
 }
 
 void ServerGameSpeedestWin::updateShipVelocity(Ship& ship) {
-    Wind wind = m_map->getWind(static_cast<sf::Vector2i> (ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
+    Wind wind = m_map.getWind(static_cast<sf::Vector2i> (ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
     float shipDirRad = Kinematics::degToRad(ship.getAngle());
     sf::Vector2f outP(std::cos(shipDirRad), std::sin(shipDirRad));
 
@@ -144,16 +145,16 @@ bool ServerGameSpeedestWin::gameIsEnded() {
 void ServerGameSpeedestWin::sendGame() {
     MsgData msgGame;
     msgGame << MsgType::Game << GameType::SpeedestWin << sf::Int32(NB_TILES_HEIGHT) << sf::Int32(NB_TILES_WIDTH) << sf::Int32(m_server.getSeed()) << sf::Int32(m_server.getSeed());
-    
+
     msgGame << sf::Int32(m_checkPointManager.getCheckPointCount());
-    
-    for (int i = 0 ; i < m_checkPointManager.getCheckPointCount(); ++i) {
-        ServerCheckpoint* checkpoint = m_checkPointManager.getCheckPoint(i);
-        
-        sf::Vector2i position = checkpoint->getPosition();
+
+    for (int i = 0; i < m_checkPointManager.getCheckPointCount(); ++i) {
+        ServerCheckpoint& checkpoint = m_checkPointManager.getCheckPoint(i);
+
+        sf::Vector2i position = checkpoint.getPosition();
         msgGame << sf::Int32(position.x) << sf::Int32(position.y);
     }
-    
+
     m_server.getNetwork()->getTCPManager().send(msgGame, std::vector<ServerPlayer*>(m_players.inGame().begin(), m_players.inGame().end()));
 }
 
@@ -186,10 +187,6 @@ void ServerGameSpeedestWin::sendInfo() {
     }
 
     m_server.getNetwork()->getUDPManager().send(msgGameInfo, std::vector<ServerPlayer*>(m_players.inGame().begin(), m_players.inGame().end()));
-}
-
-sf::Packet ServerGameSpeedestWin::toPacket(sf::Packet &packet) const {
-    return packet << *m_map;
 }
 
 bool ServerGameSpeedestWin::read(MsgData& message, ServerPlayer& player) {

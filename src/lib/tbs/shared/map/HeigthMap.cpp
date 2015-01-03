@@ -19,10 +19,23 @@ HeigthMap::HeigthMap() : m_header(0, 0), m_container(nullptr) {
 
 }
 
+HeigthMap::HeigthMap(const HeigthMap& other) :
+HeigthMap(other.m_header) {
+}
+
 HeigthMap::HeigthMap(const MapHeader &header)
 : m_header(header)
 , m_container(nullptr) {
 
+    if (m_header.getWidth() <= 0 || m_header.getHeight() <= 0) {
+        std::cout << "!!!!!!!!!!!!!!!!!" << std::endl;
+        return;
+    }
+
+    if (m_header.getWidth() != m_header.getHeight()) {
+        std::cout << "!!!!!!!!!!!!!!!! Width diff Height, not implemented yet" << std::endl;
+        return;
+    }
 
     int width = header.getWidth();
     int height = header.getHeight();
@@ -50,12 +63,16 @@ HeigthMap::HeigthMap(const MapHeader &header)
 }
 
 HeigthMap::~HeigthMap() {
-//    if (m_container != nullptr) { // @TODO
-//        for (int i = 0; i < getHeight(); ++i) {
-//            delete m_container[i];
-//        }
-//        delete m_container;
-//    }
+    /*if (m_container != nullptr) {
+        for (int i = 0; i < getHeight(); ++i) {
+            delete m_container[i];
+        }
+        delete m_container;
+    }*/
+}
+
+float HeigthMap::getValue(int x, int y) const {
+    return m_container[x][y];
 }
 
 int HeigthMap::getSize() const {

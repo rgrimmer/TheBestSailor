@@ -22,9 +22,7 @@ sf::Packet& operator>>(sf::Packet& packet, MapHeader& header) {
 }
 
 MapHeader::MapHeader()
-: m_height(0)
-, m_width(0)
-, m_seed(0) {
+: MapHeader(0,0,0) {
 }
 
 MapHeader::MapHeader(int height, int width, double seed)

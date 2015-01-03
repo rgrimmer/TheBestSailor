@@ -62,7 +62,7 @@ void Server::startChronoAndWait() {
         // Wait first player
         while (m_players.inWait().empty()) {
             readMessagesWait();
-            if (m_players.size() < 1)
+            if (m_players.inWait().size() >= 1)
                 std::cout << "[Serv][WaitP] \tFirst connection, start chrono" << std::endl;
             else
                 std::cout << "[Serv][WaitP] \t Warning, expect new client" << std::endl;

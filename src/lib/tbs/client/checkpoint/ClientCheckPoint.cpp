@@ -12,6 +12,6 @@ ClientCheckPoint::~ClientCheckPoint() {
 }
 
 void ClientCheckPoint::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-
+    states.transform.scale(32,32);
     target.draw(m_shape, states);
 }

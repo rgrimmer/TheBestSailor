@@ -5,10 +5,10 @@
  * Created on 21 octobre 2014, 13:59
  */
 
+#include "shared/Utils.h"
+#include "shared/map/HeigthMap.h"
 #include "server/PathFinding.h"
 #include "server/serverCheckpoint/ServerCheckpointManager.h"
-
-#include "shared/Utils.h"
 
 ServerCheckpointManager::ServerCheckpointManager()
 : m_checkpoints() {
@@ -19,7 +19,7 @@ ServerCheckpointManager::~ServerCheckpointManager() {
 
 }
 
-void ServerCheckpointManager::initialise(Map *map) {
+void ServerCheckpointManager::initialise(HeigthMap& map) {
     PathFinding p;
     sf::Vector2i checkpointsPos[4];
 
@@ -30,7 +30,8 @@ void ServerCheckpointManager::initialise(Map *map) {
 
     do {
         restart = false;
-        p.loadMap(&map->getHeightMap());
+        std::cout << "Map Address : " << &map << std::endl;
+        p.loadMap(&map);
         sf::Vector2i startPoint = p.choosePoint(PathFinding::area_center);
 
         for (int i = 0; i < 4; ++i) {
@@ -46,30 +47,24 @@ void ServerCheckpointManager::initialise(Map *map) {
             if (!pathFound) {
                 // new map
                 std::cout << "No path found, changing map" << std::endl;
-                delete map;
-                map = new Map(MapHeader(NB_TILES_HEIGHT, NB_TILES_WIDTH, rand()));
+                map = HeigthMap(MapHeader(map.getHeight(), map.getWidth(), rand()));
                 restart = true;
                 break;
             }
         }
 
     } while (restart);
-    
+
     for (int i = 0; i < 4; ++i) {
-        ServerCheckpoint* c = new ServerCheckpoint(checkpointsPos[i]);
-        m_checkpoints.push_back(c);
+        m_checkpoints.push_back(ServerCheckpoint(checkpointsPos[i]));
     }
 }
 
 void ServerCheckpointManager::release() {
-    for (unsigned int i = 0; i < m_checkpoints.size(); ++i) {
-        delete m_checkpoints.front();
-    }
-
     m_checkpoints.clear();
 }
 
-ServerCheckpoint* ServerCheckpointManager::getCheckPoint(int index) {
+ServerCheckpoint& ServerCheckpointManager::getCheckPoint(int index) {
     return m_checkpoints.at(index);
 }
 
@@ -77,3 +72,6 @@ int ServerCheckpointManager::getCheckPointCount() {
     return m_checkpoints.size();
 }
 
+std::vector<ServerCheckpoint>& ServerCheckpointManager::getCheckPoints() {
+    return m_checkpoints;
+}
