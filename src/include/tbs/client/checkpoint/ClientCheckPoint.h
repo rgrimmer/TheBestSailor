@@ -14,7 +14,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 
-class ClientCheckPoint : public sf::Drawable{
+class ClientCheckPoint : public sf::Drawable {
 public:
     explicit ClientCheckPoint(sf::Vector2i position);
     virtual ~ClientCheckPoint();

@@ -17,12 +17,13 @@ public:
     virtual ~ClientCheckPointManager();
 
     void addCheckPoint(sf::Vector2i position);
-    
-    int getCheckPointCount();
-    ClientCheckPoint* getCheckPoint(int index);
-    
+
+    int getCheckPointCount() const;
+    const ClientCheckPoint& getCheckPoint(int index) const;
+    const std::vector<ClientCheckPoint>& getCheckPoints() const;
+
 private:
-    std::vector<ClientCheckPoint*> m_checkPoints;
+    std::vector<ClientCheckPoint> m_checkPoints;
 };
 
 #endif	/* CLIENTCHECKPOINTMANAGER_H */

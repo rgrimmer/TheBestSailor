@@ -54,12 +54,11 @@ void DetailsView::draw(sf::RenderTarget& target, sf::RenderStates states) const 
     timeDrawHeightMap = clockDraw.restart();
 
     // Draw checkpoints
-    //std::cout << m_world.getCheckPointManager().getCheckPointCount() << std::endl;
-    /*for (int i = 0; i < m_world.getCheckPointManager().getCheckPointCount(); i++) {
-        //m_world.getCheckPointManager().getCheckPoint(i);
-        target.draw(*m_world.getCheckPointManager().getCheckPoint(i), states);
-    }*/
-
+    std::cout << m_world.getCheckPointManager().getCheckPointCount() << std::endl;
+    for(auto& checkPoint : m_world.getCheckPointManager().getCheckPoints()) {
+        target.draw(checkPoint, states);
+    }
+    
     // Draw Ships
     for (auto& shipView : m_shipsView)
         target.draw(shipView, states);

@@ -5,22 +5,20 @@ ClientCheckPointManager::ClientCheckPointManager()
 }
 
 ClientCheckPointManager::~ClientCheckPointManager() {
-    for (unsigned int i = 0; i < m_checkPoints.size(); ++i) {
-        delete m_checkPoints.at(i);
-    }
-    
-    m_checkPoints.empty();
 }
 
 void ClientCheckPointManager::addCheckPoint(sf::Vector2i position) {
-    m_checkPoints.push_back(new ClientCheckPoint(position));
+    m_checkPoints.push_back(ClientCheckPoint(position));
 }
 
-ClientCheckPoint* ClientCheckPointManager::getCheckPoint(int index){
+const ClientCheckPoint& ClientCheckPointManager::getCheckPoint(int index) const {
     return m_checkPoints.at(index);
 }
 
-int ClientCheckPointManager::getCheckPointCount() {
+int ClientCheckPointManager::getCheckPointCount() const {
     return m_checkPoints.size();
 }
 
+const std::vector<ClientCheckPoint>& ClientCheckPointManager::getCheckPoints() const {
+    return m_checkPoints;
+}

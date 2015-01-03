@@ -37,12 +37,12 @@ sf::Packet& operator>>(sf::Packet& packet, ClientWorld& world) {
     return packet;
 }
 
-ClientWorld::ClientWorld() : m_mapmap() {
-    m_checkPointManager = new ClientCheckPointManager();
+ClientWorld::ClientWorld() 
+: m_mapmap()
+, m_checkPointManager() {
 }
 
 ClientWorld::~ClientWorld() {
-    delete m_checkPointManager;
 }
 
 void ClientWorld::initialize() {
@@ -63,15 +63,15 @@ void ClientWorld::update(float dt) {
 }
 
 void ClientWorld::addCheckPoint(sf::Vector2i position) {
-    m_checkPointManager->addCheckPoint(position);
+    m_checkPointManager.addCheckPoint(position);
 }
 
-/*ClientCheckPointManager& ClientWorld::getCheckPointManager() {
-    return *m_checkPointManager;
-}*/
+const ClientCheckPointManager& ClientWorld::getCheckPointManager() const {
+    return m_checkPointManager;
+}
 
 ClientCheckPointManager& ClientWorld::getCheckPointManager() {
-    return *m_checkPointManager;
+    return m_checkPointManager;
 }
 
 std::map<unsigned int, Ship>& ClientWorld::getShips() {

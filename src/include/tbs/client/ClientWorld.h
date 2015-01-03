@@ -45,6 +45,7 @@ public:
 
  
     ClientCheckPointManager& getCheckPointManager();
+    const ClientCheckPointManager& getCheckPointManager() const;
     
     Map& getMap();
     const Map& getMap() const;
@@ -57,7 +58,7 @@ public:
 
 private:
     Map m_mapmap;
-    ClientCheckPointManager* m_checkPointManager;
+    ClientCheckPointManager m_checkPointManager;
     Ship* m_ship;
     std::map<unsigned int, Ship> m_ships;
 };
