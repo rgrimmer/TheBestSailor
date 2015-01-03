@@ -15,6 +15,7 @@
 #include "shared/map/WindMap.h"
 #include "shared/ship/Ship.h"
 
+#include "client/checkpoint/ClientCheckPointManager.h"
 #include "client/map/HeigthMapView.h"
 #include "client/map/WindMapView.h"
 #include "client/ship/ShipView.h"
@@ -38,6 +39,7 @@ private:
     const ClientWorld& m_world;
     HeigthMapView m_heigthMapView;
     WindMapView m_windMapView;
+    ClientCheckPointManager m_checkPointManager;
     std::vector<ShipView> m_shipsView;
 
     // Enable

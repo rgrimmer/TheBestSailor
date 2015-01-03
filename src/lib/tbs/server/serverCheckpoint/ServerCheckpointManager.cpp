@@ -19,7 +19,7 @@ ServerCheckpointManager::~ServerCheckpointManager() {
 
 }
 
-void ServerCheckpointManager::initialise(HeigthMap *m_map) {
+void ServerCheckpointManager::initialise(Map *map) {
     PathFinding p;
     sf::Vector2i checkpointsPos[4];
 
@@ -29,8 +29,8 @@ void ServerCheckpointManager::initialise(HeigthMap *m_map) {
     int attempts = 0;
 
     do {
-
-        p.loadMap(m_map);
+        restart = false;
+        p.loadMap(&map->getHeightMap());
         sf::Vector2i startPoint = p.choosePoint(PathFinding::area_center);
 
         for (int i = 0; i < 4; ++i) {
@@ -41,19 +41,20 @@ void ServerCheckpointManager::initialise(HeigthMap *m_map) {
                 checkpointsPos[i] = p.choosePoint((PathFinding::area)(PathFinding::area_north_east + i));
                 pathFound = p.find(startPoint, checkpointsPos[i]);
                 attempts++;
-            } while (!pathFound && attempts <= 100);
+            } while (!pathFound && attempts <= 1);
 
             if (!pathFound) {
                 // new map
-                delete m_map;
-                m_map = new HeigthMap(MapHeader(NB_TILES_WIDTH, NB_TILES_HEIGHT, rand()));
+                std::cout << "No path found, changing map" << std::endl;
+                delete map;
+                map = new Map(MapHeader(NB_TILES_HEIGHT, NB_TILES_WIDTH, rand()));
                 restart = true;
                 break;
             }
         }
 
     } while (restart);
-
+    
     for (int i = 0; i < 4; ++i) {
         ServerCheckpoint* c = new ServerCheckpoint(checkpointsPos[i]);
         m_checkpoints.push_back(c);
@@ -67,3 +68,12 @@ void ServerCheckpointManager::release() {
 
     m_checkpoints.clear();
 }
+
+ServerCheckpoint* ServerCheckpointManager::getCheckPoint(int index) {
+    return m_checkpoints.at(index);
+}
+
+int ServerCheckpointManager::getCheckPointCount() {
+    return m_checkpoints.size();
+}
+

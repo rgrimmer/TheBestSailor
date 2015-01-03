@@ -15,6 +15,8 @@ public:
     ServerCheckpoint(const sf::Vector2i & pos);
     virtual ~ServerCheckpoint();
     
+    sf::Vector2i getPosition() const;
+    
 private:
     sf::Vector2i m_position;
 };

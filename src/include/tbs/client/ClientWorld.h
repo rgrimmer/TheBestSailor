@@ -11,6 +11,8 @@
 #include <map>
 #include <iostream>
 
+#include "client/checkpoint/ClientCheckPointManager.h"
+
 #include "shared/map/MapHeader.h"
 #include "shared/map/HeigthMap.h"
 #include "shared/map/WindMap.h"
@@ -29,6 +31,8 @@ public:
 
     void update(float dt);
 
+    void addCheckPoint(sf::Vector2i position);
+    
     std::map<unsigned int, Ship>& getShips();
     const std::map<unsigned int, Ship>& getShips() const;
     void setClientShip(Ship* ship);
@@ -39,6 +43,9 @@ public:
     bool windComeFromTribord(const Wind &wind) const;
     bool windComeFromFront(const Wind &wind) const;
 
+ 
+    ClientCheckPointManager& getCheckPointManager();
+    
     Map& getMap();
     const Map& getMap() const;
 
@@ -50,6 +57,7 @@ public:
 
 private:
     Map m_mapmap;
+    ClientCheckPointManager* m_checkPointManager;
     Ship* m_ship;
     std::map<unsigned int, Ship> m_ships;
 };

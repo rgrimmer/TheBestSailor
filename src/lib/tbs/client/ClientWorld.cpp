@@ -14,6 +14,7 @@
 #include "client/map/Gradient.h"
 
 #include "shared/Utils.h"
+#include "client/checkpoint/ClientCheckPointManager.h"
 
 sf::Vector2f operator*(const sf::Vector2f &v1, const sf::Vector2f &v2) {
     return sf::Vector2f(v1.x * v2.x, v1.y * v2.y);
@@ -37,10 +38,11 @@ sf::Packet& operator>>(sf::Packet& packet, ClientWorld& world) {
 }
 
 ClientWorld::ClientWorld() : m_mapmap() {
-
+    m_checkPointManager = new ClientCheckPointManager();
 }
 
 ClientWorld::~ClientWorld() {
+    delete m_checkPointManager;
 }
 
 void ClientWorld::initialize() {
@@ -58,6 +60,18 @@ void ClientWorld::initializeMap(int width, int height, int heightMapSeed, int wi
 void ClientWorld::update(float dt) {
     for (auto& pairShip : m_ships)
         pairShip.second.update(dt);
+}
+
+void ClientWorld::addCheckPoint(sf::Vector2i position) {
+    m_checkPointManager->addCheckPoint(position);
+}
+
+/*ClientCheckPointManager& ClientWorld::getCheckPointManager() {
+    return *m_checkPointManager;
+}*/
+
+ClientCheckPointManager& ClientWorld::getCheckPointManager() {
+    return *m_checkPointManager;
 }
 
 std::map<unsigned int, Ship>& ClientWorld::getShips() {

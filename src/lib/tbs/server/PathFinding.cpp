@@ -93,7 +93,7 @@ sf::Vector2i PathFinding::choosePoint(area a) {
         choosenPoint.x = rand() % (max.x - min.x) + min.x;
         choosenPoint.y = rand() % (max.y - min.y) + min.y;
 
-        if (isWatterAround(choosenPoint.x, choosenPoint.y, 2)) {
+        if (isWatterAround(choosenPoint.x, choosenPoint.y, 4)) {
             break;
         }
     }
@@ -196,7 +196,7 @@ void PathFinding::add_neightbours(std::pair <int, int>& n) {
             if ((i == n.first) && (j == n.second)) // case actuelle n
                 continue;
 
-            if (!isWatterAround(i, j, 2))
+            if (!isWatterAround(i, j, 4))
                 // obstace, terrain non franchissable
                 continue;
 

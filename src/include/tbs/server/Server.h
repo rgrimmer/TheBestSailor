@@ -30,6 +30,7 @@ public:
     bool readMessagesWait(sf::Time timeout = sf::Time::Zero);
     bool read(MsgData& message, ServerPlayer& player);
 
+    int getSeed();
     ServerNetwork* getNetwork();
     void startReaderThread();
     void stopReaderThread();
@@ -57,6 +58,7 @@ private:
     
     std::thread *m_readerThread;
     bool m_threadRun;
+    int m_seed;
 };
 
 #endif	/* SERVER_H */

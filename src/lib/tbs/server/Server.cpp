@@ -11,6 +11,7 @@
 #include <SFML/System/Clock.hpp>
 #include <bitset>
 
+#include "shared/Utils.h"
 #include "shared/network/MsgGame.h"
 #include "shared/network/MsgClientPlayerInfo.h"
 #include "shared/network/MsgServerPlayerInfo.h"
@@ -80,15 +81,13 @@ void Server::startChronoAndWait() {
 void Server::createGame() {
     std::cout << "[Create] \tGame" << std::endl;
     // @TODO : switch with different game type
-    m_game = new ServerGameSpeedestWin(*this, m_players, MapHeader(200, 200, 42));
+    m_seed = rand();
+    m_game = new ServerGameSpeedestWin(*this, m_players, MapHeader(NB_TILES_HEIGHT, NB_TILES_WIDTH, m_seed));
 }
 
 void Server::sendGame() {
     std::cout << "[Broad] \tGame" << std::endl;
-    MsgData msgGame;
-    msgGame << MsgType::Game << GameType::SpeedestWin << sf::Int32(200) << sf::Int32(200) << sf::Int32(42) << sf::Int32(42);
-
-    m_network.getTCPManager().send(msgGame, std::vector<ServerPlayer*>(m_players.inGame().begin(), m_players.inGame().end()));
+    m_game->sendGame();
     waitAcknowledgment(m_players.inGame().size());
 }
 
@@ -209,6 +208,10 @@ bool Server::readDisconnect(MsgData& msg, ServerPlayer& player) {
 void Server::waitAcknowledgment(int permits) {
 
     m_acknowledgment.aquire(permits);
+}
+
+int Server::getSeed() {
+    return m_seed;
 }
 
 ServerNetwork* Server::getNetwork() {
