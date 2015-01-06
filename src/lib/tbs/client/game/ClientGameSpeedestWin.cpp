@@ -104,16 +104,16 @@ bool ClientGameSpeedestWin::read(sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
         switch (event.key.code) {
             case sf::Keyboard::Left:
-                m_posView.x -= 500.0f;
+                m_posView.x -= 255.0f * m_zoomValue;
                 break;
             case sf::Keyboard::Right:
-                m_posView.x += 500.0f;
+                m_posView.x += 255.0f * m_zoomValue;
                 break;
             case sf::Keyboard::Up:
-                m_posView.y -= 500.0f;
+                m_posView.y -= 255.0f * m_zoomValue;
                 break;
             case sf::Keyboard::Down:
-                m_posView.y += 500.0f;
+                m_posView.y += 255.0f * m_zoomValue;
                 break;
             case sf::Keyboard::Subtract:
                 m_zoomValue *= 2.0f;
