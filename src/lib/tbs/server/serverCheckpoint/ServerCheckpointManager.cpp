@@ -45,8 +45,6 @@ void ServerCheckpointManager::initialise(HeigthMap& map) {
             } while (!pathFound && attempts <= 1);
 
             if (!pathFound) {
-                // new map
-                std::cout << "No path found, changing map" << std::endl;
                 map = HeigthMap(MapHeader(map.getHeight(), map.getWidth(), rand()));
                 restart = true;
                 break;

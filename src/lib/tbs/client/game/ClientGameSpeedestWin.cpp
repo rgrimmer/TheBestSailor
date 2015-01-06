@@ -217,7 +217,6 @@ bool ClientGameSpeedestWin::readInitGame(MsgData & msg) {
     sf::Int32 width, height, seedHeight, seedWind;
     sf::Int32 checkPointCount;
     msg >> height >> width >> seedHeight >> seedWind;
-    ClientCheckPointManager checkPointManager;
     
     m_world.initialize();
     std::cout << "RECEIVE map(" << height << ", " << width << ", " << seedHeight << ", " << seedWind << ")" << std::endl;

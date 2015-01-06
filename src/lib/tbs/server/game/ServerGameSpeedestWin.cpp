@@ -144,13 +144,15 @@ bool ServerGameSpeedestWin::gameIsEnded() {
 
 void ServerGameSpeedestWin::sendGame() {
     MsgData msgGame;
-    msgGame << MsgType::Game << GameType::SpeedestWin << sf::Int32(NB_TILES_HEIGHT) << sf::Int32(NB_TILES_WIDTH) << sf::Int32(m_server.getSeed()) << sf::Int32(m_server.getSeed());
+    msgGame << MsgType::Game << GameType::SpeedestWin 
+            << sf::Int32(m_map.getHeader().getHeight()) 
+            << sf::Int32(m_map.getHeader().getWidth()) 
+            << sf::Int32(m_map.getHeightMap().getSeed()) 
+            << sf::Int32(m_map.getWindMap().getSeed());
 
     msgGame << sf::Int32(m_checkPointManager.getCheckPointCount());
 
-    for (int i = 0; i < m_checkPointManager.getCheckPointCount(); ++i) {
-        ServerCheckpoint& checkpoint = m_checkPointManager.getCheckPoint(i);
-
+    for (auto& checkpoint : m_checkPointManager.getCheckPoints()) {
         sf::Vector2i position = checkpoint.getPosition();
         msgGame << sf::Int32(position.x) << sf::Int32(position.y);
     }

@@ -17,6 +17,7 @@ public:
     HeigthMap();
     HeigthMap(const MapHeader &header);
     HeigthMap(const HeigthMap& other);
+    
     virtual ~HeigthMap();
 
     float& operator()(int i, int j) {
@@ -38,7 +39,8 @@ public:
 
 private:
     MapHeader m_header;
-    float** m_container;
+    std::vector<std::vector<float> > m_container;
+//    float** m_container;
 };
 
 sf::Packet& operator <<(sf::Packet& packet, const HeigthMap& map);

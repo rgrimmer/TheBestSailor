@@ -15,17 +15,19 @@ sf::Packet& operator<<(sf::Packet& packet, const HeigthMap& map) {
     return packet << map.getHeader();
 }
 
-HeigthMap::HeigthMap() : m_header(0, 0), m_container(nullptr) {
+HeigthMap::HeigthMap() : m_header(0, 0) {
+    std::cout << "HeigthMap(0) call" << std::endl;
 
 }
 
 HeigthMap::HeigthMap(const HeigthMap& other) :
 HeigthMap(other.m_header) {
+    std::cout << "CP HeigthMap(1) call" << std::endl;
 }
 
 HeigthMap::HeigthMap(const MapHeader &header)
-: m_header(header)
-, m_container(nullptr) {
+: m_header(header) {
+    std::cout << "HeigthMap(1) call" << std::endl;
 
     if (m_header.getWidth() <= 0 || m_header.getHeight() <= 0) {
         std::cout << "!!!!!!!!!!!!!!!!!" << std::endl;
@@ -43,10 +45,12 @@ HeigthMap::HeigthMap(const MapHeader &header)
 
     ValueNoise::GenerateValues(getSeed());
 
-    m_container = new float*[height];
+    m_container.resize(height);
+//    m_container = new float*[height];
+//    std::cout << "address m_container : " << m_container << std::endl;
 
     for (int i = 0; i < height; ++i) {
-        m_container[i] = new float[width];
+        m_container[i].resize(width);
     }
 
     float invWidth = 1.f / width, invHeight = 1.f / height;
@@ -63,12 +67,14 @@ HeigthMap::HeigthMap(const MapHeader &header)
 }
 
 HeigthMap::~HeigthMap() {
-    /*if (m_container != nullptr) {
-        for (int i = 0; i < getHeight(); ++i) {
-            delete m_container[i];
-        }
-        delete m_container;
-    }*/
+//    std::cout << "~ HeigthMap call. delete " << m_container << std::endl;
+//    if (m_container != nullptr) {
+//        for (int i = 0; i < getHeight(); ++i) {
+//            delete[] m_container[i];
+//        }
+//        delete[] m_container;
+//        m_container = nullptr;
+//    }
 }
 
 float HeigthMap::getValue(int x, int y) const {

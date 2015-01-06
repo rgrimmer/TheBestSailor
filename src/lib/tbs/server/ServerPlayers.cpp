@@ -63,25 +63,6 @@ void ServerPlayers::remove(ServerPlayer& playerToRemove) {
         std::cout << "Find in connection " << std::endl;
     }
     
-    /*
-auto itInGame = std::find(m_inGamePlayers.begin(), m_inGamePlayers.end(), &playerToRemove);
-if (itInGame != m_inGamePlayers.end()) {
-    std::cout << "Find in game " << &playerToRemove << " = " << *itInGame << " : " << (*itInGame)->getId() << " " << (*itInGame)->getName() << std::endl;
-    std::cout << "erase " << (m_inGamePlayers.erase(itInGame) != m_inGamePlayers.end()) << " players in game" << std::endl;
-} else {
-    auto itInWait = std::find(m_inWaitPlayers.begin(), m_inWaitPlayers.end(), &playerToRemove);
-    if (itInWait != m_inWaitPlayers.end()) {
-        std::cout << "Find in wait " << &playerToRemove << " = " << *itInWait << " : " << (*itInWait)->getId() << " " << (*itInWait)->getName() << std::endl;
-        m_inWaitPlayers.erase(itInWait);
-    } else {
-        if (m_inConnectionPlayers.erase(&playerToRemove) == 1) {
-            std::cout << "Find in connection " << playerToRemove.getId() << " " << playerToRemove.getName() << std::endl;
-        } else {
-            std::cout << "Unfineable player" << std::endl;
-        }
-    }
-}
-     */
     auto itPlayer = std::find(m_players.begin(), m_players.end(), &playerToRemove);
     std::cout << "Find player " << &playerToRemove << " = " << *itPlayer << " : " << (*itPlayer)->getId() << " " << (*itPlayer)->getName() << std::endl;
     delete *itPlayer;
