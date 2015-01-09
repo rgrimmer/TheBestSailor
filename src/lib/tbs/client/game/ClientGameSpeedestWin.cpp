@@ -54,7 +54,6 @@ void ClientGameSpeedestWin::release() {
 }
 
 void ClientGameSpeedestWin::init() {
-    sf::sleep(sf::milliseconds(100));
     m_globalView = new GlobalView(m_world.getHeightMap(), m_world.getWindMap(), m_world.getClientShip());
     m_detailsView = new DetailsView(m_world);
     m_mainGraphic = dynamic_cast<sf::Drawable*> (m_detailsView);
@@ -216,6 +215,7 @@ bool ClientGameSpeedestWin::read(MsgData & msg) {
 bool ClientGameSpeedestWin::readInitGame(MsgData & msg) {
     sf::Int32 width, height, seedHeight, seedWind;
     sf::Int32 checkPointCount;
+    sf::Int32 shipCount;
     msg >> height >> width >> seedHeight >> seedWind;
     
     m_world.initialize();
@@ -228,6 +228,18 @@ bool ClientGameSpeedestWin::readInitGame(MsgData & msg) {
         msg >> posCheckPoint.x >> posCheckPoint.y;
         
         m_world.addCheckPoint(posCheckPoint);
+    }
+    
+    msg >> shipCount;
+    
+    for(int i = 0; i < shipCount; ++i) {
+        sf::Uint8 id;
+        msg >> id;
+        Ship& ship = m_world.getShips()[static_cast<unsigned int>(id)];
+        auto& shipPos = ship.kinematics().position();
+        msg >> shipPos.x >> shipPos.y;
+        ship.setAngle(90.0f);
+        ship.getSail().setAngle(m_world.getWindMap().wind(shipPos.x / TILE_SIZE, shipPos.y / TILE_SIZE).getDirection());
     }
     
     return true;

@@ -41,6 +41,20 @@ ServerGameSpeedestWin::ServerGameSpeedestWin(Server &server, ServerPlayers& play
 : ServerGame(server, players)
 , m_map(header) {
     m_checkPointManager.initialise(m_map.getHeightMap());
+    sf::Vector2f initPosition = static_cast<sf::Vector2f>(m_checkPointManager.getCheckPoint(0).getPosition());
+    sf::Vector2f position(initPosition);
+    for (auto* player : m_players.inGame()) {
+        Ship ship;
+        ship.kinematics().position() = position;
+        ship.setAngle(90.0f);
+        ship.getSail().setAngle(m_map.getWind(sf::Vector2i(position.x / TILE_SIZE, position.y / TILE_SIZE)).direction());
+        m_ships[player] = ship;
+        position.x += TILE_SIZE/4;
+        if(position.x >= initPosition.x + TILE_SIZE) {
+            position.x = initPosition.x;
+            position.y += TILE_SIZE/4;
+        }
+    }
 }
 
 ServerGameSpeedestWin::ServerGameSpeedestWin(const ServerGameSpeedestWin& other) :
@@ -55,14 +69,6 @@ const Map& ServerGameSpeedestWin::getMap() const {
 }
 
 void ServerGameSpeedestWin::init() {
-    sf::Vector2f position(1000.0f, 1000.0f);
-    for (auto* player : m_players.inGame()) {
-        Ship ship;
-        ship.kinematics().position() = position;
-        ship.setAngle(90.0f);
-        m_ships[player] = ship;
-        position.x += 32.0f;
-    }
     sendInfo();
 }
 
@@ -150,11 +156,22 @@ void ServerGameSpeedestWin::sendGame() {
             << sf::Int32(m_map.getHeightMap().getSeed()) 
             << sf::Int32(m_map.getWindMap().getSeed());
 
+    // Send checkpoint
     msgGame << sf::Int32(m_checkPointManager.getCheckPointCount());
 
     for (auto& checkpoint : m_checkPointManager.getCheckPoints()) {
         sf::Vector2i position = checkpoint.getPosition();
         msgGame << sf::Int32(position.x) << sf::Int32(position.y);
+    }
+    
+    // Send ship
+    msgGame << sf::Int32(m_ships.size());
+    
+    for (auto& pair : m_ships) {
+        auto& ship = pair.second;
+        msgGame << static_cast<sf::Uint8>(pair.first->getId())
+                << ship.kinematics().position().x
+                << ship.kinematics().position().y;
     }
 
     m_server.getNetwork()->getTCPManager().send(msgGame, std::vector<ServerPlayer*>(m_players.inGame().begin(), m_players.inGame().end()));

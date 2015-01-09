@@ -81,8 +81,7 @@ void Server::startChronoAndWait() {
 void Server::createGame() {
     std::cout << "[Create] \tGame" << std::endl;
     // @TODO : switch with different game type
-    m_seed = rand();
-    m_game = new ServerGameSpeedestWin(*this, m_players, MapHeader(NB_TILES_HEIGHT, NB_TILES_WIDTH, m_seed));
+    m_game = new ServerGameSpeedestWin(*this, m_players, MapHeader(NB_TILES_HEIGHT, NB_TILES_WIDTH, rand()));
 }
 
 void Server::sendGame() {
@@ -208,10 +207,6 @@ bool Server::readDisconnect(MsgData& msg, ServerPlayer& player) {
 void Server::waitAcknowledgment(int permits) {
 
     m_acknowledgment.aquire(permits);
-}
-
-int Server::getSeed() {
-    return m_seed;
 }
 
 ServerNetwork* Server::getNetwork() {

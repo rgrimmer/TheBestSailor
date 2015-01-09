@@ -5,7 +5,7 @@ ClientCheckPoint::ClientCheckPoint(sf::Vector2i position)
 : m_position(position)
 , m_shape({200.0f, 200.0f})
 {
-    m_shape.setPosition(position.x*TILE_SIZE, position.y*TILE_SIZE);
+    m_shape.setPosition(position.x, position.y);
     m_shape.setFillColor(sf::Color::Red);
 }
 
