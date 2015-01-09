@@ -32,7 +32,7 @@ private:
     
     sf::View m_ipAddressSfView;
     TextView m_fixedTextView;
-    TextView m_ipAddressView;
+    const std::string& m_ipAddressText;
 };
 
 #endif	/* CONNECTIONVIEW_H */

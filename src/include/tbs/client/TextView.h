@@ -22,7 +22,7 @@ enum TypeAlign {
 
 class TextView : public sf::Drawable {
 public:
-    TextView(const std::string text, int size = 30, TypeAlign type = Regular, sf::Uint32 = sf::Text::Style::Regular);
+    TextView(const std::string& text, int size = 30, TypeAlign type = Regular, sf::Uint32 = sf::Text::Style::Regular);
     virtual ~TextView();
     
     static void update();

@@ -15,7 +15,7 @@
 ConnectionView::ConnectionView(const std::string& ipAddressText)
 : m_titleSfText("The Best Sailor", 130, Center)
 , m_fixedTextView("IP address : ", 60, Center)
-, m_ipAddressView(ipAddressText, 60, Center) {
+, m_ipAddressText(ipAddressText) {
     m_titleView.setViewport(sf::FloatRect(0.01f, 0.0f, 1.0f, 1.0f));
 
     // Set input text view
@@ -37,7 +37,7 @@ void ConnectionView::draw(sf::RenderTarget& target, sf::RenderStates states) con
     // Draw InputText
     target.setView(m_ipAddressSfView);
     target.draw(m_fixedTextView);
-    target.draw(m_ipAddressView);
+    target.draw(TextView(m_ipAddressText, 60, Center));
 
     target.setView(currentView);
 }

@@ -27,6 +27,7 @@
 #include "shared/map/Map.h"
 #include "shared/network/MsgClientPlayerInfo.h"
 #include "client/ClientWorld.h"
+#include "client/game/ClientGameConnection.h"
 
 Client::Client()
 : m_player(-1, "Unamed")
@@ -46,13 +47,18 @@ ClientNetwork& Client::getNetwork() {
 
 void Client::start(const std::string & name) {
     m_player.setName(name);
+    m_window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
+    m_game = new ClientGameConnection(m_window, *this);
+    m_game->start();
+    if(!m_window.isOpen())
+        return;
     initConnectionWithServer();
     bool continued = true;
-    do {
+    while (continued && m_window.isOpen()) {
         initGame();
         startGame();
         m_game = nullptr;
-    } while (continued && m_window.isOpen());
+    }
     doDisconnection();
 }
 
@@ -148,7 +154,6 @@ bool Client::readMsgGame(MsgData& message) {
     switch (gameType) {
         case GameType::SpeedestWin:
         {
-            m_window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
             m_game = new ClientGameSpeedestWin(m_window, *this, m_player);
             m_game->readInitGame(message);
             return true;

@@ -31,6 +31,7 @@ void ClientGameConnection::init() {
     m_port = 0;
     m_address = sf::IpAddress::None;
     m_validate = false;
+    m_ipAddressInput.clear();
 }
 
 void ClientGameConnection::update(float dt) {
@@ -38,6 +39,7 @@ void ClientGameConnection::update(float dt) {
 }
 
 void ClientGameConnection::draw() {
+    TextView::update();
     m_window.draw(m_view);
 }
 
@@ -51,14 +53,24 @@ bool ClientGameConnection::read(MsgData& msg) {
 
 bool ClientGameConnection::read(sf::Event& event) {
     if (event.type == sf::Event::TextEntered) {
-        char c = static_cast<char>(event.text.unicode);
-        m_ipAddressInput.append(&c);
-        return true;
+        char c = static_cast<char> (event.text.unicode);
+        std::cout << "Text entred(" << c << ")" << std::endl;
+        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+            m_ipAddressInput.append(&c);
+            return true;
+        }
+        return false;
     } else if (event.type == sf::Event::KeyPressed) {
+        if (event.key.code == sf::Keyboard::BackSpace) {
+            m_ipAddressInput.resize(m_ipAddressInput.size() - 1);
+            return true;
+        }
         if (event.key.code == sf::Keyboard::Return) {
             m_validate = true;
             return true;
         }
+    } else if (event.type == sf::Event::Closed) {
+        m_window.close();
     }
     return false;
 }

@@ -60,6 +60,7 @@ void ClientGame::displayView() {
         }
         
         TextView::setAbs(true);
+        TextView::update();
         m_window.draw(TextView(std::to_string(m_lastCoutFrames) + " FPS"));
         m_window.display();
 }
