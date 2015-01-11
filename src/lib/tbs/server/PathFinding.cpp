@@ -168,7 +168,7 @@ bool PathFinding::isWatterAround(int x, int y, int radius) {
             if ((j < 0) || (j >= height))
                 continue;
             float x = m_map->getValue(i,j);
-            if (x <= 0.35) {
+            if (!WATER(x)) {
                 return false;
             }
         }

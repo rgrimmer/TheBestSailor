@@ -43,8 +43,9 @@ protected:
 private:
     void updateShipState(Ship& ship, float dt);
     void updateSail(Ship& ship);
-    void updateShipVelocity(Ship& ship);
+    sf::Vector2f calculShipVelocity(Ship& ship);
 
+    bool collideWithMap(Ship ship, sf::Vector2f velocity);
     bool readAction(MsgData& msg, ServerPlayer& player);
     bool readDisconnect(MsgData& msg, ServerPlayer& player);
 

@@ -73,11 +73,19 @@ void ServerGameSpeedestWin::init() {
 }
 
 void ServerGameSpeedestWin::update(float dt) {
-    for (auto& test : m_ships) {
-        updateShipState(test.second, dt);
-        updateSail(test.second);
-        updateShipVelocity(test.second);
-        test.second.update(dt);
+    for (auto& ship : m_ships) {
+        updateShipState(ship.second, dt);
+        updateSail(ship.second);
+        sf::Vector2f shipVelocity = calculShipVelocity(ship.second);
+        
+        if(!collideWithMap(ship.second, shipVelocity)) {
+            ship.second.kinematics().speed() = shipVelocity;
+        }
+        else {
+            ship.second.kinematics().speed() = {0.0f,0.0f};
+        }
+        
+        ship.second.update(dt);
     }
 }
 
@@ -124,7 +132,7 @@ void ServerGameSpeedestWin::updateSail(Ship& ship) {
     }
 }
 
-void ServerGameSpeedestWin::updateShipVelocity(Ship& ship) {
+sf::Vector2f ServerGameSpeedestWin::calculShipVelocity(Ship& ship) {
     Wind wind = m_map.getWind(static_cast<sf::Vector2i> (ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
     float shipDirRad = Kinematics::degToRad(ship.getAngle());
     sf::Vector2f outP(std::cos(shipDirRad), std::sin(shipDirRad));
@@ -132,8 +140,16 @@ void ServerGameSpeedestWin::updateShipVelocity(Ship& ship) {
     // Temporary equation 
     sf::Vector2f windForce = wind.getVector() * std::sin(Kinematics::degToRad(std::abs(ship.getSail().getAngle() - wind.getDirection())));
     sf::Vector2f velocity = std::sqrt(windForce.x * windForce.x + windForce.y * windForce.y) * outP;
-    ship.kinematics().speed() = velocity;
+    //ship.kinematics().speed() = velocity;
+    return velocity;
 }
+
+bool ServerGameSpeedestWin::collideWithMap(Ship ship, sf::Vector2f velocity) {
+    int x = (ship.kinematics().position().x + velocity.x) / TILE_SIZE;
+    int y = (ship.kinematics().position().y + velocity.y) / TILE_SIZE;
+    return !WATER(m_map.getHeightMap().getValue(x,y));
+}
+
 
 bool ServerGameSpeedestWin::windComeFromFront(const Ship& ship, const Wind& wind) const {
     return (static_cast<int> (450 - ship.getAngle() + wind.getDirection()) % 360 > 180);
