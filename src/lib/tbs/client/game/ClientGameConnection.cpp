@@ -8,6 +8,7 @@
 #include <SFML/Network/Socket.hpp>
 #include <SFML/Window/Event.hpp>
 
+#include "shared/network/UtilsNetwork.h"
 #include "client/game/ClientGameConnection.h"
 
 ClientGameConnection::ClientGameConnection(sf::RenderWindow& window, Client& client)
@@ -28,10 +29,10 @@ sf::IpAddress ClientGameConnection::getIpAddress() const {
 }
 
 void ClientGameConnection::init() {
-    m_port = 0;
+    m_port = SERVER_PORT_TCP;
     m_address = sf::IpAddress::None;
     m_validate = false;
-    m_ipAddressInput.clear();
+    m_ipAddressInput = "localhost";
     m_window.setKeyRepeatEnabled(false);
     m_window.setJoystickThreshold(100.0f);
 }
@@ -57,7 +58,7 @@ bool ClientGameConnection::read(sf::Event& event) {
     if (event.type == sf::Event::TextEntered) {
         char c = static_cast<char> (event.text.unicode);
         std::cout << "Text entred(" << c << ")" << std::endl;
-        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '.') {
             m_ipAddressInput.append(&c);
             return true;
         }
@@ -68,9 +69,10 @@ bool ClientGameConnection::read(sf::Event& event) {
             return true;
         }
         if (event.key.code == sf::Keyboard::Return) {
+            m_address = sf::IpAddress(m_ipAddressInput);
             m_validate = true;
             return true;
-        }
+        }// 172.21.70.34
     } else if (event.type == sf::Event::Closed) {
         m_window.close();
     }

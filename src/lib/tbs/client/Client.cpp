@@ -48,23 +48,22 @@ ClientNetwork& Client::getNetwork() {
 void Client::start(const std::string & name) {
     m_player.setName(name);
     m_window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
-    m_game = new ClientGameConnection(m_window, *this);
-    m_game->start();
-    m_game = nullptr;
+    m_connection = new ClientGameConnection(m_window, *this);
+    m_connection->start();
     if (!m_window.isOpen())
         return;
-    initConnectionWithServer();
+    std::cout << "TRY TO CONNECT TO " << m_connection->getIpAddress().toString() << std::endl;
+    initConnectionWithServer(m_connection->getIpAddress());
     while (m_window.isOpen()) {
         initGame();
         startGame();
-        m_game = nullptr;
     }
     doDisconnection();
 }
 
-void Client::initConnectionWithServer() {
+void Client::initConnectionWithServer(const sf::IpAddress &address) {
     std::cout << "[NetW][InitCWS]\tInitialize connection" << std::endl;
-    m_network.connect();
+    m_network.connect(address);
     m_network.getTcpManager().startReceiverThread();
     sendLocalPlayerInfo();
     waitServerPlayerInfo();
@@ -93,6 +92,7 @@ void Client::initGame() {
 
 void Client::startGame() {
     m_game->start();
+    m_game = nullptr;
 }
 
 void Client::doDisconnection() {
@@ -138,11 +138,11 @@ bool Client::read(MsgData& message) {
 }
 
 bool Client::readMsgServerPlayerInfo(MsgData &message) {
-    sf::Uint16 port, id;
-    message >> port >> id;
-    std::cout << "[Client][Read] \t Read Server Player Info Message. id(" << id << "), serverUdpPort(" << port << ")" << std::endl;
+    sf::Uint16 udpPort, id;
+    message >> udpPort >> id;
+    std::cout << "[Client][Read] \t Read Server Player Info Message. id(" << id << "), serverUdpPort(" << udpPort << ")" << std::endl;
     m_player.setId(id);
-    m_network.getUdpManager().initialize("localhost", port); // @TODO
+    m_network.getUdpManager().initialize(m_connection->getIpAddress(), udpPort); // @TODO
     m_network.getUdpManager().startReceiverThread();
     return true;
 }

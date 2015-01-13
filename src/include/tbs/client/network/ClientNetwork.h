@@ -8,6 +8,8 @@
 #ifndef CLIENTNETWORK_H
 #define	CLIENTNETWORK_H
 
+#include <SFML/Network/IpAddress.hpp>
+
 #include "client/network/ClientTCPManager.h"
 #include "client/network/ClientUDPManager.h"
 #include "client/network/ClientMsgQueue.h"
@@ -17,7 +19,7 @@ public:
     ClientNetwork();
     virtual ~ClientNetwork();
 
-    void connect();
+    void connect(const sf::IpAddress &address = sf::IpAddress("localhost"));
     void initialize();
     ClientTCPManager& getTcpManager();
     const ClientTCPManager& getTcpManager() const;

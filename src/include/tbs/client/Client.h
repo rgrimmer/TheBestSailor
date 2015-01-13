@@ -15,6 +15,7 @@
 
 #include "client/ClientPlayer.h"
 #include "client/network/ClientNetwork.h"
+#include "game/ClientGameConnection.h"
 
 class MsgGame;
 class ClientGame;
@@ -34,7 +35,7 @@ public:
     void pollMessages();
 
 private:
-    void initConnectionWithServer();
+    void initConnectionWithServer(const sf::IpAddress &address);
     void initGame();
     void startGame();
 
@@ -54,6 +55,7 @@ private:
 
     ClientPlayer m_player;
     ClientGame* m_game;
+    ClientGameConnection* m_connection;
 
     //    std::vector<ClientPlayer> m_otherPlayers;
 

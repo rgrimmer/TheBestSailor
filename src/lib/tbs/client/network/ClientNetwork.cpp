@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+
 #include <SFML/System/Sleep.hpp>
 
 #include "shared/network/UtilsNetwork.h"
@@ -26,8 +27,8 @@ ClientMsgQueue& ClientNetwork::getMessageQueue() {
     return m_msgQueue;
 }
 
-void ClientNetwork::connect() {
-    while (!m_tcpManager.connect(sf::IpAddress("localhost"), SERVER_PORT_TCP)) {
+void ClientNetwork::connect(const sf::IpAddress &address) {
+    while (!m_tcpManager.connect(address, SERVER_PORT_TCP/*, sf::milliseconds(1000)*/)) {
         std::cout << "[NetW][Tcp] \tCan't find server, try again in 5s" << std::endl;
         sf::sleep(sf::milliseconds(5000));
     }
