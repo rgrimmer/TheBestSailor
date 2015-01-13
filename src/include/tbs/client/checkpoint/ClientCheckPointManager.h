@@ -19,7 +19,9 @@ public:
     void addCheckPoint(sf::Vector2i position);
 
     int getCheckPointCount() const;
+    ClientCheckPoint& getCheckPoint(int index);
     const ClientCheckPoint& getCheckPoint(int index) const;
+    
     const std::vector<ClientCheckPoint>& getCheckPoints() const;
 
 private:

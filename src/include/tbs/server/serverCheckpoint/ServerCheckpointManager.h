@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "server/serverCheckpoint/ServerCheckpoint.h"
+#include "server/ServerPlayer.h"
 
 class HeigthMap;
 
@@ -21,11 +22,14 @@ public:
     void initialise(HeigthMap& map);
     void release(void);
     
+    void addCompletedCheckpoint(ServerPlayer* player, int indexCheckpoint);
+    bool isCompletedCheckpoint(ServerPlayer* player, int indexCheckpoint);
+    
     int getCheckPointCount();
     ServerCheckpoint& getCheckPoint(int index);
     std::vector<ServerCheckpoint>& getCheckPoints(void);
 
 private:
     std::vector<ServerCheckpoint> m_checkpoints;
-
+    std::map<ServerPlayer*, std::vector<int>> m_completedCheckpoints;
 };

@@ -44,6 +44,7 @@ private:
     bool readInitGame(MsgData& msg);
     bool readGameInfo(MsgData& msg);
     bool readDisconnect(MsgData& msg);
+    bool readCheckpoint(MsgData& msg);
 
 private:
     // Model

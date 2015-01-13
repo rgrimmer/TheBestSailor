@@ -16,13 +16,23 @@
 
 class ClientCheckPoint : public sf::Drawable {
 public:
+    
+    enum EState {
+        e_state_off,
+        e_state_on
+    };
+    
     explicit ClientCheckPoint(sf::Vector2i position);
     virtual ~ClientCheckPoint();
     
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    
+    void activate();
+    
 private:
     sf::Vector2i m_position;
     sf::RectangleShape m_shape;
+    EState m_eState;
 };
 
 #endif	/* CLIENTCHECKPOINT_H */
