@@ -50,11 +50,11 @@ void Client::start(const std::string & name) {
     m_window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor");
     m_game = new ClientGameConnection(m_window, *this);
     m_game->start();
-    if(!m_window.isOpen())
+    m_game = nullptr;
+    if (!m_window.isOpen())
         return;
     initConnectionWithServer();
-    bool continued = true;
-    while (continued && m_window.isOpen()) {
+    while (m_window.isOpen()) {
         initGame();
         startGame();
         m_game = nullptr;
