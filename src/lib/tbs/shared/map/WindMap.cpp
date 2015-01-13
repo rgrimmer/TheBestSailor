@@ -12,7 +12,7 @@
 #include "shared/ValueNoise.h"
 
 const int WindMap::maxStrength = 64;
-const int WindMap::minStrength = 16;
+const int WindMap::minStrength = 32;
 
 sf::Packet& operator<<(sf::Packet& packet, const WindMap& map) {
     return packet << map.getHeader();
@@ -39,14 +39,15 @@ WindMap::WindMap(const MapHeader &header)
     }
 
     float invWidth = 1.f / width, invHeight = 1.f / height;
+    float mainDir = ValueNoise::Eval(sf::Vector2f(0.0f,0.0f));
 
     for (int i = 0; i < width; ++i) {
         for (int j = 0; j < height; ++j) {
             sf::Vector2f pnoise(i * invWidth, j * invHeight);
-            float nDirection = ValueNoise::Eval(sf::Vector2f(pnoise.x * 20.0f, pnoise.y * 20.0f));
+            float nDirection = ValueNoise::Eval(sf::Vector2f(pnoise.x * 5.0f, pnoise.y * 5.0f));
             //            float nDirection =45.0f/360.0f;
             float nForce = ValueNoise::Eval(sf::Vector2f(pnoise.x * 40.0f, pnoise.y * 40.0f));
-            m_container[i][j] = Wind(nDirection * 360.0f, nForce * (maxStrength - minStrength) + minStrength);
+            m_container[i][j] = Wind(mainDir + ( 120.0f * (nDirection - 0.5f)), nForce * (maxStrength - minStrength) + minStrength);
         }
     }
 }
