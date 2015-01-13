@@ -32,6 +32,8 @@ void ClientGameConnection::init() {
     m_address = sf::IpAddress::None;
     m_validate = false;
     m_ipAddressInput.clear();
+    m_window.setKeyRepeatEnabled(false);
+    m_window.setJoystickThreshold(100.0f);
 }
 
 void ClientGameConnection::update(float dt) {
@@ -61,7 +63,7 @@ bool ClientGameConnection::read(sf::Event& event) {
         }
         return false;
     } else if (event.type == sf::Event::KeyPressed) {
-        if (event.key.code == sf::Keyboard::BackSpace) {
+        if (event.key.code == sf::Keyboard::BackSpace && m_ipAddressInput.size() > 0) {
             m_ipAddressInput.resize(m_ipAddressInput.size() - 1);
             return true;
         }
