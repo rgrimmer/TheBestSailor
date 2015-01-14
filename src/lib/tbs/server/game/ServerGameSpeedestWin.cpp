@@ -169,10 +169,8 @@ bool ServerGameSpeedestWin::collideWithCheckPoint(const Ship & ship, const Serve
     sf::Vector2f posShip = ship.kinematics().position();
     sf::Vector2i posCheckPoint = checkPoint.getPosition();
     
-    std::cout << static_cast<int>(posShip.x / TILE_SIZE) << " " << posCheckPoint.x / TILE_SIZE << "  " << static_cast<int>(posShip.y / TILE_SIZE) << " "  << posCheckPoint.y / TILE_SIZE << std::endl;
     if (static_cast<int>(posShip.x / TILE_SIZE) == posCheckPoint.x / TILE_SIZE
      && static_cast<int>(posShip.y / TILE_SIZE) == posCheckPoint.y / TILE_SIZE) {
-        //std::cout << "collision" << std::endl;
         return true;
     }
     
