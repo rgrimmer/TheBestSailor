@@ -207,6 +207,8 @@ bool ClientGameSpeedestWin::read(MsgData & msg) {
             return readGameInfo(msg);
         case MsgType::Disconnect:
             return readDisconnect(msg);
+        case MsgType::Checkpoint:
+            return readCheckpoint(msg);
         default:
             return false;
     }
@@ -284,3 +286,10 @@ bool ClientGameSpeedestWin::readDisconnect(MsgData & msg) {
     return true;
 }
 
+bool ClientGameSpeedestWin::readCheckpoint(MsgData& msg) {
+    sf::Uint8 idCheckpoint;
+    
+    msg >> idCheckpoint;
+    
+    m_world.getCheckPointManager().getCheckPoint(idCheckpoint).activate();
+}

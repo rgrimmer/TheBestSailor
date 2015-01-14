@@ -24,6 +24,7 @@ public:
     const Kinematics& kinematics() const {
         return m_kinematics;
     }
+    
     Helm& getHelm();
     Sail& getSail();
     const Sail& getSail() const;

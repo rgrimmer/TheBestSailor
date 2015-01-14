@@ -74,7 +74,6 @@ void HeigthMapView::load() {
 }
 
 void HeigthMapView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-    std::cout << "map : " << m_heigthMap.getWidth() << " " << m_heigthMap.getHeight() << std::endl;
     // draw the vertex array
     target.draw(m_vertices, states);
 }

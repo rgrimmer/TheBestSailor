@@ -85,6 +85,20 @@ void ServerGameSpeedestWin::update(float dt) {
             ship.second.kinematics().speed() = {0.0f,0.0f};
         }
         
+        int checkPointCount = m_checkPointManager.getCheckPointCount();
+        
+        for (int i = 0; i < checkPointCount; i++) {
+            ServerCheckpoint c = m_checkPointManager.getCheckPoint(i);
+            if(!m_checkPointManager.isCompletedCheckpoint(ship.first, i)) {
+                if(collideWithCheckPoint(ship.second, c)) {
+                    m_checkPointManager.addCompletedCheckpoint(ship.first, i);
+                    MsgData msgCheckpoint;
+                    msgCheckpoint << MsgType::Checkpoint << static_cast<sf::Uint8>(i);
+                    m_server.getNetwork()->getTCPManager().send(msgCheckpoint, ship.first->getTCPSocket());
+                }   
+            }
+        }
+        
         ship.second.update(dt);
     }
 }
@@ -144,12 +158,30 @@ sf::Vector2f ServerGameSpeedestWin::calculShipVelocity(Ship& ship) {
     return velocity;
 }
 
-bool ServerGameSpeedestWin::collideWithMap(Ship ship, sf::Vector2f velocity) {
+bool ServerGameSpeedestWin::collideWithMap(const Ship & ship, const sf::Vector2f & velocity) {
     int x = (ship.kinematics().position().x + velocity.x) / TILE_SIZE;
     int y = (ship.kinematics().position().y + velocity.y) / TILE_SIZE;
     return !WATER(m_map.getHeightMap().getValue(x,y));
 }
 
+bool ServerGameSpeedestWin::collideWithCheckPoint(const Ship & ship, const ServerCheckpoint & checkPoint) {
+
+    sf::Vector2f posShip = ship.kinematics().position();
+    sf::Vector2i posCheckPoint = checkPoint.getPosition();
+            
+    if (checkPoint.isActivated()) {
+        return false;
+    }
+    
+    std::cout << static_cast<int>(posShip.x / TILE_SIZE) << " " << posCheckPoint.x / TILE_SIZE << "  " << static_cast<int>(posShip.y / TILE_SIZE) << " "  << posCheckPoint.y / TILE_SIZE << std::endl;
+    if (static_cast<int>(posShip.x / TILE_SIZE) == posCheckPoint.x / TILE_SIZE
+     && static_cast<int>(posShip.y / TILE_SIZE) == posCheckPoint.y / TILE_SIZE) {
+        //std::cout << "collision" << std::endl;
+        return true;
+    }
+    
+    return false;
+}
 
 bool ServerGameSpeedestWin::windComeFromFront(const Ship& ship, const Wind& wind) const {
     return (static_cast<int> (450 - ship.getAngle() + wind.getDirection()) % 360 > 180);

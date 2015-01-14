@@ -11,6 +11,10 @@ void ClientCheckPointManager::addCheckPoint(sf::Vector2i position) {
     m_checkPoints.push_back(ClientCheckPoint(position));
 }
 
+ClientCheckPoint& ClientCheckPointManager::getCheckPoint(int index) {
+    return m_checkPoints.at(index);
+}
+
 const ClientCheckPoint& ClientCheckPointManager::getCheckPoint(int index) const {
     return m_checkPoints.at(index);
 }

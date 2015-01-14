@@ -5,6 +5,12 @@
  * Created on 21 octobre 2014, 13:59
  */
 
+#include "server/serverCheckpoint/ServerCheckpoint.h"
+
+
+#include <vector>
+
+
 #include "shared/Utils.h"
 #include "shared/map/HeigthMap.h"
 #include "server/PathFinding.h"
@@ -60,6 +66,14 @@ void ServerCheckpointManager::initialise(HeigthMap& map) {
 
 void ServerCheckpointManager::release() {
     m_checkpoints.clear();
+}
+
+void ServerCheckpointManager::addCompletedCheckpoint(ServerPlayer* player, int indexCheckpoint) {
+    m_completedCheckpoints[player].push_back(indexCheckpoint);
+}
+
+bool ServerCheckpointManager::isCompletedCheckpoint(ServerPlayer* player, int indexCheckpoint) {
+    return std::find(m_completedCheckpoints[player].begin(), m_completedCheckpoints[player].end(), indexCheckpoint) != m_completedCheckpoints[player].end();
 }
 
 ServerCheckpoint& ServerCheckpointManager::getCheckPoint(int index) {

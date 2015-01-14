@@ -9,7 +9,6 @@
 #define	HEIGHTMAP_H
 
 #include <SFML/Network/Packet.hpp>
-
 #include "MapHeader.h"
 
 class HeigthMap {

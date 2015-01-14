@@ -14,6 +14,8 @@
 #include "shared/map/Map.h"
 
 #include "server/serverCheckpoint/ServerCheckpointManager.h"
+#include "server/serverCheckpoint/ServerCheckpoint.h"
+
 #include "server/game/ServerGame.h"
 
 class Server;
@@ -45,7 +47,9 @@ private:
     void updateSail(Ship& ship);
     sf::Vector2f calculShipVelocity(Ship& ship);
 
-    bool collideWithMap(Ship ship, sf::Vector2f velocity);
+    bool collideWithMap(const Ship & ship, const sf::Vector2f & velocity);
+    bool collideWithCheckPoint(const Ship & ship, const ServerCheckpoint & checkPoint);
+    
     bool readAction(MsgData& msg, ServerPlayer& player);
     bool readDisconnect(MsgData& msg, ServerPlayer& player);
 
