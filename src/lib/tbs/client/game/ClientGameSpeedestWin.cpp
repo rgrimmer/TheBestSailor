@@ -30,7 +30,6 @@ ClientGameSpeedestWin::ClientGameSpeedestWin(sf::RenderWindow& window, Client& c
 , m_detailsView(nullptr)
 , m_globalView(nullptr)
 , m_currentView(m_window.getView()) {
-
 }
 
 ClientGameSpeedestWin::~ClientGameSpeedestWin() {
@@ -100,7 +99,10 @@ bool ClientGameSpeedestWin::read(sf::Event& event) {
     if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
         m_window.close();
     }
-    if (event.type == sf::Event::KeyPressed) {
+    else if(event.type == sf::Event::Resized) {
+        m_currentView.setSize(event.size.width * m_zoomValue, event.size.height * m_zoomValue);
+    }
+    else if (event.type == sf::Event::KeyPressed) {
         switch (event.key.code) {
             case sf::Keyboard::Left:
                 m_posView.x -= 255.0f * m_zoomValue;
@@ -116,11 +118,11 @@ bool ClientGameSpeedestWin::read(sf::Event& event) {
                 break;
             case sf::Keyboard::Subtract:
                 m_zoomValue *= 2.0f;
-                m_currentView = sf::View(sf::FloatRect(m_posView.x, m_posView.y, SCREEN_WIDTH * m_zoomValue, SCREEN_HEIGHT * m_zoomValue));
+                m_currentView.setSize(m_window.getSize().x * m_zoomValue, m_window.getSize().y * m_zoomValue);
                 break;
             case sf::Keyboard::Add:
                 m_zoomValue /= 2.0f;
-                m_currentView = sf::View(sf::FloatRect(m_posView.x, m_posView.y, SCREEN_WIDTH * m_zoomValue, SCREEN_HEIGHT * m_zoomValue));
+                m_currentView = sf::View(m_posView, sf::Vector2f(m_window.getSize().x * m_zoomValue, m_window.getSize().y * m_zoomValue));
                 break;
             case sf::Keyboard::D:
             {
@@ -292,4 +294,5 @@ bool ClientGameSpeedestWin::readCheckpoint(MsgData& msg) {
     msg >> idCheckpoint;
     
     m_world.getCheckPointManager().getCheckPoint(idCheckpoint).activate();
+    return true;
 }

@@ -37,7 +37,7 @@ ServerMessageQueue& ServerNetwork::getMessageQueue() {
 void ServerNetwork::initialize() {
     std::cout << "[NetW][Init]" << std::endl;
     m_tcpManager.initialize(SERVER_PORT_TCP);
-    m_udpManager.initialize(SERVER_PORT_UDP);
+    m_udpManager.initialize();
     startTCPThread();
     startUDPThread();
 }

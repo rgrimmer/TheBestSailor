@@ -40,8 +40,10 @@ void ClientGame::start() {
 
         update(clockUpdate.restart().asSeconds());
         displayView();
+        
         // @TODO replacer le sleep par un window.waitEvent avec timeout
-        sf::sleep(m_updateTime - clockGame.restart());
+        sf::sleep(m_updateTime - clockGame.getElapsedTime());
+        clockGame.restart();
     }
     std::cout << "[Client][Game][End]" << std::endl;
 }

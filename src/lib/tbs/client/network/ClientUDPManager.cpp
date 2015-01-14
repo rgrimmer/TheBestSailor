@@ -43,7 +43,7 @@ void ClientUDPManager::receiver() {
             m_msgQueue.push(msg);
 
         } else {
-            std::cout << "WARNING : Message Source isn't server" << std::endl;
+            std::cout << "WARNING : Source(" << senderAddress.toString() << ") != Server(" << m_addressRemote.toString() << ")" << std::endl;
             delete msg;
         }
     }

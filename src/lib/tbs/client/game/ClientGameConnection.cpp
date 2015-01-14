@@ -72,7 +72,7 @@ bool ClientGameConnection::read(sf::Event& event) {
             m_address = sf::IpAddress(m_ipAddressInput);
             m_validate = true;
             return true;
-        }// 172.21.70.34
+        }
     } else if (event.type == sf::Event::Closed) {
         m_window.close();
     }
