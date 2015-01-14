@@ -11,8 +11,8 @@
 
 #include "shared/ValueNoise.h"
 
-const int WindMap::maxStrength = 64;
-const int WindMap::minStrength = 32;
+const int WindMap::maxStrength = 128;
+const int WindMap::minStrength = WindMap::maxStrength / 2;
 
 sf::Packet& operator<<(sf::Packet& packet, const WindMap& map) {
     return packet << map.getHeader();

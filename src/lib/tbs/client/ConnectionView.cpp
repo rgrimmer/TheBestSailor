@@ -6,6 +6,7 @@
  */
 
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/Network/IpAddress.hpp>
 
 #include "shared/Font.h"
 
@@ -14,7 +15,7 @@
 
 ConnectionView::ConnectionView(const std::string& ipAddressText)
 : m_titleSfText("The Best Sailor", 130, Center)
-, m_fixedTextView("IP address : ", 60, Center)
+, m_fixedTextView("IP address (your IP : " + sf::IpAddress::getPublicAddress(sf::milliseconds(30000)).toString() + ")", 60, Center)
 , m_ipAddressText(ipAddressText) {
     m_titleView.setViewport(sf::FloatRect(0.01f, 0.0f, 1.0f, 1.0f));
 
