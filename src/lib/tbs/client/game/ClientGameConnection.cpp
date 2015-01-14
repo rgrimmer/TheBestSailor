@@ -59,7 +59,7 @@ bool ClientGameConnection::read(sf::Event& event) {
         char c = static_cast<char> (event.text.unicode);
         std::cout << "Text entred(" << c << ")" << std::endl;
         if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '.') {
-            m_ipAddressInput.append(&c);
+            m_ipAddressInput.append(&c,1);
             return true;
         }
         return false;

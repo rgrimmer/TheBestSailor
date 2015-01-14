@@ -22,7 +22,7 @@ class VectorView;
 
 class ShipView : public sf::Drawable {
 public:
-    ShipView(const Ship &ship);
+    ShipView(const Ship &ship, const sf::Color & color = sf::Color::Red);
     ShipView(const ShipView& other);
 
     virtual ~ShipView();

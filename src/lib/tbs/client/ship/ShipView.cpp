@@ -12,7 +12,7 @@
 #include "client/VectorView.h"
 #include "client/ship/ShipView.h"
 
-ShipView::ShipView(const Ship &ship)
+ShipView::ShipView(const Ship &ship, const sf::Color & color)
 : m_ship(ship)
 , m_sailShape({100.0f, 2.0f}) {
     m_speedView = new VectorView(m_ship.kinematics().position(), m_ship.kinematics().speed(), "Vship", sf::Color::Cyan);
@@ -20,11 +20,11 @@ ShipView::ShipView(const Ship &ship)
 
     // Ship base
     m_shipVertex.setPrimitiveType(sf::PrimitiveType::TrianglesStrip);
-    m_shipVertex.append(sf::Vertex(sf::Vector2f(50.0f, 0.0f), sf::Color::Red));
-    m_shipVertex.append(sf::Vertex(sf::Vector2f(25.0f, 25.0f), sf::Color::Red));
-    m_shipVertex.append(sf::Vertex(sf::Vector2f(25.0f, -25.0f), sf::Color::Red));
-    m_shipVertex.append(sf::Vertex(sf::Vector2f(-50.0f, 25.0f), sf::Color::Red));
-    m_shipVertex.append(sf::Vertex(sf::Vector2f(-50.0f, -25.0f), sf::Color::Red));
+    m_shipVertex.append(sf::Vertex(sf::Vector2f(50.0f, 0.0f), color));
+    m_shipVertex.append(sf::Vertex(sf::Vector2f(25.0f, 25.0f), color));
+    m_shipVertex.append(sf::Vertex(sf::Vector2f(25.0f, -25.0f), color));
+    m_shipVertex.append(sf::Vertex(sf::Vector2f(-50.0f, 25.0f), color));
+    m_shipVertex.append(sf::Vertex(sf::Vector2f(-50.0f, -25.0f), color));
 
     // Sail
     m_sailShape.setOrigin(0.0f, 1.0f);
