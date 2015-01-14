@@ -48,7 +48,7 @@ void ClientGame::start() {
 
 void ClientGame::displayView() {
     
-        m_window.clear();
+        m_window.clear(sf::Color(5,52,79,255));
         draw();
 
         if (m_clockFPS.getElapsedTime().asSeconds() >= 1) {

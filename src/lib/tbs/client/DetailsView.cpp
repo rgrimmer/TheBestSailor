@@ -20,9 +20,14 @@ DetailsView::DetailsView(const ClientWorld &world)
 //, m_checkPointManager(world.getCheckPointManager())
 , m_enableWind(true) {
 
+
     for (auto& ship : world.getShips()) {
-        m_shipsView.emplace_back(ship.second);
+        if (&ship.second != &world.getClientShip()) {
+            m_shipsView.emplace_back(ship.second, sf::Color(255, 0, 0, 100));
+        }
     }
+
+    m_shipsView.emplace_back(world.getClientShip(), sf::Color(255, 0, 0, 255));
 }
 
 bool DetailsView::switchEnableWind() {
@@ -54,10 +59,10 @@ void DetailsView::draw(sf::RenderTarget& target, sf::RenderStates states) const 
     timeDrawHeightMap = clockDraw.restart();
 
     // Draw checkpoints
-    for(auto& checkPoint : m_world.getCheckPointManager().getCheckPoints()) {
+    for (auto& checkPoint : m_world.getCheckPointManager().getCheckPoints()) {
         target.draw(checkPoint, states);
     }
-    
+
     // Draw Ships
     for (auto& shipView : m_shipsView)
         target.draw(shipView, states);
@@ -67,7 +72,7 @@ void DetailsView::draw(sf::RenderTarget& target, sf::RenderStates states) const 
         target.draw(m_windMapView, states);
         timeDrawWindMap = clockDraw.restart();
     }
-    
+
     TextView::update();
     TextView::setAbs(true);
     target.draw(TextView("Draw(ms)"));
