@@ -24,8 +24,9 @@ public:
     
     void addCompletedCheckpoint(ServerPlayer* player, int indexCheckpoint);
     bool isCompletedCheckpoint(ServerPlayer* player, int indexCheckpoint);
+    bool isCompletedAllCheckpoint(ServerPlayer* player) const;
     
-    int getCheckPointCount();
+    int getCheckPointCount() const;
     ServerCheckpoint& getCheckPoint(int index);
     std::vector<ServerCheckpoint>& getCheckPoints(void);
 

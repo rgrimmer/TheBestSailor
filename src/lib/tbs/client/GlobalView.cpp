@@ -30,13 +30,11 @@ GlobalView::GlobalView(const HeigthMap& heigthMap, const WindMap& windMap, const
     m_titleView.setViewport(sf::FloatRect(0.01f, 0.0f, 1.0f, 1.0f));
 
     // Set world view
-    m_worldViewGraphic = sf::View(sf::FloatRect(0.0f, 0.0f, m_mapHeader.getWidth() * TILE_SIZE, m_mapHeader.getHeight() * TILE_SIZE));
     m_worldViewUnit = sf::View(sf::FloatRect(0.0f, 0.0f, m_mapHeader.getWidth(), m_mapHeader.getHeight()));
 
     // Set viewport for the view
     float leftMargin = 0.01f;
     sf::FloatRect worldViewport(leftMargin, 0.2f, 0.6f, 0.79f);
-    m_worldViewGraphic.setViewport(worldViewport);
     m_worldViewUnit.setViewport(worldViewport);
 
     // Set info view
@@ -63,11 +61,10 @@ void GlobalView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(m_titleSfText);
 
     // Draw world in worldView
-    target.setView(m_worldViewGraphic);
+    target.setView(m_worldViewUnit);
     target.draw(m_heigthMapView, states);
 
     // Set ship on view
-    target.setView(m_worldViewUnit);
     sf::CircleShape shipShape(1.0f);
     shipShape.setPosition(m_shipView.getShip().kinematics().position());
     target.draw(shipShape);

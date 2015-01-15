@@ -39,7 +39,8 @@ sf::Packet& operator<<(sf::Packet& packet, const ServerGameSpeedestWin& game) {
 
 ServerGameSpeedestWin::ServerGameSpeedestWin(Server &server, ServerPlayers& players, const MapHeader &header)
 : ServerGame(server, players)
-, m_map(header) {
+, m_map(header)
+, m_endGameStarted(false) {
     m_checkPointManager.initialise(m_map.getHeightMap());
     sf::Vector2f initPosition = static_cast<sf::Vector2f> (m_checkPointManager.getCheckPoint(0).getPosition());
     initPosition.x += 0.25f;
@@ -77,6 +78,14 @@ void ServerGameSpeedestWin::init() {
 }
 
 void ServerGameSpeedestWin::update(float dt) {
+    for(auto* player : m_players.inGame()) {
+        if(m_checkPointManager.isCompletedAllCheckpoint(player)) {
+            m_endGameStarted = true;
+            MsgData msg;
+            msg << MsgType::GameEnd << player->getName();
+            m_server.getNetwork()->getTCPManager().send(msg, m_players.inGame());
+        }
+    }
     for (auto& ship : m_ships) {
         updateShipState(ship.second, dt);
         updateSail(ship.second);

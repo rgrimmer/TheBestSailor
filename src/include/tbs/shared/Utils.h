@@ -8,11 +8,6 @@
 #ifndef UTILS_H
 #define	UTILS_H
 
-#define SCREEN_WIDTH 1366
-#define SCREEN_HEIGHT 768
-
-#define TILE_SIZE 200
-
 #define NB_TILES_WIDTH 200
 #define NB_TILES_HEIGHT 200
 

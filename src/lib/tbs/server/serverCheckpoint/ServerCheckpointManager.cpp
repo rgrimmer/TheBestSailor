@@ -76,11 +76,22 @@ bool ServerCheckpointManager::isCompletedCheckpoint(ServerPlayer* player, int in
     return std::find(m_completedCheckpoints[player].begin(), m_completedCheckpoints[player].end(), indexCheckpoint) != m_completedCheckpoints[player].end();
 }
 
+bool ServerCheckpointManager::isCompletedAllCheckpoint(ServerPlayer* player) const {
+    const auto iterator = m_completedCheckpoints.find(player);
+    if(iterator == m_completedCheckpoints.end()) {
+        return false;
+    }
+    else {
+        std::cout << "" << player->getName() << " has " << (*iterator).second.size() << " checkpoints(" << getCheckPointCount()<<")"<< std::endl;
+        return (*iterator).second.size() == getCheckPointCount();
+    }
+}
+
 ServerCheckpoint& ServerCheckpointManager::getCheckPoint(int index) {
     return m_checkpoints.at(index);
 }
 
-int ServerCheckpointManager::getCheckPointCount() {
+int ServerCheckpointManager::getCheckPointCount() const {
     return m_checkpoints.size();
 }
 

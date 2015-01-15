@@ -9,6 +9,7 @@
 #define	SERVER_TCP_MANAGER_H
 
 #include <thread>
+#include <unordered_set>
 
 #include <SFML/Network/TcpListener.hpp>
 #include <SFML/Network/SocketSelector.hpp>
@@ -29,6 +30,7 @@ public:
     void startReceiverThread();
     bool send(MsgData &message, sf::TcpSocket& player) const;
     bool send(MsgData &message, const std::vector<ServerPlayer*>& players) const;
+    bool send(MsgData &message, const std::unordered_set<ServerPlayer*>& players) const;
 
 private:
     void receiver();

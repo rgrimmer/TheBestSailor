@@ -72,7 +72,17 @@ bool ServerTCPManager::send(MsgData &message, sf::TcpSocket& player) const {
 
 bool ServerTCPManager::send(MsgData &message, const std::vector<ServerPlayer*>& players) const {
     bool hasReceiveByAll = true;
-    for (auto &player : players) {
+    for (auto player : players) {
+        if (send(message, player->getTCPSocket()) != sf::Socket::Done) {
+            hasReceiveByAll = false;
+        }
+    }
+    return hasReceiveByAll;
+}
+
+bool ServerTCPManager::send(MsgData &message, const std::unordered_set<ServerPlayer*>& players) const {
+    bool hasReceiveByAll = true;
+    for (auto player : players) {
         if (send(message, player->getTCPSocket()) != sf::Socket::Done) {
             hasReceiveByAll = false;
         }

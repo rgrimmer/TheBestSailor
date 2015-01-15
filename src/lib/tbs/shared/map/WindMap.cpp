@@ -11,7 +11,7 @@
 
 #include "shared/ValueNoise.h"
 
-const int WindMap::maxStrength = 2;
+const int WindMap::maxStrength = 8;
 const int WindMap::minStrength = WindMap::maxStrength / 2;
 
 sf::Packet& operator<<(sf::Packet& packet, const WindMap& map) {
@@ -53,12 +53,7 @@ WindMap::WindMap(const MapHeader &header)
 }
 
 WindMap::~WindMap() {
-//    if (m_container != nullptr) { // @TODO
-//        for (int i = 0; i < getHeight(); ++i) {
-//            delete m_container[i];
-//        }
-//        delete m_container;
-//    }
+    // @TODO replace wind* by vector
 }
 
 int WindMap::getSize() const {

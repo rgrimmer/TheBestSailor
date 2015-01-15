@@ -29,7 +29,9 @@ ClientGameSpeedestWin::ClientGameSpeedestWin(sf::RenderWindow& window, Client& c
 , m_mainGraphic(nullptr)
 , m_detailsView(nullptr)
 , m_globalView(nullptr)
-, m_currentView(m_window.getView()) {
+, m_currentView(m_window.getView())
+, m_winner()
+, m_endGame(nullptr) {
 }
 
 ClientGameSpeedestWin::~ClientGameSpeedestWin() {
@@ -87,6 +89,12 @@ void ClientGameSpeedestWin::draw() {
     // Draw view
     if (m_mainGraphic)
         m_window.draw(*m_mainGraphic);
+    
+    // Draw winnner
+    if(m_endGame != nullptr) {
+        m_window.setView(m_window.getDefaultView());
+        m_window.draw(TextView(m_winner, 40, TypeAlign::Center));
+    }
 }
 
 void ClientGameSpeedestWin::sendInfo() {
@@ -307,6 +315,7 @@ bool ClientGameSpeedestWin::readCheckpoint(MsgData& msg) {
 
 bool ClientGameSpeedestWin::readMsgEnd(MsgData& msg) {
     msg >> m_winner;
+    m_winner.append(" has win");
     m_endGame = new std::thread(&ClientGameSpeedestWin::endScheduler, this);
     return true;
 }
