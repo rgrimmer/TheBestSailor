@@ -48,6 +48,7 @@ void ClientGameSpeedestWin::setClientWorld(const ClientWorld& world) {
 
 void ClientGameSpeedestWin::release() {
     m_mainGraphic = nullptr;
+    m_music.stop();
     delete m_globalView;
     delete m_detailsView;
 }
@@ -58,6 +59,10 @@ void ClientGameSpeedestWin::init() {
     m_mainGraphic = dynamic_cast<sf::Drawable*> (m_detailsView);
     m_enableFolowCamera = true;
     m_window.setKeyRepeatEnabled(false);
+    if(m_music.openFromFile("./share/tbs/sound/music_414.mp3")) {
+        m_music.setLoop(true);
+        m_music.play();
+    }
 }
 
 void ClientGameSpeedestWin::update(float dt) {
@@ -75,9 +80,8 @@ void ClientGameSpeedestWin::draw() {
     // Set view position
     if (m_enableFolowCamera) {
         m_currentView.setCenter(m_world.getClientShip().kinematics().position());
-    } else {
-        m_currentView.setCenter(m_posView);
     }
+    
     m_window.setView(m_currentView);
 
     // Draw view
@@ -105,16 +109,16 @@ bool ClientGameSpeedestWin::read(sf::Event& event) {
     else if (event.type == sf::Event::KeyPressed) {
         switch (event.key.code) {
             case sf::Keyboard::Left:
-                m_posView.x -= 255.0f * m_zoomValue;
+                m_currentView.move(-255.0f * m_zoomValue, 0.0f);
                 break;
             case sf::Keyboard::Right:
-                m_posView.x += 255.0f * m_zoomValue;
+                m_currentView.move(255.0f * m_zoomValue, 0.0f);
                 break;
             case sf::Keyboard::Up:
-                m_posView.y -= 255.0f * m_zoomValue;
+                m_currentView.move(0.0f, -255.0f * m_zoomValue);
                 break;
             case sf::Keyboard::Down:
-                m_posView.y += 255.0f * m_zoomValue;
+                m_currentView.move(0.0f, 255.0f * m_zoomValue);
                 break;
                 
             case sf::Keyboard::L:
@@ -126,7 +130,7 @@ bool ClientGameSpeedestWin::read(sf::Event& event) {
             case sf::Keyboard::P:
             case sf::Keyboard::Add:
                 m_zoomValue /= 2.0f;
-                m_currentView = sf::View(m_posView, sf::Vector2f(m_window.getSize().x * m_zoomValue, m_window.getSize().y * m_zoomValue));
+                m_currentView.setSize(m_window.getSize().x * m_zoomValue, m_window.getSize().y * m_zoomValue);
                 break;
             case sf::Keyboard::D:
             {

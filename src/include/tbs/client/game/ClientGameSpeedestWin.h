@@ -12,6 +12,7 @@
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Audio/Music.hpp>
 
 
 #include "client/ClientWorld.h"
@@ -58,7 +59,6 @@ private:
     bool m_enableFolowCamera;
     bool m_enablePause;
     float m_timeSpeed;
-    sf::Vector2f m_posView;
     float m_zoomValue;
     
     std::bitset<4> m_keys;
@@ -67,6 +67,8 @@ private:
     DetailsView* m_detailsView;
     GlobalView* m_globalView;
     sf::View m_currentView;
+    
+    sf::Music m_music;
 };
 
 #endif	/* CLIENTGAMESPEEDESTWIN_H */
