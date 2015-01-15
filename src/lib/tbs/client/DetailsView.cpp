@@ -73,10 +73,12 @@ void DetailsView::draw(sf::RenderTarget& target, sf::RenderStates states) const 
         timeDrawWindMap = clockDraw.restart();
     }
 
-    TextView::update();
+    /*TextView::update();
     TextView::setAbs(true);
+    
     target.draw(TextView("Draw(ms)"));
     target.draw(TextView("HeightMap : " + std::to_string(timeDrawHeightMap.asMilliseconds())));
     target.draw(TextView("WindMap : " + std::to_string(timeDrawWindMap.asMilliseconds())));
+     */
 }
 

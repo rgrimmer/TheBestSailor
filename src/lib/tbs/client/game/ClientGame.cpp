@@ -16,7 +16,10 @@
 ClientGame::ClientGame(sf::RenderWindow& window, Client& client)
 : m_window(window)
 , m_client(client)
-, m_updateTime(sf::seconds(1.0f / 60.0f)) {
+, m_updateTime(sf::seconds(1.0f / 60.0f))
+, m_countFrames(0)
+, m_lastCoutFrames(0)
+, m_clockFPS() {
 
 }
 
@@ -30,11 +33,13 @@ void ClientGame::start() {
     std::cout << "[Client][Game][Start]" << std::endl;
     while (!isEnded() && m_window.isOpen()) {
         sf::Event event;
-        while (m_window.pollEvent(event))
+        while (m_window.pollEvent(event)) {
             read(event);
+        }
         
-        if (m_hasInfoToSend)
+        if (m_hasInfoToSend) {
             sendInfo();
+        }
         
         m_client.pollMessages();
 
@@ -42,6 +47,7 @@ void ClientGame::start() {
         displayView();
         // @TODO replacer le sleep par un window.waitEvent avec timeout
         sf::sleep(m_updateTime - clockGame.restart());
+        calculateFPS();
     }
     std::cout << "[Client][Game][End]" << std::endl;
 }
@@ -50,19 +56,22 @@ void ClientGame::displayView() {
     
         m_window.clear(sf::Color(5,52,79,255));
         draw();
-
-        if (m_clockFPS.getElapsedTime().asSeconds() >= 1) {
-            m_lastCoutFrames = m_countFrames;
-            m_countFrames = 0;
-            m_clockFPS.restart();
-        } else {
-            ++m_countFrames;
-        }
         
         TextView::setAbs(true);
         TextView::update();
-        m_window.draw(TextView(std::to_string(m_lastCoutFrames) + " FPS"));
+        
+        m_window.draw(TextView("FPS : " + std::to_string(m_lastCoutFrames)));
         m_window.display();
+}
+
+void ClientGame::calculateFPS() {
+    if (m_clockFPS.getElapsedTime().asSeconds() >= 1) {
+        m_lastCoutFrames = m_countFrames;
+        m_countFrames = 0;
+        m_clockFPS.restart();
+    } else {
+        ++m_countFrames;
+    }
 }
 
 void ClientGame::setUpdateTime(const sf::Time& updateTime) {
