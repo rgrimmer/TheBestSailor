@@ -21,8 +21,7 @@ ClientGame::ClientGame(sf::RenderWindow& window, Client& client)
 , m_countFrames(0)
 , m_lastCoutFrames(0)
 , m_clockFPS()
-, m_clockPing()
-{
+, m_clockPing() {
 
 }
 
@@ -39,12 +38,10 @@ void ClientGame::start() {
         while (m_window.pollEvent(event)) {
             read(event);
         }
-        
-        if (m_hasInfoToSend) {
-            sendInfo();
-            m_clockPing.restart();
-        }
-        
+
+        sendInfo();
+        m_clockPing.restart();
+
         m_client.pollMessages();
 
         update(clockUpdate.restart().asSeconds());
@@ -55,16 +52,16 @@ void ClientGame::start() {
 }
 
 void ClientGame::displayView() {
-    
-        m_window.clear(sf::Color(5,52,79,255));
-        draw();
-        
-        TextView::setAbs(true);
-        TextView::update();
-        
-        m_window.draw(TextView("PING(ms) : " + std::to_string(m_ping.asMilliseconds())));
-        m_window.draw(TextView("FPS : " + std::to_string(m_lastCoutFrames)));
-        m_window.display();
+
+    m_window.clear(sf::Color(5, 52, 79, 255));
+    draw();
+
+    TextView::setAbs(true);
+    TextView::update();
+
+    m_window.draw(TextView("PING(ms) : " + std::to_string(m_ping.asMilliseconds())));
+    m_window.draw(TextView("FPS : " + std::to_string(m_lastCoutFrames)));
+    m_window.display();
 }
 
 void ClientGame::calculateFPS() {
