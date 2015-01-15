@@ -1,0 +1,29 @@
+- System
+	- Architecture
+		- Boucle principale
+		- Boucle secondaire
+		- Threads
+		- System de Game
+	- Phisics
+		- Le bateau
+			- Théorie
+			- Test d'implémentation
+			- Probleme rencontrés
+			- Simplification du probleme
+	
+- Graphic
+	- description SFML Graphic
+	- OpenGL
+	- 
+	
+- Network
+	- Description SFML réseaux
+	- Détailler : Le protocole des threads réception et "principale"
+	- Essai d'implémentation d'un system de Class de message.
+	- Détailler : Le protocole de réception 
+	- Prédiction la théorie
+	- Prédiction implenté
+	- Prédiction possible
+	- Compensation la théorie
+	- Compensation implenté
+	- Compensation possible
