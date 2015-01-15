@@ -116,10 +116,14 @@ bool ClientGameSpeedestWin::read(sf::Event& event) {
             case sf::Keyboard::Down:
                 m_posView.y += 255.0f * m_zoomValue;
                 break;
+                
+            case sf::Keyboard::L:
             case sf::Keyboard::Subtract:
                 m_zoomValue *= 2.0f;
                 m_currentView.setSize(m_window.getSize().x * m_zoomValue, m_window.getSize().y * m_zoomValue);
                 break;
+                
+            case sf::Keyboard::P:
             case sf::Keyboard::Add:
                 m_zoomValue /= 2.0f;
                 m_currentView = sf::View(m_posView, sf::Vector2f(m_window.getSize().x * m_zoomValue, m_window.getSize().y * m_zoomValue));
@@ -159,9 +163,9 @@ bool ClientGameSpeedestWin::read(sf::Event& event) {
             case sf::Keyboard::C:
                 m_enableFolowCamera = !m_enableFolowCamera;
                 break;
-            case sf::Keyboard::P:
+            /*case sf::Keyboard::P:
                 m_enablePause = !m_enablePause;
-                break;
+                break;*/
             case sf::Keyboard::R:
                 m_timeSpeed /= 2.0f;
                 break;
