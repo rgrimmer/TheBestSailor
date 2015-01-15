@@ -8,8 +8,7 @@
 #include "server/network/ServerUDPManager.h"
 
 ServerUDPManager::ServerUDPManager(ServerPlayers& players, ServerMessageQueue& msgQueue)
-: m_port(0)
-, m_players(players)
+: m_players(players)
 , m_msgQueue(msgQueue)
 , m_threadReceiver(nullptr) {
 
@@ -21,11 +20,14 @@ ServerUDPManager::~ServerUDPManager() {
 
 bool ServerUDPManager::initialize(unsigned short port) {
     std::cout << "[UDP][Init] \tInitialize udp socket" << std::endl;
-    m_port = port;
     m_socket.setBlocking(true);
-    sf::Socket::Status status = m_socket.bind(m_port);
+    sf::Socket::Status status = m_socket.bind(port);
     std::cout << "[UDP][Init] \tInitialize done" << std::endl;
     return status == sf::Socket::Done;
+}
+
+unsigned short ServerUDPManager::getPort() const {
+    return m_socket.getLocalPort();
 }
 
 void ServerUDPManager::startReceiverThread() {

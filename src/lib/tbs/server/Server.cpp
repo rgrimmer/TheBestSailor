@@ -158,9 +158,10 @@ bool Server::read(MsgData& message, ServerPlayer &player) {
             player.setName(name);
             std::cout << "[Serv][Read] \t Read info client(" << player.getName() << "@" << player.getAddress().toString() << ":" << player.getUdpPort() << ")" << std::endl;
             // Send info to Client
+            unsigned short port = m_network.getUDPManager().getPort();
             MsgData msgServer;
-            msgServer << MsgType::ServerPlayerInfo << sf::Uint16(SERVER_PORT_UDP) << sf::Int16(player.getId());
-            std::cout << "[Serv][Read] \t Send info serv. ServUdpPort(" << SERVER_PORT_UDP << "), playerId(" << sf::Int16(player.getId()) << ")" << std::endl;
+            msgServer << MsgType::ServerPlayerInfo << sf::Uint16(port) << sf::Int16(player.getId());
+            std::cout << "[Serv][Read] \t Send info serv. ServUdpPort(" << port << "), playerId(" << sf::Int16(player.getId()) << ")" << std::endl;
             m_network.getTCPManager().send(msgServer, player.getTCPSocket());
             m_players.setPlayerReady(player);
             isRead = true;

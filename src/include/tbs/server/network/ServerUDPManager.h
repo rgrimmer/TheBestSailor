@@ -23,7 +23,8 @@ public:
     ServerUDPManager(ServerPlayers& players, ServerMessageQueue& msgQueue);
     ~ServerUDPManager();
 
-    bool initialize(unsigned short port);
+    bool initialize(unsigned short port = sf::Socket::AnyPort);
+    unsigned short getPort() const;
 
     void startReceiverThread();
     bool send(MsgData &message, const ServerPlayer& player) const;
@@ -33,7 +34,6 @@ private:
     void receiver();
 
 private:
-    unsigned short m_port;
     mutable sf::UdpSocket m_socket;
 
     ServerPlayers& m_players;
