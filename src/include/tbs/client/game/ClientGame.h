@@ -36,6 +36,7 @@ protected:
     
 private:
     void displayView();
+    void calculateFPS();
 
 protected:
     sf::RenderWindow& m_window;

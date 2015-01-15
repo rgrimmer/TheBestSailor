@@ -50,6 +50,8 @@ void Client::start(const std::string & name) {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 2;
     m_window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "The Best Sailor", sf::Style::Default, settings);
+    m_window.setFramerateLimit(60);
+    
     m_connection = new ClientGameConnection(m_window, *this);
     m_connection->start();
     if (!m_window.isOpen())
