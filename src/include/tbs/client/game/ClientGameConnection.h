@@ -29,7 +29,6 @@ protected:
     virtual void init();
     virtual void update(float dt);
     virtual void draw();
-    virtual bool isEnded();
 
     virtual bool read(sf::Event& event);
 

@@ -31,7 +31,6 @@ sf::IpAddress ClientGameConnection::getIpAddress() const {
 void ClientGameConnection::init() {
     m_port = SERVER_PORT_TCP;
     m_address = sf::IpAddress::None;
-    m_validate = false;
     m_ipAddressInput = "localhost";
     m_window.setKeyRepeatEnabled(false);
     m_window.setJoystickThreshold(100.0f);
@@ -44,10 +43,6 @@ void ClientGameConnection::update(float dt) {
 void ClientGameConnection::draw() {
     TextView::update();
     m_window.draw(m_view);
-}
-
-bool ClientGameConnection::isEnded() {
-    return m_validate;
 }
 
 bool ClientGameConnection::read(MsgData& msg) {
@@ -70,7 +65,7 @@ bool ClientGameConnection::read(sf::Event& event) {
         }
         if (event.key.code == sf::Keyboard::Return) {
             m_address = sf::IpAddress(m_ipAddressInput);
-            m_validate = true;
+            m_isEnded = true;
             return true;
         }
     } else if (event.type == sf::Event::Closed) {

@@ -18,6 +18,8 @@ ClientGame::ClientGame(sf::RenderWindow& window, Client& client)
 , m_client(client)
 , m_updateTime(sf::seconds(1.0f / 60.0f))
 , m_ping(sf::milliseconds(0))
+, m_hasInfoToSend(false)
+, m_isEnded(false)
 , m_countFrames(0)
 , m_lastCoutFrames(0)
 , m_clockFPS()
@@ -32,9 +34,9 @@ ClientGame::~ClientGame() {
 void ClientGame::start() {
     std::cout << "[Client][Game][Init]" << std::endl;
     init();
-    sf::Clock clockGame, clockUpdate;
+    sf::Clock clockUpdate;
     std::cout << "[Client][Game][Start]" << std::endl;
-    while (!isEnded() && m_window.isOpen()) {
+    while (!m_isEnded && m_window.isOpen()) {
         sf::Event event;
         while (m_window.pollEvent(event)) {
             read(event);

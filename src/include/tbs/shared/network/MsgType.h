@@ -20,6 +20,7 @@ enum class MsgType : sf::Int16 {
     Checkpoint,
     Game,
     GameInfo,
+    GameEnd,
     Acknowledgment
 };
 

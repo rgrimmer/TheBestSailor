@@ -9,6 +9,7 @@
 #define	CLIENTGAMESPEEDESTWIN_H
 
 #include <bitset>
+#include <thread>
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -37,7 +38,6 @@ protected:
     virtual void init();
     virtual void update(float dt);
     virtual void draw();
-    virtual bool isEnded();
     virtual void sendInfo();
 
 private:
@@ -46,6 +46,9 @@ private:
     bool readGameInfo(MsgData& msg);
     bool readDisconnect(MsgData& msg);
     bool readCheckpoint(MsgData& msg);
+    bool readMsgEnd(MsgData& msg);
+    
+    void endScheduler();
 
 private:
     // Model
@@ -69,6 +72,10 @@ private:
     sf::View m_currentView;
     
     sf::Music m_music;
+    
+    std::string m_winner;
+    std::thread* m_endGame;
+    
 };
 
 #endif	/* CLIENTGAMESPEEDESTWIN_H */

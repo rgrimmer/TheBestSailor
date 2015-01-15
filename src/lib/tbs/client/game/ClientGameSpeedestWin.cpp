@@ -89,10 +89,6 @@ void ClientGameSpeedestWin::draw() {
         m_window.draw(*m_mainGraphic);
 }
 
-bool ClientGameSpeedestWin::isEnded() {
-    return false;
-}
-
 void ClientGameSpeedestWin::sendInfo() {
     MsgData msg;
     msg << MsgType::Action << static_cast<sf::Uint8> (m_keys.to_ulong()) << m_clockGame.getElapsedTime().asMilliseconds();
@@ -221,6 +217,8 @@ bool ClientGameSpeedestWin::read(MsgData & msg) {
             return readDisconnect(msg);
         case MsgType::Checkpoint:
             return readCheckpoint(msg);
+        case MsgType::GameEnd:
+            return readMsgEnd(msg);
         default:
             return false;
     }
@@ -306,3 +304,17 @@ bool ClientGameSpeedestWin::readCheckpoint(MsgData& msg) {
     m_world.getCheckPointManager().getCheckPoint(idCheckpoint).activate();
     return true;
 }
+
+bool ClientGameSpeedestWin::readMsgEnd(MsgData& msg) {
+    msg >> m_winner;
+    m_endGame = new std::thread(&ClientGameSpeedestWin::endScheduler, this);
+    return true;
+}
+
+void ClientGameSpeedestWin::endScheduler() {
+    sf::sleep(sf::seconds(5.0f));
+    m_isEnded = true;
+}
+
+
+

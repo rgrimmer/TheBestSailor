@@ -32,7 +32,6 @@ protected:
     virtual void init() = 0;
     virtual void update(float dt) = 0;
     virtual void draw() = 0;
-    virtual bool isEnded() = 0;
     virtual bool read(sf::Event& event) = 0;
 
     virtual void sendInfo() {
@@ -49,6 +48,7 @@ protected:
     sf::Time m_ping;
 
     bool m_hasInfoToSend;
+    bool m_isEnded;
 
     int m_countFrames;
     int m_lastCoutFrames;
