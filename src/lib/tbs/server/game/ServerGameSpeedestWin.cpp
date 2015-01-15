@@ -41,18 +41,22 @@ ServerGameSpeedestWin::ServerGameSpeedestWin(Server &server, ServerPlayers& play
 : ServerGame(server, players)
 , m_map(header) {
     m_checkPointManager.initialise(m_map.getHeightMap());
-    sf::Vector2f initPosition = static_cast<sf::Vector2f>(m_checkPointManager.getCheckPoint(0).getPosition());
+    sf::Vector2f initPosition = static_cast<sf::Vector2f> (m_checkPointManager.getCheckPoint(0).getPosition());
+    initPosition.x += 0.25f;
     sf::Vector2f position(initPosition);
+    int count = 0;
     for (auto* player : m_players.inGame()) {
         Ship ship;
         ship.kinematics().position() = position;
         ship.setAngle(90.0f);
-        ship.getSail().setAngle(m_map.getWind(sf::Vector2i(position.x / TILE_SIZE, position.y / TILE_SIZE)).direction());
+        ship.getSail().setAngle(m_map.getWind(static_cast<sf::Vector2i> (position)).direction());
         m_ships[player] = ship;
-        position.x += TILE_SIZE/4;
-        if(position.x >= initPosition.x + TILE_SIZE) {
+        position.x += 0.25f;
+        count++;
+        if (count >= 4) {
             position.x = initPosition.x;
-            position.y += TILE_SIZE/4;
+            position.y += 0.25f;
+            count = 0;
         }
     }
 }
@@ -77,28 +81,27 @@ void ServerGameSpeedestWin::update(float dt) {
         updateShipState(ship.second, dt);
         updateSail(ship.second);
         sf::Vector2f shipVelocity = calculShipVelocity(ship.second);
-        
-        if(!collideWithMap(ship.second, shipVelocity)) {
+
+        if (!collideWithMap(ship.second, shipVelocity)) {
             ship.second.kinematics().speed() = shipVelocity;
+        } else {
+            ship.second.kinematics().speed() = {0.0f, 0.0f};
         }
-        else {
-            ship.second.kinematics().speed() = {0.0f,0.0f};
-        }
-        
+
         int checkPointCount = m_checkPointManager.getCheckPointCount();
-        
+
         for (int i = 0; i < checkPointCount; i++) {
             ServerCheckpoint c = m_checkPointManager.getCheckPoint(i);
-            if(!m_checkPointManager.isCompletedCheckpoint(ship.first, i)) {
-                if(collideWithCheckPoint(ship.second, c)) {
+            if (!m_checkPointManager.isCompletedCheckpoint(ship.first, i)) {
+                if (collideWithCheckPoint(ship.second, c)) {
                     m_checkPointManager.addCompletedCheckpoint(ship.first, i);
                     MsgData msgCheckpoint;
-                    msgCheckpoint << MsgType::Checkpoint << static_cast<sf::Uint8>(i);
+                    msgCheckpoint << MsgType::Checkpoint << static_cast<sf::Uint8> (i);
                     m_server.getNetwork()->getTCPManager().send(msgCheckpoint, ship.first->getTCPSocket());
-                }   
+                }
             }
         }
-        
+
         ship.second.update(dt);
     }
 }
@@ -121,7 +124,7 @@ void ServerGameSpeedestWin::updateShipState(Ship& ship, float dt) {
 }
 
 void ServerGameSpeedestWin::updateSail(Ship& ship) {
-    Wind wind = m_map.getWind(static_cast<sf::Vector2i> (ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
+    Wind wind = m_map.getWind(static_cast<sf::Vector2i> (ship.kinematics().position()));
     float angleShip = ship.getAngle();
     float diff = 360.0f - angleShip;
     float windDir = wind.getDirection() + diff;
@@ -147,7 +150,7 @@ void ServerGameSpeedestWin::updateSail(Ship& ship) {
 }
 
 sf::Vector2f ServerGameSpeedestWin::calculShipVelocity(Ship& ship) {
-    Wind wind = m_map.getWind(static_cast<sf::Vector2i> (ship.kinematics().position() / sf::Vector2f(TILE_SIZE, TILE_SIZE)));
+    Wind wind = m_map.getWind(static_cast<sf::Vector2i> (ship.kinematics().position()));
     float shipDirRad = Kinematics::degToRad(ship.getAngle());
     sf::Vector2f outP(std::cos(shipDirRad), std::sin(shipDirRad));
 
@@ -159,21 +162,20 @@ sf::Vector2f ServerGameSpeedestWin::calculShipVelocity(Ship& ship) {
 }
 
 bool ServerGameSpeedestWin::collideWithMap(const Ship & ship, const sf::Vector2f & velocity) {
-    int x = (ship.kinematics().position().x + velocity.x) / TILE_SIZE;
-    int y = (ship.kinematics().position().y + velocity.y) / TILE_SIZE;
-    return !WATER(m_map.getHeightMap().getValue(x,y));
+    int x = (ship.kinematics().position().x + velocity.x);
+    int y = (ship.kinematics().position().y + velocity.y);
+    return !WATER(m_map.getHeightMap().getValue(x, y));
 }
 
 bool ServerGameSpeedestWin::collideWithCheckPoint(const Ship & ship, const ServerCheckpoint & checkPoint) {
 
     sf::Vector2f posShip = ship.kinematics().position();
     sf::Vector2i posCheckPoint = checkPoint.getPosition();
-    
-    if (static_cast<int>(posShip.x / TILE_SIZE) == posCheckPoint.x / TILE_SIZE
-     && static_cast<int>(posShip.y / TILE_SIZE) == posCheckPoint.y / TILE_SIZE) {
+
+    if(static_cast<sf::Vector2i>(posShip) == posCheckPoint) {
         return true;
     }
-    
+
     return false;
 }
 
@@ -192,10 +194,10 @@ bool ServerGameSpeedestWin::gameIsEnded() {
 
 void ServerGameSpeedestWin::sendGame() {
     MsgData msgGame;
-    msgGame << MsgType::Game << GameType::SpeedestWin 
-            << sf::Int32(m_map.getHeader().getHeight()) 
-            << sf::Int32(m_map.getHeader().getWidth()) 
-            << sf::Int32(m_map.getHeightMap().getSeed()) 
+    msgGame << MsgType::Game << GameType::SpeedestWin
+            << sf::Int32(m_map.getHeader().getHeight())
+            << sf::Int32(m_map.getHeader().getWidth())
+            << sf::Int32(m_map.getHeightMap().getSeed())
             << sf::Int32(m_map.getWindMap().getSeed());
 
     // Send checkpoint
@@ -205,13 +207,13 @@ void ServerGameSpeedestWin::sendGame() {
         sf::Vector2i position = checkpoint.getPosition();
         msgGame << sf::Int32(position.x) << sf::Int32(position.y);
     }
-    
+
     // Send ship
     msgGame << sf::Int32(m_ships.size());
-    
+
     for (auto& pair : m_ships) {
         auto& ship = pair.second;
-        msgGame << static_cast<sf::Uint8>(pair.first->getId())
+        msgGame << static_cast<sf::Uint8> (pair.first->getId())
                 << ship.kinematics().position().x
                 << ship.kinematics().position().y;
     }

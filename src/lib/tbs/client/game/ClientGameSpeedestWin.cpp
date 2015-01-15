@@ -243,7 +243,7 @@ bool ClientGameSpeedestWin::readInitGame(MsgData & msg) {
         auto& shipPos = ship.kinematics().position();
         msg >> shipPos.x >> shipPos.y;
         ship.setAngle(90.0f);
-        ship.getSail().setAngle(m_world.getWindMap().wind(shipPos.x / TILE_SIZE, shipPos.y / TILE_SIZE).getDirection());
+        ship.getSail().setAngle(m_world.getWindMap().wind(static_cast<sf::Vector2i>(shipPos)).getDirection());
     }
     
     return true;

@@ -3,7 +3,7 @@
 
 ClientCheckPoint::ClientCheckPoint(sf::Vector2i position) 
 : m_position(position)
-, m_shape({200.0f, 200.0f})
+, m_shape({1.0f, 1.0f})
 , m_eState(e_state_off)
 {
     m_shape.setPosition(position.x, position.y);

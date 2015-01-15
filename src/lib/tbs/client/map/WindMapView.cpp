@@ -32,7 +32,7 @@ void WindMapView::load() {
             sf::Vertex* triangle = &m_vertices[(i + j * width) * 3];
 
             // define its 3 corners
-            triangle[0].position = sf::Vector2f(i * TILE_SIZE, j * TILE_SIZE);
+            triangle[0].position = sf::Vector2f(i, j);
             
             //Wind wind = map(i,j).direction();
             Wind wind = m_windMap.wind(i,j);
@@ -42,14 +42,13 @@ void WindMapView::load() {
             float cos2 = std::cos((windDir - 15.0f) * M_PI / 180.0f);
             float sin2 = std::sin((windDir - 15.0f) * M_PI / 180.0f);
             
-            sf::Vector2f pos1 = triangle[0].position + sf::Vector2f(TILE_SIZE/1.5f*cos1,TILE_SIZE/1.5f*sin1);
-            sf::Vector2f pos2 = triangle[0].position + sf::Vector2f(TILE_SIZE/1.5f*cos2,TILE_SIZE/1.5f*sin2);
+            sf::Vector2f pos1 = triangle[0].position + sf::Vector2f(cos1/1.5f, sin1/1.5f);
+            sf::Vector2f pos2 = triangle[0].position + sf::Vector2f(cos2/1.5f, sin2/1.5f);
             
             triangle[1].position = pos1;
             triangle[2].position = pos2;
 
             int valTrans = 255 * (wind.force() - WindMap::minStrength) / (WindMap::maxStrength - WindMap::minStrength);
-//            int valTrans = 255;
             triangle[0].color = sf::Color(255, 255, 255, valTrans);
             triangle[1].color = sf::Color(255, 255, 255, valTrans);
             triangle[2].color = sf::Color(255, 255, 255, valTrans);
@@ -59,7 +58,7 @@ void WindMapView::load() {
 
 void WindMapView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     // apply the transform
-    states.transform.translate(TILE_SIZE/2, TILE_SIZE/2);
+    states.transform.translate(0.5f, 0.5f);
 
     // draw the vertex array
     target.draw(m_vertices, states);

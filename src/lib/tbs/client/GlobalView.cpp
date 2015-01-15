@@ -68,10 +68,9 @@ void GlobalView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
     // Set ship on view
     target.setView(m_worldViewUnit);
-    sf::CircleShape ship(1.0f);
-    const sf::Vector2f &shipPosView = m_shipView.getShip().kinematics().position();
-    ship.setPosition(shipPosView.x / TILE_SIZE, shipPosView.y / TILE_SIZE);
-    target.draw(ship);
+    sf::CircleShape shipShape(1.0f);
+    shipShape.setPosition(m_shipView.getShip().kinematics().position());
+    target.draw(shipShape);
 
     // Draw info
     TextView::setAbs(false);

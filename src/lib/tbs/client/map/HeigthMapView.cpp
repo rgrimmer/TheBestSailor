@@ -48,10 +48,10 @@ void HeigthMapView::load() {
             sf::Vertex* quad = &m_vertices[(i + j * width) * 4];
 
             // define its 4 corners
-            quad[0].position = sf::Vector2f(i * TILE_SIZE, j * TILE_SIZE);
-            quad[1].position = sf::Vector2f((i + 1) * TILE_SIZE, j * TILE_SIZE);
-            quad[2].position = sf::Vector2f((i + 1) * TILE_SIZE, (j + 1) * TILE_SIZE);
-            quad[3].position = sf::Vector2f(i * TILE_SIZE, (j + 1) * TILE_SIZE);
+            quad[0].position = sf::Vector2f(i, j);
+            quad[1].position = sf::Vector2f((i + 1), j);
+            quad[2].position = sf::Vector2f((i + 1), (j + 1));
+            quad[3].position = sf::Vector2f(i, (j + 1));
 
             // define its 4 colors coordinates
             if (m_squared) {

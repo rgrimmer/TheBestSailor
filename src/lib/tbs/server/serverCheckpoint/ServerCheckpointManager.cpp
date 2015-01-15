@@ -60,7 +60,7 @@ void ServerCheckpointManager::initialise(HeigthMap& map) {
     } while (restart);
 
     for (int i = 0; i < 4; ++i) {
-        m_checkpoints.push_back(ServerCheckpoint(sf::Vector2i(checkpointsPos[i].x*TILE_SIZE, checkpointsPos[i].y*TILE_SIZE)));
+        m_checkpoints.emplace_back(checkpointsPos[i]);
     }
 }
 
