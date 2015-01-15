@@ -200,6 +200,8 @@ bool ClientGameSpeedestWin::read(sf::Event& event) {
 }
 
 bool ClientGameSpeedestWin::read(MsgData & msg) {
+    m_ping = m_clockPing.getElapsedTime();
+    
     MsgType msgType;
     msg >> msgType;
     switch (msgType) {

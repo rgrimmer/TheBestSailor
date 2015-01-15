@@ -21,9 +21,11 @@ public:
 
     void start();
     virtual bool read(MsgData& msg) = 0;
-    virtual bool readInitGame(MsgData& msg){
+
+    virtual bool readInitGame(MsgData& msg) {
         std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
-        return false;}
+        return false;
+    }
     virtual void setUpdateTime(const sf::Time& updateTime);
 
 protected:
@@ -32,8 +34,10 @@ protected:
     virtual void draw() = 0;
     virtual bool isEnded() = 0;
     virtual bool read(sf::Event& event) = 0;
-    virtual void sendInfo() {}
-    
+
+    virtual void sendInfo() {
+    }
+
 private:
     void displayView();
     void calculateFPS();
@@ -42,11 +46,15 @@ protected:
     sf::RenderWindow& m_window;
     Client& m_client;
     sf::Time m_updateTime;
+    sf::Time m_ping;
+
     bool m_hasInfoToSend;
-    
-    sf::Clock m_clockFPS;
+
     int m_countFrames;
     int m_lastCoutFrames;
+
+    sf::Clock m_clockFPS;
+    sf::Clock m_clockPing;
 
 };
 
