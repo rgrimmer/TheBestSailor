@@ -49,7 +49,7 @@ protected:
 
     bool m_hasInfoToSend;
     bool m_isEnded;
-
+    
     int m_countFrames;
     int m_lastCoutFrames;
 

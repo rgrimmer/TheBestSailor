@@ -139,26 +139,22 @@ bool ClientGameSpeedestWin::read(sf::Event& event) {
             case sf::Keyboard::D:
             {
                 m_keys.set(TURN_HELM_POSITIVE, true);
-                m_hasInfoToSend = true;
             }
                 break;
             case sf::Keyboard::Q:
             {
                 m_keys.set(TURN_HELM_NEGATIVE, true);
-                m_hasInfoToSend = true;
             }
                 break;
             case sf::Keyboard::Z:
             {
                 m_keys.set(TURN_SAIL_POSITIVE, true);
-                m_hasInfoToSend = true;
             }
                 break;
 
             case sf::Keyboard::S:
             {
                 m_keys.set(TURN_SAIL_NEGATIVE, true);
-                m_hasInfoToSend = true;
             }
                 break;
 
@@ -190,19 +186,15 @@ bool ClientGameSpeedestWin::read(sf::Event& event) {
         switch (event.key.code) {
             case sf::Keyboard::D:
                 m_keys.set(TURN_HELM_POSITIVE, false);
-                m_hasInfoToSend = true;
                 break;
             case sf::Keyboard::Q:
                 m_keys.set(TURN_HELM_NEGATIVE, false);
-                m_hasInfoToSend = true;
                 break;
             case sf::Keyboard::Z:
                 m_keys.set(TURN_SAIL_POSITIVE, false);
-                m_hasInfoToSend = true;
                 break;
             case sf::Keyboard::S:
                 m_keys.set(TURN_SAIL_NEGATIVE, false);
-                m_hasInfoToSend = true;
                 break;
             default:
                 return false;
