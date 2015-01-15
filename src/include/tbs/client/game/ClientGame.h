@@ -48,8 +48,6 @@ protected:
     sf::Time m_updateTime;
     sf::Time m_ping;
 
-    bool m_hasInfoToSend;
-
     int m_countFrames;
     int m_lastCoutFrames;
 
