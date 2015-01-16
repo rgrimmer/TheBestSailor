@@ -43,7 +43,9 @@ La théorie :
 2. Attente du début de partie (Atente et réception des informations sur la partie)
 3. Exécution du jeux
 4. Retour à (2)
-..
+
+(Coté server) :
+???
 
 
 Boucle principale.

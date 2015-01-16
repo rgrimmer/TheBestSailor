@@ -262,3 +262,18 @@ Cela implique que lorsque le bateau remonte trop le vent, le vent n'a plus d'eff
 ( !!! FAUX !!! ) Ensuite l'angle entre le bateau et la voile ne peut faire qu'un angle de 90°. Un angle plus important n'est pas
 possible en réalité sur une voile contrainte (Containte dans le sens : On veut que le vent pousse sur la voile)
 Une voile non contrainte (laissé au vent sans contrainte) pourrait l'être mais cela n'a aucun intéret.
+
+
+Etude de la terminaison d'une partie (coté client)
+1. La partie est en cours
+2. Le client reçoi un message fin de partie (Nom du gagnant, temps d'affichage)
+3. On affiche le gagnant.
+4. Une fois le temps fini. On repasse dans l'état en file d'attente.
+
+(coté serveur)
+1. La partie est en cours.
+2. On détecte la fin de partie.
+3. On passe dans le  sous-état, "terminaison".
+4. On envoi le message fin de partie aux joueurs
+5. On lance un chrono
+6. Dans l'update si le chrono est terminer. On passe dans l'état file d'attente
