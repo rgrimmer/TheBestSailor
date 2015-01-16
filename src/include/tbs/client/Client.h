@@ -16,6 +16,7 @@
 #include "client/ClientPlayer.h"
 #include "client/network/ClientNetwork.h"
 #include "game/ClientGameConnection.h"
+#include "gamestate/GameStateManager.h"
 
 class MsgGame;
 class ClientGame;
@@ -51,8 +52,11 @@ private:
     void doDisconnection();
 
 private:
+    GameStateManager m_gamestateManager;
     sf::RenderWindow m_window;
 
+    sf::Clock m_clock;
+    
     ClientPlayer m_player;
     ClientGame* m_game;
     ClientGameConnection* m_connection;

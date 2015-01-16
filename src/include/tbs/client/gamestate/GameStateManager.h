@@ -9,16 +9,17 @@ public:
 
     enum EGameState {
         e_game_state_main_menu,
+        e_game_state_game,
         e_game_state_max
     };
 
     explicit GameStateManager(void);
     virtual ~GameStateManager(void);
 
-    void Initialize(void);
+    void Initialize(ClientNetwork& network);
     void Release(void);
 
-    void UpdateAndRender(float dt);
+    void UpdateAndRender(sf::RenderWindow & window, float dt);
     
     // GameState access
     void Push(EGameState eGameState);

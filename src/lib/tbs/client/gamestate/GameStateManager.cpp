@@ -1,3 +1,5 @@
+#include <SFML/Window/Event.hpp>
+
 #include "client/gamestate/GameStateManager.h"
 #include "client/gamestate/GameStateMainMenu.h"
 
@@ -13,10 +15,10 @@ GameStateManager::~GameStateManager(void) {
 
 }
 
-void GameStateManager::Initialize(void) {
+void GameStateManager::Initialize(ClientNetwork& network) {
     m_apGameState[e_game_state_main_menu] = new GameStateMainMenu();
 
-    m_apGameState[e_game_state_main_menu]->Initialize();
+    m_apGameState[e_game_state_main_menu]->Initialize(network);
 
     m_eCurrentGameState = e_game_state_main_menu;
     Push(m_eCurrentGameState);
@@ -32,12 +34,27 @@ void GameStateManager::Release(void) {
     }
 }
 
-void GameStateManager::UpdateAndRender(float dt) {
+void GameStateManager::UpdateAndRender(sf::RenderWindow & window, float dt) {
     GameState* pCurrentGameState = GetCurrentGameState();
 
     if (nullptr != pCurrentGameState) {
+
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            
+            if(!pCurrentGameState->read(event)) {
+                window.close();
+            }
+        }
+
         pCurrentGameState->Update(dt);
-        pCurrentGameState->Render();
+        window.clear(sf::Color(5,52,79,255));
+        pCurrentGameState->Render(window);
+        
+        TextView::setAbs(true);
+        TextView::update();
+        
+        window.display();
     }
 }
 

@@ -5,6 +5,12 @@
  * Created on 9 octobre 2014, 18:23
  */
 
+#include <SFML/System/Time.hpp>
+
+
+#include <SFML/System/Sleep.hpp>
+
+
 
 #include <iostream>
 
@@ -46,11 +52,27 @@ ClientNetwork& Client::getNetwork() {
 }
 
 void Client::start(const std::string & name) {
-    m_player.setName(name);
+    
     sf::ContextSettings settings;
     settings.antialiasingLevel = 2;
     m_window.create(sf::VideoMode(800, 600), "The Best Sailor", sf::Style::Default, settings);
     m_window.setFramerateLimit(60);
+    m_window.setKeyRepeatEnabled(false);
+    m_window.setJoystickThreshold(100.0f);
+
+        sf::sleep(sf::seconds(1.0f));
+
+    g_gameStateManager.Initialize(m_network);
+    
+    while (m_window.isOpen()) {
+        g_gameStateManager.UpdateAndRender(m_window, m_clock.restart().asSeconds());
+        sf::sleep(sf::seconds(1.0f));
+    }
+    
+    g_gameStateManager.Release();
+    
+    /*m_player.setName(name);
+
     
     m_connection = new ClientGameConnection(m_window, *this);
     m_connection->start();
@@ -62,7 +84,7 @@ void Client::start(const std::string & name) {
         initGame();
         startGame();
     }
-    doDisconnection();
+    doDisconnection();*/
 }
 
 void Client::initConnectionWithServer(const sf::IpAddress &address) {
