@@ -27,3 +27,31 @@
 	- Compensation la théorie
 	- Compensation implenté
 	- Compensation possible
+
+
+La pratique :
+
+Les états :
+Dans tous jeux vidéos, le système peut être divisé en différents état.
+Les seuls états implémenté jusqu'alors sont (Coté client) :
+1. Connnection au server
+2. Execution du jeux
+
+La théorie :
+(Coté client) :
+1. Etablissement de la connection au serveur (envoi du nom du joueur, réception du port UDP du serveur ...)
+2. Attente du début de partie (Atente et réception des informations sur la partie)
+3. Exécution du jeux
+4. Retour à (2)
+..
+
+
+Boucle principale.
+La boucle principale correspond à la boucle d'état du système. Son fonctionnement est identique pour le Cient et pour le Serveur.
+Elle se compose de la façon suivante :
+1. Création de l'état.
+2. Execution de l'état.
+
+Boucle secondaire.
+Cette seconde boucle est imbriqué dans la première. Elle correspond à l'exécution de l'état.
+Sa composition varie en fonction de l'état exécuter.
