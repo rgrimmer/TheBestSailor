@@ -11,8 +11,9 @@
 #include "client/network/ClientNetwork.h"
 #include "shared/network/MsgTurnHelm.h"
 
-GameStateMainMenu::GameStateMainMenu(ClientNetwork& network, ClientPlayer& player)
-: GameState(network, player)
+GameStateMainMenu::GameStateMainMenu(sf::RenderWindow& window, ClientNetwork& network, ClientPlayer& player)
+: GameState(window, network, player)
+, m_currentView(&m_choiceIpView)
 , m_choiceIpView(m_ipAddressInput)
 , m_connectionView(m_ipAddressInput) {
 
@@ -33,7 +34,7 @@ void GameStateMainMenu::Release(void) {
 }
 
 void GameStateMainMenu::Activate(void) {
-    m_eState = e_state_ip_choice;
+    changeState(e_state_ip_choice);
 }
 
 void GameStateMainMenu::DeActivate(void) {
@@ -41,45 +42,42 @@ void GameStateMainMenu::DeActivate(void) {
 }
 
 void GameStateMainMenu::Update(float deltaTimeInMs) {
-
-}
-
-void GameStateMainMenu::Render(sf::RenderWindow & window) {
     switch (m_eState) {
-
-        case e_state_ip_choice:
-        {
-            window.draw(m_choiceIpView);
-        }
-            break;
-            
         case e_state_connection:
-        {
-            window.draw(m_connectionView);
-        }
+            if (m_network.connect(m_address, sf::milliseconds(1000)))
+                changeState(e_state_exchange_info);
             break;
 
         default:
             break;
-
     }
+}
+
+void GameStateMainMenu::Render(sf::RenderWindow& window) {
+    window.draw(*m_currentView);
 }
 
 void GameStateMainMenu::initConnectionWithServer(const sf::IpAddress &address) {
     std::cout << "[NetW][InitCWS]\tInitialize connection" << std::endl;
-    m_network.connect(address);
     m_network.getTcpManager().startReceiverThread();
     sendLocalPlayerInfo();
     waitServerPlayerInfo();
 }
 
 void GameStateMainMenu::changeState(EState state) {
-
     m_eState = state;
 
-    if (m_eState == e_state_connection) {
-//        std::cout << "TRY TO CONNECT TO " << m_address.toString() << std::endl;
-//        initConnectionWithServer(m_address);
+    switch (m_eState) {
+        case e_state_connection:
+            m_currentView = &m_connectionView;
+            break;
+
+        case e_state_exchange_info:
+            initConnectionWithServer(m_address);
+            break;
+
+        default:
+            m_currentView = &m_choiceIpView;
     }
 }
 
@@ -111,7 +109,7 @@ bool GameStateMainMenu::read(sf::Event& event) {
             m_address = sf::IpAddress(m_ipAddressInput);
             changeState(e_state_connection);
         } else if (event.key.code == sf::Keyboard::Escape) {
-            if(m_eState == e_state_ip_choice) 
+            if (m_eState == e_state_ip_choice)
                 return false;
             changeState(e_state_ip_choice);
         }
@@ -126,10 +124,11 @@ bool GameStateMainMenu::read(MsgData& msg) {
     MsgType msgType;
     msg >> msgType;
     switch (msgType) {
-            //        case MsgType::Game:
-            //            return readMsgGame(msg);
         case MsgType::ServerPlayerInfo:
             return readMsgServerPlayerInfo(msg);
+
+        default:
+            break;
     }
     return true;
 }
@@ -141,6 +140,6 @@ bool GameStateMainMenu::readMsgServerPlayerInfo(MsgData &message) {
     m_player.setId(id);
     m_network.getUdpManager().initialize(m_address, udpPort);
     m_network.getUdpManager().startReceiverThread();
-    //    g_gameStateManager.Push(/*game*/);
+    g_gameStateManager.Push(GameState::EGameState::e_game_state_wait_game);
     return true;
 }

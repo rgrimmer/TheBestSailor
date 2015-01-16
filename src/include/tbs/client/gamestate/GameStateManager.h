@@ -7,30 +7,25 @@
 class GameStateManager {
 public:
 
-    enum EGameState {
-        e_game_state_main_menu,
-        e_game_state_game,
-        e_game_state_max
-    };
 
     explicit GameStateManager(void);
     virtual ~GameStateManager(void);
 
-    void Initialize(ClientNetwork& network, ClientPlayer& player);
+    void Initialize(sf::RenderWindow& window, ClientNetwork& network, ClientPlayer& player);
     void Release(void);
 
     void UpdateAndRender(sf::RenderWindow & window, float dt);
     
     // GameState access
-    void Push(EGameState eGameState);
+    void Push(GameState::EGameState eGameState);
     void Pop(void);
-    void Change(EGameState eGameState);
+    void Change(GameState::EGameState eGameState);
 
     GameState* GetCurrentGameState(void) const;
 
 private:
-    GameState* m_apGameState[e_game_state_max];
-    EGameState m_eCurrentGameState;
+    GameState* m_apGameState[GameState::EGameState::e_game_state_max];
+    GameState::EGameState m_eCurrentGameState;
     std::stack<GameState*> m_sGameState;
 };
 

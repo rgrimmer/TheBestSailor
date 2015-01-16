@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include <SFML/System/Sleep.hpp>
+#include <SFML/System/Clock.hpp>
 
 #include "shared/network/UtilsNetwork.h"
 
@@ -27,12 +28,17 @@ ClientMsgQueue& ClientNetwork::getMessageQueue() {
     return m_msgQueue;
 }
 
-void ClientNetwork::connect(const sf::IpAddress &address) {
-    while (!m_tcpManager.connect(address, SERVER_PORT_TCP/*, sf::milliseconds(1000)*/)) {
-        std::cout << "[NetW][Tcp] \tCan't find server, try again in 5s" << std::endl;
-        sf::sleep(sf::milliseconds(5000));
+bool ClientNetwork::connect(const sf::IpAddress &address, sf::Time timeout) {
+    sf::Time minTime = sf::milliseconds(1000);
+    if (timeout < minTime)
+        timeout = minTime;
+
+    if (m_tcpManager.connect(address, SERVER_PORT_TCP, timeout)) {
+        std::cout << "[NetW][Tcp] \tConnection established" << std::endl;
+        return true;
     }
-    std::cout << "[NetW][Tcp] \tConnection established" << std::endl;
+    std::cout << "[NetW][Tcp] \tCan't find server" << std::endl;
+    return false;
 }
 
 void ClientNetwork::initialize() {

@@ -3,8 +3,9 @@
 
 #include "client/gamestate/GameState.h"
 
-GameState::GameState(ClientNetwork& network, ClientPlayer& player)
-: m_network(network)
+GameState::GameState(sf::RenderWindow& window, ClientNetwork& network, ClientPlayer& player)
+: m_window(window)
+, m_network(network)
 , m_player(player) {
 
 }

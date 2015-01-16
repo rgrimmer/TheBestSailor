@@ -2,11 +2,12 @@
 
 #include "client/gamestate/GameStateManager.h"
 #include "client/gamestate/GameStateMainMenu.h"
+#include "client/gamestate/GameStateWaitGame.h"
 
 GameStateManager g_gameStateManager;
 
 GameStateManager::GameStateManager(void)
-: m_eCurrentGameState(e_game_state_main_menu)
+: m_eCurrentGameState(GameState::EGameState::e_game_state_main_menu)
 , m_sGameState() {
 
 }
@@ -15,17 +16,18 @@ GameStateManager::~GameStateManager(void) {
 
 }
 
-void GameStateManager::Initialize(ClientNetwork& network, ClientPlayer& player) {
-    m_apGameState[e_game_state_main_menu] = new GameStateMainMenu(network, player);
+void GameStateManager::Initialize(sf::RenderWindow& window, ClientNetwork& network, ClientPlayer& player) {
+    m_apGameState[GameState::EGameState::e_game_state_main_menu] = new GameStateMainMenu(window, network, player);
+    m_apGameState[GameState::EGameState::e_game_state_wait_game] = new GameStateWaitGame(window, network, player);
 
-    m_apGameState[e_game_state_main_menu]->Initialize();
+    m_apGameState[GameState::EGameState::e_game_state_main_menu]->Initialize();
 
-    m_eCurrentGameState = e_game_state_main_menu;
+    m_eCurrentGameState = GameState::EGameState::e_game_state_main_menu;
     Push(m_eCurrentGameState);
 }
 
 void GameStateManager::Release(void) {
-    for (int eGameState = 0; eGameState < e_game_state_max; ++eGameState) {
+    for (int eGameState = 0; eGameState < GameState::EGameState::e_game_state_max; ++eGameState) {
         delete(m_apGameState[eGameState]);
     }
 
@@ -34,31 +36,31 @@ void GameStateManager::Release(void) {
     }
 }
 
-void GameStateManager::UpdateAndRender(sf::RenderWindow & window, float dt) {
+void GameStateManager::UpdateAndRender(sf::RenderWindow& window, float dt) {
     GameState* pCurrentGameState = GetCurrentGameState();
 
     if (nullptr != pCurrentGameState) {
 
         sf::Event event;
         while (window.pollEvent(event)) {
-            
-            if(!pCurrentGameState->read(event)) {
+
+            if (!pCurrentGameState->read(event)) {
                 window.close();
             }
         }
 
         pCurrentGameState->Update(dt);
-        window.clear(sf::Color(5,52,79,255));
+        window.clear(sf::Color(5, 52, 79, 255));
         pCurrentGameState->Render(window);
-        
+
         TextView::setAbs(true);
         TextView::update();
-        
+
         window.display();
     }
 }
 
-void GameStateManager::Push(EGameState eGameState) {
+void GameStateManager::Push(GameState::EGameState eGameState) {
     GameState* pCurrentGameState = GetCurrentGameState();
 
     if (nullptr != pCurrentGameState) {
@@ -81,7 +83,7 @@ void GameStateManager::Pop(void) {
     GetCurrentGameState()->Activate();
 }
 
-void GameStateManager::Change(EGameState eGameState) {
+void GameStateManager::Change(GameState::EGameState eGameState) {
     //pop
     GameState* pCurrentGameState = GetCurrentGameState();
 
