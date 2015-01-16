@@ -9,10 +9,12 @@
 #include "client/gamestate/GameStateManager.h"
 #include "client/ClientPlayer.h"
 #include "client/network/ClientNetwork.h"
+#include "shared/network/MsgTurnHelm.h"
 
-GameStateMainMenu::GameStateMainMenu()
-: GameState()
-, m_view(m_ipAddressInput) {
+GameStateMainMenu::GameStateMainMenu(ClientNetwork& network, ClientPlayer& player)
+: GameState(network, player)
+, m_choiceIpView(m_ipAddressInput)
+, m_connectionView(m_ipAddressInput) {
 
 }
 
@@ -20,9 +22,7 @@ GameStateMainMenu::~GameStateMainMenu(void) {
 
 }
 
-void GameStateMainMenu::Initialize(ClientNetwork& network, ClientPlayer& player) {
-    m_network = &network;
-    m_player = &player;
+void GameStateMainMenu::Initialize(void) {
     m_port = SERVER_PORT_TCP;
     m_address = sf::IpAddress::None;
     m_ipAddressInput = "localhost";
@@ -41,23 +41,21 @@ void GameStateMainMenu::DeActivate(void) {
 }
 
 void GameStateMainMenu::Update(float deltaTimeInMs) {
+
+}
+
+void GameStateMainMenu::Render(sf::RenderWindow & window) {
     switch (m_eState) {
-
-        case e_state_connection:
-        {
-            /*
-            while (m_window.isOpen()) {
-                initGame();
-                startGame();
-            }
-            doDisconnection();*/
-
-        }
-            break;
 
         case e_state_ip_choice:
         {
-
+            window.draw(m_choiceIpView);
+        }
+            break;
+            
+        case e_state_connection:
+        {
+            window.draw(m_connectionView);
         }
             break;
 
@@ -67,8 +65,35 @@ void GameStateMainMenu::Update(float deltaTimeInMs) {
     }
 }
 
-void GameStateMainMenu::Render(sf::RenderWindow & window) {
-    window.draw(m_view);
+void GameStateMainMenu::initConnectionWithServer(const sf::IpAddress &address) {
+    std::cout << "[NetW][InitCWS]\tInitialize connection" << std::endl;
+    m_network.connect(address);
+    m_network.getTcpManager().startReceiverThread();
+    sendLocalPlayerInfo();
+    waitServerPlayerInfo();
+}
+
+void GameStateMainMenu::changeState(EState state) {
+
+    m_eState = state;
+
+    if (m_eState == e_state_connection) {
+//        std::cout << "TRY TO CONNECT TO " << m_address.toString() << std::endl;
+//        initConnectionWithServer(m_address);
+    }
+}
+
+void GameStateMainMenu::sendLocalPlayerInfo() {
+    std::cout << "[Client][SendLPI] \t Envoi des informations du joueurs" << std::endl;
+    MsgData msg;
+    msg << MsgType::ClientPlayerInfo << static_cast<sf::Uint16> (m_network.getUdpManager().getPort()) << m_player.getName();
+    m_network.getTcpManager().send(msg);
+    std::cout << "[Client][SendLPI] \t Send : name(" << m_player.getName() << ") port(" << m_network.getUdpManager().getPort() << ")" << std::endl;
+}
+
+void GameStateMainMenu::waitServerPlayerInfo() {
+    std::cout << "[Client][WSPI] \t Wait information from server" << std::endl;
+    pollMessagesWait(sf::Time::Zero);
 }
 
 bool GameStateMainMenu::read(sf::Event& event) {
@@ -82,11 +107,13 @@ bool GameStateMainMenu::read(sf::Event& event) {
     } else if (event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::BackSpace && m_ipAddressInput.size() > 0) {
             m_ipAddressInput.resize(m_ipAddressInput.size() - 1);
-        }
-        if (event.key.code == sf::Keyboard::Return) {
+        } else if (event.key.code == sf::Keyboard::Return) {
             m_address = sf::IpAddress(m_ipAddressInput);
-            m_eState = e_state_connection;
             changeState(e_state_connection);
+        } else if (event.key.code == sf::Keyboard::Escape) {
+            if(m_eState == e_state_ip_choice) 
+                return false;
+            changeState(e_state_ip_choice);
         }
     } else if (event.type == sf::Event::Closed) {
         return false;
@@ -95,52 +122,25 @@ bool GameStateMainMenu::read(sf::Event& event) {
     return true;
 }
 
-void GameStateMainMenu::initConnectionWithServer(const sf::IpAddress &address) {
-    std::cout << "[NetW][InitCWS]\tInitialize connection" << std::endl;
-    m_network->connect(address);
-    m_network->getTcpManager().startReceiverThread();
-    sendLocalPlayerInfo();
-    waitServerPlayerInfo();
-}
-
-void GameStateMainMenu::changeState(EState state) {
-
-    m_eState = state;
-
-    if (m_eState == e_state_connection) {
-        std::cout << "TRY TO CONNECT TO " << m_address.toString() << std::endl;
-        initConnectionWithServer(m_address);
+bool GameStateMainMenu::read(MsgData& msg) {
+    MsgType msgType;
+    msg >> msgType;
+    switch (msgType) {
+            //        case MsgType::Game:
+            //            return readMsgGame(msg);
+        case MsgType::ServerPlayerInfo:
+            return readMsgServerPlayerInfo(msg);
     }
+    return true;
 }
 
-void GameStateMainMenu::sendLocalPlayerInfo() {
-    std::cout << "[Client][SendLPI] \t Envoi des informations du joueurs" << std::endl;
-    MsgData msg;
-    msg << MsgType::ClientPlayerInfo << static_cast<sf::Uint16> (m_network->getUdpManager().getPort()) << m_player->getName();
-    m_network->getTcpManager().send(msg);
-    std::cout << "[Client][SendLPI] \t Send : name(" << m_player->getName() << ") port(" << m_network->getUdpManager().getPort() << ")" << std::endl;
-}
-
-void GameStateMainMenu::waitServerPlayerInfo() {
-    std::cout << "[Client][WSPI] \t Wait information from server" << std::endl;
-    pollMessagesWait(sf::Time::Zero);
-}
-
-void Client::pollMessages() {
-    while (!m_network.getMessageQueue().empty()) {
-        auto message = m_network.getMessageQueue().pop();
-        read(*message);
-    }
-}
-
-bool Client::pollMessagesWait(sf::Time timeout) {
-    if (m_network.getMessageQueue().empty()) {
-        std::cout << "[Client][PoolM][Wait]" << std::endl;
-        if (!m_network.getMessageQueue().waitEvent(timeout)) {
-            std::cout << "[Client][PoolM][Wait] \t timeout" << std::endl;
-            return false;
-        }
-    }
-    pollMessages();
+bool GameStateMainMenu::readMsgServerPlayerInfo(MsgData &message) {
+    sf::Uint16 udpPort, id;
+    message >> udpPort >> id;
+    std::cout << "[Client][Read] \t Read Server Player Info Message. id(" << id << "), serverUdpPort(" << udpPort << ")" << std::endl;
+    m_player.setId(id);
+    m_network.getUdpManager().initialize(m_address, udpPort);
+    m_network.getUdpManager().startReceiverThread();
+    //    g_gameStateManager.Push(/*game*/);
     return true;
 }

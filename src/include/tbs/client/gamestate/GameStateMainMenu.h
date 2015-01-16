@@ -4,6 +4,7 @@
 
 #include "GameState.h"
 #include "client/ConnectionView.h"
+#include "client/ChoiceIpView.h"
 
 class ClientNetwork;
 class ClientPlayer;
@@ -16,10 +17,10 @@ public:
         e_state_connection
     };
 
-    explicit GameStateMainMenu(void);
+    explicit GameStateMainMenu(ClientNetwork& network, ClientPlayer& player);
     virtual ~GameStateMainMenu(void);
 
-    virtual void Initialize(ClientNetwork& network, ClientPlayer& player);
+    virtual void Initialize(void);
     virtual void Release(void);
     virtual void Activate(void);
     virtual void DeActivate(void);
@@ -28,17 +29,18 @@ public:
     virtual void Render(sf::RenderWindow & window);
 
     virtual bool read(sf::Event& event);
+    virtual bool read(MsgData& msg);
 
 private:
     void changeState(EState state);
     void initConnectionWithServer(const sf::IpAddress &address);
     void sendLocalPlayerInfo();
     void waitServerPlayerInfo();
+    
+    bool readMsgServerPlayerInfo(MsgData& msg);
 
-
-    ConnectionView m_view;
-    ClientNetwork* m_network;
-    ClientPlayer* m_player;
+    ChoiceIpView m_choiceIpView;
+    ConnectionView m_connectionView;
     EState m_eState;
     unsigned short m_port;
     sf::IpAddress m_address;

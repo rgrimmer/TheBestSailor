@@ -6,7 +6,6 @@
  */
 
 #include <SFML/Graphics/Text.hpp>
-#include <SFML/Network/IpAddress.hpp>
 
 #include "shared/Font.h"
 
@@ -15,12 +14,13 @@
 
 ConnectionView::ConnectionView(const std::string& ipAddressText)
 : m_titleSfText("The Best Sailor", 130, Center)
-, m_fixedTextView("IP address \nIP Public : " + sf::IpAddress::getPublicAddress(sf::milliseconds(30000)).toString() + "\nIP Local : " + sf::IpAddress::getLocalAddress().toString(), 60, Center)
+, m_fixedTextView("Try to connect to", 60, Center)
 , m_ipAddressText(ipAddressText) {
-    m_titleView.setViewport(sf::FloatRect(0.01f, 0.0f, 1.0f, 1.0f));
+    // Set text viewport
+    m_titleView.setViewport({0.0f, 0.0f, 1.0f, 1.0f});
 
-    // Set input text view
-    m_ipAddressSfView.setViewport({0, 0, 1.0f, 1.0f});
+    // Set input text viewport
+    m_ipAddressSfView.setViewport({0.0f, 0.4f, 1.0f, 1.0f});
 }
 
 ConnectionView::~ConnectionView() {
@@ -30,15 +30,18 @@ void ConnectionView::draw(sf::RenderTarget& target, sf::RenderStates states) con
     sf::View currentView = target.getView();
 
     // Draw background
-    target.draw(m_backgroundView);
+    target.draw(m_backgroundView, states);
 
     // Draw Title
-    target.draw(m_titleSfText);
+    target.setView(m_titleView);
+    target.draw(m_titleSfText, states);
 
+    TextView::setAbs(false);
+    
     // Draw InputText
     target.setView(m_ipAddressSfView);
-    target.draw(m_fixedTextView);
-    target.draw(TextView(m_ipAddressText, 60, Center));
+    target.draw(m_fixedTextView, states);
+    target.draw(TextView(m_ipAddressText, 60, Center), states);
 
     target.setView(currentView);
 }

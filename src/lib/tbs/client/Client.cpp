@@ -5,17 +5,11 @@
  * Created on 9 octobre 2014, 18:23
  */
 
-#include <SFML/System/Time.hpp>
-
-
-#include <SFML/System/Sleep.hpp>
-
-
-
 #include <iostream>
 
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/System/Time.hpp>
 
 #include "client/Client.h"
 #include "client/game/ClientGame.h"
@@ -60,13 +54,10 @@ void Client::start(const std::string & name) {
     m_window.setKeyRepeatEnabled(false);
     m_window.setJoystickThreshold(100.0f);
 
-        sf::sleep(sf::seconds(1.0f));
-
-    g_gameStateManager.Initialize(m_network);
+    g_gameStateManager.Initialize(m_network, m_player);
     
     while (m_window.isOpen()) {
         g_gameStateManager.UpdateAndRender(m_window, m_clock.restart().asSeconds());
-        sf::sleep(sf::seconds(1.0f));
     }
     
     g_gameStateManager.Release();

@@ -16,7 +16,7 @@ public:
     explicit GameStateManager(void);
     virtual ~GameStateManager(void);
 
-    void Initialize(ClientNetwork& network);
+    void Initialize(ClientNetwork& network, ClientPlayer& player);
     void Release(void);
 
     void UpdateAndRender(sf::RenderWindow & window, float dt);

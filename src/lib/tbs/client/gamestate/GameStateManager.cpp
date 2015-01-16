@@ -15,10 +15,10 @@ GameStateManager::~GameStateManager(void) {
 
 }
 
-void GameStateManager::Initialize(ClientNetwork& network) {
-    m_apGameState[e_game_state_main_menu] = new GameStateMainMenu();
+void GameStateManager::Initialize(ClientNetwork& network, ClientPlayer& player) {
+    m_apGameState[e_game_state_main_menu] = new GameStateMainMenu(network, player);
 
-    m_apGameState[e_game_state_main_menu]->Initialize(network);
+    m_apGameState[e_game_state_main_menu]->Initialize();
 
     m_eCurrentGameState = e_game_state_main_menu;
     Push(m_eCurrentGameState);

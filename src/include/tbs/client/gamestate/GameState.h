@@ -1,17 +1,20 @@
 #pragma once
 
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/System/Time.hpp>
 
 class ClientNetwork;
 class ClientPlayer;
+class MsgData;
 
 class GameState {
 public:
 
-    explicit GameState(void);
+    explicit GameState(ClientNetwork& network, ClientPlayer& player);
     virtual ~GameState(void);
 
-    virtual void Initialize(ClientNetwork& network, ClientPlayer& player) = 0;
+    virtual void Initialize(void) = 0;
     virtual void Release(void) = 0;
     virtual void Activate(void) = 0;
     virtual void DeActivate(void) = 0;
@@ -20,7 +23,12 @@ public:
     virtual void Render(sf::RenderWindow & window) = 0;
     
     virtual bool read(sf::Event& event) = 0;
+    virtual bool read(MsgData& msg) = 0;
+    
+    void pollMessages();
+    bool pollMessagesWait(sf::Time timeout = sf::Time::Zero);
     
 protected:
-    ClientNetwork* m_network;
+    ClientNetwork& m_network;
+    ClientPlayer& m_player;
 };
