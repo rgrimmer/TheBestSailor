@@ -2,7 +2,7 @@
 
 #include "client/gamestate/GameStateManager.h"
 #include "client/gamestate/GameStateMainMenu.h"
-#include "client/gamestate/GameStateWaitGame.h"
+#include "client/gamestate/GameStateGame.h"
 
 GameStateManager g_gameStateManager;
 
@@ -18,10 +18,11 @@ GameStateManager::~GameStateManager(void) {
 
 void GameStateManager::Initialize(sf::RenderWindow& window, ClientNetwork& network, ClientPlayer& player) {
     m_apGameState[GameState::EGameState::e_game_state_main_menu] = new GameStateMainMenu(window, network, player);
-    m_apGameState[GameState::EGameState::e_game_state_wait_game] = new GameStateWaitGame(window, network, player);
+    m_apGameState[GameState::EGameState::e_game_state_game] = new GameStateGame(window, network, player);
 
     m_apGameState[GameState::EGameState::e_game_state_main_menu]->Initialize();
-
+    m_apGameState[GameState::EGameState::e_game_state_game]->Initialize();
+    
     m_eCurrentGameState = GameState::EGameState::e_game_state_main_menu;
     Push(m_eCurrentGameState);
 }

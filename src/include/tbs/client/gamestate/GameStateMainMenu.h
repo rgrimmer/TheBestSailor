@@ -41,6 +41,8 @@ private:
     void waitServerPlayerInfo();
 
     bool readMsgServerPlayerInfo(MsgData& msg);
+    bool readMsgGame(MsgData& message);
+    
 
     sf::Drawable* m_currentView;
     ChoiceIpView m_choiceIpView;

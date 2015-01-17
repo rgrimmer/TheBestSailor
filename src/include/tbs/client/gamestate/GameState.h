@@ -4,6 +4,9 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/System/Time.hpp>
 
+#include "client/network/ClientNetwork.h"
+#include "client/ClientPlayer.h"
+
 class ClientNetwork;
 class ClientPlayer;
 class MsgData;
@@ -12,7 +15,6 @@ class GameState {
 public:
     enum EGameState {
         e_game_state_main_menu,
-        e_game_state_wait_game,
         e_game_state_game,
         e_game_state_max
     };
@@ -30,7 +32,7 @@ public:
     
     virtual bool read(sf::Event& event) = 0;
     virtual bool read(MsgData& msg) = 0;
-    
+  
     void pollMessages();
     bool pollMessagesWait(sf::Time timeout = sf::Time::Zero);
     

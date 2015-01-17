@@ -1,5 +1,3 @@
-#include "client/network/ClientNetwork.h"
-#include "client/ClientPlayer.h"
 
 #include "client/gamestate/GameState.h"
 

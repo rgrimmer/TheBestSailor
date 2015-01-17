@@ -54,6 +54,7 @@ void Client::start(const std::string & name) {
     m_window.setKeyRepeatEnabled(false);
     m_window.setJoystickThreshold(100.0f);
 
+    m_player.setName(name);
     g_gameStateManager.Initialize(m_window, m_network, m_player);
     
     while (m_window.isOpen()) {

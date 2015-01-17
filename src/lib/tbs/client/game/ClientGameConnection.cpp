@@ -29,11 +29,11 @@ sf::IpAddress ClientGameConnection::getIpAddress() const {
 }
 
 void ClientGameConnection::init() {
-    m_port = SERVER_PORT_TCP;
+    /*m_port = SERVER_PORT_TCP;
     m_address = sf::IpAddress::None;
     m_ipAddressInput = "localhost";
     m_window.setKeyRepeatEnabled(false);
-    m_window.setJoystickThreshold(100.0f);
+    m_window.setJoystickThreshold(100.0f);*/
 }
 
 void ClientGameConnection::update(float dt) {
@@ -41,8 +41,8 @@ void ClientGameConnection::update(float dt) {
 }
 
 void ClientGameConnection::draw() {
-    TextView::update();
-    m_window.draw(m_view);
+    /*TextView::update();
+    m_window.draw(m_view);*/
 }
 
 bool ClientGameConnection::read(MsgData& msg) {
@@ -50,27 +50,7 @@ bool ClientGameConnection::read(MsgData& msg) {
 }
 
 bool ClientGameConnection::read(sf::Event& event) {
-    if (event.type == sf::Event::TextEntered) {
-        char c = static_cast<char> (event.text.unicode);
-        std::cout << "Text entred(" << c << ")" << std::endl;
-        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '.') {
-            m_ipAddressInput.append(&c,1);
-            return true;
-        }
-        return false;
-    } else if (event.type == sf::Event::KeyPressed) {
-        if (event.key.code == sf::Keyboard::BackSpace && m_ipAddressInput.size() > 0) {
-            m_ipAddressInput.resize(m_ipAddressInput.size() - 1);
-            return true;
-        }
-        if (event.key.code == sf::Keyboard::Return) {
-            m_address = sf::IpAddress(m_ipAddressInput);
-            m_isEnded = true;
-            return true;
-        }
-    } else if (event.type == sf::Event::Closed) {
-        m_window.close();
-    }
+   //DONE
     return false;
 }
 

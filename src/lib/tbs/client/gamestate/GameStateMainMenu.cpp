@@ -75,7 +75,7 @@ void GameStateMainMenu::changeState(EState state) {
         case e_state_send_info:
             initConnectionWithServer(m_address);
             break;
-            
+
         case e_state_recv_info:
             break;
 
@@ -126,6 +126,7 @@ bool GameStateMainMenu::read(sf::Event& event) {
 bool GameStateMainMenu::read(MsgData& msg) {
     MsgType msgType;
     msg >> msgType;
+
     switch (msgType) {
         case MsgType::ServerPlayerInfo:
             return readMsgServerPlayerInfo(msg);
@@ -143,6 +144,6 @@ bool GameStateMainMenu::readMsgServerPlayerInfo(MsgData &message) {
     m_player.setId(id);
     m_network.getUdpManager().initialize(m_address, udpPort);
     m_network.getUdpManager().startReceiverThread();
-    g_gameStateManager.Push(GameState::EGameState::e_game_state_wait_game);
+    g_gameStateManager.Push(GameState::EGameState::e_game_state_game);
     return false;
 }
