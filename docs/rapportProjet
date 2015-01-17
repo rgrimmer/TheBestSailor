@@ -28,24 +28,69 @@
 	- Compensation implenté
 	- Compensation possible
 
+Préambule
+L'intégralité de se rapport est rédigé du point de vu de la conception lors d'un 
+refactoring important que nous avons effectué une fois le prototype fonctionnel terminer.
+il comprendera l'implémentation du prototype, notre démarche et nos réflextion pour la modélisation 
+et les détails techniques de la nouvelle implémentation.
 
-La pratique :
-
-Les états :
+Les états
+    La théorie
+        Les différentes états
 Dans tous jeux vidéos, le système peut être divisé en différents état.
-Les seuls états implémenté jusqu'alors sont (Coté client) :
-1. Connnection au server
-2. Execution du jeux
+Dans notre jeux, Le système pourrait se découper de la façon suivante :
+A. Etablissement de la connection au serveur (envoi du nom du joueur, réception du port UDP du serveur ...)
+B. Attente du début de partie (Attente et réception des informations sur la partie)
+C. Exécution du jeux
+D. Pause - Menu des options (Règlage des différents éléments du jeux : sons, graphique, etc )
 
-La théorie :
-(Coté client) :
-1. Etablissement de la connection au serveur (envoi du nom du joueur, réception du port UDP du serveur ...)
-2. Attente du début de partie (Atente et réception des informations sur la partie)
-3. Exécution du jeux
-4. Retour à (2)
 
-(Coté server) :
-???
+        Modélisation
+Les états peuvent être facilement représenté sous la forme d'une pile LIFO. En effet les états se suivent et il est nécessaire de les effectuers dans l'ordre.
+Il est aussi possible de déplier les états. 
+On passerait de l'état C à B une fois la partie terminer. 
+De B à A ou de C à A si la connection est perdu.
+L'état D pourrait être empiler après n'importe quel autre état et devrait forément être dépiler pour continuer l'exécution normale du jeux.
+Pour quitter le jeux on dépilerait simplement tous les états présents dans la pile.
+
+
+    Le prototype
+Les états comme défini dans la théorie n'avaient pas été implémentés ou mal implémentés.
+Cependant on retrouvait le même pattern que dans la théorie execpté quelques possibilité en moins.
+Il n'était pas possible de revenir à la connection une fois celle-ci établie.
+Il n'existait pas non plus de menu et de pause.
+
+/* Pas dans la bonne partie ? */
+Le code ressemblait plus à du procédurale avec des boucles et des fonctions :
+
+Début
+    Faire
+        connection(adresse ip)
+    Tanque la connection échoue
+
+    envoi des info au serveur
+    reception des infos du serveur
+
+    Tantque la fenetre est ouverte
+        initialiser le jeux
+        lancer le jeux
+Fin
+
+La partie correspondant à la gestion des messeges et des évenements est masqué.
+
+
+    L'implémentation
+
+
+            La pause
+Elle serait empilé après l'exécution du jeux. Cependant mettre la pause dans un jeux multijoueur n'est pas pertinant sauf dans des cas spécifiques.
+            Le menu des options
+Bien souvent, le menu des options est lié à la pause. En multijoueur, même si il n'est pas possible de mettre le jeux en pause, il est toujours possible d'afficher le menu.
+Il serait par contre pertiant, en remplacement de la pause, d'ajouter un état "menu" comme dans beaucoup de jeux.
+Généralement le menu comporte des options tel que le réglage du son et de la musique ainsi que des controles graphiques.
+Notre jeux ne comportant pas
+        
+
 
 
 Boucle principale.
