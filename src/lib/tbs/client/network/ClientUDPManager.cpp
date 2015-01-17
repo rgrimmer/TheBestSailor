@@ -37,15 +37,15 @@ void ClientUDPManager::receiver() {
 
         m_socket.receive(*msg, senderAddress, senderPort);
         std::cout << "[UDP][Recv] \t";
-        if (senderAddress == m_addressRemote && senderPort == m_portRemote) {
+//        if (senderAddress == m_addressRemote && senderPort == m_portRemote) {
 
             //                std::cout << msg->getType() << std::endl;
             m_msgQueue.push(msg);
 
-        } else {
-            std::cout << "WARNING : Source(" << senderAddress.toString() << ") != Server(" << m_addressRemote.toString() << ")" << std::endl;
-            delete msg;
-        }
+//        } else {
+//            std::cout << "WARNING : Source(" << senderAddress.toString() << ") != Server(" << m_addressRemote.toString() << ")" << std::endl;
+//            delete msg;
+//        }
     }
 }
 

@@ -42,24 +42,7 @@ void GameStateManager::UpdateAndRender(sf::RenderWindow& window, float dt) {
 
     if (nullptr != pCurrentGameState) {
 
-        sf::Event event;
-        while (window.pollEvent(event)) {
-
-            if (!pCurrentGameState->read(event)) {
-                window.close();
-            }
-        }
         
-        pCurrentGameState->pollMessages();
-
-        pCurrentGameState->Update(dt);
-        window.clear(sf::Color(5, 52, 79, 255));
-        pCurrentGameState->Render(window);
-
-        TextView::setAbs(true);
-        TextView::update();
-
-        window.display();
     }
 }
 

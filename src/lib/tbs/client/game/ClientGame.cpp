@@ -44,7 +44,7 @@ void ClientGame::start() {
         sendInfo();
         m_clockPing.restart();
 
-        m_client.pollMessages();
+//        m_client.pollMessages();
 
         update(clockUpdate.restart().asSeconds());
         displayView();

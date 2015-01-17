@@ -1,5 +1,5 @@
 /* 
- * File:   GameStateGame.cpp
+ * File:   StateGame.cpp
  * Author: maxence
  * 
  * Created on 16 janvier 2015, 23:28
@@ -12,36 +12,38 @@
 #include "shared/network/MsgTurnSail.h"
 #include "shared/network/MsgAction.h"
 
-#include "client/gamestate/GameStateGame.h"
+#include "client/ClientPlayer.h"
+#include "client/state/ClientState.h"
+#include "client/state/StateGame.h"
+#include "client/network/ClientNetwork.h"
 
-GameStateGame::GameStateGame(sf::RenderWindow& window, ClientNetwork& network, ClientPlayer& player)
-: GameState(window, network, player)
+StateGame::StateGame(ClientState& manager, ClientNetwork& network, ClientPlayer& player)
+: State()
+, m_manager(manager)
+, m_network(network)
+, m_player(player)
 , m_world()
 , m_hasInfoToSend(false)
 , m_isEnded(false)
 , m_enableFolowCamera(true)
 , m_countFrames(0)
 , m_lastCoutFrames(0)
+, m_state(0)
 , m_keys()
 , m_mainGraphic(nullptr)
 , m_detailsView(nullptr)
 , m_globalView(nullptr)
-, m_currentView(m_window.getView())
+, m_currentView()
 , m_music() {
 
 }
 
-GameStateGame::~GameStateGame() {
+StateGame::~StateGame() {
 }
 
-void GameStateGame::Activate() {
+void StateGame::activate() {
     std::cout << "[Client][Game][Init]" << std::endl;
 
-    m_globalView = new GlobalView(m_world.getHeightMap(), m_world.getWindMap(), m_world.getClientShip());
-    m_detailsView = new DetailsView(m_world);
-    m_mainGraphic = dynamic_cast<sf::Drawable*> (m_detailsView);
-    m_enableFolowCamera = true;
-    m_window.setKeyRepeatEnabled(false);
     /*if (m_music.openFromFile("./share/tbs/sound/music_414.mp3")) {
         m_music.setLoop(true);
         m_music.play();
@@ -50,70 +52,89 @@ void GameStateGame::Activate() {
     std::cout << "[Client][Game][Start]" << std::endl;
 }
 
-void GameStateGame::DeActivate() {
+void StateGame::deActivate() {
     m_mainGraphic = nullptr;
     m_music.stop();
     delete m_globalView;
     delete m_detailsView;
 }
 
-void GameStateGame::Initialize() {
+void StateGame::initialize() {
 
 }
 
-void GameStateGame::Release() {
+void StateGame::release() {
 
 }
 
-void GameStateGame::Update(float dt) {
+void StateGame::update(float dt) {
 
-    //TODO: quit when m_isEnded
-    MsgData msg;
-    msg << MsgType::Action << static_cast<sf::Uint8> (m_keys.to_ulong()) << dt;
-    m_network.getUdpManager().send(msg);
-    
-    //m_world.update(dt);
-}
+    switch (m_state) {
+        case 0:
+            break;
 
-void GameStateGame::Render(sf::RenderWindow& window) {
+        case 1:
+        {
+            //TODO: quit when m_isEnded
+            MsgData msg;
+            msg << MsgType::Action << static_cast<sf::Uint8> (m_keys.to_ulong()) << dt;
+            m_network.getUdpManager().send(msg);
 
-    if (&(m_world.getClientShip()) == nullptr)
-        return;
+            m_world.update(dt);
+        }
+            break;
 
-    // Set view position
-    if (m_enableFolowCamera) {
-//        m_currentView.setCenter(m_world.getClientShip().kinematics().position());
+        default:
+            break;
     }
-
-    window.setView(m_currentView);
-
-    // Draw view
-    if (m_mainGraphic)
-        window.draw(*m_mainGraphic);
-
-    // Draw winnner
-    /*if (m_endGame != nullptr) {
-        m_window.setView(m_window.getDefaultView());
-        m_window.draw(TextView(m_winner, 40, TypeAlign::Center));
-    }*/
-    /*
-    TextView::setAbs(true);
-    TextView::update();
-     */
-    window.display();
 }
 
-bool GameStateGame::read(sf::Event& event) {
+void StateGame::render(sf::RenderWindow& window) const {
+
+    switch (m_state) {
+        case 0:
+            break;
+
+        case 1:
+        {
+            if (&(m_world.getClientShip()) == nullptr)
+                return;
+
+            // Set view position
+            if (m_enableFolowCamera) {
+                //        m_currentView.setCenter(m_world.getClientShip().kinematics().position());
+            }
+
+            window.setView(m_currentView);
+
+            // Draw view
+            if (m_mainGraphic)
+                window.draw(*m_mainGraphic);
+
+            // Draw winnner
+            /*if (m_endGame != nullptr) {
+                window.setView(window.getDefaultView());
+                window.draw(TextView(m_winner, 40, TypeAlign::Center));
+            }*/
+        }
+            break;
+
+        default:
+            break;
+    }
+}
+
+bool StateGame::read(sf::Event & event) {
     if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
         return false;
     }
     return true;
 }
 
-bool GameStateGame::read(MsgData& msg) {
+bool StateGame::read(MsgData & msg) {
     MsgType msgType;
     msg >> msgType;
-    std::cout << "type : " << (int)msgType << std::endl;
+    std::cout << "type : " << (int) msgType << std::endl;
     switch (msgType) {
         case MsgType::Game:
             return readInitGame(msg);
@@ -128,44 +149,49 @@ bool GameStateGame::read(MsgData& msg) {
         default:
             return true;
     }
-    
+
     return true;
 }
 
-bool GameStateGame::readInitGame(MsgData & msg) {
+bool StateGame::readInitGame(MsgData & msg) {
+    GameType gameType;
     sf::Int32 width, height, seedHeight, seedWind;
     sf::Int32 checkPointCount;
     sf::Int32 shipCount;
-    msg >> height >> width >> seedHeight >> seedWind;
-    
+    msg >> gameType >> height >> width >> seedHeight >> seedWind;
+
     m_world.initialize();
     std::cout << "RECEIVE map(" << height << ", " << width << ", " << seedHeight << ", " << seedWind << ")" << std::endl;
     m_world.initializeMap(width, height, seedHeight, seedWind);
-    
+
     msg >> checkPointCount;
     for (int i = 0; i < checkPointCount; ++i) {
         sf::Vector2i posCheckPoint;
         msg >> posCheckPoint.x >> posCheckPoint.y;
-        
+
         m_world.addCheckPoint(posCheckPoint);
     }
-    
+
     msg >> shipCount;
-    
-    for(int i = 0; i < shipCount; ++i) {
+
+    for (int i = 0; i < shipCount; ++i) {
         sf::Uint8 id;
         msg >> id;
-        Ship& ship = m_world.getShips()[static_cast<unsigned int>(id)];
+        Ship& ship = m_world.getShips()[static_cast<unsigned int> (id)];
         auto& shipPos = ship.kinematics().position();
         msg >> shipPos.x >> shipPos.y;
         ship.setAngle(90.0f);
-        ship.getSail().setAngle(m_world.getWindMap().wind(static_cast<sf::Vector2i>(shipPos)).getDirection());
+        ship.getSail().setAngle(m_world.getWindMap().wind(static_cast<sf::Vector2i> (shipPos)).getDirection());
     }
-    
+    m_world.setClientShip(&m_world.getShips()[m_player.getId()]);
+    m_globalView = new GlobalView(m_world.getHeightMap(), m_world.getWindMap(), m_world.getClientShip());
+    m_detailsView = new DetailsView(m_world);
+    m_mainGraphic = dynamic_cast<sf::Drawable*> (m_detailsView);
+    m_state = 1;
     return true;
 }
 
-bool GameStateGame::readGameInfo(MsgData & msg) {
+bool StateGame::readGameInfo(MsgData & msg) {
     std::cout << "GameInfo" << std::endl;
     sf::Int32 time;
     msg >> time;
@@ -191,11 +217,11 @@ bool GameStateGame::readGameInfo(MsgData & msg) {
         ship.kinematics().speed() = {speedX, speedY};
         std::cout << "Recv ship(" << static_cast<unsigned int> (id) << ") pos(" << positionX << "," << positionY << ") speed(" << speedX << "," << speedY << ")" << std::endl;
     }
-    m_world.setClientShip(&m_world.getShips()[m_player.getId()]);
+    m_world.setClientShip(&m_world.getClientShip());
     return true;
 }
 
-bool GameStateGame::readDisconnect(MsgData & msg) {
+bool StateGame::readDisconnect(MsgData & msg) {
     sf::Uint8 id;
     msg >> id;
     std::cout << m_world.getShips().erase(static_cast<unsigned int> (id)) << std::endl;
@@ -204,16 +230,16 @@ bool GameStateGame::readDisconnect(MsgData & msg) {
     return true;
 }
 
-bool GameStateGame::readCheckpoint(MsgData& msg) {
+bool StateGame::readCheckpoint(MsgData & msg) {
     sf::Uint8 idCheckpoint;
-    
+
     msg >> idCheckpoint;
-    
+
     m_world.getCheckPointManager().getCheckPoint(idCheckpoint).activate();
     return true;
 }
 
-bool GameStateGame::readMsgEnd(MsgData& msg) {
+bool StateGame::readMsgEnd(MsgData & msg) {
     /*msg >> m_winner;
     m_winner.append(" has win");
     m_endGame = new std::thread(&ClientGameSpeedestWin::endScheduler, this);*/

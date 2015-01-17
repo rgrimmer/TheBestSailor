@@ -17,6 +17,7 @@
 #include "client/network/ClientNetwork.h"
 #include "game/ClientGameConnection.h"
 #include "gamestate/GameStateManager.h"
+#include "state/ClientState.h"
 
 class MsgGame;
 class ClientGame;
@@ -33,8 +34,6 @@ public:
 
     void start(const std::string & name);
 
-    void pollMessages();
-
 private:
     void initConnectionWithServer(const sf::IpAddress &address);
     void initGame();
@@ -43,6 +42,7 @@ private:
     void sendLocalPlayerInfo();
     void waitServerPlayerInfo();
 
+    void pollMessages();
     bool pollMessagesWait(sf::Time timeout = sf::Time::Zero);
 
     bool read(MsgData& message);
@@ -52,7 +52,7 @@ private:
     void doDisconnection();
 
 private:
-    GameStateManager m_gamestateManager;
+//    GameStateManager m_gamestateManager;
     sf::RenderWindow m_window;
 
     sf::Clock m_clock;
@@ -60,6 +60,7 @@ private:
     ClientPlayer m_player;
     ClientGame* m_game;
     ClientGameConnection* m_connection;
+    ClientState m_state;
 
     //    std::vector<ClientPlayer> m_otherPlayers;
 

@@ -31,7 +31,8 @@
 
 Client::Client()
 : m_player(-1, "Unamed")
-, m_game(nullptr) {
+, m_game(nullptr)
+, m_state(m_network, m_player) {
 }
 
 Client::~Client() {
@@ -46,7 +47,7 @@ ClientNetwork& Client::getNetwork() {
 }
 
 void Client::start(const std::string & name) {
-    
+
     sf::ContextSettings settings;
     settings.antialiasingLevel = 2;
     m_window.create(sf::VideoMode(800, 600), "The Best Sailor", sf::Style::Default, settings);
@@ -55,14 +56,31 @@ void Client::start(const std::string & name) {
     m_window.setJoystickThreshold(100.0f);
 
     m_player.setName(name);
-    g_gameStateManager.Initialize(m_window, m_network, m_player);
-    
+    m_state.initialize();
+
     while (m_window.isOpen()) {
-        g_gameStateManager.UpdateAndRender(m_window, m_clock.restart().asSeconds());
+        sf::Event event;
+        while (m_window.pollEvent(event)) {
+
+            if (!m_state.read(event)) {
+                m_window.close();
+            }
+        }
+
+        pollMessages();
+
+        m_state.update(m_clock.restart().asSeconds());
+        m_window.clear(sf::Color(5, 52, 79, 255));
+        m_state.render(m_window);
+
+        TextView::setAbs(true);
+        TextView::update();
+
+        m_window.display();
     }
-    
+
     g_gameStateManager.Release();
-    
+
     /*m_player.setName(name);
 
     
@@ -120,7 +138,7 @@ void Client::doDisconnection() {
 void Client::pollMessages() {
     while (!m_network.getMessageQueue().empty()) {
         auto message = m_network.getMessageQueue().pop();
-        read(*message);
+        m_state.read(*message);
     }
 }
 

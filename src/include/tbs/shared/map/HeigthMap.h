@@ -33,7 +33,6 @@ public:
     int getSeed() const;
     const MapHeader& getHeader() const;
     MapHeader& getHeader();
-    //void setHeader(const MapHeader& mapHeader);
     float getValue(int x, int y) const;
 
 private:

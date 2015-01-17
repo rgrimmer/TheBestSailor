@@ -46,7 +46,7 @@ public:
 
 private:
     MapHeader m_header;
-    Wind** m_container;
+    std::vector<std::vector<Wind> > m_container;
 };
 
 sf::Packet& operator<<(sf::Packet& packet, const WindMap& map);
