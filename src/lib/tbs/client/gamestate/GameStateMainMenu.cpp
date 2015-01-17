@@ -45,7 +45,7 @@ void GameStateMainMenu::Update(float deltaTimeInMs) {
     switch (m_eState) {
         case e_state_connection:
             if (m_network.connect(m_address, sf::milliseconds(1000)))
-                changeState(e_state_exchange_info);
+                changeState(e_state_send_info);
             break;
 
         default:
@@ -72,8 +72,11 @@ void GameStateMainMenu::changeState(EState state) {
             m_currentView = &m_connectionView;
             break;
 
-        case e_state_exchange_info:
+        case e_state_send_info:
             initConnectionWithServer(m_address);
+            break;
+            
+        case e_state_recv_info:
             break;
 
         default:
@@ -141,5 +144,5 @@ bool GameStateMainMenu::readMsgServerPlayerInfo(MsgData &message) {
     m_network.getUdpManager().initialize(m_address, udpPort);
     m_network.getUdpManager().startReceiverThread();
     g_gameStateManager.Push(GameState::EGameState::e_game_state_wait_game);
-    return true;
+    return false;
 }

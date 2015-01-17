@@ -43,6 +43,7 @@ void GameStateWaitGame::Update(float dt) {
 bool GameStateWaitGame::read(sf::Event& event) {
     return true;
 }
+
 bool GameStateWaitGame::read(MsgData& msg) {
     MsgType msgType;
     msg >> msgType;

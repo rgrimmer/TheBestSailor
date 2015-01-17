@@ -48,6 +48,8 @@ void GameStateManager::UpdateAndRender(sf::RenderWindow& window, float dt) {
                 window.close();
             }
         }
+        
+        pCurrentGameState->pollMessages();
 
         pCurrentGameState->Update(dt);
         window.clear(sf::Color(5, 52, 79, 255));

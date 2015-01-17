@@ -15,7 +15,9 @@ public:
     enum EState {
         e_state_ip_choice,
         e_state_connection,
-        e_state_exchange_info
+        e_state_send_info,
+        e_state_recv_info,
+        e_state_end
     };
 
     explicit GameStateMainMenu(sf::RenderWindow& window, ClientNetwork& network, ClientPlayer& player);

@@ -17,7 +17,8 @@ GameState::~GameState(void) {
 void GameState::pollMessages() {
     while (!m_network.getMessageQueue().empty()) {
         auto message = m_network.getMessageQueue().pop();
-        read(*message);
+        if(!read(*message))
+            break;
     }
 }
 
