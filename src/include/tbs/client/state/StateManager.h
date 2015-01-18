@@ -8,7 +8,7 @@
 template<typename T> class StateManager;
 
 template<typename T>
-class StateManager : State {
+class StateManager : public State {
 public:
 
     explicit StateManager(void);

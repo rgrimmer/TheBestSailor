@@ -95,6 +95,6 @@ bool StateMainMenuExchangeInfo::readMsgServerPlayerInfo(MsgData &message) {
     m_player.setId(id);
     m_network.getUdpManager().initialize(m_address, udpPort);
     m_network.getUdpManager().startReceiverThread();
-    m_manager.getClientManager().push(EClientState::Game);
+    m_manager.getManager().push(EClientState::Game);
     return false;
 }

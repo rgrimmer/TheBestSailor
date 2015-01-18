@@ -28,7 +28,7 @@ public:
     virtual ~MainMenuStateManager();
 
     virtual void initialize();
-    ClientState& getClientManager();
+    ClientState& getManager();
 
 private:
     ClientState& m_manager;

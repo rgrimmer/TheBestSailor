@@ -15,56 +15,25 @@
 
 #include "client/ClientPlayer.h"
 #include "client/network/ClientNetwork.h"
-#include "game/ClientGameConnection.h"
-#include "gamestate/GameStateManager.h"
-#include "state/ClientState.h"
-
-class MsgGame;
-class ClientGame;
-class MsgData;
-class MsgServerPlayerInfo;
+#include "client/state/ClientState.h"
 
 class Client {
 public:
     Client();
     virtual ~Client();
 
-    ClientNetwork& getNetwork();
-    const ClientNetwork& getNetwork() const;
-
     void start(const std::string & name);
-
-private:
-    void initConnectionWithServer(const sf::IpAddress &address);
-    void initGame();
-    void startGame();
-
-    void sendLocalPlayerInfo();
-    void waitServerPlayerInfo();
-
+    
     void pollMessages();
     bool pollMessagesWait(sf::Time timeout = sf::Time::Zero);
 
-    bool read(MsgData& message);
-    bool readMsgServerPlayerInfo(MsgData &message);
-    bool readMsgGame(MsgData& message);
-
-    void doDisconnection();
-
 private:
-//    GameStateManager m_gamestateManager;
     sf::RenderWindow m_window;
-
-    sf::Clock m_clock;
-    
+    ClientNetwork m_network;
     ClientPlayer m_player;
-    ClientGame* m_game;
-    ClientGameConnection* m_connection;
     ClientState m_state;
 
-    //    std::vector<ClientPlayer> m_otherPlayers;
-
-    ClientNetwork m_network;
+    sf::Clock m_clock;
 };
 
 #endif	/* CLIENT_H */

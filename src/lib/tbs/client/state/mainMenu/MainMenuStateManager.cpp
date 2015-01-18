@@ -12,10 +12,15 @@
 MainMenuStateManager::MainMenuStateManager(ClientState& manager, ClientNetwork& network, ClientPlayer& player)
 : m_manager(manager)
 , m_network(network)
-, m_player(player) {
+, m_player(player)
+, m_address() {
 }
 
 MainMenuStateManager::~MainMenuStateManager() {
+}
+
+ClientState& MainMenuStateManager::getManager() {
+    return m_manager;
 }
 
 void MainMenuStateManager::initialize() {
@@ -28,6 +33,3 @@ void MainMenuStateManager::initialize() {
     push(EMainMenuState::ChoiceIp);
 }
 
-ClientState& MainMenuStateManager::getClientManager() {
-    return m_manager;
-}
