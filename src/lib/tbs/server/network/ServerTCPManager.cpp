@@ -1,18 +1,14 @@
 #include <iostream>
 
-#include "server/network/ServerTCPManager.h"
-
-
 #include <SFML/Network/TcpSocket.hpp>
 
 #include "shared/network/Semaphore.h"
 #include "shared/network/MsgData.h"
-#include "shared/network/MsgFactory.h"
 
 #include "server/ServerPlayer.h"
 #include "server/ServerPlayers.h"
 #include "server/network/ServerMessageQueue.h"
-#include "shared/network/MsgDisconnect.h"
+#include "server/network/ServerTCPManager.h"
 
 ServerTCPManager::ServerTCPManager(ServerPlayers& players, ServerMessageQueue& msgQueue)
 : m_threadReceiver(nullptr)

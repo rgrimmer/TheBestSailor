@@ -7,7 +7,7 @@
 #include "shared/network/MsgData.h"
 #include "shared/network/MsgType.h"
 
-#include "client/state/StateWaitGame.h"
+#include "client/state/game/StateWaitGame.h"
 
 StateWaitGame::StateWaitGame(sf::RenderWindow& window, ClientNetwork& network, ClientPlayer& player)
 : State() {

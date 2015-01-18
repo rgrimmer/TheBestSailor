@@ -6,8 +6,8 @@
  */
 
 #include "client/state/ClientState.h"
-#include "client/state/StateMainMenu.h"
-#include "client/state/StateGame.h"
+#include "client/state/mainMenu/StateMainMenu.h"
+#include "client/state/game/StateGame.h"
 
 ClientState::ClientState(ClientNetwork& network, ClientPlayer& player)
 : m_network(network)
@@ -19,13 +19,12 @@ ClientState::~ClientState() {
 
 void ClientState::initialize() {
 
-    add(EClientState::e_game_state_main_menu, new StateMainMenu(*this, m_network, m_player));
-    add(EClientState::e_game_state_game, new StateGame(*this, m_network, m_player));
+    add(EClientState::MainMenu, new StateMainMenu(*this, m_network, m_player));
+    add(EClientState::Game, new StateGame(*this, m_network, m_player));
 
-    m_apState[EClientState::e_game_state_main_menu]->initialize();
-//    m_apState[GameState::EGameState::e_game_state_game]->Initialize();
+    m_apState[EClientState::MainMenu]->initialize();
+    m_apState[EClientState::Game]->initialize();
 
-    m_eCurrentState = EClientState::e_game_state_main_menu;
-    push(m_eCurrentState);
+    push(EClientState::MainMenu);
 }
 

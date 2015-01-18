@@ -14,7 +14,7 @@
 
 #include "client/ClientPlayer.h"
 #include "client/state/ClientState.h"
-#include "client/state/StateGame.h"
+#include "client/state/game/StateGame.h"
 #include "client/network/ClientNetwork.h"
 
 StateGame::StateGame(ClientState& manager, ClientNetwork& network, ClientPlayer& player)
@@ -52,7 +52,7 @@ void StateGame::activate() {
     std::cout << "[Client][Game][Start]" << std::endl;
 }
 
-void StateGame::deActivate() {
+void StateGame::deactivate() {
     m_mainGraphic = nullptr;
     m_music.stop();
     delete m_globalView;

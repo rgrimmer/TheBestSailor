@@ -34,7 +34,7 @@ public:
     virtual void release();
 
     virtual void activate();
-    virtual void deActivate();
+    virtual void deactivate();
 
     virtual void update(float dt);
     virtual void render(sf::RenderWindow& window) const;

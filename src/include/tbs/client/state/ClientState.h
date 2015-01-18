@@ -9,7 +9,14 @@
 #define	CLIENTSTATE_H
 
 #include "client/state/StateManager.h"
-#include "client/state/EClientState.h"
+
+enum EClientState {
+    MainMenu,
+    Game
+};
+
+class ClientNetwork;
+class ClientPlayer;
 
 class ClientState : public StateManager<EClientState> {
 public:
@@ -17,8 +24,6 @@ public:
     virtual ~ClientState();
 
     virtual void initialize();
-
-
 
 private:
     ClientNetwork& m_network;

@@ -1,6 +1,5 @@
 #include <iostream>
 
-#include "shared/network/MsgFactory.h"
 #include "shared/network/MsgData.h"
 
 #include "client/network/ClientMsgQueue.h"

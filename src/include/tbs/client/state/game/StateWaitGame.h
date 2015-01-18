@@ -5,10 +5,13 @@
  * Created on 16 janvier 2015, 23:28
  */
 
-#ifndef StateWAITGAME_H
-#define	StateWAITGAME_H
+#ifndef STATEWAITGAME_H
+#define	STATEWAITGAME_H
 
 #include "client/state/State.h"
+
+class ClientNetwork;
+class ClientPlayer;
 
 class StateWaitGame : public State {
 public:

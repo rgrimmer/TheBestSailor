@@ -3,8 +3,6 @@
 #include <SFML/Network/Packet.hpp>
 
 #include "shared/network/MsgData.h"
-#include "shared/network/UtilsNetwork.h"
-#include "shared/network/MsgFactory.h"
 
 #include "client/network/ClientMsgQueue.h"
 #include "client/network/ClientTCPManager.h"

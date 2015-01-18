@@ -91,7 +91,7 @@ ServerCheckpoint& ServerCheckpointManager::getCheckPoint(int index) {
     return m_checkpoints.at(index);
 }
 
-int ServerCheckpointManager::getCheckPointCount() const {
+unsigned int ServerCheckpointManager::getCheckPointCount() const {
     return m_checkpoints.size();
 }
 
