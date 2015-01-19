@@ -289,8 +289,8 @@ bool ServerGameSpeedestWin::readAction(MsgData& msg, ServerPlayer& player) {
     msg >> keysUI8 >> sfTime;
     std::bitset<4> keys = keysUI8;
 
-    if (!MsgData::checkValidity(sf::milliseconds(sfTime), m_lastAction[&player]))
-        return false;
+    //if (!MsgData::checkValidity(sf::milliseconds(sfTime), m_lastAction[&player]))
+      //  return false;
 
     Ship& ship = m_ships[&player];
     ship.setTurningNegative(keys.test(TURN_HELM_NEGATIVE));
