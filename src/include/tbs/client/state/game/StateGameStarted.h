@@ -42,6 +42,8 @@ private:
     bool readDisconnect(MsgData& msg);
     bool readCheckpoint(MsgData& msg);
     bool readMsgEnd(MsgData& msg);
+    
+    bool switchFollowingCamera();
 
 private:
     GameStateManager& m_manager;
@@ -50,13 +52,13 @@ private:
     ClientWorld& m_world;
     
     std::bitset<4> m_keys;
+    bool m_followingCamera;
+    float m_zoomValue;
     
     // Graphic
     sf::Drawable* m_mainGraphic;
     DetailsView* m_detailsView;
     GlobalView* m_globalView;
-    sf::View m_currentView;
-    bool m_enableFolowCamera;
     
     // Sound
     sf::Music m_music;

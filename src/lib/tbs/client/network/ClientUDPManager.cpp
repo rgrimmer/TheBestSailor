@@ -50,6 +50,6 @@ void ClientUDPManager::receiver() {
 
 bool ClientUDPManager::send(MsgData& message) const {
     sf::Socket::Status status = m_socket.send(message, m_addressRemote, m_portRemote);
-    std::cout << "[UDP][Send] \t" /*<< message.getType()*/ << std::endl;
+    std::cout << "[UDP][Send] \tSend to " << m_addressRemote.toString() << ":" << m_portRemote /*<< message.getType()*/ << std::endl;
     return (status == sf::Socket::Done);
 }

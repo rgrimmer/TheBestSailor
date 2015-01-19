@@ -24,10 +24,13 @@
 class DetailsView : public sf::Drawable {
 public:
     DetailsView(const ClientWorld &world);
-    virtual ~DetailsView();
+    virtual ~DetailsView(void);
 
-    bool switchEnableWind();
-    bool switchSquared();
+    sf::View& getView(void);
+    bool switchEnableWind(void);
+    bool switchSquared(void);
+    void setCenter(const sf::Vector2f& center);
+    void setSize(const sf::Vector2f& size);
     void updateShips(void);
 
 private:
@@ -37,10 +40,13 @@ private:
 private:
     // Graphic
     const ClientWorld& m_world;
+    
     HeigthMapView m_heigthMapView;
     WindMapView m_windMapView;
-    ClientCheckPointManager m_checkPointManager;
     std::vector<ShipView> m_shipsView;
+    
+    sf::View m_currentView;
+    bool m_followingCamera;
 
     // Enable
     bool m_enableWind;

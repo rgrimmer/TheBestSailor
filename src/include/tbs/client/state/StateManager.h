@@ -110,9 +110,8 @@ void StateManager<T>::push(T eState) {
         pCurrentState->deactivate();
     }
 
-    m_apState[eState]->activate();
-
     m_sState.push(m_apState[eState]);
+    m_apState[eState]->activate();
 }
 
 template<typename T>

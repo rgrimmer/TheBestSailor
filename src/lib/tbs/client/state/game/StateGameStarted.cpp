@@ -6,6 +6,7 @@
  */
 #include "shared/network/MsgData.h"
 #include "shared/network/MsgType.h"
+#include "shared/network/MsgAction.h"
 
 #include "client/ClientPlayer.h"
 #include "client/ClientWorld.h"
@@ -23,7 +24,9 @@ StateGameStarted::StateGameStarted(GameStateManager& manager, ClientNetwork& net
 , m_manager(manager)
 , m_network(network)
 , m_player(player)
-, m_world(world) {
+, m_world(world)
+, m_followingCamera(true)
+, m_zoomValue(1.0f) {
 }
 
 StateGameStarted::~StateGameStarted() {
@@ -51,27 +54,26 @@ void StateGameStarted::deactivate(void) {
 }
 
 void StateGameStarted::update(float dt) {
-            // @TODO: quit when m_isEnded
-            // @TODO: update ship position
-            MsgData msg;
-            msg << MsgType::Action << static_cast<sf::Uint8> (m_keys.to_ulong()) << dt;
-            m_network.getUdpManager().send(msg);
+    // @TODO: quit when m_isEnded
+    // @TODO: update ship position
+    MsgData msg;
+    msg << MsgType::Action << static_cast<sf::Uint8> (m_keys.to_ulong()) << dt;
+    m_network.getUdpManager().send(msg);
 
-            m_world.update(dt);
+    m_world.update(dt);
 }
 
 void StateGameStarted::render(sf::RenderWindow& window) const {
-    window.clear(sf::Color(200,14,94));
-    // Set view position
-    if (m_enableFolowCamera) {
-        //        m_currentView.setCenter(m_world.getClientShip().kinematics().position());
-    }
 
-    window.setView(m_currentView);
+    // Set view position
+    if (m_followingCamera) {
+        m_detailsView->setCenter(m_world.getClientShip().kinematics().position());
+    }
 
     // Draw view
     if (m_mainGraphic)
         window.draw(*m_mainGraphic);
+
 
     // Draw winnner
     /*if (m_endGame != nullptr) {
@@ -80,16 +82,91 @@ void StateGameStarted::render(sf::RenderWindow& window) const {
     }*/
 }
 
+bool StateGameStarted::switchFollowingCamera() {
+    m_followingCamera = !m_followingCamera;
+    return m_followingCamera;
+}
+
 bool StateGameStarted::read(sf::Event& event) {
 
-    if (event.type == sf::Event::KeyPressed) {
-        if (event.key.code == sf::Keyboard::Escape) {
-//            m_manager.pop();
-        }
-    } else if (event.type == sf::Event::Closed) {
+    if (event.type == sf::Event::Closed) {
         return false;
-    }
+    } else if (event.type == sf::Event::Resized) {
+        m_detailsView->setSize({event.size.width * m_zoomValue, event.size.height * m_zoomValue});
+    } else if (event.type == sf::Event::KeyPressed) {
+        switch (event.key.code) {
+            case sf::Keyboard::Left:
+                m_detailsView->getView().move(-5.0f * m_zoomValue, 0.0f);
+                break;
+            case sf::Keyboard::Right:
+                m_detailsView->getView().move(5.0f * m_zoomValue, 0.0f);
+                break;
+            case sf::Keyboard::Up:
+                m_detailsView->getView().move(0.0f, -5.0f * m_zoomValue);
+                break;
+            case sf::Keyboard::Down:
+                m_detailsView->getView().move(0.0f, 5.0f * m_zoomValue);
+                break;
 
+            case sf::Keyboard::L:
+            case sf::Keyboard::Subtract:
+                m_zoomValue *= 2.0f;
+                m_detailsView->getView().zoom(2.0f);
+                break;
+
+            case sf::Keyboard::P:
+            case sf::Keyboard::Add:
+                m_zoomValue *= 0.5f;
+                m_detailsView->getView().zoom(0.5f);
+                break;
+            case sf::Keyboard::D:
+                m_keys.set(TURN_HELM_POSITIVE, true);
+                break;
+            case sf::Keyboard::Q:
+                m_keys.set(TURN_HELM_NEGATIVE, true);
+                break;
+            case sf::Keyboard::Z:
+                m_keys.set(TURN_SAIL_POSITIVE, true);
+                break;
+            case sf::Keyboard::S:
+                m_keys.set(TURN_SAIL_NEGATIVE, true);
+                break;
+            case sf::Keyboard::A:
+                m_detailsView->switchSquared();
+                break;
+            case sf::Keyboard::W:
+                m_detailsView->switchEnableWind();
+                break;
+            case sf::Keyboard::C:
+                switchFollowingCamera();
+                break;
+            case sf::Keyboard::M:
+                m_mainGraphic = (m_mainGraphic == dynamic_cast<sf::Drawable*> (m_detailsView)) ? dynamic_cast<sf::Drawable*> (m_globalView) : dynamic_cast<sf::Drawable*> (m_detailsView);
+                break;
+            case sf::Keyboard::Escape:
+                return false;
+                break;
+            default:
+                break;
+        }
+    } else if (event.type == sf::Event::KeyReleased) {
+        switch (event.key.code) {
+            case sf::Keyboard::D:
+                m_keys.set(TURN_HELM_POSITIVE, false);
+                break;
+            case sf::Keyboard::Q:
+                m_keys.set(TURN_HELM_NEGATIVE, false);
+                break;
+            case sf::Keyboard::Z:
+                m_keys.set(TURN_SAIL_POSITIVE, false);
+                break;
+            case sf::Keyboard::S:
+                m_keys.set(TURN_SAIL_NEGATIVE, false);
+                break;
+            default:
+                break;
+        }
+    }
     return true;
 }
 
@@ -144,7 +221,7 @@ bool StateGameStarted::readGameInfo(MsgData & msg) {
 
 bool StateGameStarted::readCheckpoint(MsgData& msg) {
     sf::Uint8 idCheckpoint;
-    
+
     msg >> idCheckpoint;
     m_world.getCheckPointManager().getCheckPoint(idCheckpoint).activate();
     return true;

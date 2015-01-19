@@ -64,6 +64,7 @@ void Client::pollMessages() {
     while (!m_network.getMessageQueue().empty()) {
         auto message = m_network.getMessageQueue().pop();
         m_state.read(*message);
+        delete message;
     }
 }
 

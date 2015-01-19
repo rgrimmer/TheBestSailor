@@ -17,7 +17,6 @@ DetailsView::DetailsView(const ClientWorld &world)
 : m_world(world)
 , m_heigthMapView(world.getHeightMap())
 , m_windMapView(world.getWindMap())
-//, m_checkPointManager(world.getCheckPointManager())
 , m_enableWind(true) {
 
 
@@ -25,9 +24,17 @@ DetailsView::DetailsView(const ClientWorld &world)
         if (&ship.second != &world.getClientShip()) {
             m_shipsView.emplace_back(ship.second, sf::Color(255, 0, 0, 100));
         }
+        else {
+            m_currentView.setCenter(world.getClientShip().kinematics().position());
+        }
     }
 
     m_shipsView.emplace_back(world.getClientShip(), sf::Color(255, 0, 0, 255));
+    m_currentView.setSize(sf::Vector2f(world.getMap().getHeader().getWidth(), world.getMap().getHeader().getHeight()));
+    
+}
+
+DetailsView::~DetailsView() {
 }
 
 bool DetailsView::switchEnableWind() {
@@ -39,7 +46,16 @@ bool DetailsView::switchSquared() {
     return m_heigthMapView.switchSquared();
 }
 
-DetailsView::~DetailsView() {
+sf::View& DetailsView::getView() {
+    return m_currentView;
+}
+
+void DetailsView::setCenter(const sf::Vector2f& center) {
+    m_currentView.setCenter(center);
+}
+
+void DetailsView::setSize(const sf::Vector2f& size) {
+    m_currentView.setSize(size);
 }
 
 void DetailsView::updateShips(void) {
@@ -50,6 +66,8 @@ void DetailsView::updateShips(void) {
 }
 
 void DetailsView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+    sf::View viewCpy = target.getView();
+    target.setView(m_currentView);
 
     sf::Clock clockDraw;
     sf::Time timeDrawHeightMap, timeDrawWindMap;
@@ -80,5 +98,7 @@ void DetailsView::draw(sf::RenderTarget& target, sf::RenderStates states) const 
     target.draw(TextView("HeightMap : " + std::to_string(timeDrawHeightMap.asMilliseconds())));
     target.draw(TextView("WindMap : " + std::to_string(timeDrawWindMap.asMilliseconds())));
      */
+    
+    target.setView(viewCpy);
 }
 
