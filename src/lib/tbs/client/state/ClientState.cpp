@@ -6,7 +6,7 @@
  */
 
 #include "client/state/ClientState.h"
-#include "client/state/mainMenu/StateMainMenu.h"
+#include "client/state/mainMenu/ClientStateMenu.h"
 #include "client/state/game/ClientStateGame.h"
 
 ClientState::ClientState(ClientNetwork& network, ClientPlayer& player)

@@ -37,7 +37,7 @@ bool ClientNetwork::connect(const sf::IpAddress &address, sf::Time timeout) {
         std::cout << "[NetW][Tcp] \tConnection established" << std::endl;
         return true;
     }
-    std::cout << "[NetW][Tcp] \tCan't find server" << std::endl;
+    std::cout << "[NetW][Tcp] \tCan't find server @" << address.toString() << std::endl;
     return false;
 }
 

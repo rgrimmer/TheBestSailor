@@ -14,7 +14,7 @@
 class Input {
 public:
     Input();
-    Input(std::bitset<4>actions, sf::Time& time);
+    Input(std::bitset<4>actions, sf::Time time);
     virtual ~Input();
 
     sf::Time getTime() const;

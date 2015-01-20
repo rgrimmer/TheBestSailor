@@ -16,7 +16,6 @@
 
 #include "client/state/State.h"
 
-class GameStateManager;
 class ClientNetwork;
 class ClientPlayer;
 class ClientWorld;

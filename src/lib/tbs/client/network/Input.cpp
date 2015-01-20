@@ -10,7 +10,7 @@
 Input::Input() {
 }
 
-Input::Input(std::bitset<4> actions, sf::Time& time)
+Input::Input(std::bitset<4> actions, sf::Time time)
 : m_time(time)
 , m_actions(actions) {
 }
