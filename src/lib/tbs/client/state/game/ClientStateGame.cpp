@@ -1,7 +1,7 @@
 
+#include "client/state/game/ClientStateGame.h"
 #include "client/state/game/ClientStateGameWait.h"
 #include "client/state/game/ClientStateGameStarted.h"
-#include "client/state/game/ClientStateGame.h"
 
 ClientStateGame::ClientStateGame(ClientState& manager, ClientNetwork& network, ClientPlayer& player)
 : m_manager(manager)

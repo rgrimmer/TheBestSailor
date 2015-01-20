@@ -1,26 +1,26 @@
 /* 
- * File:   StateMainMenuExchangeInfo.h
+ * File:   ClientStateMenuExchangeInfo.h
  * Author: maxence
  *
  * Created on 18 janvier 2015, 13:58
  */
 
-#ifndef STATEMAINMENUEXCHANGEINFO_H
-#define	STATEMAINMENUEXCHANGEINFO_H
+#ifndef ClientStateMenuExchangeInfo_H
+#define	ClientStateMenuExchangeInfo_H
 
 #include <SFML/Network/IpAddress.hpp>
 
 #include "client/state/State.h"
 #include "client/ConnectionView.h"
 
-class MainMenuStateManager;
+class ClientStateMenu;
 class ClientNetwork;
 class ClientPlayer;
 
-class StateMainMenuExchangeInfo : public State {
+class ClientStateMenuExchangeInfo : public State {
 public:
-    StateMainMenuExchangeInfo(MainMenuStateManager& manager, ClientNetwork& network, ClientPlayer& player, std::string& address);
-    virtual ~StateMainMenuExchangeInfo();
+    ClientStateMenuExchangeInfo(ClientStateMenu& manager, ClientNetwork& network, ClientPlayer& player, std::string& address);
+    virtual ~ClientStateMenuExchangeInfo();
 
     virtual void initialize(void);
     virtual void release(void);
@@ -38,7 +38,7 @@ private:
     bool readMsgServerPlayerInfo(MsgData& msg);
 
 private:
-    MainMenuStateManager& m_manager;
+    ClientStateMenu& m_manager;
     ClientNetwork& m_network;
     ClientPlayer& m_player;
     sf::IpAddress m_address;
@@ -48,5 +48,5 @@ private:
 
 };
 
-#endif	/* STATEMAINMENUEXCHANGEINFO_H */
+#endif	/* ClientStateMenuExchangeInfo_H */
 

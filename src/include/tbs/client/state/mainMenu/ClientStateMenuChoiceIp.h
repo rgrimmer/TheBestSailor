@@ -1,21 +1,21 @@
 /* 
- * File:   StateMainMenuChoiceIp.h
+ * File:   ClientStateMenuChoiceIp.h
  * Author: maxence
  *
  * Created on 18 janvier 2015, 11:06
  */
 
-#ifndef STATEMAINMENUCHOICEIP_H
-#define	STATEMAINMENUCHOICEIP_H
+#ifndef ClientStateMenuChoiceIp_H
+#define	ClientStateMenuChoiceIp_H
 
 #include "client/ChoiceIpView.h"
 #include "client/state/State.h"
-#include "client/state/mainMenu/MainMenuStateManager.h"
+#include "client/state/mainMenu/ClientStateMenu.h"
 
-class StateMainMenuChoiceIp : public State {
+class ClientStateMenuChoiceIp : public State {
 public:
-    StateMainMenuChoiceIp(MainMenuStateManager& manager, std::string& address);
-    virtual ~StateMainMenuChoiceIp();
+    ClientStateMenuChoiceIp(ClientStateMenu& manager, std::string& address);
+    virtual ~ClientStateMenuChoiceIp();
 
 public:
     virtual void initialize();
@@ -28,11 +28,11 @@ public:
     virtual bool read(MsgData& msg);
 
 private:
-    MainMenuStateManager& m_manager;
+    ClientStateMenu& m_manager;
     std::string& m_address;
     
     ChoiceIpView m_choiceIpView;
 };
 
-#endif	/* STATEMAINMENUCHOICEIP_H */
+#endif	/* ClientStateMenuChoiceIp_H */
 

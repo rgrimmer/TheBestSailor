@@ -19,7 +19,7 @@ ClientState::~ClientState() {
 
 void ClientState::initialize() {
 
-    add(EClientState::MainMenu, new StateMainMenu(*this, m_network, m_player));
+    add(EClientState::MainMenu, new ClientStateMenu(*this, m_network, m_player));
     add(EClientState::Game, new ClientStateGame(*this, m_network, m_player));
 
     m_apState[EClientState::MainMenu]->initialize();

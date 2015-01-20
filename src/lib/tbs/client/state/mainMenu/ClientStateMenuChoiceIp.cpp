@@ -1,42 +1,42 @@
 /* 
- * File:   StateMainMenuChoiceIp.cpp
+ * File:   ClientStateMenuChoiceIp.cpp
  * Author: maxence
  * 
  * Created on 18 janvier 2015, 11:06
  */
 
-#include "client/state/mainMenu/StateMainMenuChoiceIp.h"
+#include "client/state/mainMenu/ClientStateMenuChoiceIp.h"
 #include "shared/network/MsgData.h"
 
-StateMainMenuChoiceIp::StateMainMenuChoiceIp(MainMenuStateManager& manager, std::string& address)
+ClientStateMenuChoiceIp::ClientStateMenuChoiceIp(ClientStateMenu& manager, std::string& address)
 : m_manager(manager)
 , m_address(address)
 , m_choiceIpView(address) {
 }
 
-StateMainMenuChoiceIp::~StateMainMenuChoiceIp() {
+ClientStateMenuChoiceIp::~ClientStateMenuChoiceIp() {
 }
 
-void StateMainMenuChoiceIp::initialize() {
+void ClientStateMenuChoiceIp::initialize() {
 }
 
-void StateMainMenuChoiceIp::release() {
+void ClientStateMenuChoiceIp::release() {
 }
 
-void StateMainMenuChoiceIp::activate() {
+void ClientStateMenuChoiceIp::activate() {
 }
 
-void StateMainMenuChoiceIp::deactivate() {
+void ClientStateMenuChoiceIp::deactivate() {
 }
 
-void StateMainMenuChoiceIp::update(float dt) {
+void ClientStateMenuChoiceIp::update(float dt) {
 }
 
-void StateMainMenuChoiceIp::render(sf::RenderWindow& window) const {
+void ClientStateMenuChoiceIp::render(sf::RenderWindow& window) const {
     window.draw(m_choiceIpView);
 }
 
-bool StateMainMenuChoiceIp::read(sf::Event& event) {
+bool ClientStateMenuChoiceIp::read(sf::Event& event) {
     if (event.type == sf::Event::TextEntered) {
         char c = static_cast<char> (event.text.unicode);
         if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '.') {
@@ -59,6 +59,6 @@ bool StateMainMenuChoiceIp::read(sf::Event& event) {
     return true;
 }
 
-bool StateMainMenuChoiceIp::read(MsgData& msg) {
+bool ClientStateMenuChoiceIp::read(MsgData& msg) {
     return true;
 }

@@ -12,14 +12,15 @@
 
 #include "client/state/StateManager.h"
 
-class ClientState;
-class ClientNetwork;
-class ClientPlayer;
 
 enum EStateGame {
     Wait,
     Started
 };
+
+class ClientState;
+class ClientNetwork;
+class ClientPlayer;
 
 class ClientStateGame : public StateManager<EStateGame> {
 public:
@@ -27,15 +28,6 @@ public:
     virtual ~ClientStateGame(void);
 
     virtual void initialize(void);
-    virtual void release(void);
-    virtual void activate(void);
-    virtual void deactivate(void);
-    virtual void update(float dt);
-    virtual void render(sf::RenderWindow& window) const;
-    virtual bool read(sf::Event& event);
-    virtual bool read(MsgData& msg);
-    
-    
     ClientState& getManager();
     
 private:
