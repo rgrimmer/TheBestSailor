@@ -14,8 +14,6 @@
 #include "client/state/ClientState.h"
 #include "client/state/mainMenu/ClientStateMenu.h"
 #include "client/state/mainMenu/ClientStateMenuExchangeInfo.h"
-#include "client/state/mainMenu/StateMainMenu.h"
-
 
 ClientStateMenuExchangeInfo::ClientStateMenuExchangeInfo(ClientStateMenu& manager, ClientNetwork& network, ClientPlayer& player, std::string& address)
 : m_manager(manager)
