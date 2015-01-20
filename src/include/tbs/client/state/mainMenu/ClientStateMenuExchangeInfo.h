@@ -41,6 +41,7 @@ private:
     ClientStateMenu& m_manager;
     ClientNetwork& m_network;
     ClientPlayer& m_player;
+    std::string& m_stdAddress;
     sf::IpAddress m_address;
     
     ConnectionView m_connectionView;

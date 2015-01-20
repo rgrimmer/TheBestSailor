@@ -4,6 +4,7 @@
  * 
  * Created on 18 janvier 2015, 11:28
  */
+#include <iostream>
 
 #include "shared/network/MsgData.h"
 
@@ -20,7 +21,8 @@ ClientStateMenuExchangeInfo::ClientStateMenuExchangeInfo(ClientStateMenu& manage
 : m_manager(manager)
 , m_network(network)
 , m_player(player)
-, m_address(address)
+, m_stdAddress(address)
+, m_address()
 , m_connectionView(address) {
 
 }
@@ -35,6 +37,7 @@ void ClientStateMenuExchangeInfo::release(void) {
 }
 
 void ClientStateMenuExchangeInfo::activate(void) {
+    m_address = m_stdAddress;
 }
 
 void ClientStateMenuExchangeInfo::deactivate(void) {
