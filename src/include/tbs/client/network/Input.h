@@ -18,7 +18,7 @@ public:
     virtual ~Input();
 
     sf::Time getTime() const;
-    std::bitset<4> getActions() const;
+    const std::bitset<4>& getActions() const;
 private:
     sf::Time m_time;
     std::bitset<4> m_actions;

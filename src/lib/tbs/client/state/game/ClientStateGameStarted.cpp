@@ -18,6 +18,7 @@
 
 #include "client/state/game/ClientStateGame.h"
 #include "client/state/game/ClientStateGameStarted.h"
+#include "client/network/Input.h"
 
 ClientStateGameStarted::ClientStateGameStarted(ClientStateGame& manager, ClientNetwork& network, ClientPlayer& player, ClientWorld& world)
 : State()
@@ -55,10 +56,12 @@ void ClientStateGameStarted::deactivate(void) {
 
 void ClientStateGameStarted::update(float dt) {
     // @TODO: quit when m_isEnded
-    
-    sendInfo();
 
+
+    Input input(m_keys, m_clock.getElapsedTime());
     m_world.update(dt);
+    sendInfo(input);
+    m_predictions.add(input);
 }
 
 void ClientStateGameStarted::render(sf::RenderWindow& window) const {
@@ -80,15 +83,15 @@ void ClientStateGameStarted::render(sf::RenderWindow& window) const {
     }*/
 }
 
-void ClientStateGameStarted::sendInfo() const {
+void ClientStateGameStarted::sendInfo(const Input &input) {
     MsgData msg;
-    msg << MsgType::Action << static_cast<sf::Uint8> (m_keys.to_ulong()) << 0.5f;
+    msg << MsgType::Action << static_cast<sf::Uint8> (input.getActions().to_ulong()) << input.getTime().asMilliseconds();
     m_network.getUdpManager().send(msg);
 }
 
 bool ClientStateGameStarted::switchFollowingCamera() {
-        m_followingCamera = !m_followingCamera;
-        return m_followingCamera;
+    m_followingCamera = !m_followingCamera;
+    return m_followingCamera;
 }
 
 bool ClientStateGameStarted::read(sf::Event& event) {
@@ -219,8 +222,41 @@ bool ClientStateGameStarted::readGameInfo(MsgData & msg) {
         ship.kinematics().speed() = {speedX, speedY};
         std::cout << "Recv ship(" << static_cast<unsigned int> (id) << ") pos(" << positionX << "," << positionY << ") speed(" << speedX << "," << speedY << ")" << std::endl;
     }
-    m_world.setClientShip(&m_world.getClientShip());
+
+    updatePrediction(sf::milliseconds(time));
     return true;
+}
+
+void ClientStateGameStarted::updatePrediction(sf::Time time) {
+    std::vector<Input> predictions = m_predictions.getInputFrom(time);
+
+    Input tmp(predictions[0].getActions(), time);
+    Input* prevInput = &tmp;
+
+    for (unsigned int i = 1; i < predictions.size(); ++i) {
+
+        // Set state of world 
+        Ship& ship = m_world.getClientShip();
+        ship.setTurningNegative(prevInput->getActions().test(TURN_HELM_NEGATIVE));
+        ship.setTurningPositive(prevInput->getActions().test(TURN_HELM_POSITIVE));
+        ship.getSail().setTurningNegative(prevInput->getActions().test(TURN_SAIL_NEGATIVE));
+        ship.getSail().setTurningPositive(prevInput->getActions().test(TURN_SAIL_POSITIVE));
+
+        // Update
+        sf::Time diffTime = prevInput->getTime() - predictions[i].getTime();
+        ship.update(diffTime.asSeconds());
+
+        // Go to the next predictions
+        prevInput = &predictions[i];
+    }
+
+    // Set state of world 
+    Ship& ship = m_world.getClientShip();
+    ship.setTurningNegative(prevInput->getActions().test(TURN_HELM_NEGATIVE));
+    ship.setTurningPositive(prevInput->getActions().test(TURN_HELM_POSITIVE));
+    ship.getSail().setTurningNegative(prevInput->getActions().test(TURN_SAIL_NEGATIVE));
+    ship.getSail().setTurningPositive(prevInput->getActions().test(TURN_SAIL_POSITIVE));
+
 }
 
 bool ClientStateGameStarted::readCheckpoint(MsgData& msg) {

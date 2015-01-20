@@ -22,6 +22,6 @@ sf::Time Input::getTime() const {
     return m_time;
 }
 
-std::bitset<4> Input::getActions() const {
+const std::bitset<4>& Input::getActions() const {
     return m_actions;
 }

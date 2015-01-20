@@ -15,6 +15,7 @@
 #include <SFML/Audio/Music.hpp>
 
 #include "client/state/State.h"
+#include "client/network/InputPredictions.h"
 
 class ClientNetwork;
 class ClientPlayer;
@@ -44,7 +45,8 @@ private:
     bool readMsgEnd(MsgData& msg);
     
     bool switchFollowingCamera();
-    void sendInfo() const;
+    void sendInfo(const Input &input);
+    void updatePrediction(sf::Time time);
 
 private:
     ClientStateGame& m_manager;
@@ -52,7 +54,10 @@ private:
     ClientPlayer& m_player;
     ClientWorld& m_world;
     
+    sf::Clock m_clock;
+    
     std::bitset<4> m_keys;
+    InputPredictions m_predictions;
     bool m_followingCamera;
     float m_zoomValue;
     

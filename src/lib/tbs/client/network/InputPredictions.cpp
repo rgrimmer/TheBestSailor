@@ -28,9 +28,11 @@ void InputPredictions::add(const Input& input) {
 std::vector<Input> InputPredictions::getInputFrom(sf::Time time) const {
     unsigned int i;
     std::vector<Input> result;
-    for(i = m_nextPos-1; i == m_nextPos; i = (i - 1 + maxCountPrediction) % 200) {
-        if(m_inputs[i].getTime() == time)
+    i = m_nextPos-1;
+    while(true) {
+        if(m_inputs[i].getTime() <= time)
             break;
+        i = (i - 1 + maxCountPrediction) % 200;
     }
     // Optimisation
     /*    int half = halfCount;
