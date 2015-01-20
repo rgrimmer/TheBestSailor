@@ -55,10 +55,8 @@ void StateGameStarted::deactivate(void) {
 
 void StateGameStarted::update(float dt) {
     // @TODO: quit when m_isEnded
-    // @TODO: update ship position
-    MsgData msg;
-    msg << MsgType::Action << static_cast<sf::Uint8> (m_keys.to_ulong()) << dt;
-    m_network.getUdpManager().send(msg);
+    
+    sendInfo();
 
     m_world.update(dt);
 }
@@ -82,9 +80,15 @@ void StateGameStarted::render(sf::RenderWindow& window) const {
     }*/
 }
 
+void StateGameStarted::sendInfo() const {
+    MsgData msg;
+    msg << MsgType::Action << static_cast<sf::Uint8> (m_keys.to_ulong()) << sf::Clock;
+    m_network.getUdpManager().send(msg);
+}
+
 bool StateGameStarted::switchFollowingCamera() {
-    m_followingCamera = !m_followingCamera;
-    return m_followingCamera;
+        m_followingCamera = !m_followingCamera;
+        return m_followingCamera;
 }
 
 bool StateGameStarted::read(sf::Event& event) {
@@ -92,7 +96,7 @@ bool StateGameStarted::read(sf::Event& event) {
     if (event.type == sf::Event::Closed) {
         return false;
     } else if (event.type == sf::Event::Resized) {
-        m_detailsView->setSize({event.size.width * m_zoomValue, event.size.height * m_zoomValue});
+        m_detailsView->getView().setSize({event.size.width * m_zoomValue, event.size.height * m_zoomValue});
     } else if (event.type == sf::Event::KeyPressed) {
         switch (event.key.code) {
             case sf::Keyboard::Left:

@@ -23,6 +23,7 @@ class ClientWorld;
 class DetailsView;
 class GlobalView;
 
+
 class StateGameStarted : public State {
 public:
     StateGameStarted(GameStateManager& manager, ClientNetwork& network, ClientPlayer& player, ClientWorld& world);
@@ -44,6 +45,7 @@ private:
     bool readMsgEnd(MsgData& msg);
     
     bool switchFollowingCamera();
+    void sendInfo() const;
 
 private:
     GameStateManager& m_manager;
