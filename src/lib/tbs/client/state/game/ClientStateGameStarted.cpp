@@ -11,8 +11,8 @@
 #include "client/ClientPlayer.h"
 #include "client/ClientWorld.h"
 
-#include "client/DetailsView.h"
-#include "client/GlobalView.h"
+#include "client/view/DetailsView.h"
+#include "client/view/GlobalView.h"
 
 #include "client/network/ClientNetwork.h"
 

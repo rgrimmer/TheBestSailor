@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-#include "client/map/HeigthMapView.h"
+#include "client/view/HeigthMapView.h"
 #include "client/map/Gradient.h"
 
 HeigthMapView::HeigthMapView(const HeigthMap &heigthMap)

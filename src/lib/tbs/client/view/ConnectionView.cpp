@@ -9,8 +9,8 @@
 
 #include "shared/Font.h"
 
-#include "client/TextView.h"
-#include "client/ConnectionView.h"
+#include "client/view/TextView.h"
+#include "client/view/ConnectionView.h"
 
 ConnectionView::ConnectionView(const std::string& ipAddressText)
 : m_titleSfText("The Best Sailor", 130, Center)

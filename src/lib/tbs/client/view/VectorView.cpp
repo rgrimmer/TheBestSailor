@@ -7,7 +7,7 @@
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
-#include "client/VectorView.h"
+#include "client/view/VectorView.h"
 #include "shared/Utils.h"
 
 const sf::Vector2f VectorView::defaultOrigin(0, 0);

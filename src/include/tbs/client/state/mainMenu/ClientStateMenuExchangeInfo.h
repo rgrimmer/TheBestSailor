@@ -11,7 +11,7 @@
 #include <SFML/Network/IpAddress.hpp>
 
 #include "client/state/State.h"
-#include "client/ConnectionView.h"
+#include "client/view/ConnectionView.h"
 
 class ClientStateMenu;
 class ClientNetwork;

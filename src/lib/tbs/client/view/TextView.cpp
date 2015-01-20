@@ -8,7 +8,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
-#include "client/TextView.h"
+#include "client/view/TextView.h"
 
 sf::RenderStates TextView::g_states = sf::RenderStates::Default;
 bool TextView::g_absView = true;

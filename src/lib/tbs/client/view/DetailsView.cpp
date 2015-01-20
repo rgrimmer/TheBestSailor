@@ -4,9 +4,9 @@
  * 
  * Created on 7 décembre 2014, 18:02
  */
-#include "client/TextView.h"
+#include "client/view/TextView.h"
 
-#include "client/DetailsView.h"
+#include "client/view/DetailsView.h"
 #include "client/ClientWorld.h"
 
 sf::Vector2f operator/(const sf::Vector2f &v1, const sf::Vector2f &v2) {

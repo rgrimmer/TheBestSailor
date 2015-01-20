@@ -9,8 +9,8 @@
 
 #include "shared/ship/Ship.h"
 
-#include "client/VectorView.h"
-#include "client/ship/ShipView.h"
+#include "client/view/VectorView.h"
+#include "client/view/ShipView.h"
 #include "shared/Utils.h"
 
 ShipView::ShipView(const Ship &ship, const sf::Color & color)

@@ -14,7 +14,7 @@
 #include "shared/network/MsgData.h"
 
 #include "client/Client.h"
-#include "client/TextView.h"
+#include "client/view/TextView.h"
 
 Client::Client()
 : m_player(-1, "Unamed")

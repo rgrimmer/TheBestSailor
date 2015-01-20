@@ -7,7 +7,7 @@
 #include <SFML/Network/IpAddress.hpp>
 #include <SFML/System/Time.hpp>
 
-#include "client/ChoiceIpView.h"
+#include "client/view/ChoiceIpView.h"
 
 ChoiceIpView::ChoiceIpView(const std::string& ipAddressText)
 : m_titleSfText("The Best Sailor", 130, Center)

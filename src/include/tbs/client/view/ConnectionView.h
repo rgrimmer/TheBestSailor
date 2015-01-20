@@ -14,7 +14,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 
-#include "client/BackgroundView.h"
+#include "client/view/BackgroundView.h"
 #include "TextView.h"
 
 class ConnectionView : public sf::Drawable {

@@ -8,7 +8,7 @@
 #ifndef ClientStateMenuChoiceIp_H
 #define	ClientStateMenuChoiceIp_H
 
-#include "client/ChoiceIpView.h"
+#include "client/view/ChoiceIpView.h"
 #include "client/state/State.h"
 #include "client/state/mainMenu/ClientStateMenu.h"
 

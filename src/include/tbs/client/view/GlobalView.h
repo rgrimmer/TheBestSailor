@@ -15,11 +15,11 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
-#include "client/TextView.h"
-#include "client/BackgroundView.h"
-#include "client/map/HeigthMapView.h"
-#include "client/map/WindMapView.h"
-#include "client/ship/ShipView.h"
+#include "client/view/TextView.h"
+#include "client/view/BackgroundView.h"
+#include "client/view/HeigthMapView.h"
+#include "client/view/WindMapView.h"
+#include "client/view/ShipView.h"
 
 class MapHeader;
 class HeigthMap;

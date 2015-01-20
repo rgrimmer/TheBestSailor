@@ -10,7 +10,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
-#include "client/BackgroundView.h"
+#include "client/view/BackgroundView.h"
 
 
 bool BackgroundView::g_textureIsLoad(false);

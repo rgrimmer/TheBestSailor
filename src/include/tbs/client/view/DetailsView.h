@@ -16,10 +16,10 @@
 #include "shared/ship/Ship.h"
 
 #include "client/checkpoint/ClientCheckPointManager.h"
-#include "client/map/HeigthMapView.h"
-#include "client/map/WindMapView.h"
-#include "client/ship/ShipView.h"
-#include "ClientWorld.h"
+#include "client/view/HeigthMapView.h"
+#include "client/view/WindMapView.h"
+#include "client/view/ShipView.h"
+#include "client/ClientWorld.h"
 
 class DetailsView : public sf::Drawable {
 public:

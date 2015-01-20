@@ -17,8 +17,8 @@
 //#include "shared/map/WindMap.h"
 #include "shared/ship/Ship.h"
 
-#include "client/TextView.h"
-#include "client/GlobalView.h"
+#include "client/view/TextView.h"
+#include "client/view/GlobalView.h"
 
 GlobalView::GlobalView(const HeigthMap& heigthMap, const WindMap& windMap, const Ship& ship)
 : m_titleSfText("The Best Sailor", 130, Center)

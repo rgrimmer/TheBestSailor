@@ -8,7 +8,7 @@
 #include <iostream>
 #include <math.h>
 
-#include "client/map/WindMapView.h"
+#include "client/view/WindMapView.h"
 
 WindMapView::WindMapView(const WindMap& windMap) 
 : m_windMap(windMap) {
