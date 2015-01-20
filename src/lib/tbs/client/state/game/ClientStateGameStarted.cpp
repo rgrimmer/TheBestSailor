@@ -82,7 +82,7 @@ void ClientStateGameStarted::render(sf::RenderWindow& window) const {
 
 void ClientStateGameStarted::sendInfo() const {
     MsgData msg;
-//    msg << MsgType::Action << static_cast<sf::Uint8> (m_keys.to_ulong()) << sf::Clock;
+    msg << MsgType::Action << static_cast<sf::Uint8> (m_keys.to_ulong()) << 0.5f;
     m_network.getUdpManager().send(msg);
 }
 
