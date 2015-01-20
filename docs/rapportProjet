@@ -47,7 +47,7 @@ D. Pause - Menu des options (Règlage des différents éléments du jeux : sons,
 
         Modélisation
 Les états peuvent être facilement représenté sous la forme d'une pile LIFO. En effet les états se suivent et il est nécessaire de les effectuers dans l'ordre.
-Il est aussi possible de déplier les états. 
+Il est aussi possible de déplier les états. (Ref : http://openclassrooms.com/courses/programmation-objet-avancee-la-conception-avant-tout-design-patterns-a-l-emploi/le-patron-de-conception-etat-state)
 On passerait de l'état C à B une fois la partie terminer. 
 De B à A ou de C à A si la connection est perdu.
 L'état D pourrait être empiler après n'importe quel autre état et devrait forément être dépiler pour continuer l'exécution normale du jeux.
@@ -81,10 +81,9 @@ La partie correspondant à la gestion des messeges et des évenements est masqu�
 
     L'implémentation
 
-
-            La pause
+        La pause
 Elle serait empilé après l'exécution du jeux. Cependant mettre la pause dans un jeux multijoueur n'est pas pertinant sauf dans des cas spécifiques.
-            Le menu des options
+        Le menu des options
 Bien souvent, le menu des options est lié à la pause. En multijoueur, même si il n'est pas possible de mettre le jeux en pause, il est toujours possible d'afficher le menu.
 Il serait par contre pertiant, en remplacement de la pause, d'ajouter un état "menu" comme dans beaucoup de jeux.
 Généralement le menu comporte des options tel que le réglage du son et de la musique ainsi que des controles graphiques.
