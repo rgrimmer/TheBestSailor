@@ -4,7 +4,7 @@
 		- Boucle secondaire
 		- Threads
 		- System de Game
-	- Phisics
+	- Physics
 		- Le bateau
 			- Théorie
 			- Test d'implémentation
@@ -13,7 +13,6 @@
 	
 - Graphic
 	- description SFML Graphic
-	- OpenGL
 	- 
 	
 - Network
@@ -27,6 +26,12 @@
 	- Compensation la théorie
 	- Compensation implenté
 	- Compensation possible
+
+
+Elements de jeu :
+_Carte (génération procedurale à base de valeur)
+_Balises (pathfinding a*)
+_bateaux
 
 Préambule
 L'intégralité de se rapport est rédigé du point de vu de la conception lors d'un 
