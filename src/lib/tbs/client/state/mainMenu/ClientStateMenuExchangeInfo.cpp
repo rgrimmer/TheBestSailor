@@ -1,5 +1,5 @@
 /* 
- * File:   StateMainMenuExchangeInfo.cpp
+ * File:   ClientStateMenuExchangeInfo.cpp
  * Author: maxence
  * 
  * Created on 18 janvier 2015, 11:28
@@ -11,12 +11,12 @@
 #include "client/network/ClientNetwork.h"
 
 #include "client/state/ClientState.h"
-#include "client/state/mainMenu/MainMenuStateManager.h"
-#include "client/state/mainMenu/StateMainMenuExchangeInfo.h"
+#include "client/state/mainMenu/ClientStateMenu.h"
+#include "client/state/mainMenu/ClientStateMenuExchangeInfo.h"
 #include "client/state/mainMenu/StateMainMenu.h"
 
 
-StateMainMenuExchangeInfo::StateMainMenuExchangeInfo(MainMenuStateManager& manager, ClientNetwork& network, ClientPlayer& player, std::string& address)
+ClientStateMenuExchangeInfo::ClientStateMenuExchangeInfo(ClientStateMenu& manager, ClientNetwork& network, ClientPlayer& player, std::string& address)
 : m_manager(manager)
 , m_network(network)
 , m_player(player)
@@ -25,37 +25,37 @@ StateMainMenuExchangeInfo::StateMainMenuExchangeInfo(MainMenuStateManager& manag
 
 }
 
-StateMainMenuExchangeInfo::~StateMainMenuExchangeInfo() {
+ClientStateMenuExchangeInfo::~ClientStateMenuExchangeInfo() {
 }
 
-void StateMainMenuExchangeInfo::initialize(void) {
+void ClientStateMenuExchangeInfo::initialize(void) {
 }
 
-void StateMainMenuExchangeInfo::release(void) {
+void ClientStateMenuExchangeInfo::release(void) {
 }
 
-void StateMainMenuExchangeInfo::activate(void) {
+void ClientStateMenuExchangeInfo::activate(void) {
 }
 
-void StateMainMenuExchangeInfo::deactivate(void) {
+void ClientStateMenuExchangeInfo::deactivate(void) {
 }
 
-void StateMainMenuExchangeInfo::update(float dt) {
+void ClientStateMenuExchangeInfo::update(float dt) {
     if(m_network.connect(m_address, sf::milliseconds(1000)))
         initConnectionWithServer(m_address);
 }
 
-void StateMainMenuExchangeInfo::render(sf::RenderWindow& window) const {
+void ClientStateMenuExchangeInfo::render(sf::RenderWindow& window) const {
     window.draw(m_connectionView);
 }
 
-void StateMainMenuExchangeInfo::initConnectionWithServer(const sf::IpAddress &address) {
+void ClientStateMenuExchangeInfo::initConnectionWithServer(const sf::IpAddress &address) {
     std::cout << "[NetW][InitCWS]\tInitialize connection" << std::endl;
     m_network.getTcpManager().startReceiverThread();
     sendLocalPlayerInfo();
 }
 
-void StateMainMenuExchangeInfo::sendLocalPlayerInfo() {
+void ClientStateMenuExchangeInfo::sendLocalPlayerInfo() {
     std::cout << "[Client][SendLPI] \t Envoi des informations du joueurs" << std::endl;
     MsgData msg;
     msg << MsgType::ClientPlayerInfo << static_cast<sf::Uint16> (m_network.getUdpManager().getPort()) << m_player.getName();
@@ -63,7 +63,7 @@ void StateMainMenuExchangeInfo::sendLocalPlayerInfo() {
     std::cout << "[Client][SendLPI] \t Send : name(" << m_player.getName() << ") port(" << m_network.getUdpManager().getPort() << ")" << std::endl;
 }
 
-bool StateMainMenuExchangeInfo::read(sf::Event& event) {
+bool ClientStateMenuExchangeInfo::read(sf::Event& event) {
 
     if (event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::Escape) {
@@ -76,7 +76,7 @@ bool StateMainMenuExchangeInfo::read(sf::Event& event) {
     return true;
 }
 
-bool StateMainMenuExchangeInfo::read(MsgData& msg) {
+bool ClientStateMenuExchangeInfo::read(MsgData& msg) {
     MsgType msgType;
     msg >> msgType;
     switch (msgType) {
@@ -88,7 +88,7 @@ bool StateMainMenuExchangeInfo::read(MsgData& msg) {
     }
 }
 
-bool StateMainMenuExchangeInfo::readMsgServerPlayerInfo(MsgData &message) {
+bool ClientStateMenuExchangeInfo::readMsgServerPlayerInfo(MsgData &message) {
     sf::Uint16 udpPort, id;
     message >> udpPort >> id;
     std::cout << "[Client][Read] \t Read Server Player Info Message. id(" << id << "), serverUdpPort(" << udpPort << ")" << std::endl;

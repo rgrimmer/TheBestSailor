@@ -1,7 +1,7 @@
 #pragma once
 
 #include "client/state/State.h"
-#include "client/state/mainMenu/MainMenuStateManager.h"
+#include "client/state/mainMenu/ClientStateMenu.h"
 
 class ClientState;
 class ClientNetwork;
@@ -22,7 +22,7 @@ public:
     virtual bool read(MsgData& msg);
     
 private:
-    MainMenuStateManager m_states;
+    ClientStateMenu m_states;
 };
 
 

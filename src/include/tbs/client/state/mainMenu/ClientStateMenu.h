@@ -1,5 +1,5 @@
 /* 
- * File:   MainMenuStateManager.h
+ * File:   ClientStateMenu.h
  * Author: maxence
  *
  * Created on 18 janvier 2015, 10:44
@@ -22,10 +22,10 @@ class ClientState;
 class ClientNetwork;
 class ClientPlayer;
 
-class MainMenuStateManager : public StateManager<EMainMenuState> {
+class ClientStateMenu : public StateManager<EMainMenuState> {
 public:
-    MainMenuStateManager(ClientState& manager, ClientNetwork& network, ClientPlayer& player);
-    virtual ~MainMenuStateManager();
+    ClientStateMenu(ClientState& manager, ClientNetwork& network, ClientPlayer& player);
+    virtual ~ClientStateMenu();
 
     virtual void initialize();
     ClientState& getManager();
