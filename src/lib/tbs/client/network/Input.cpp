@@ -7,9 +7,12 @@
 
 #include "client/network/Input.h"
 
+Input::Input() {
+}
+
 Input::Input(std::bitset<4> actions, sf::Time& time)
-: m_actions(actions)
-, m_time(time) {
+: m_time(time)
+, m_actions(actions) {
 }
 
 Input::~Input() {

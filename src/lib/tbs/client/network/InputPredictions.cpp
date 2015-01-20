@@ -7,12 +7,12 @@
 #include "client/network/Input.h"
 #include "client/network/InputPredictions.h"
 
-int InputPredictions::maxCountPrediction = 200;
-int
-InputPredictions::halfCount = maxCountPrediction/2;
+const int InputPredictions::maxCountPrediction = 200;
+const int InputPredictions::halfCount = maxCountPrediction/2;
 
 InputPredictions::InputPredictions()
-: m_nextPos(0) {
+: m_inputs()
+, m_nextPos(0) {
     m_inputs.resize(200);
 }
 
@@ -26,7 +26,7 @@ void InputPredictions::add(const Input& input) {
 }
 
 std::vector<Input> InputPredictions::getInputFrom(sf::Time time) const {
-    int i;
+    unsigned int i;
     std::vector<Input> result;
     for(i = m_nextPos-1; i == m_nextPos; i = (i - 1 + maxCountPrediction) % 200) {
         if(m_inputs[i].getTime() == time)
@@ -47,7 +47,7 @@ std::vector<Input> InputPredictions::getInputFrom(sf::Time time) const {
     }
     */
     while(i != m_nextPos) {
-        result.push_back(m_inputs[index]);
+        result.push_back(m_inputs[i]);
         i = (i + 1) % maxCountPrediction;
     }
     return result;

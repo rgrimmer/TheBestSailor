@@ -7,7 +7,7 @@
 
 #include "client/state/ClientState.h"
 #include "client/state/mainMenu/StateMainMenu.h"
-#include "client/state/game/StateGame.h"
+#include "client/state/game/ClientStateGame.h"
 
 ClientState::ClientState(ClientNetwork& network, ClientPlayer& player)
 : m_network(network)
@@ -20,7 +20,7 @@ ClientState::~ClientState() {
 void ClientState::initialize() {
 
     add(EClientState::MainMenu, new StateMainMenu(*this, m_network, m_player));
-    add(EClientState::Game, new StateGame(*this, m_network, m_player));
+    add(EClientState::Game, new ClientStateGame(*this, m_network, m_player));
 
     m_apState[EClientState::MainMenu]->initialize();
     m_apState[EClientState::Game]->initialize();

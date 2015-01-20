@@ -16,10 +16,10 @@
 
 #include "client/network/ClientNetwork.h"
 
-#include "client/state/game/GameStateManager.h"
-#include "client/state/game/StateGameStarted.h"
+#include "client/state/game/ClientStateGame.h"
+#include "client/state/game/ClientStateGameStarted.h"
 
-StateGameStarted::StateGameStarted(GameStateManager& manager, ClientNetwork& network, ClientPlayer& player, ClientWorld& world)
+ClientStateGameStarted::ClientStateGameStarted(ClientStateGame& manager, ClientNetwork& network, ClientPlayer& player, ClientWorld& world)
 : State()
 , m_manager(manager)
 , m_network(network)
@@ -29,31 +29,31 @@ StateGameStarted::StateGameStarted(GameStateManager& manager, ClientNetwork& net
 , m_zoomValue(1.0f) {
 }
 
-StateGameStarted::~StateGameStarted() {
+ClientStateGameStarted::~ClientStateGameStarted() {
 
 }
 
-void StateGameStarted::initialize(void) {
+void ClientStateGameStarted::initialize(void) {
 }
 
-void StateGameStarted::release(void) {
+void ClientStateGameStarted::release(void) {
 }
 
-void StateGameStarted::activate(void) {
+void ClientStateGameStarted::activate(void) {
     std::cout << "[GameStarted][Activate]" << std::endl;
     m_globalView = new GlobalView(m_world.getHeightMap(), m_world.getWindMap(), m_world.getClientShip());
     m_detailsView = new DetailsView(m_world);
     m_mainGraphic = dynamic_cast<sf::Drawable*> (m_detailsView);
 }
 
-void StateGameStarted::deactivate(void) {
+void ClientStateGameStarted::deactivate(void) {
     std::cout << "[GameStarted][Desactivate]" << std::endl;
     m_mainGraphic = nullptr;
     delete m_globalView;
     delete m_detailsView;
 }
 
-void StateGameStarted::update(float dt) {
+void ClientStateGameStarted::update(float dt) {
     // @TODO: quit when m_isEnded
     
     sendInfo();
@@ -61,7 +61,7 @@ void StateGameStarted::update(float dt) {
     m_world.update(dt);
 }
 
-void StateGameStarted::render(sf::RenderWindow& window) const {
+void ClientStateGameStarted::render(sf::RenderWindow& window) const {
 
     // Set view position
     if (m_followingCamera) {
@@ -80,18 +80,18 @@ void StateGameStarted::render(sf::RenderWindow& window) const {
     }*/
 }
 
-void StateGameStarted::sendInfo() const {
+void ClientStateGameStarted::sendInfo() const {
     MsgData msg;
-    msg << MsgType::Action << static_cast<sf::Uint8> (m_keys.to_ulong()) << sf::Clock;
+//    msg << MsgType::Action << static_cast<sf::Uint8> (m_keys.to_ulong()) << sf::Clock;
     m_network.getUdpManager().send(msg);
 }
 
-bool StateGameStarted::switchFollowingCamera() {
+bool ClientStateGameStarted::switchFollowingCamera() {
         m_followingCamera = !m_followingCamera;
         return m_followingCamera;
 }
 
-bool StateGameStarted::read(sf::Event& event) {
+bool ClientStateGameStarted::read(sf::Event& event) {
 
     if (event.type == sf::Event::Closed) {
         return false;
@@ -174,7 +174,7 @@ bool StateGameStarted::read(sf::Event& event) {
     return true;
 }
 
-bool StateGameStarted::read(MsgData& msg) {
+bool ClientStateGameStarted::read(MsgData& msg) {
     MsgType msgType;
     msg >> msgType;
     switch (msgType) {
@@ -191,7 +191,7 @@ bool StateGameStarted::read(MsgData& msg) {
     }
 }
 
-bool StateGameStarted::readGameInfo(MsgData & msg) {
+bool ClientStateGameStarted::readGameInfo(MsgData & msg) {
     std::cout << "GameInfo" << std::endl;
     sf::Int32 time;
     msg >> time;
@@ -223,7 +223,7 @@ bool StateGameStarted::readGameInfo(MsgData & msg) {
     return true;
 }
 
-bool StateGameStarted::readCheckpoint(MsgData& msg) {
+bool ClientStateGameStarted::readCheckpoint(MsgData& msg) {
     sf::Uint8 idCheckpoint;
 
     msg >> idCheckpoint;
@@ -231,7 +231,7 @@ bool StateGameStarted::readCheckpoint(MsgData& msg) {
     return true;
 }
 
-bool StateGameStarted::readDisconnect(MsgData & msg) {
+bool ClientStateGameStarted::readDisconnect(MsgData & msg) {
     sf::Uint8 id;
     msg >> id;
     std::cout << m_world.getShips().erase(static_cast<unsigned int> (id)) << std::endl;
@@ -240,7 +240,7 @@ bool StateGameStarted::readDisconnect(MsgData & msg) {
     return true;
 }
 
-bool StateGameStarted::readMsgEnd(MsgData & msg) {
+bool ClientStateGameStarted::readMsgEnd(MsgData & msg) {
     /*msg >> m_winner;
     m_winner.append(" has win");
     m_endGame = new std::thread(&ClientGameSpeedestWin::endScheduler, this);*/

@@ -16,11 +16,10 @@
 #include "client/network/ClientNetwork.h"
 
 #include "client/state/ClientState.h"
-#include "client/state/game/GameStateManager.h"
-#include "client/state/game/StateGameWait.h"
-#include "client/state/game/StateGame.h"
+#include "client/state/game/ClientStateGame.h"
+#include "client/state/game/ClientStateGameWait.h"
 
-StateGameWait::StateGameWait(GameStateManager& manager, ClientNetwork& network, ClientPlayer& player, ClientWorld& world)
+ClientStateGameWait::ClientStateGameWait(ClientStateGame& manager, ClientNetwork& network, ClientPlayer& player, ClientWorld& world)
 : State()
 , m_manager(manager)
 , m_network(network)
@@ -28,32 +27,32 @@ StateGameWait::StateGameWait(GameStateManager& manager, ClientNetwork& network, 
 , m_world(world) {
 }
 
-StateGameWait::~StateGameWait() {
+ClientStateGameWait::~ClientStateGameWait() {
 
 }
 
-void StateGameWait::initialize(void) {
+void ClientStateGameWait::initialize(void) {
 }
 
-void StateGameWait::release(void) {
+void ClientStateGameWait::release(void) {
 }
 
-void StateGameWait::activate(void) {
+void ClientStateGameWait::activate(void) {
     std::cout << "[WaitGame][Activate]" << std::endl;
 }
 
-void StateGameWait::deactivate(void) {
+void ClientStateGameWait::deactivate(void) {
     std::cout << "[WaitGame][Deactivate]" << std::endl;
 }
 
-void StateGameWait::update(float dt) {
+void ClientStateGameWait::update(float dt) {
 }
 
-void StateGameWait::render(sf::RenderWindow& window) const {
+void ClientStateGameWait::render(sf::RenderWindow& window) const {
     window.clear(sf::Color(52,23,120));
 }
 
-bool StateGameWait::read(sf::Event& event) {
+bool ClientStateGameWait::read(sf::Event& event) {
 
     if (event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::Escape) {
@@ -66,7 +65,7 @@ bool StateGameWait::read(sf::Event& event) {
     return true;
 }
 
-bool StateGameWait::read(MsgData& msg) {
+bool ClientStateGameWait::read(MsgData& msg) {
     MsgType msgType;
     msg >> msgType;
     switch (msgType) {
@@ -78,7 +77,7 @@ bool StateGameWait::read(MsgData& msg) {
     }
 }
 
-bool StateGameWait::readInitGame(MsgData & msg) {
+bool ClientStateGameWait::readInitGame(MsgData & msg) {
     GameType gameType;
     sf::Int32 width, height, seedHeight, seedWind;
     sf::Int32 checkPointCount;
@@ -109,6 +108,6 @@ bool StateGameWait::readInitGame(MsgData & msg) {
         ship.getSail().setAngle(m_world.getWindMap().wind(static_cast<sf::Vector2i> (shipPos)).getDirection());
     }
     m_world.setClientShip(&m_world.getShips()[m_player.getId()]);
-    m_manager.push(EGameStateManager::Started);
+    m_manager.push(EStateGame::Started);
     return true;
 }

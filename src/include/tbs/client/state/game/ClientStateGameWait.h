@@ -5,20 +5,20 @@
  * Created on 16 janvier 2015, 23:28
  */
 
-#ifndef STATEGAMEWAIT_H
-#define	STATEGAMEWAIT_H
+#ifndef CLIENTSTATEGAMEWAIT_H
+#define	CLIENTSTATEGAMEWAIT_H
 
 #include "client/state/State.h"
 
-class GameStateManager;
+class ClientStateGame;
 class ClientNetwork;
 class ClientPlayer;
 class ClientWorld;
 
-class StateGameWait : public State {
+class ClientStateGameWait : public State {
 public:
-    StateGameWait(GameStateManager& manager, ClientNetwork& network, ClientPlayer& player, ClientWorld& world);
-    virtual ~StateGameWait();
+    ClientStateGameWait(ClientStateGame& manager, ClientNetwork& network, ClientPlayer& player, ClientWorld& world);
+    virtual ~ClientStateGameWait();
 
     virtual void initialize(void);
     virtual void release(void);
@@ -33,7 +33,7 @@ private:
     bool readInitGame(MsgData& msg);
 
 private:
-    GameStateManager& m_manager;
+    ClientStateGame& m_manager;
     ClientNetwork& m_network;
     ClientPlayer& m_player;
     ClientWorld& m_world;

@@ -5,8 +5,8 @@
  * Created on 18 janvier 2015, 15:54
  */
 
-#ifndef STATEGAMESTARTED_H
-#define	STATEGAMESTARTED_H
+#ifndef CLIENTSTATEGAMESTARTED_H
+#define	CLIENTSTATEGAMESTARTED_H
 
 #include <bitset>
 
@@ -24,10 +24,10 @@ class DetailsView;
 class GlobalView;
 
 
-class StateGameStarted : public State {
+class ClientStateGameStarted : public State {
 public:
-    StateGameStarted(GameStateManager& manager, ClientNetwork& network, ClientPlayer& player, ClientWorld& world);
-    virtual ~StateGameStarted();
+    ClientStateGameStarted(ClientStateGame& manager, ClientNetwork& network, ClientPlayer& player, ClientWorld& world);
+    virtual ~ClientStateGameStarted();
 
     virtual void initialize(void);
     virtual void release(void);
@@ -48,7 +48,7 @@ private:
     void sendInfo() const;
 
 private:
-    GameStateManager& m_manager;
+    ClientStateGame& m_manager;
     ClientNetwork& m_network;
     ClientPlayer& m_player;
     ClientWorld& m_world;
