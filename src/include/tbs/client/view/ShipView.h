@@ -39,11 +39,12 @@ private:
     VectorView* m_speedView;
     VectorView* m_accView;
     
-    sf::VertexArray m_shipVertex;
+    sf::Sprite m_boatSprite;
     sf::RectangleShape m_sailShape;
-
+    static sf::Texture g_texture;
 
 };
+
 
 #endif	/* SHIPVIEW_H */
 
