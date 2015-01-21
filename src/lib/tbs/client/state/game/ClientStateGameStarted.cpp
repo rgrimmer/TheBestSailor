@@ -223,7 +223,7 @@ bool ClientStateGameStarted::readGameInfo(MsgData & msg) {
         std::cout << "Recv ship(" << static_cast<unsigned int> (id) << ") pos(" << positionX << "," << positionY << ") speed(" << speedX << "," << speedY << ")" << std::endl;
     }
 
-    updatePrediction(sf::milliseconds(time));
+    //updatePrediction(sf::milliseconds(time));
     return true;
 }
 
