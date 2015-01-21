@@ -32,12 +32,7 @@ ShipView::ShipView(const Ship &ship, const sf::Color & color)
 }
 
 ShipView::ShipView(const ShipView& other)
-: m_ship(other.m_ship)
-, m_speedView(other.m_speedView)
-, m_accView(other.m_accView)
-, m_sailShape(other.m_sailShape) {
-    m_speedView = new VectorView(m_ship.kinematics().position(), m_ship.kinematics().speed(), "Vship", sf::Color::Cyan);
-    m_accView = new VectorView(m_ship.kinematics().position(), m_ship.kinematics().acceleration(), "", sf::Color::White);
+: ShipView(other.m_ship, sf::Color::Red){
 }
 
 ShipView::~ShipView() {
