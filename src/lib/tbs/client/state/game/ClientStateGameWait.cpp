@@ -49,7 +49,7 @@ void ClientStateGameWait::update(float dt) {
 }
 
 void ClientStateGameWait::render(sf::RenderWindow& window) const {
-    window.clear(sf::Color(52,23,120));
+    window.draw(m_view);
 }
 
 bool ClientStateGameWait::read(sf::Event& event) {

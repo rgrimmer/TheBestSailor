@@ -9,6 +9,7 @@
 #define	CLIENTSTATEGAMEWAIT_H
 
 #include "client/state/State.h"
+#include "client/view/menu/GameWaitView.h"
 
 class ClientStateGame;
 class ClientNetwork;
@@ -37,6 +38,7 @@ private:
     ClientNetwork& m_network;
     ClientPlayer& m_player;
     ClientWorld& m_world;
+    GameWaitView m_view;
 };
 
 #endif	/* StateGameWait_H */
