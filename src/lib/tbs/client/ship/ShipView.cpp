@@ -18,8 +18,8 @@ sf::Texture ShipView::g_texture;
 ShipView::ShipView(const Ship &ship, const sf::Color & color)
 : m_ship(ship)
 , m_sailShape({0.5f, 0.05f}) {
-    m_speedView = new VectorView(m_ship.kinematics().position(), m_ship.kinematics().speed(), "Vship", sf::Color::Cyan);
-    m_accView = new VectorView(m_ship.kinematics().position(), m_ship.kinematics().acceleration(), "", sf::Color::White);
+    m_speedView = new VectorView(m_ship.getPosition(), m_ship.getVelocity(), "Vship", sf::Color::Cyan);
+//    m_accView = new VectorView(m_ship.getPosition(), m_ship.kinematics().acceleration(), "", sf::Color::White);
     
     g_texture.loadFromFile("share/tbs/textures/boat.png");
     m_boatSprite.setTexture(g_texture);
@@ -37,13 +37,13 @@ ShipView::ShipView(const ShipView& other)
 
 ShipView::~ShipView() {
     delete m_speedView;
-    delete m_accView;
+//    delete m_accView;
 }
 
 void ShipView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
     sf::RenderStates renderShipShape(states);
-    renderShipShape.transform.translate(m_ship.kinematics().position());
+    renderShipShape.transform.translate(m_ship.getPosition());
     renderShipShape.transform.rotate(m_ship.getAngle());
 
     // Draw ship
@@ -51,7 +51,7 @@ void ShipView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
     // Draw sail
     sf::RenderStates renderSailShape(states);
-    renderSailShape.transform.translate(m_ship.kinematics().position());
+    renderSailShape.transform.translate(m_ship.getPosition());
     renderSailShape.transform.rotate(m_ship.getSail().getAngle());
     target.draw(m_sailShape, renderSailShape);
 
@@ -59,7 +59,7 @@ void ShipView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(*m_speedView, states);
 
     // Draw acceleration vector
-    target.draw(*m_accView, states);
+//    target.draw(*m_accView, states);
 }
 
 const Ship& ShipView::getShip() const {

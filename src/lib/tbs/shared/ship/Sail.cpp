@@ -10,8 +10,10 @@
 
 #include "shared/ship/Sail.h"
 
-Sail::Sail() 
-: m_angle(0.0f) {
+Sail::Sail(float angle)
+: m_angle(angle)
+, m_turnNegative(false)
+, m_turnPositive(false) {
 }
 
 Sail::~Sail() {

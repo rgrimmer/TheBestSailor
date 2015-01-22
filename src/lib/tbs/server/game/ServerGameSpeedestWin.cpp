@@ -47,11 +47,9 @@ ServerGameSpeedestWin::ServerGameSpeedestWin(Server &server, ServerPlayers& play
     sf::Vector2f position(initPosition);
     int count = 0;
     for (auto* player : m_players.inGame()) {
-        Ship ship;
-        ship.kinematics().position() = position;
-        ship.setAngle(90.0f);
-        ship.getSail().setAngle(m_map.getWind(static_cast<sf::Vector2i> (position)).direction());
-        m_ships[player] = ship;
+        // Set Ship
+        m_ships[player] = Ship(position, 90.0f, m_map.getWind(static_cast<sf::Vector2i> (position)).direction());
+        // Set next pos
         position.x += 0.25f;
         count++;
         if (count >= 4) {
@@ -77,8 +75,8 @@ void ServerGameSpeedestWin::init() {
 }
 
 void ServerGameSpeedestWin::update(float dt) {
-    for(auto* player : m_players.inGame()) {
-        if(m_checkPointManager.isCompletedAllCheckpoint(player)) {
+    for (auto* player : m_players.inGame()) {
+        if (m_checkPointManager.isCompletedAllCheckpoint(player)) {
             m_endGameStarted = true;
             MsgData msg;
             msg << MsgType::GameEnd << player->getName();
@@ -90,11 +88,10 @@ void ServerGameSpeedestWin::update(float dt) {
         updateSail(ship.second);
         sf::Vector2f shipVelocity = calculShipVelocity(ship.second);
 
-        if (!collideWithMap(ship.second, shipVelocity)) {
-            ship.second.kinematics().speed() = shipVelocity;
-        } else {
-            ship.second.kinematics().speed() = {0.0f, 0.0f};
-        }
+        if (collideWithMap(ship.second, shipVelocity))
+            shipVelocity = {0.0f, 0.0f};
+            
+        ship.second.setVelocity(shipVelocity);
 
         int checkPointCount = m_checkPointManager.getCheckPointCount();
 
@@ -132,7 +129,7 @@ void ServerGameSpeedestWin::updateShipState(Ship& ship, float dt) {
 }
 
 void ServerGameSpeedestWin::updateSail(Ship& ship) {
-    Wind wind = m_map.getWind(static_cast<sf::Vector2i> (ship.kinematics().position()));
+    Wind wind = m_map.getWind(static_cast<sf::Vector2i> (ship.getPosition()));
     float angleShip = ship.getAngle();
     float diff = 360.0f - angleShip;
     float windDir = wind.getDirection() + diff;
@@ -158,7 +155,7 @@ void ServerGameSpeedestWin::updateSail(Ship& ship) {
 }
 
 sf::Vector2f ServerGameSpeedestWin::calculShipVelocity(Ship& ship) {
-    Wind wind = m_map.getWind(static_cast<sf::Vector2i> (ship.kinematics().position()));
+    Wind wind = m_map.getWind(static_cast<sf::Vector2i> (ship.getPosition()));
     float shipDirRad = Kinematics::degToRad(ship.getAngle());
     sf::Vector2f outP(std::cos(shipDirRad), std::sin(shipDirRad));
 
@@ -170,17 +167,14 @@ sf::Vector2f ServerGameSpeedestWin::calculShipVelocity(Ship& ship) {
 }
 
 bool ServerGameSpeedestWin::collideWithMap(const Ship & ship, const sf::Vector2f & velocity) {
-    int x = (ship.kinematics().position().x + velocity.x);
-    int y = (ship.kinematics().position().y + velocity.y);
+    int x = (ship.getPosition().x + velocity.x);
+    int y = (ship.getPosition().y + velocity.y);
     return !WATER(m_map.getHeightMap().getValue(x, y));
 }
 
 bool ServerGameSpeedestWin::collideWithCheckPoint(const Ship & ship, const ServerCheckpoint & checkPoint) {
 
-    sf::Vector2f posShip = ship.kinematics().position();
-    sf::Vector2i posCheckPoint = checkPoint.getPosition();
-
-    if(static_cast<sf::Vector2i>(posShip) == posCheckPoint) {
+    if (static_cast<sf::Vector2i> (ship.getPosition()) == checkPoint.getPosition()) {
         return true;
     }
 
@@ -222,8 +216,8 @@ void ServerGameSpeedestWin::sendGame() {
     for (auto& pair : m_ships) {
         auto& ship = pair.second;
         msgGame << static_cast<sf::Uint8> (pair.first->getId())
-                << ship.kinematics().position().x
-                << ship.kinematics().position().y;
+                << ship.getPosition().x
+                << ship.getPosition().y;
     }
 
     m_server.getNetwork()->getTCPManager().send(msgGame, std::vector<ServerPlayer*>(m_players.inGame().begin(), m_players.inGame().end()));
@@ -246,10 +240,10 @@ void ServerGameSpeedestWin::sendInfo(ServerPlayer& player, sf::Uint32 idReq) {
         id = ship.first->getId();
         shipAngle = ship.second.getAngle();
         sailAngle = ship.second.getSail().getAngle();
-        sf::Vector2f posShip = ship.second.kinematics().position();
+        const sf::Vector2f& posShip = ship.second.getPosition();
         positionX = posShip.x;
         positionY = posShip.y;
-        sf::Vector2f speedShip = ship.second.kinematics().speed();
+        const sf::Vector2f& speedShip = ship.second.getVelocity();
         speedX = speedShip.x;
         speedY = speedShip.y;
         msgGameInfo << id << shipAngle << sailAngle << positionX << positionY << speedX << speedY;
@@ -288,7 +282,7 @@ bool ServerGameSpeedestWin::readAction(MsgData& msg, ServerPlayer& player) {
     std::bitset<4> keys = keysUI8;
 
     //if (!MsgData::checkValidity(sf::milliseconds(sfTime), m_lastAction[&player]))
-      //  return false;
+    //  return false;
 
     Ship& ship = m_ships[&player];
     ship.setTurningNegative(keys.test(TURN_HELM_NEGATIVE));

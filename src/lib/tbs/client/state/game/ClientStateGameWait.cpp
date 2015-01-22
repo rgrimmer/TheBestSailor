@@ -106,10 +106,9 @@ bool ClientStateGameWait::readInitGame(MsgData & msg) {
         sf::Uint8 id;
         msg >> id;
         Ship& ship = m_world.getShips()[static_cast<unsigned int> (id)];
-        auto& shipPos = ship.kinematics().position();
-        msg >> shipPos.x >> shipPos.y;
+        msg >> ship.position().x >> ship.position().y;
         ship.setAngle(90.0f);
-        ship.getSail().setAngle(m_world.getWindMap().wind(static_cast<sf::Vector2i> (shipPos)).getDirection());
+        ship.getSail().setAngle(m_world.getWindMap().wind(static_cast<sf::Vector2i> (ship.position())).getDirection());
     }
     m_world.setClientShip(&m_world.getShips()[m_player.getId()]);
     m_manager.push(EStateGame::Started);

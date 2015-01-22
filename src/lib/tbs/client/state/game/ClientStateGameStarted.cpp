@@ -65,7 +65,7 @@ void ClientStateGameStarted::render(sf::RenderWindow& window) const {
 
     // Set view position
     if (m_followingCamera) {
-        m_detailsView->setCenter(m_world.getClientShip().kinematics().position());
+        m_detailsView->setCenter(m_world.getClientShip().getPosition());
     }
 
     // Draw view
@@ -211,8 +211,8 @@ bool ClientStateGameStarted::readGameInfo(MsgData & msg) {
         Ship &ship = m_world.getShips()[static_cast<unsigned int> (id)];
         ship.setAngle(shipAngle);
         ship.getSail().setAngle(sailAngle);
-        ship.kinematics().position() = {positionX, positionY};
-        ship.kinematics().speed() = {speedX, speedY};
+        ship.position() = {positionX, positionY};
+        ship.velocity() = {speedX, speedY};
         std::cout << "Recv ship(" << static_cast<unsigned int> (id) << ") pos(" << positionX << "," << positionY << ") speed(" << speedX << "," << speedY << ")" << std::endl;
     }
 

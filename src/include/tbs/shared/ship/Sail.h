@@ -12,7 +12,7 @@
 
 class Sail {
 public:
-    Sail();
+    Sail(float angle = 0.0f);
     virtual ~Sail();
 
     void update(float dt);
@@ -28,10 +28,9 @@ public:
     float getAngle(void) const;
 
 private:
-    bool m_turnPositive;
-    bool m_turnNegative;
-
     float m_angle;
+    bool m_turnNegative;
+    bool m_turnPositive;
 };
 
 #endif	/* SAIL_H */

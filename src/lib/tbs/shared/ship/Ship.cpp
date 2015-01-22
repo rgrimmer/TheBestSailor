@@ -14,24 +14,31 @@
 #include "shared/ship/Ship.h"
 #include "shared/Font.h"
 
-Ship::Ship(int type)
+Ship::Ship(const sf::Vector2f& position, float shipAngle, float sailAngle, int type)
 : m_turnPositive(false)
 , m_turnNegative(false)
-, m_angle(0.0f)
-, m_type(type) {
+, m_angle(shipAngle)
+, m_type(type)
+, m_position(position)
+, m_velocity()
+, m_acceleration()
+, m_sail(sailAngle){
 }
 
 Ship::~Ship() {
 }
 
 void Ship::initialize(const sf::Vector2f & position, const sf::Vector2f & speed) {
-    m_kinematics.initialize(position, speed);
+    m_position = position;
+    m_velocity = speed;
 }
 
 void Ship::update(float dt) {
-    m_kinematics.update(dt);
+    // Ship
+    m_velocity += m_acceleration *dt;
+    m_position += m_velocity * dt;
+    // Sail
     m_sail.update(dt);
-    m_helm.update(dt);
 }
 
 void Ship::turnNegative(float angle) {
@@ -74,14 +81,38 @@ Sail& Ship::getSail() {
     return m_sail;
 }
 
-Helm& Ship::getHelm() {
-    return m_helm;
-}
-
 float Ship::getAngle(void) const {
     return m_angle;
 }
 
 int Ship::getType() const {
     return m_type;
+}
+
+float Ship::getDirection() const {
+    return Kinematics::direction(m_velocity);
+}
+
+sf::Vector2f& Ship::position() {
+    return m_position;
+}
+
+const sf::Vector2f& Ship::getPosition() const {
+    return m_position;
+}
+
+sf::Vector2f& Ship::velocity() {
+    return m_velocity;
+}
+
+const sf::Vector2f& Ship::getVelocity() const {
+    return m_velocity;
+}
+
+void Ship::setPosition(const sf::Vector2f& position) {
+    m_position = position;
+}
+
+void Ship::setVelocity(const sf::Vector2f& velocity) {
+    m_velocity = velocity;
 }

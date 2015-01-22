@@ -14,18 +14,9 @@
 
 class Ship {
 public:
-    Ship(int type = 0);
+    Ship(const sf::Vector2f& position = {0,0}, float shipAngle = 0, float sailAngle = 0, int type = 0);
     virtual ~Ship();
-
-    Kinematics& kinematics() {
-        return m_kinematics;
-    }
-
-    const Kinematics& kinematics() const {
-        return m_kinematics;
-    }
     
-    Helm& getHelm();
     Sail& getSail();
     const Sail& getSail() const;
 
@@ -33,6 +24,14 @@ public:
     float getAngle(void) const;
     
     int getType() const;
+    float getDirection() const;
+    sf::Vector2f& position();
+    const sf::Vector2f& getPosition() const;
+    void setPosition(const sf::Vector2f& position);
+    sf::Vector2f& velocity();
+    const sf::Vector2f& getVelocity() const;
+    void setVelocity(const sf::Vector2f& velocity);
+    
     
     void turnPositive(float angle);
     void turnNegative(float angle);
@@ -46,13 +45,19 @@ public:
 
 
 private:
+    // Ship state
     bool m_turnPositive;
     bool m_turnNegative;
-    Helm m_helm;
-    Sail m_sail;
-    Kinematics m_kinematics;
     float m_angle;
     int m_type;
+    
+    // Ship kinematics
+    sf::Vector2f m_position;
+    sf::Vector2f m_velocity;
+    sf::Vector2f m_acceleration;
+    
+    Sail m_sail;
+
 
 };
 

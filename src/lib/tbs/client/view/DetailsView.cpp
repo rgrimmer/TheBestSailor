@@ -25,7 +25,7 @@ DetailsView::DetailsView(const ClientWorld &world)
             m_shipsView.emplace_back(ship.second, sf::Color(255, 0, 0, 100));
         }
         else {
-            m_currentView.setCenter(world.getClientShip().kinematics().position());
+            m_currentView.setCenter(world.getClientShip().getPosition());
         }
     }
 
