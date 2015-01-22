@@ -21,6 +21,7 @@ enum class MsgType : sf::Int16 {
     Game,
     GameInfo,
     GameEnd,
+    TimeLeft,
     Acknowledgment
 };
 

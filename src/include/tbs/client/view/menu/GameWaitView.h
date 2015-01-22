@@ -16,12 +16,19 @@ class GameWaitView : public MenuView {
 public:
     GameWaitView();
     virtual ~GameWaitView();
-    
+
+    void setLeftTime(float leftTime);
+    void decreaseLeftTime(float leftTime);
+
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 private:
+    void updateText();
+    
+private:
     sf::View m_centerSfView;
-    TextView m_centerFixedTextView;
+    std::string m_leftTimeText;
+    float m_leftTime;
 
 };
 

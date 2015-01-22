@@ -29,7 +29,8 @@ Server::Server()
 : m_game(nullptr)
 , m_network(m_players)
 , m_readerThread(nullptr)
-, m_threadRun(false) {
+, m_threadRun(false)
+ {
 
 }
 
@@ -54,7 +55,7 @@ void Server::initializeNetwork() {
 }
 
 void Server::startChronoAndWait() {
-    sf::Time timeoutWaitPlayers = sf::milliseconds(5000);
+    sf::Time timeoutWaitPlayers = sf::milliseconds(20000);
 
     // Main loop, game can't start without player
     do {
@@ -67,13 +68,20 @@ void Server::startChronoAndWait() {
             else
                 std::cout << "[Serv][WaitP] \t Warning, expect new client" << std::endl;
         }
+        std::cout << "[Serv][WaitP] \tStart chrono" << std::endl;
+
+        sendWaitTimeLeft(timeoutWaitPlayers.asSeconds());
 
         sf::Clock clockWaitPlayers;
 
-        while (clockWaitPlayers.getElapsedTime() < timeoutWaitPlayers) {
+        while (timeoutWaitPlayers > sf::Time::Zero) {
             if (m_players.inWait().empty())
                 break;
-            readMessagesWait(timeoutWaitPlayers - clockWaitPlayers.getElapsedTime());
+            bool hasRead = readMessagesWait(timeoutWaitPlayers);
+            timeoutWaitPlayers -= clockWaitPlayers.restart();
+            if (hasRead) {
+                sendWaitTimeLeft(timeoutWaitPlayers.asSeconds());
+            }
         }
     } while (m_players.inWait().empty());
 }
@@ -92,6 +100,12 @@ void Server::sendGame() {
 
 void Server::startGame() {
     m_game->start();
+}
+
+void Server::sendWaitTimeLeft(float timeLeft) {
+    MsgData msg;
+    msg << MsgType::TimeLeft << timeLeft;
+    m_network.getTCPManager().send(msg, m_players.inWait());
 }
 
 void Server::startReaderThread() {
@@ -158,6 +172,7 @@ bool Server::read(MsgData& message, ServerPlayer &player) {
             player.setName(name);
             std::cout << "[Serv][Read] \t Read info client(" << player.getName() << "@" << player.getAddress().toString() << ":" << player.getUdpPort() << ")" << std::endl;
             // Send info to Client
+
             unsigned short port = m_network.getUDPManager().getPort();
             MsgData msgServer;
             msgServer << MsgType::ServerPlayerInfo << sf::Uint16(port) << sf::Int16(player.getId());

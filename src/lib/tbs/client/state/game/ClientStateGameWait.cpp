@@ -38,14 +38,16 @@ void ClientStateGameWait::release(void) {
 }
 
 void ClientStateGameWait::activate(void) {
-    std::cout << "[WaitGame][Activate]" << std::endl;
+    std::cout << "[GameWait][Activate]" << std::endl;
 }
 
 void ClientStateGameWait::deactivate(void) {
-    std::cout << "[WaitGame][Deactivate]" << std::endl;
+    std::cout << "[GameWait][Deactivate]" << std::endl;
 }
 
 void ClientStateGameWait::update(float dt) {
+    std::cout << "[GameWait][Update]" << std::endl;
+    m_view.decreaseLeftTime(dt);
 }
 
 void ClientStateGameWait::render(sf::RenderWindow& window) const {
@@ -71,6 +73,8 @@ bool ClientStateGameWait::read(MsgData& msg) {
     switch (msgType) {
         case MsgType::Game:
             return readInitGame(msg);
+        case MsgType::TimeLeft:
+            return readTimeLeft(msg);
 
         default:
             return true;
@@ -109,5 +113,15 @@ bool ClientStateGameWait::readInitGame(MsgData & msg) {
     }
     m_world.setClientShip(&m_world.getShips()[m_player.getId()]);
     m_manager.push(EStateGame::Started);
+    return true;
+}
+
+bool ClientStateGameWait::readTimeLeft(MsgData& msg) {
+    float timeLeft;
+    msg >> timeLeft;
+    
+    m_view.setLeftTime(timeLeft);
+    
+    std::cout << "Time left(" << static_cast<int>(timeLeft) << ")" << std::endl;
     return true;
 }

@@ -32,6 +32,7 @@ public:
 
 private:
     bool readInitGame(MsgData& msg);
+    bool readTimeLeft(MsgData& msg);
 
 private:
     ClientStateGame& m_manager;

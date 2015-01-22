@@ -40,6 +40,8 @@ private:
     void createGame();
     void sendGame();
     void startGame();
+    
+    void sendWaitTimeLeft(float timeLeft);
 
     void readerLoop();
     
