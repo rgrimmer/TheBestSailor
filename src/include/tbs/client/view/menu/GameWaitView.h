@@ -17,8 +17,8 @@ public:
     GameWaitView();
     virtual ~GameWaitView();
 
-    void setLeftTime(float leftTime);
-    void decreaseLeftTime(float leftTime);
+    void setTimeLeft(float timeLeft);
+    void decreaseTimeLeft(float dt);
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
@@ -28,7 +28,7 @@ private:
 private:
     sf::View m_centerSfView;
     std::string m_leftTimeText;
-    float m_leftTime;
+    float m_timeLeft;
 
 };
 

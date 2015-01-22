@@ -14,7 +14,7 @@
 
 class Ship {
 public:
-    Ship();
+    Ship(int type = 0);
     virtual ~Ship();
 
     Kinematics& kinematics() {
@@ -31,6 +31,8 @@ public:
 
     void setAngle(float angle);
     float getAngle(void) const;
+    
+    int getType() const;
     
     void turnPositive(float angle);
     void turnNegative(float angle);
@@ -50,6 +52,7 @@ private:
     Sail m_sail;
     Kinematics m_kinematics;
     float m_angle;
+    int m_type;
 
 };
 

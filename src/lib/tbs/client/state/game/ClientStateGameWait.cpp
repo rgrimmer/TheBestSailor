@@ -47,7 +47,7 @@ void ClientStateGameWait::deactivate(void) {
 
 void ClientStateGameWait::update(float dt) {
     std::cout << "[GameWait][Update]" << std::endl;
-    m_view.decreaseLeftTime(dt);
+    m_view.decreaseTimeLeft(dt);
 }
 
 void ClientStateGameWait::render(sf::RenderWindow& window) const {
@@ -89,7 +89,7 @@ bool ClientStateGameWait::readInitGame(MsgData & msg) {
     msg >> gameType >> height >> width >> seedHeight >> seedWind;
 
     m_world.initialize();
-    std::cout << "RECEIVE map(" << height << ", " << width << ", " << seedHeight << ", " << seedWind << ")" << std::endl;
+    std::cout << "[GameWait][Read] \tmap(" << height << ", " << width << ", " << seedHeight << ", " << seedWind << ")" << std::endl;
     m_world.initializeMap(width, height, seedHeight, seedWind);
 
     msg >> checkPointCount;
@@ -120,8 +120,8 @@ bool ClientStateGameWait::readTimeLeft(MsgData& msg) {
     float timeLeft;
     msg >> timeLeft;
     
-    m_view.setLeftTime(timeLeft);
+    m_view.setTimeLeft(timeLeft);
     
-    std::cout << "Time left(" << static_cast<int>(timeLeft) << ")" << std::endl;
+    std::cout << "[GameWait][Read]\t leftTime(" << static_cast<int>(timeLeft) << ")" << std::endl;
     return true;
 }

@@ -14,10 +14,11 @@
 #include "shared/ship/Ship.h"
 #include "shared/Font.h"
 
-Ship::Ship()
+Ship::Ship(int type)
 : m_turnPositive(false)
-, m_turnNegative(false) {
-    m_angle = 45.0f;
+, m_turnNegative(false)
+, m_angle(0.0f)
+, m_type(type) {
 }
 
 Ship::~Ship() {
@@ -79,4 +80,8 @@ Helm& Ship::getHelm() {
 
 float Ship::getAngle(void) const {
     return m_angle;
+}
+
+int Ship::getType() const {
+    return m_type;
 }
