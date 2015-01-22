@@ -21,7 +21,7 @@ ClientStateMenuExchangeInfo::ClientStateMenuExchangeInfo(ClientStateMenu& manage
 , m_player(player)
 , m_stdAddress(address)
 , m_address()
-, m_connectionView(address) {
+, m_connectionView() {
 
 }
 
@@ -36,6 +36,7 @@ void ClientStateMenuExchangeInfo::release(void) {
 
 void ClientStateMenuExchangeInfo::activate(void) {
     m_address = m_stdAddress;
+    m_connectionView.setAdressText(m_address.toString());
 }
 
 void ClientStateMenuExchangeInfo::deactivate(void) {

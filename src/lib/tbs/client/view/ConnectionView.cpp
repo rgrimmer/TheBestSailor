@@ -11,15 +11,18 @@
 
 #include "client/view/ConnectionView.h"
 
-ConnectionView::ConnectionView(const std::string& ipAddressText)
-: m_fixedTextView("Try to connect to", 60, Center)
-, m_ipAddressText(ipAddressText) {
+ConnectionView::ConnectionView()
+: m_fixedTextView("Try to connect to", 60, Center) {
 
     // Set input text viewport
     m_ipAddressSfView.setViewport({0.0f, 0.4f, 1.0f, 1.0f});
 }
 
 ConnectionView::~ConnectionView() {
+}
+
+void ConnectionView::setAdressText(const std::string& ipAddress) {
+    m_ipAddressText = ipAddress;
 }
 
 void ConnectionView::draw(sf::RenderTarget& target, sf::RenderStates states) const {

@@ -17,15 +17,17 @@
 
 class ConnectionView : public MenuView {
 public:
-    ConnectionView(const std::string& ipAddressText);
+    ConnectionView();
     virtual ~ConnectionView();
 
+    void setAdressText(const std::string& ipAddress);
+
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
- 
+
 private:
     sf::View m_ipAddressSfView;
     TextView m_fixedTextView;
-    const std::string& m_ipAddressText;
+    std::string m_ipAddressText;
 };
 
 #endif	/* CONNECTIONVIEW_H */
