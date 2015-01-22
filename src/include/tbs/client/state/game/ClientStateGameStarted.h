@@ -45,8 +45,8 @@ private:
     bool readMsgEnd(MsgData& msg);
     
     bool switchFollowingCamera();
-    void sendInfo(const Input &input);
-    void updatePrediction(sf::Time time);
+    void sendInfo(const Input &input, sf::Uint32 idReq);
+    void updatePrediction(sf::Uint32 idReq);
 
 private:
     ClientStateGame& m_manager;

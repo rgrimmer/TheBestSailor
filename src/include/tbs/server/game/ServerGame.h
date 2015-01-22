@@ -33,7 +33,7 @@ protected:
     /* should not be called in herited classes*/
     virtual void init() = 0;
     virtual void update(float dt) = 0;
-    virtual void sendInfo() = 0;
+    virtual void sendInfo(ServerPlayer& player, sf::Uint32 idReq) = 0;
     virtual bool gameIsEnded() = 0;
 
 protected:

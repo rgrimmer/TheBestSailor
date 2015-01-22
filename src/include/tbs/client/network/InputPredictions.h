@@ -23,8 +23,8 @@ public:
     InputPredictions();
     virtual ~InputPredictions();
     
-    void add(const Input &input);
-    std::vector<Input> getInputFrom(sf::Time time) const;
+    sf::Uint32 add(const Input &input);
+    std::vector<Input> getInputFrom(sf::Uint32 id) const;
     
 private:
     std::vector<Input> m_inputs;

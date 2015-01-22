@@ -55,13 +55,10 @@ void ClientStateGameStarted::deactivate(void) {
 }
 
 void ClientStateGameStarted::update(float dt) {
-    // @TODO: quit when m_isEnded
-
-
     Input input(m_keys, m_clock.getElapsedTime());
     m_world.update(dt);
-    sendInfo(input);
-    m_predictions.add(input);
+    sf::Uint32 id = m_predictions.add(input);
+    sendInfo(input, id);
 }
 
 void ClientStateGameStarted::render(sf::RenderWindow& window) const {
@@ -83,9 +80,9 @@ void ClientStateGameStarted::render(sf::RenderWindow& window) const {
     }*/
 }
 
-void ClientStateGameStarted::sendInfo(const Input &input) {
+void ClientStateGameStarted::sendInfo(const Input &input, sf::Uint32 id) {
     MsgData msg;
-    msg << MsgType::Action << static_cast<sf::Uint8> (input.getActions().to_ulong()) << input.getTime().asMilliseconds();
+    msg << MsgType::Action << static_cast<sf::Uint8> (input.getActions().to_ulong()) << id;
     m_network.getUdpManager().send(msg);
 }
 
@@ -196,12 +193,8 @@ bool ClientStateGameStarted::read(MsgData& msg) {
 
 bool ClientStateGameStarted::readGameInfo(MsgData & msg) {
     std::cout << "GameInfo" << std::endl;
-    sf::Int32 time;
-    msg >> time;
-    /*
-    if (!MsgData::checkValidity(sf::milliseconds(time), m_lastGameInfo))
-        return true;
-     * */
+    sf::Uint32 idReq;
+    msg >> idReq;
 
     while (!msg.endOfPacket()) {
 
@@ -223,15 +216,14 @@ bool ClientStateGameStarted::readGameInfo(MsgData & msg) {
         std::cout << "Recv ship(" << static_cast<unsigned int> (id) << ") pos(" << positionX << "," << positionY << ") speed(" << speedX << "," << speedY << ")" << std::endl;
     }
 
-    //updatePrediction(sf::milliseconds(time));
+    updatePrediction(idReq);
     return true;
 }
 
-void ClientStateGameStarted::updatePrediction(sf::Time time) {
-    std::vector<Input> predictions = m_predictions.getInputFrom(time);
-
-    Input tmp(predictions[0].getActions(), time);
-    Input* prevInput = &tmp;
+void ClientStateGameStarted::updatePrediction(sf::Uint32 reqId) {
+    std::vector<Input> predictions = m_predictions.getInputFrom(reqId);
+    std::cout << "nbPrediction(" << predictions.size() << ")" << std::endl;
+    Input* prevInput = &predictions[0];
 
     for (unsigned int i = 1; i < predictions.size(); ++i) {
 

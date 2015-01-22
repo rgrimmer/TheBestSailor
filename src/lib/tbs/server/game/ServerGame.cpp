@@ -33,7 +33,6 @@ void ServerGame::start() {
     while (!gameIsEnded()) {
         sendInfoClock.restart();
         doUpdate();
-        sendInfo();
         sf::sleep(minimunSendLimit - sendInfoClock.getElapsedTime());
     }
     m_server.stopReaderThread();

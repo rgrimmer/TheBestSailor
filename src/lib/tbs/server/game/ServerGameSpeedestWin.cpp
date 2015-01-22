@@ -74,7 +74,6 @@ const Map& ServerGameSpeedestWin::getMap() const {
 }
 
 void ServerGameSpeedestWin::init() {
-    sendInfo();
 }
 
 void ServerGameSpeedestWin::update(float dt) {
@@ -230,11 +229,10 @@ void ServerGameSpeedestWin::sendGame() {
     m_server.getNetwork()->getTCPManager().send(msgGame, std::vector<ServerPlayer*>(m_players.inGame().begin(), m_players.inGame().end()));
 }
 
-void ServerGameSpeedestWin::sendInfo() {
-    sf::Int32 timeGame = m_gameClock.getElapsedTime().asMilliseconds();
+void ServerGameSpeedestWin::sendInfo(ServerPlayer& player, sf::Uint32 idReq) {
 
     MsgData msgGameInfo;
-    msgGameInfo << MsgType::GameInfo << timeGame;
+    msgGameInfo << MsgType::GameInfo << idReq;
 
     sf::Uint8 id;
     float shipAngle;
@@ -255,10 +253,10 @@ void ServerGameSpeedestWin::sendInfo() {
         speedX = speedShip.x;
         speedY = speedShip.y;
         msgGameInfo << id << shipAngle << sailAngle << positionX << positionY << speedX << speedY;
-        std::cout << "Send ship(" << static_cast<unsigned int> (id) << ") pos(" << positionX << "," << positionY << ") speed(" << speedX << "," << speedY << ") clock(" << timeGame << ")" << std::endl;
+        std::cout << "Send ship(" << static_cast<unsigned int> (id) << ") pos(" << positionX << "," << positionY << ") speed(" << speedX << "," << speedY << ") id(" << idReq << ")" << std::endl;
     }
 
-    m_server.getNetwork()->getUDPManager().send(msgGameInfo, std::vector<ServerPlayer*>(m_players.inGame().begin(), m_players.inGame().end()));
+    m_server.getNetwork()->getUDPManager().send(msgGameInfo, player);
 }
 
 bool ServerGameSpeedestWin::read(MsgData& message, ServerPlayer& player) {
@@ -285,8 +283,8 @@ bool ServerGameSpeedestWin::readDisconnect(MsgData& msg, ServerPlayer& player) {
 
 bool ServerGameSpeedestWin::readAction(MsgData& msg, ServerPlayer& player) {
     sf::Uint8 keysUI8;
-    sf::Int32 sfTime;
-    msg >> keysUI8 >> sfTime;
+    sf::Int32 idReq;
+    msg >> keysUI8 >> idReq;
     std::bitset<4> keys = keysUI8;
 
     //if (!MsgData::checkValidity(sf::milliseconds(sfTime), m_lastAction[&player]))
@@ -299,5 +297,6 @@ bool ServerGameSpeedestWin::readAction(MsgData& msg, ServerPlayer& player) {
     ship.getSail().setTurningPositive(keys.test(TURN_SAIL_POSITIVE));
 
     doUpdate();
+    sendInfo(player, idReq);
     return true;
 }
