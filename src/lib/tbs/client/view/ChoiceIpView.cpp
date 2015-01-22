@@ -7,16 +7,16 @@
 #include <SFML/Network/IpAddress.hpp>
 #include <SFML/System/Time.hpp>
 
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RenderStates.hpp>
+
 #include "client/view/ChoiceIpView.h"
 
 ChoiceIpView::ChoiceIpView(const std::string& ipAddressText)
-: m_titleSfText("The Best Sailor", 130, Center)
-, m_ipAddressText(ipAddressText)
+: m_ipAddressText(ipAddressText)
 , m_fixedTextView1("Enter the server ip :", 60, Center)
 , m_fixedTextView2("Public IP : " + sf::IpAddress::getPublicAddress(sf::milliseconds(500)).toString(), 40)
 , m_fixedTextView3("Local IP : " + sf::IpAddress::getLocalAddress().toString(), 40) {
-    // Set text viewport
-    m_titleView.setViewport({0.0f, 0.0f, 1.0f, 1.0f});
 
     // Set input text viewport
     m_ipEnterSfView.setViewport({0.0f, 0.4f, 1.0f, 1.0f});
@@ -29,14 +29,9 @@ ChoiceIpView::~ChoiceIpView() {
 }
 
 void ChoiceIpView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+    MenuView::draw(target, states);
+    
     sf::View currentView = target.getView();
-
-    // Draw background
-    target.draw(m_backgroundView);
-
-    // Draw Title
-    target.setView(m_titleView);
-    target.draw(m_titleSfText);
     
     TextView::setAbs(false);
 

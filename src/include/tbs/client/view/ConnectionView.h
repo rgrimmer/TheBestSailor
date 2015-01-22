@@ -10,26 +10,19 @@
 
 #include <string>
 
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Graphics/RenderStates.hpp>
+#include <SFML/Graphics/View.hpp>
 
-#include "client/view/BackgroundView.h"
-#include "TextView.h"
+#include "client/view/TextView.h"
+#include "client/view/menu/MenuView.h"
 
-class ConnectionView : public sf::Drawable {
+class ConnectionView : public MenuView {
 public:
     ConnectionView(const std::string& ipAddressText);
     virtual ~ConnectionView();
 
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
  
 private:
-    BackgroundView m_backgroundView;
-
-    sf::View m_titleView;
-    TextView m_titleSfText;
-    
     sf::View m_ipAddressSfView;
     TextView m_fixedTextView;
     const std::string& m_ipAddressText;

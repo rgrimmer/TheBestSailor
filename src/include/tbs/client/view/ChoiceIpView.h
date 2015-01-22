@@ -10,26 +10,17 @@
 
 #include <string>
 
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
-#include <SFML/Graphics/RenderStates.hpp>
+#include "client/view/TextView.h"
+#include "client/view/menu/MenuView.h"
 
-#include "client/view/BackgroundView.h"
-#include "TextView.h"
-
-class ChoiceIpView : public sf::Drawable {
+class ChoiceIpView : public MenuView {
 public:
     ChoiceIpView(const std::string& ipAddressText);
     virtual ~ChoiceIpView();
 
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 private:
-    BackgroundView m_backgroundView;
-
-    sf::View m_titleView;
-    TextView m_titleSfText;
-
     sf::View m_ipEnterSfView;
     const std::string& m_ipAddressText;
     
