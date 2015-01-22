@@ -65,6 +65,7 @@ private:
     sf::Clock m_gameClock;
     std::map<ServerPlayer*, sf::Time> m_lastAction;
     bool m_endGameStarted;
+    sf::Clock m_endGameClock;
 };
 
 sf::Packet& operator<<(sf::Packet& packet, const ServerGameSpeedestWin& game);

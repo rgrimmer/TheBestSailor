@@ -77,6 +77,16 @@ const std::unordered_set<ServerPlayer*>& ServerPlayers::inGame() const {
     return m_inGamePlayers;
 }
 
+const std::unordered_set<ServerPlayer*>& ServerPlayers::inConnection() const {
+    return m_inConnectionPlayers;
+}
+
+void ServerPlayers::putPlayersInGameToInWait() {
+    m_inWaitPlayers.insert(m_inGamePlayers.begin(), m_inGamePlayers.end());
+    m_inGamePlayers.clear();
+}
+
+
 void ServerPlayers::putPlayersInGame() {
     m_inWaitPlayers.swap(m_inGamePlayers);
 }

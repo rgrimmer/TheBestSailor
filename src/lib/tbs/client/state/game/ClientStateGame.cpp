@@ -2,6 +2,7 @@
 #include "client/state/game/ClientStateGame.h"
 #include "client/state/game/ClientStateGameWait.h"
 #include "client/state/game/ClientStateGameStarted.h"
+#include "client/state/game/ClientStateGameEnd.h"
 
 ClientStateGame::ClientStateGame(ClientState& manager, ClientNetwork& network, ClientPlayer& player)
 : m_manager(manager)
@@ -21,6 +22,7 @@ ClientState& ClientStateGame::getManager() {
 void ClientStateGame::initialize(void) {
     add(EStateGame::Wait, new ClientStateGameWait(*this, m_network, m_player, m_world));
     add(EStateGame::Started, new ClientStateGameStarted(*this, m_network, m_player, m_world));
+    add(EStateGame::End, new ClientStateGameEnd(*this, m_network, m_player, m_world));
     
     m_apState[EStateGame::Wait]->initialize();
     m_apState[EStateGame::Started]->initialize();

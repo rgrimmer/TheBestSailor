@@ -11,7 +11,12 @@
 #include "client/ClientWorld.h"
 
 #include "client/state/StateManager.h"
-#include "client/state/game/EClientStateGame.h"
+
+enum EStateGame {
+    Wait,
+    Started,
+    End
+};
 
 class ClientState;
 class ClientNetwork;

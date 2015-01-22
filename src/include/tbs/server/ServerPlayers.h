@@ -37,6 +37,7 @@ public:
 
     void setPlayerReady(ServerPlayer &player);
     void putPlayersInGame();
+    void putPlayersInGameToInWait();
 
 private:
     std::vector<ServerPlayer*> m_players;

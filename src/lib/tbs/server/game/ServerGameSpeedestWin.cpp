@@ -39,8 +39,7 @@ sf::Packet& operator<<(sf::Packet& packet, const ServerGameSpeedestWin& game) {
 
 ServerGameSpeedestWin::ServerGameSpeedestWin(Server &server, ServerPlayers& players, const MapHeader &header)
 : ServerGame(server, players)
-, m_map(header)
-, m_endGameStarted(false) {
+, m_map(header) {
     m_checkPointManager.initialise(m_map.getHeightMap());
     sf::Vector2f initPosition = static_cast<sf::Vector2f> (m_checkPointManager.getCheckPoint(0).getPosition());
     initPosition.x += 0.25f;
@@ -75,12 +74,19 @@ void ServerGameSpeedestWin::init() {
 }
 
 void ServerGameSpeedestWin::update(float dt) {
-    for (auto* player : m_players.inGame()) {
-        if (m_checkPointManager.isCompletedAllCheckpoint(player)) {
-            m_endGameStarted = true;
-            MsgData msg;
-            msg << MsgType::GameEnd << player->getName();
-            m_server.getNetwork()->getTCPManager().send(msg, m_players.inGame());
+    if (m_endGameStarted) {
+        if (m_endGameClock.getElapsedTime() >= sf::seconds(6)) {
+            m_players.putPlayersInGameToInWait();
+        }
+    } else {
+        for (auto* player : m_players.inGame()) {
+            if (m_checkPointManager.isCompletedAllCheckpoint(player)) {
+                m_endGameStarted = true;
+                m_endGameClock.restart();
+                MsgData msg;
+                msg << MsgType::GameEnd << player->getName();
+                m_server.getNetwork()->getTCPManager().send(msg, m_players.inGame());
+            }
         }
     }
     for (auto& ship : m_ships) {
@@ -90,7 +96,7 @@ void ServerGameSpeedestWin::update(float dt) {
 
         if (collideWithMap(ship.second, shipVelocity))
             shipVelocity = {0.0f, 0.0f};
-            
+
         ship.second.setVelocity(shipVelocity);
 
         int checkPointCount = m_checkPointManager.getCheckPointCount();
@@ -162,7 +168,6 @@ sf::Vector2f ServerGameSpeedestWin::calculShipVelocity(Ship& ship) {
     // Temporary equation 
     sf::Vector2f windForce = wind.getVector() * std::sin(Kinematics::degToRad(std::abs(ship.getSail().getAngle() - wind.getDirection())));
     sf::Vector2f velocity = std::sqrt(windForce.x * windForce.x + windForce.y * windForce.y) * outP;
-    //ship.kinematics().speed() = velocity;
     return velocity;
 }
 

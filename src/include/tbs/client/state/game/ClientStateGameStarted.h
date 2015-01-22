@@ -48,7 +48,7 @@ private:
     void sendInfo(const Input &input, sf::Uint32 idReq);
     void updatePrediction(sf::Uint32 idReq);
 
-private:
+protected:
     ClientStateGame& m_manager;
     ClientNetwork& m_network;
     ClientPlayer& m_player;

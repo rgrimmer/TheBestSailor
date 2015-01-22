@@ -269,8 +269,6 @@ bool ClientStateGameStarted::readDisconnect(MsgData & msg) {
 }
 
 bool ClientStateGameStarted::readMsgEnd(MsgData & msg) {
-    /*msg >> m_winner;
-    m_winner.append(" has win");
-    m_endGame = new std::thread(&ClientGameSpeedestWin::endScheduler, this);*/
+    m_manager.push(EStateGame::End);
     return true;
 }
