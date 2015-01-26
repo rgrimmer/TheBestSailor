@@ -26,14 +26,16 @@ public:
     unsigned int getId() const;
     void setId(unsigned int id);
     unsigned short getUdpPort() const;
+    void setIdShip(int id);
+    int getShipType() const;
 
 private:
     unsigned int m_id;
     std::string m_name;
-    unsigned short int m_udpPort;
+    unsigned short m_udpPort;
     sf::TcpSocket m_TCPSocket;
 
-
+    int m_idShip;
 };
 
 //MsgClientPlayerInfo operator>>(MsgClientPlayerInfo &msg, ServerPlayer player);

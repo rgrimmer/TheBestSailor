@@ -14,6 +14,9 @@
 
 class Ship {
 public:
+    static const int maxType;
+    
+public:
     Ship(const sf::Vector2f& position = {0,0}, float shipAngle = 0, float sailAngle = 0, int type = 0);
     virtual ~Ship();
     

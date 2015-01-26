@@ -43,7 +43,7 @@ void ClientStateMenuExchangeInfo::deactivate(void) {
 }
 
 void ClientStateMenuExchangeInfo::update(float dt) {
-    if(m_network.connect(m_address, sf::milliseconds(1000)))
+    if (m_network.connect(m_address, sf::milliseconds(1000)))
         initConnectionWithServer(m_address);
 }
 
@@ -68,11 +68,17 @@ void ClientStateMenuExchangeInfo::sendLocalPlayerInfo() {
 bool ClientStateMenuExchangeInfo::read(sf::Event& event) {
 
     if (event.type == sf::Event::KeyPressed) {
-        if (event.key.code == sf::Keyboard::Escape) {
-            m_manager.pop();
+        switch (event.key.code) {
+            case sf::Keyboard::Escape:
+                m_manager.pop();
+                break;
+            default:
+                break;
         }
     } else if (event.type == sf::Event::Closed) {
         return false;
+    } else if (event.type == sf::Event::MouseButtonPressed) {
+        std::cout << "posInWindow(" << event.mouseButton.x << " " << event.mouseButton.y << ")" << std::endl;
     }
 
     return true;

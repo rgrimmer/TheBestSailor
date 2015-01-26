@@ -14,6 +14,7 @@
 #include "shared/ship/Ship.h"
 #include "shared/Font.h"
 
+const int Ship::maxType = 4;
 Ship::Ship(const sf::Vector2f& position, float shipAngle, float sailAngle, int type)
 : m_turnPositive(false)
 , m_turnNegative(false)

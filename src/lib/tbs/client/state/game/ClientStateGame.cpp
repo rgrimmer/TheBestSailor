@@ -1,4 +1,6 @@
 
+#include "client/network/ClientNetwork.h"
+
 #include "client/state/game/ClientStateGame.h"
 #include "client/state/game/ClientStateGameWait.h"
 #include "client/state/game/ClientStateGameStarted.h"
@@ -29,3 +31,9 @@ void ClientStateGame::initialize(void) {
 
     push(EStateGame::Wait);
 }
+
+void ClientStateGame::deactivate() {
+    std::cout << "[StateGame][Desactivate]" << std::endl;
+    m_network.getTcpManager().disconnect();
+}
+

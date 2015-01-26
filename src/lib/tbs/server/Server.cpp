@@ -6,12 +6,14 @@
  */
 
 #include <iostream>
+#include <bitset>
 
 #include <SFML/System/Time.hpp>
 #include <SFML/System/Clock.hpp>
-#include <bitset>
+#include <SFML/Window/Keyboard.hpp>
 
 #include "shared/Utils.h"
+#include "shared/ship/Ship.h"
 #include "shared/network/MsgGame.h"
 #include "shared/network/MsgClientPlayerInfo.h"
 #include "shared/network/MsgServerPlayerInfo.h"
@@ -30,7 +32,7 @@ Server::Server()
 , m_network(m_players)
 , m_readerThread(nullptr)
 , m_threadRun(false)
- {
+, m_stateInWait(true) {
 
 }
 
@@ -55,10 +57,11 @@ void Server::initializeNetwork() {
 }
 
 void Server::startChronoAndWait() {
-    sf::Time timeoutWaitPlayers = sf::milliseconds(20000);
+    m_stateInWait = true;
 
     // Main loop, game can't start without player
     do {
+
         std::cout << "[Serv][WaitP] \tWait players" << std::endl;
         // Wait first player
         while (m_players.inWait().empty()) {
@@ -70,6 +73,7 @@ void Server::startChronoAndWait() {
         }
         std::cout << "[Serv][WaitP] \tStart chrono" << std::endl;
 
+        sf::Time timeoutWaitPlayers = sf::milliseconds(20000);
         sendWaitTimeLeft(timeoutWaitPlayers.asSeconds());
 
         sf::Clock clockWaitPlayers;
@@ -84,6 +88,7 @@ void Server::startChronoAndWait() {
             }
         }
     } while (m_players.inWait().empty());
+    m_stateInWait = false;
 }
 
 void Server::createGame() {
@@ -153,12 +158,14 @@ bool Server::read(MsgData& message, ServerPlayer &player) {
     MsgData messageCopy(message);
 
     bool isRead(false);
-    if (m_game)
-        isRead = m_game->read(messageCopy, player);
 
     message >> msgType;
     std::cout << "[Serv][Read][Start] \t Read message(" << static_cast<int> (msgType) << ") from " << player.getName() << std::endl;
     switch (msgType) {
+        case MsgType::Action:
+            if (m_stateInWait)
+                return readAction(message, player);
+            break;
         case MsgType::ClientPlayerInfo:
         {
             // Receive info from Client
@@ -204,6 +211,9 @@ bool Server::read(MsgData& message, ServerPlayer &player) {
         }
     }
 
+    if (m_game)
+        isRead = m_game->read(messageCopy, player);
+
     return isRead;
 }
 
@@ -217,6 +227,19 @@ bool Server::readDisconnect(MsgData& msg, ServerPlayer& player) {
     msgDisconnect << MsgType::Disconnect << idPlayer;
     m_network.getTCPManager().send(msgDisconnect, m_players.getList());
 
+    return true;
+}
+
+bool Server::readAction(MsgData& msg, ServerPlayer& player) {
+    std::cout << "[Read] \tRead actions !" << std::endl;
+    sf::Int16 action;
+    msg >> action;
+    if (action == sf::Keyboard::Key::Left) {
+        player.setIdShip((player.getShipType() + Ship::maxType - 1) % Ship::maxType);
+    } 
+    else if (action == sf::Keyboard::Key::Right) {
+        player.setIdShip((player.getShipType() + 1) % Ship::maxType);
+    }
     return true;
 }
 

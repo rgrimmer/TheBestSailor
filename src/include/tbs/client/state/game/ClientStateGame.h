@@ -27,8 +27,10 @@ public:
     explicit ClientStateGame(ClientState& manager, ClientNetwork& network, ClientPlayer& player);
     virtual ~ClientStateGame(void);
 
-    virtual void initialize(void);
     ClientState& getManager();
+
+    virtual void initialize(void);
+    virtual void deactivate();
     
 private:
     ClientState& m_manager;

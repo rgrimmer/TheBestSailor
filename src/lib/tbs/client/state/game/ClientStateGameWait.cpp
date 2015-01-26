@@ -57,8 +57,21 @@ void ClientStateGameWait::render(sf::RenderWindow& window) const {
 bool ClientStateGameWait::read(sf::Event& event) {
 
     if (event.type == sf::Event::KeyPressed) {
-        if (event.key.code == sf::Keyboard::Escape) {
-            m_manager.getManager().pop();
+        switch (event.key.code) {
+            case sf::Keyboard::Escape:
+                m_manager.getManager().pop();
+                break;
+
+            case sf::Keyboard::Left:
+            case sf::Keyboard::Right:
+            {
+                MsgData msg;
+                msg << MsgType::Action << sf::Int16(event.key.code);
+                m_network.getTcpManager().send(msg);
+            }
+                break;
+            default:
+                break;
         }
     } else if (event.type == sf::Event::Closed) {
         return false;
@@ -118,9 +131,9 @@ bool ClientStateGameWait::readInitGame(MsgData & msg) {
 bool ClientStateGameWait::readTimeLeft(MsgData& msg) {
     float timeLeft;
     msg >> timeLeft;
-    
+
     m_view.setTimeLeft(timeLeft);
-    
-    std::cout << "[GameWait][Read]\t leftTime(" << static_cast<int>(timeLeft) << ")" << std::endl;
+
+    std::cout << "[GameWait][Read]\t leftTime(" << static_cast<int> (timeLeft) << ")" << std::endl;
     return true;
 }

@@ -48,6 +48,7 @@ private:
     void waitAcknowledgment(int permits);
 
     bool readDisconnect(MsgData& msg, ServerPlayer& player);
+    bool readAction(MsgData& msg, ServerPlayer& player);
 
 
 private:
@@ -59,6 +60,8 @@ private:
     
     std::thread *m_readerThread;
     bool m_threadRun;
+    
+    bool m_stateInWait;
 };
 
 #endif	/* SERVER_H */

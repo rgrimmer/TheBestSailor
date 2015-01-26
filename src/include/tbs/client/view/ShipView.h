@@ -41,7 +41,7 @@ private:
     
     sf::Sprite m_boatSprite;
     sf::RectangleShape m_sailShape;
-    static sf::Texture g_texture;
+    sf::Texture m_texture;
 
 };
 

@@ -7,7 +7,8 @@
 ServerPlayer::ServerPlayer()
 : m_id(0)
 , m_name("Anonymous")
-, m_udpPort(0) {
+, m_udpPort(0)
+, m_idShip(0) {
 
 }
 
@@ -48,4 +49,12 @@ void ServerPlayer::setName(const std::string& name) {
 
 unsigned short ServerPlayer::getUdpPort() const {
     return m_udpPort;
+}
+
+void ServerPlayer::setIdShip(int id) {
+    m_idShip = id;
+}
+
+int ServerPlayer::getShipType() const {
+    return m_idShip;
 }
