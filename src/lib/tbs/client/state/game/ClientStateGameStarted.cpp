@@ -56,6 +56,7 @@ void ClientStateGameStarted::deactivate(void) {
 
 void ClientStateGameStarted::update(float dt) {
     Input input(m_keys, m_clock.getElapsedTime());
+    
     m_world.update(dt);
     sf::Uint32 id = m_predictions.add(input);
     sendInfo(input, id);
@@ -124,15 +125,19 @@ bool ClientStateGameStarted::read(sf::Event& event) {
                 m_detailsView->getView().zoom(0.5f);
                 break;
             case sf::Keyboard::D:
+                m_world.getClientShip().setTurningPositive(true);
                 m_keys.set(TURN_HELM_POSITIVE, true);
                 break;
             case sf::Keyboard::Q:
+                m_world.getClientShip().setTurningNegative(true);
                 m_keys.set(TURN_HELM_NEGATIVE, true);
                 break;
             case sf::Keyboard::Z:
+                m_world.getClientShip().getSail().setTurningPositive(true);
                 m_keys.set(TURN_SAIL_POSITIVE, true);
                 break;
             case sf::Keyboard::S:
+                m_world.getClientShip().getSail().setTurningNegative(true);
                 m_keys.set(TURN_SAIL_NEGATIVE, true);
                 break;
             case sf::Keyboard::A:
@@ -157,15 +162,19 @@ bool ClientStateGameStarted::read(sf::Event& event) {
         switch (event.key.code) {
             case sf::Keyboard::D:
                 m_keys.set(TURN_HELM_POSITIVE, false);
+                m_world.getClientShip().setTurningPositive(false);
                 break;
             case sf::Keyboard::Q:
                 m_keys.set(TURN_HELM_NEGATIVE, false);
+                m_world.getClientShip().setTurningNegative(false);
                 break;
             case sf::Keyboard::Z:
                 m_keys.set(TURN_SAIL_POSITIVE, false);
+                m_world.getClientShip().getSail().setTurningPositive(false);
                 break;
             case sf::Keyboard::S:
                 m_keys.set(TURN_SAIL_NEGATIVE, false);
+                m_world.getClientShip().getSail().setTurningNegative(false);
                 break;
             default:
                 break;
@@ -224,7 +233,9 @@ void ClientStateGameStarted::updatePrediction(sf::Uint32 reqId) {
     std::vector<Input> predictions = m_predictions.getInputFrom(reqId);
     std::cout << "nbPrediction(" << predictions.size() << ")" << std::endl;
     Input* prevInput = &predictions[0];
-
+ 
+    sf::Vector2f oldShipPos(m_world.getClientShip());
+    
     for (unsigned int i = 1; i < predictions.size(); ++i) {
 
         // Set state of world 
@@ -235,8 +246,8 @@ void ClientStateGameStarted::updatePrediction(sf::Uint32 reqId) {
         ship.getSail().setTurningPositive(prevInput->getActions().test(TURN_SAIL_POSITIVE));
 
         // Update
-        sf::Time diffTime = prevInput->getTime() - predictions[i].getTime();
-        ship.update(diffTime.asSeconds());
+        sf::Time diffTime = predictions[i].getTime() - prevInput->getTime();
+        m_world.updateClientShip(diffTime.asSeconds());
 
         // Go to the next predictions
         prevInput = &predictions[i];
@@ -244,6 +255,17 @@ void ClientStateGameStarted::updatePrediction(sf::Uint32 reqId) {
     
     // Set state of world 
     Ship& ship = m_world.getClientShip();
+    sf::Vector2f& newShipPos = ship.getPosition();
+    
+    // Smouth correction
+    sf::Vector2f diffPos = newShipPos - oldShipPos;
+    if(std::abs(diffPos.x) < 1) {
+        newShipPos.x =  oldShipPos.x + (diffPos.x * 0.2);
+    }
+    if(std::abs(diffPos.y) < 1) {
+        newShipPos.y =  oldShipPos.y + (diffPos.y * 0.2);
+    }
+    
     ship.setTurningNegative(prevInput->getActions().test(TURN_HELM_NEGATIVE));
     ship.setTurningPositive(prevInput->getActions().test(TURN_HELM_POSITIVE));
     ship.getSail().setTurningNegative(prevInput->getActions().test(TURN_SAIL_NEGATIVE));

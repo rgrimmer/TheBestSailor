@@ -44,20 +44,25 @@ void ClientTCPManager::receiver() {
             {
                 // @TODO
                 std::cout << "[TCP][Recv] \t TCP Server connection disconnected" << std::endl;
+                delete msg;
                 exit(-1);
             }
                 break;
             case sf::Socket::Status::Error:
             {
                 std::cout << "[TCP][Recv] \t TCP receive error" << std::endl;
+                delete msg;
             }
+                break;
             case sf::Socket::Status::NotReady:
             {
 //                std::cout << "[TCP][Recv] \t TCP not ready" << std::endl;
+                delete msg;
             }
                 break;
             default :
                 std::cout << "[TCP][Recv] \t TCP Unknow status error" << std::endl;
+                delete msg;
         }
     }
 }

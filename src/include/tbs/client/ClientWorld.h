@@ -30,6 +30,7 @@ public:
     void initializeMap(int width, int height, int heightMapSeed, int windMapSeed);
 
     void update(float dt);
+    void updateClientShip(float dt);
 
     void addCheckPoint(sf::Vector2i position);
     

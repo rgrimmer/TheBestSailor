@@ -8,6 +8,8 @@
 #ifndef WORLD_CPP
 #define	WORLD_CPP
 
+#include <iostream>
+
 #include <SFML/System/Vector2.hpp>
 
 #include "client/ClientWorld.h"
@@ -37,7 +39,7 @@ sf::Packet& operator>>(sf::Packet& packet, ClientWorld& world) {
     return packet;
 }
 
-ClientWorld::ClientWorld() 
+ClientWorld::ClientWorld()
 : m_mapmap()
 , m_checkPointManager() {
 }
@@ -58,8 +60,26 @@ void ClientWorld::initializeMap(int width, int height, int heightMapSeed, int wi
 }
 
 void ClientWorld::update(float dt) {
-    for (auto& pairShip : m_ships)
-        pairShip.second.update(dt);
+    for (auto& pairShip : m_ships) {
+        if (&(pairShip.second) == &getClientShip()) {
+            updateClientShip(dt);
+        } else {
+            pairShip.second.update(dt);
+        }
+    }
+}
+
+void ClientWorld::updateClientShip(float dt) {
+            std::cout << "update client ship" << std::endl;
+    Wind wind = m_mapmap.getWind(static_cast<sf::Vector2i> (getClientShip().getPosition()));
+    float shipDirRad = Kinematics::degToRad(getClientShip().getAngle());
+    sf::Vector2f outP(std::cos(shipDirRad), std::sin(shipDirRad));
+
+    // Temporary equation 
+    sf::Vector2f windForce = wind.getVector() * std::sin(Kinematics::degToRad(std::abs(getClientShip().getSail().getAngle() - wind.getDirection())));
+    sf::Vector2f velocity = std::sqrt(windForce.x * windForce.x + windForce.y * windForce.y) * outP;
+    getClientShip().setVelocity(velocity);
+    getClientShip().update(dt);
 }
 
 void ClientWorld::addCheckPoint(sf::Vector2i position) {
