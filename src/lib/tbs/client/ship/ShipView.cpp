@@ -13,23 +13,31 @@
 #include "client/view/ShipView.h"
 
 ShipView::ShipView(const Ship &ship, const sf::Color & color)
-: m_ship(ship)
-, m_sailShape({0.5f, 0.05f}) {
+: m_ship(ship) {
     m_speedView = new VectorView(m_ship.getPosition(), m_ship.getVelocity(), "Vship", sf::Color::Cyan);
-    //    m_accView = new VectorView(m_ship.getPosition(), m_ship.kinematics().acceleration(), "", sf::Color::White);
 
-    std::string path = "share/tbs/textures/boat" + std::to_string(m_ship.getType()) + ".png";
+    std::string pathShip = "share/tbs/textures/baseShip" + std::to_string(m_ship.getType()) + ".png";
+    std::string pathSail = "share/tbs/textures/sail" + std::to_string(m_ship.getType()) + ".png";
 
-    if (!m_texture.loadFromFile(path))
-        m_texture.loadFromFile("share/tbs/textures/boat.png");
+    if (!m_textureShip.loadFromFile(pathShip))
+        m_textureShip.loadFromFile("share/tbs/textures/baseShip.png");
+    
+    if (!m_textureSail.loadFromFile(pathSail))
+        m_textureSail.loadFromFile("share/tbs/textures/sail1.png");
 
-    m_boatSprite.setTexture(m_texture);
-    m_boatSprite.setScale(1.5f / m_boatSprite.getTexture()->getSize().x, 0.5f / m_boatSprite.getTexture()->getSize().y);
-    m_boatSprite.setOrigin(m_boatSprite.getTexture()->getSize().x / 2.0f, m_boatSprite.getTexture()->getSize().y / 2.0f);
-
-    // Sail
-    m_sailShape.setOrigin(0.0f, 0.05f);
-    m_sailShape.setFillColor(sf::Color::White);
+    sf::Vector2f sizeShip = static_cast<sf::Vector2f>(m_textureShip.getSize());
+    sf::Vector2f sizeSail = static_cast<sf::Vector2f>(m_textureSail.getSize());
+    m_shapeShip.setPrimitiveType(sf::PrimitiveType::Quads);
+    m_shapeShip.append(sf::Vertex({-0.5f, -0.5f}, {0.0f, 0.0f}));
+    m_shapeShip.append(sf::Vertex({0.5f, -0.5f}, {sizeShip.x, 0.0f}));
+    m_shapeShip.append(sf::Vertex({0.5f, 0.5f}, {sizeShip.x, sizeShip.y}));
+    m_shapeShip.append(sf::Vertex({-0.5f, 0.5f}, {0.0f, sizeShip.y}));
+    
+    m_shapeSail.setPrimitiveType(sf::PrimitiveType::Quads);
+    m_shapeSail.append(sf::Vertex({-0.5f, -0.5f}, {0.0f, 0.0f}));
+    m_shapeSail.append(sf::Vertex({0.5f, -0.5f}, {sizeSail.x, 0.0f}));
+    m_shapeSail.append(sf::Vertex({0.5f, 0.5f}, {sizeSail.x, sizeSail.y}));
+    m_shapeSail.append(sf::Vertex({-0.5f, 0.5f}, {0.0f, sizeSail.y}));
 }
 
 ShipView::ShipView(const ShipView& other)
@@ -48,19 +56,18 @@ void ShipView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     renderShipShape.transform.rotate(m_ship.getAngle());
 
     // Draw ship
-    target.draw(m_boatSprite, renderShipShape);
+    renderShipShape.texture = &m_textureShip;
+    target.draw(m_shapeShip, renderShipShape);
 
     // Draw sail
-    sf::RenderStates renderSailShape(states);
-    renderSailShape.transform.translate(m_ship.getPosition());
-    renderSailShape.transform.rotate(m_ship.getSail().getAngle());
-    target.draw(m_sailShape, renderSailShape);
+    sf::RenderStates renderSailShape(renderShipShape);
+    renderSailShape.transform.translate({0.15,0.0});
+    renderSailShape.transform.rotate(m_ship.getSail().getAngle() - m_ship.getAngle());
+    renderSailShape.texture = &m_textureSail;
+    target.draw(m_shapeSail, renderSailShape);
 
     // Draw speed vector
     target.draw(*m_speedView, states);
-
-    // Draw acceleration vector
-    //    target.draw(*m_accView, states);
 }
 
 const Ship& ShipView::getShip() const {

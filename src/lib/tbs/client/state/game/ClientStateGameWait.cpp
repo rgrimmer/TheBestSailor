@@ -46,7 +46,7 @@ void ClientStateGameWait::deactivate(void) {
 }
 
 void ClientStateGameWait::update(float dt) {
-    std::cout << "[GameWait][Update]" << std::endl;
+    //    std::cout << "[GameWait][Update]" << std::endl;
     m_view.decreaseTimeLeft(dt);
 }
 
@@ -62,15 +62,12 @@ bool ClientStateGameWait::read(sf::Event& event) {
                 m_manager.getManager().pop();
                 break;
 
-            case sf::Keyboard::Left:
-            case sf::Keyboard::Right:
+            default:
             {
                 MsgData msg;
                 msg << MsgType::Action << sf::Int16(event.key.code);
                 m_network.getTcpManager().send(msg);
             }
-                break;
-            default:
                 break;
         }
     } else if (event.type == sf::Event::Closed) {

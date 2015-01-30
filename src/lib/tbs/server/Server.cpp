@@ -78,7 +78,7 @@ void Server::startChronoAndWait() {
 
         sf::Clock clockWaitPlayers;
 
-        while (timeoutWaitPlayers > sf::Time::Zero) {
+        while (timeoutWaitPlayers > sf::Time::Zero && m_stateInWait) {
             if (m_players.inWait().empty())
                 break;
             bool hasRead = readMessagesWait(timeoutWaitPlayers);
@@ -87,7 +87,7 @@ void Server::startChronoAndWait() {
                 sendWaitTimeLeft(timeoutWaitPlayers.asSeconds());
             }
         }
-    } while (m_players.inWait().empty());
+    } while (m_players.inWait().empty() && m_stateInWait);
     m_stateInWait = false;
 }
 
@@ -231,14 +231,25 @@ bool Server::readDisconnect(MsgData& msg, ServerPlayer& player) {
 }
 
 bool Server::readAction(MsgData& msg, ServerPlayer& player) {
-    std::cout << "[Read] \tRead actions !" << std::endl;
+    std::cout << "[Read] \tRead actions !!!!" << std::endl;
     sf::Int16 action;
     msg >> action;
-    if (action == sf::Keyboard::Key::Left) {
-        player.setIdShip((player.getShipType() + Ship::maxType - 1) % Ship::maxType);
-    } 
-    else if (action == sf::Keyboard::Key::Right) {
-        player.setIdShip((player.getShipType() + 1) % Ship::maxType);
+    switch (action) {
+        case sf::Keyboard::Key::Left:
+            player.setIdShip((player.getShipType() + Ship::maxType - 1) % Ship::maxType);
+            break;
+
+        case sf::Keyboard::Key::Right:
+            player.setIdShip((player.getShipType() + 1) % Ship::maxType);
+            break;
+            
+        case sf::Keyboard::G:
+            m_stateInWait = false;
+            break;
+            
+        default:
+            std::cout << "unused action" << std::endl;
+            break;
     }
     return true;
 }
