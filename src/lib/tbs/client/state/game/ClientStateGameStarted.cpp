@@ -241,7 +241,7 @@ void ClientStateGameStarted::updatePrediction(sf::Uint32 reqId) {
         // Go to the next predictions
         prevInput = &predictions[i];
     }
-
+    
     // Set state of world 
     Ship& ship = m_world.getClientShip();
     ship.setTurningNegative(prevInput->getActions().test(TURN_HELM_NEGATIVE));

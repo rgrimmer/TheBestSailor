@@ -15,6 +15,8 @@
 #include "shared/Font.h"
 
 const int Ship::maxType = 4;
+const int Ship::TurnVelocity = 45;
+
 Ship::Ship(const sf::Vector2f& position, float shipAngle, float sailAngle, int type)
 : m_turnPositive(false)
 , m_turnNegative(false)
@@ -23,7 +25,7 @@ Ship::Ship(const sf::Vector2f& position, float shipAngle, float sailAngle, int t
 , m_position(position)
 , m_velocity()
 , m_acceleration()
-, m_sail(sailAngle){
+, m_sail(sailAngle) {
 }
 
 Ship::~Ship() {
@@ -35,19 +37,30 @@ void Ship::initialize(const sf::Vector2f & position, const sf::Vector2f & speed)
 }
 
 void Ship::update(float dt) {
+    // Update ship
+    if (m_turnNegative) {
+        turnNegative( dt);
+    }
+    if (m_turnPositive) {
+        turnPositive(dt);
+    }
+    
+    // Sail
+    m_sail.update(dt);
+    
     // Ship
     m_velocity += m_acceleration *dt;
     m_position += m_velocity * dt;
-    // Sail
-    m_sail.update(dt);
 }
 
-void Ship::turnNegative(float angle) {
-    setAngle(m_angle - angle);
+void Ship::turnNegative(float dt) {
+    setAngle(m_angle - Ship::TurnVelocity * dt);
+    getSail().turnNegative(dt);
 }
 
-void Ship::turnPositive(float angle) {
-    setAngle(m_angle + angle);
+void Ship::turnPositive(float dt) {
+    setAngle(m_angle + Ship::TurnVelocity * dt);
+    getSail().turnPositive(dt);
 }
 
 bool Ship::isTurningPositive() const {

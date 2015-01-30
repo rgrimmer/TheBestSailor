@@ -51,6 +51,10 @@ void ClientTCPManager::receiver() {
             {
                 std::cout << "[TCP][Recv] \t TCP receive error" << std::endl;
             }
+            case sf::Socket::Status::NotReady:
+            {
+//                std::cout << "[TCP][Recv] \t TCP not ready" << std::endl;
+            }
                 break;
             default :
                 std::cout << "[TCP][Recv] \t TCP Unknow status error" << std::endl;

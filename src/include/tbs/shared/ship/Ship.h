@@ -15,6 +15,7 @@
 class Ship {
 public:
     static const int maxType;
+    static const int TurnVelocity;
     
 public:
     Ship(const sf::Vector2f& position = {0,0}, float shipAngle = 0, float sailAngle = 0, int type = 0);
@@ -36,8 +37,8 @@ public:
     void setVelocity(const sf::Vector2f& velocity);
     
     
-    void turnPositive(float angle);
-    void turnNegative(float angle);
+    void turnPositive(float dt);
+    void turnNegative(float dt);
     bool isTurningPositive() const;
     bool isTurningNegative() const;
     void setTurningPositive(bool value);

@@ -10,6 +10,8 @@
 
 #include "shared/ship/Sail.h"
 
+const int Sail::TurnVelocity = 45;
+
 Sail::Sail(float angle)
 : m_angle(angle)
 , m_turnNegative(false)
@@ -20,14 +22,20 @@ Sail::~Sail() {
 }
 
 void Sail::update(float dt) {
+    if (m_turnNegative) {
+        turnNegative(dt);
+    }
+    if (m_turnPositive) {
+        turnPositive(dt);
+    }
 }
 
-void Sail::turnNegative(float angle) {
-    setAngle(m_angle - angle);
+void Sail::turnNegative(float dt) {
+    setAngle(m_angle - dt * Sail::TurnVelocity);
 }
 
-void Sail::turnPositive(float angle) {
-    setAngle(m_angle + angle);
+void Sail::turnPositive(float dt) {
+    setAngle(m_angle + dt * Sail::TurnVelocity);
 }
 
 bool Sail::isTurningPositive() const {

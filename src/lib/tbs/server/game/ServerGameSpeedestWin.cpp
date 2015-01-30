@@ -90,7 +90,6 @@ void ServerGameSpeedestWin::update(float dt) {
         }
     }
     for (auto& ship : m_ships) {
-        updateShipState(ship.second, dt);
         updateSail(ship.second);
         sf::Vector2f shipVelocity = calculShipVelocity(ship.second);
 
@@ -114,23 +113,6 @@ void ServerGameSpeedestWin::update(float dt) {
         }
 
         ship.second.update(dt);
-    }
-}
-
-void ServerGameSpeedestWin::updateShipState(Ship& ship, float dt) {
-    if (ship.isTurningNegative()) {
-        ship.turnNegative(45.0f * dt);
-        ship.getSail().turnNegative(45.0f * dt);
-    }
-    if (ship.isTurningPositive()) {
-        ship.turnPositive(45.0f * dt);
-        ship.getSail().turnPositive(45.0f * dt);
-    }
-    if (ship.getSail().isTurningNegative()) {
-        ship.getSail().turnNegative(45.0f * dt);
-    }
-    if (ship.getSail().isTurningPositive()) {
-        ship.getSail().turnPositive(45.0f * dt);
     }
 }
 
@@ -288,6 +270,8 @@ bool ServerGameSpeedestWin::readAction(MsgData& msg, ServerPlayer& player) {
 
     //if (!MsgData::checkValidity(sf::milliseconds(sfTime), m_lastAction[&player]))
     //  return false;
+    
+    doUpdate();
 
     Ship& ship = m_ships[&player];
     ship.setTurningNegative(keys.test(TURN_HELM_NEGATIVE));
@@ -295,7 +279,6 @@ bool ServerGameSpeedestWin::readAction(MsgData& msg, ServerPlayer& player) {
     ship.getSail().setTurningNegative(keys.test(TURN_SAIL_NEGATIVE));
     ship.getSail().setTurningPositive(keys.test(TURN_SAIL_POSITIVE));
 
-    doUpdate();
     sendInfo(player, idReq);
     return true;
 }

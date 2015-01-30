@@ -12,6 +12,8 @@
 
 class Sail {
 public:
+    static const int TurnVelocity;
+public:
     Sail(float angle = 0.0f);
     virtual ~Sail();
 
