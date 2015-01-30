@@ -259,12 +259,12 @@ void ClientStateGameStarted::updatePrediction(sf::Uint32 reqId) {
     
     // Smouth correction
     sf::Vector2f diffPos = newShipPos - oldShipPos;
-//    if(std::abs(diffPos.x) < 1) {
-//        newShipPos.x =  oldShipPos.x + (diffPos.x * 0.2);
-//    }
-//    if(std::abs(diffPos.y) < 1) {
-//        newShipPos.y =  oldShipPos.y + (diffPos.y * 0.2);
-//    }
+    if(std::abs(diffPos.x) < 1) {
+        newShipPos.x =  oldShipPos.x + (diffPos.x * 0.2);
+    }
+    if(std::abs(diffPos.y) < 1) {
+        newShipPos.y =  oldShipPos.y + (diffPos.y * 0.2);
+    }
     
     ship.setTurningNegative(prevInput->getActions().test(TURN_HELM_NEGATIVE));
     ship.setTurningPositive(prevInput->getActions().test(TURN_HELM_POSITIVE));
