@@ -234,7 +234,7 @@ void ClientStateGameStarted::updatePrediction(sf::Uint32 reqId) {
     std::cout << "nbPrediction(" << predictions.size() << ")" << std::endl;
     Input* prevInput = &predictions[0];
  
-    sf::Vector2f oldShipPos(m_world.getClientShip());
+    sf::Vector2f oldShipPos = m_world.getClientShip().getPosition();
     
     for (unsigned int i = 1; i < predictions.size(); ++i) {
 
@@ -255,7 +255,7 @@ void ClientStateGameStarted::updatePrediction(sf::Uint32 reqId) {
     
     // Set state of world 
     Ship& ship = m_world.getClientShip();
-    sf::Vector2f& newShipPos = ship.getPosition();
+    sf::Vector2f& newShipPos = ship.position();
     
     // Smouth correction
     sf::Vector2f diffPos = newShipPos - oldShipPos;
