@@ -30,7 +30,7 @@ public:
     void initializeMap(int width, int height, int heightMapSeed, int windMapSeed);
 
     void update(float dt);
-    void updateClientShip(float dt);
+    void updateShip(Ship& ship, float dt);
 
     void addCheckPoint(sf::Vector2i position);
     
@@ -41,8 +41,8 @@ public:
     Ship& getClientShip();
     const Ship& getClientShip() const;
 
-    bool windComeFromTribord(const Wind &wind) const;
-    bool windComeFromFront(const Wind &wind) const;
+    bool windComeFromTribord(const Ship& ship, const Wind &wind) const;
+    bool windComeFromFront(const Ship& ship, const Wind &wind) const;
 
  
     ClientCheckPointManager& getCheckPointManager();
@@ -57,6 +57,10 @@ public:
     WindMap& getWindMap();
     const WindMap& getWindMap() const;
 
+private:
+    bool collideWithMap(const Ship & ship, const sf::Vector2f & velocity);
+    void updateSail(Ship& ship);
+    
 private:
     Map m_mapmap;
     ClientCheckPointManager m_checkPointManager;

@@ -61,25 +61,68 @@ void ClientWorld::initializeMap(int width, int height, int heightMapSeed, int wi
 
 void ClientWorld::update(float dt) {
     for (auto& pairShip : m_ships) {
-        if (&(pairShip.second) == &getClientShip()) {
-            updateClientShip(dt);
-        } else {
-            pairShip.second.update(dt);
-        }
+        updateShip(pairShip.second, dt);
     }
 }
 
-void ClientWorld::updateClientShip(float dt) {
-            std::cout << "update client ship" << std::endl;
-    Wind wind = m_mapmap.getWind(static_cast<sf::Vector2i> (getClientShip().getPosition()));
-    float shipDirRad = Kinematics::degToRad(getClientShip().getAngle());
+void ClientWorld::updateShip(Ship& ship, float dt) {
+    std::cout << "update client ship" << std::endl;
+    Wind wind = m_mapmap.getWind(static_cast<sf::Vector2i> (ship.getPosition()));
+    float shipDirRad = Kinematics::degToRad(ship.getAngle());
     sf::Vector2f outP(std::cos(shipDirRad), std::sin(shipDirRad));
 
+    updateSail(ship);
+
     // Temporary equation 
-    sf::Vector2f windForce = wind.getVector() * std::sin(Kinematics::degToRad(std::abs(getClientShip().getSail().getAngle() - wind.getDirection())));
+    sf::Vector2f windForce = wind.getVector() * std::sin(Kinematics::degToRad(std::abs(ship.getSail().getAngle() - wind.getDirection())));
     sf::Vector2f velocity = std::sqrt(windForce.x * windForce.x + windForce.y * windForce.y) * outP;
-    getClientShip().setVelocity(velocity);
-    getClientShip().update(dt);
+    ship.setVelocity(velocity);
+
+    if (collideWithMap(ship, ship.getVelocity())) {
+        ship.setVelocity({0.0f, 0.0f});
+    }
+
+    ship.update(dt);
+}
+
+void ClientWorld::updateSail(Ship& ship) {
+    Wind wind = m_mapmap.getWind(static_cast<sf::Vector2i> (ship.getPosition()));
+    float angleShip = ship.getAngle();
+    float diff = 360.0f - angleShip;
+    float windDir = wind.getDirection() + diff;
+    if (windDir >= 360.0f)
+        windDir -= 360.0f;
+    float sailDir = ship.getSail().getAngle() + diff;
+    if (sailDir >= 360.0f)
+        sailDir -= 360.0f;
+
+    float diffSailWind = sailDir - windDir;
+    if (windComeFromTribord(ship, wind)) {
+        if (sailDir < 180.0f)
+            ship.getSail().setAngle(ship.getSail().getAngle() + (180.0f - sailDir)*2.0f);
+        if (diffSailWind > 0.0f)
+            ship.getSail().setAngle(ship.getSail().getAngle() - diffSailWind);
+
+    } else {
+        if (sailDir > 180.0f)
+            ship.getSail().setAngle(ship.getSail().getAngle() - (sailDir - 180.0f)*2.0f);
+        if (diffSailWind < 0.0f)
+            ship.getSail().setAngle(ship.getSail().getAngle() - diffSailWind);
+    }
+}
+
+bool ClientWorld::collideWithMap(const Ship & ship, const sf::Vector2f & velocity) {
+    int x = (ship.getPosition().x + velocity.x);
+    int y = (ship.getPosition().y + velocity.y);
+    return !WATER(m_mapmap.getHeightMap().getValue(x, y));
+}
+
+bool ClientWorld::windComeFromFront(const Ship& ship, const Wind& wind) const {
+    return (static_cast<int> (450 - ship.getAngle() + wind.getDirection()) % 360 > 180);
+}
+
+bool ClientWorld::windComeFromTribord(const Ship& ship, const Wind& wind) const {
+    return (static_cast<int> (360 - ship.getAngle() + wind.getDirection()) % 360 > 180);
 }
 
 void ClientWorld::addCheckPoint(sf::Vector2i position) {
@@ -112,14 +155,6 @@ const Ship& ClientWorld::getClientShip() const {
 
 void ClientWorld::setClientShip(Ship* ship) {
     m_ship = ship;
-}
-
-bool ClientWorld::windComeFromFront(const Wind &wind) const {
-    return (static_cast<int> (450 - m_ship->getAngle() + wind.getDirection()) % 360 > 180);
-}
-
-bool ClientWorld::windComeFromTribord(const Wind &wind) const {
-    return (static_cast<int> (360 - m_ship->getAngle() + wind.getDirection()) % 360 > 180);
 }
 
 Map& ClientWorld::getMap() {
