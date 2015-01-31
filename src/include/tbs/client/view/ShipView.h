@@ -22,7 +22,7 @@ class VectorView;
 
 class ShipView : public sf::Drawable {
 public:
-    ShipView(const Ship &ship, const sf::Color & color = sf::Color::Red);
+    ShipView(const Ship &ship, bool transparent = false);
     ShipView(const ShipView& other);
 
     virtual ~ShipView();
@@ -34,6 +34,7 @@ private:
     
     // Model
     const Ship& m_ship;
+    bool m_transparent;
 
     // Graphic
     VectorView* m_speedView;

@@ -59,7 +59,6 @@ void ServerUDPManager::receiver() {
         } else {
             std::cout << "\tAucun message n'a pu être créé";
         }
-        std::cout << std::endl;
     }
 }
 

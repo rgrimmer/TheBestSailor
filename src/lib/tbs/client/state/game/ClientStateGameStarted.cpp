@@ -284,7 +284,7 @@ bool ClientStateGameStarted::readCheckpoint(MsgData& msg) {
 bool ClientStateGameStarted::readDisconnect(MsgData & msg) {
     sf::Uint8 id;
     msg >> id;
-    std::cout << m_world.getShips().erase(static_cast<unsigned int> (id)) << std::endl;
+    m_world.getShips().erase(static_cast<unsigned int> (id));
     m_detailsView->updateShips();
     std::cout << "Ship of player " << static_cast<unsigned int> (id) << " remove and view update" << std::endl;
     return true;

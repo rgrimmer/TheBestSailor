@@ -39,6 +39,7 @@ void ClientStateGameWait::release(void) {
 
 void ClientStateGameWait::activate(void) {
     std::cout << "[GameWait][Activate]" << std::endl;
+    m_shipType = 0;
 }
 
 void ClientStateGameWait::deactivate(void) {
@@ -46,8 +47,7 @@ void ClientStateGameWait::deactivate(void) {
 }
 
 void ClientStateGameWait::update(float dt) {
-    //    std::cout << "[GameWait][Update]" << std::endl;
-    m_view.decreaseTimeLeft(dt);
+    m_view.update(dt);
 }
 
 void ClientStateGameWait::render(sf::RenderWindow& window) const {
@@ -62,14 +62,25 @@ bool ClientStateGameWait::read(sf::Event& event) {
                 m_manager.getManager().pop();
                 break;
 
+            case sf::Keyboard::Left:
+            case sf::Keyboard::Q:
+                m_shipType = (m_shipType + Ship::maxType - 1) % Ship::maxType;
+                break;
+
+            case sf::Keyboard::Right:
+            case sf::Keyboard::D:
+                m_shipType = (m_shipType + 1) % Ship::maxType;
+                break;
+
             default:
-            {
-                MsgData msg;
-                msg << MsgType::Action << sf::Int16(event.key.code);
-                m_network.getTcpManager().send(msg);
-            }
                 break;
         }
+        MsgData msg;
+        msg << MsgType::Action << sf::Int16(event.key.code);
+        
+        m_view.setType(m_shipType);
+
+        m_network.getTcpManager().send(msg);
     } else if (event.type == sf::Event::Closed) {
         return false;
     }
@@ -113,10 +124,11 @@ bool ClientStateGameWait::readInitGame(MsgData & msg) {
     msg >> shipCount;
 
     for (int i = 0; i < shipCount; ++i) {
-        sf::Uint8 id;
-        msg >> id;
+        sf::Uint8 id, shipType;
+        msg >> id >> shipType;
         Ship& ship = m_world.getShips()[static_cast<unsigned int> (id)];
         msg >> ship.position().x >> ship.position().y;
+        ship.setType(shipType);
         ship.setAngle(90.0f);
         ship.getSail().setAngle(m_world.getWindMap().wind(static_cast<sf::Vector2i> (ship.position())).getDirection());
     }

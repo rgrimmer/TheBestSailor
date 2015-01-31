@@ -27,6 +27,7 @@ public:
     
     static void update();
     static void setAbs(bool drawAbs);
+    static sf::RenderStates getStates();
     
 private:
     static sf::IntRect g_prevViewport;

@@ -10,6 +10,7 @@
 
 #include <SFML/Graphics/View.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
 #include "shared/ship/Ship.h"
 
@@ -23,8 +24,9 @@ public:
     void setTimeLeft(float timeLeft);
     void decreaseTimeLeft(float dt);
     
-    void setTexture(int shipType);
+    void setType(int shipType);
 
+    void update(float dt);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 private:
@@ -37,7 +39,8 @@ private:
 
     sf::View m_shipSfView;
     sf::Texture m_shipTexture;
-    sf::Sprite m_shipSprite;
+    sf::VertexArray m_shapeShip;
+    sf::FloatRect m_shapeShipRect;
     
     int m_prevTexture;
 };

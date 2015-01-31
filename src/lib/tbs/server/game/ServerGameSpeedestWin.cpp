@@ -47,7 +47,7 @@ ServerGameSpeedestWin::ServerGameSpeedestWin(Server &server, ServerPlayers& play
     int count = 0;
     for (auto* player : m_players.inGame()) {
         // Set Ship
-        m_ships[player] = Ship(position, 90.0f, m_map.getWind(static_cast<sf::Vector2i> (position)).direction());
+        m_ships[player] = Ship(position, 90.0f, m_map.getWind(static_cast<sf::Vector2i> (position)).direction(), player->getShipType());
         // Set next pos
         position.x += 0.25f;
         count++;
@@ -203,6 +203,7 @@ void ServerGameSpeedestWin::sendGame() {
     for (auto& pair : m_ships) {
         auto& ship = pair.second;
         msgGame << static_cast<sf::Uint8> (pair.first->getId())
+                << static_cast<sf::Uint8> (ship.getType())
                 << ship.getPosition().x
                 << ship.getPosition().y;
     }

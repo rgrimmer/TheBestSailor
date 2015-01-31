@@ -35,6 +35,7 @@ public:
     sf::Vector2f& velocity();
     const sf::Vector2f& getVelocity() const;
     void setVelocity(const sf::Vector2f& velocity);
+    void setType(int type);
     
     
     void turnPositive(float dt);

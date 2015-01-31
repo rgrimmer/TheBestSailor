@@ -40,6 +40,7 @@ private:
     ClientPlayer& m_player;
     ClientWorld& m_world;
     GameWaitView m_view;
+    int m_shipType;
 };
 
 #endif	/* StateGameWait_H */

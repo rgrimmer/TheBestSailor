@@ -19,19 +19,18 @@ DetailsView::DetailsView(const ClientWorld &world)
 , m_windMapView(world.getWindMap())
 , m_enableWind(true) {
 
-
+    m_shipsView.reserve(world.getShips().size());
     for (auto& ship : world.getShips()) {
         if (&ship.second != &world.getClientShip()) {
-            m_shipsView.emplace_back(ship.second, sf::Color(255, 0, 0, 100));
-        }
-        else {
+            m_shipsView.emplace_back(ship.second, true);
+        } else {
+            m_shipsView.emplace_back(world.getClientShip(), false);
             m_currentView.setCenter(world.getClientShip().getPosition());
         }
     }
 
-    m_shipsView.emplace_back(world.getClientShip(), sf::Color(255, 0, 0, 255));
     m_currentView.setSize(sf::Vector2f(world.getMap().getHeader().getWidth(), world.getMap().getHeader().getHeight()));
-    
+
 }
 
 DetailsView::~DetailsView() {
@@ -98,7 +97,7 @@ void DetailsView::draw(sf::RenderTarget& target, sf::RenderStates states) const 
     target.draw(TextView("HeightMap : " + std::to_string(timeDrawHeightMap.asMilliseconds())));
     target.draw(TextView("WindMap : " + std::to_string(timeDrawWindMap.asMilliseconds())));
      */
-    
+
     target.setView(viewCpy);
 }
 

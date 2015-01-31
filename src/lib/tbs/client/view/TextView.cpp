@@ -26,6 +26,10 @@ TextView::~TextView() {
 
 }
 
+sf::RenderStates TextView::getStates() {
+    return g_states;
+}
+
 void TextView::update() {
     g_states = sf::RenderStates::Default;
 }

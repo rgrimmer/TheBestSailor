@@ -130,3 +130,7 @@ void Ship::setPosition(const sf::Vector2f& position) {
 void Ship::setVelocity(const sf::Vector2f& velocity) {
     m_velocity = velocity;
 }
+
+void Ship::setType(int type) {
+    m_type = type;
+}

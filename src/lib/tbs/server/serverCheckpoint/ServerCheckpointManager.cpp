@@ -82,7 +82,7 @@ bool ServerCheckpointManager::isCompletedAllCheckpoint(ServerPlayer* player) con
         return false;
     }
     else {
-        std::cout << "" << player->getName() << " has " << (*iterator).second.size() << " checkpoints(" << getCheckPointCount()<<")"<< std::endl;
+        std::cout << player->getName() << " has " << (*iterator).second.size() << " checkpoints(" << getCheckPointCount()<<")"<< std::endl;
         return (*iterator).second.size() == getCheckPointCount();
     }
 }
