@@ -37,7 +37,7 @@ void ClientStateMenuExchangeInfo::release(void) {
 
 void ClientStateMenuExchangeInfo::activate(void) {
     auto separator = m_stdAddress.find(":");
-    if(separator == std::string::npos) {
+    if (separator == std::string::npos) {
         m_port = SERVER_PORT_TCP;
         m_address = m_stdAddress;
     } else {
