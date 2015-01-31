@@ -89,7 +89,7 @@ void GameWaitView::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.setView(sf::View({0.0f, 0.0f, sizeW.x, sizeW.y}));
     sf::Vector2f shipPos;
     shipPos.x = sizeW.x / 2;
-    shipPos.y = (sizeW.y) / 2 + 20.0f;
+    shipPos.y = 410.0f;
     //    
     //    target.setView(m_shipSfView);
     //    std::string size = "widh(" + std::to_string(m_shipTexture.getSize().x) + "), height(" + std::to_string(m_shipTexture.getSize().y) + ")";
