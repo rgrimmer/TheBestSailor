@@ -10,8 +10,6 @@
 #include <SFML/System/Sleep.hpp>
 #include <SFML/System/Clock.hpp>
 
-#include "shared/network/UtilsNetwork.h"
-
 #include "client/network/ClientTCPManager.h"
 #include "client/network/ClientUDPManager.h"
 #include "client/network/ClientNetwork.h"
@@ -28,12 +26,12 @@ ClientMsgQueue& ClientNetwork::getMessageQueue() {
     return m_msgQueue;
 }
 
-bool ClientNetwork::connect(const sf::IpAddress &address, sf::Time timeout) {
+bool ClientNetwork::connect(const sf::IpAddress &address, unsigned short port, sf::Time timeout) {
     sf::Time minTime = sf::milliseconds(1000);
     if (timeout < minTime)
         timeout = minTime;
 
-    if (m_tcpManager.connect(address, SERVER_PORT_TCP, timeout)) {
+    if (m_tcpManager.connect(address, port, timeout)) {
         std::cout << "[NetW][Tcp] \tConnection established" << std::endl;
         return true;
     }

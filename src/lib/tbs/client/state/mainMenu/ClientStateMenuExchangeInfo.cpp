@@ -6,6 +6,7 @@
  */
 #include <iostream>
 
+#include "shared/network/UtilsNetwork.h"
 #include "shared/network/MsgData.h"
 
 #include "client/ClientPlayer.h"
@@ -35,7 +36,14 @@ void ClientStateMenuExchangeInfo::release(void) {
 }
 
 void ClientStateMenuExchangeInfo::activate(void) {
-    m_address = m_stdAddress;
+    auto separator = m_stdAddress.find(":");
+    if(separator == std::string::npos) {
+        m_port = SERVER_PORT_TCP;
+        m_address = m_stdAddress;
+    } else {
+        m_port = atoi(m_stdAddress.substr(separator + 1).c_str());
+        m_address = m_stdAddress.substr(0, separator);
+    }
     m_connectionView.setAdressText(m_address.toString());
 }
 
@@ -43,21 +51,21 @@ void ClientStateMenuExchangeInfo::deactivate(void) {
 }
 
 void ClientStateMenuExchangeInfo::update(float dt) {
-    if (m_network.connect(m_address, sf::milliseconds(1000)))
-        initConnectionWithServer(m_address);
+    if (m_network.connect(m_address, m_port, sf::milliseconds(1000)))
+        initConnectionWithServer();
 }
 
 void ClientStateMenuExchangeInfo::render(sf::RenderWindow& window) const {
     window.draw(m_connectionView);
 }
 
-void ClientStateMenuExchangeInfo::initConnectionWithServer(const sf::IpAddress &address) {
+void ClientStateMenuExchangeInfo::initConnectionWithServer(void) {
     std::cout << "[NetW][InitCWS]\tInitialize connection" << std::endl;
     m_network.getTcpManager().startReceiverThread();
     sendLocalPlayerInfo();
 }
 
-void ClientStateMenuExchangeInfo::sendLocalPlayerInfo() {
+void ClientStateMenuExchangeInfo::sendLocalPlayerInfo(void) {
     std::cout << "[Client][SendLPI] \t Envoi des informations du joueurs" << std::endl;
     MsgData msg;
     msg << MsgType::ClientPlayerInfo << static_cast<sf::Uint16> (m_network.getUdpManager().getPort()) << m_player.getName();

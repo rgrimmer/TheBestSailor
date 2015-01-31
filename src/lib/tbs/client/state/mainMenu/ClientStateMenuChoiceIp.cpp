@@ -39,7 +39,7 @@ void ClientStateMenuChoiceIp::render(sf::RenderWindow& window) const {
 bool ClientStateMenuChoiceIp::read(sf::Event& event) {
     if (event.type == sf::Event::TextEntered) {
         char c = static_cast<char> (event.text.unicode);
-        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '.') {
+        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '.' || c == ':') {
             m_address.append(&c, 1);
         }
     } else if (event.type == sf::Event::KeyPressed) {

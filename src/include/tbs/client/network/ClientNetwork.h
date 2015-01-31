@@ -19,7 +19,7 @@ public:
     ClientNetwork();
     virtual ~ClientNetwork();
 
-    bool connect(const sf::IpAddress &address = sf::IpAddress("localhost"), sf::Time timeout = sf::Time::Zero);
+    bool connect(const sf::IpAddress &address, unsigned short port, sf::Time timeout = sf::Time::Zero);
     void initialize();
     ClientTCPManager& getTcpManager();
     const ClientTCPManager& getTcpManager() const;

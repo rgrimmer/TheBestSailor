@@ -32,8 +32,8 @@ public:
     virtual bool read(MsgData& msg);
 
 private:
-    void initConnectionWithServer(const sf::IpAddress &address);
-    void sendLocalPlayerInfo();
+    void initConnectionWithServer(void);
+    void sendLocalPlayerInfo(void);
 
     bool readMsgServerPlayerInfo(MsgData& msg);
 
@@ -43,6 +43,7 @@ private:
     ClientPlayer& m_player;
     std::string& m_stdAddress;
     sf::IpAddress m_address;
+    unsigned short m_port;
     
     ConnectionView m_connectionView;
     
