@@ -21,7 +21,7 @@ public:
     ServerNetwork(ServerPlayers &players);
     virtual ~ServerNetwork();
 
-    void initialize();
+    void initialize(unsigned short portConnection);
 
     ServerTCPManager& getTCPManager();
     ServerUDPManager& getUDPManager();

@@ -34,9 +34,9 @@ ServerMessageQueue& ServerNetwork::getMessageQueue() {
     return m_messageQueue;
 }
 
-void ServerNetwork::initialize() {
+void ServerNetwork::initialize(unsigned short portConnection) {
     std::cout << "[NetW][Init]" << std::endl;
-    m_tcpManager.initialize(SERVER_PORT_TCP);
+    m_tcpManager.initialize(portConnection);
     m_udpManager.initialize();
     startTCPThread();
     startUDPThread();

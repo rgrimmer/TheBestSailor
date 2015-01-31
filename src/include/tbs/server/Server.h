@@ -10,6 +10,7 @@
 
 #include <thread>
 
+#include "shared/network/UtilsNetwork.h"
 #include "shared/network/Semaphore.h"
 
 #include "server/ServerPlayers.h"
@@ -24,7 +25,7 @@ public:
     Server();
     virtual ~Server();
 
-    void start(void);
+    void start(unsigned short portConnection);
 
     void pollMessages();
     bool readMessagesWait(sf::Time timeout = sf::Time::Zero);
@@ -35,7 +36,7 @@ public:
     void stopReaderThread();
 
 private:
-    void initializeNetwork();
+    void initializeNetwork(unsigned short portConnection);
     void startChronoAndWait();
     void createGame();
     void sendGame();

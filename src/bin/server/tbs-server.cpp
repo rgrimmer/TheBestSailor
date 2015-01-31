@@ -13,9 +13,16 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
+#include "shared/network/UtilsNetwork.h"
 #include "server/Server.h"
 
-int main(void) {
-    Server().start();
+int main(int argc, char** argv) {
+    
+    unsigned short port = (argc > 1)? atoi(argv[1]) : SERVER_PORT_TCP;
+    if(port == 0) {
+        std::cout << "invalide port" << std::endl;
+        exit(0);
+    }
+    Server().start(port);
     return 0;
 }

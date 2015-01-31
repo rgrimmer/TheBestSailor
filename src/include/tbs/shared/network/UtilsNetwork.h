@@ -8,7 +8,7 @@
 #ifndef UTILSNETWORK_H
 #define	UTILSNETWORK_H
 
-#define SERVER_PORT_TCP 6769
+#define SERVER_PORT_TCP 21736
 
 #define NB_CLIENT_MAX 100
 

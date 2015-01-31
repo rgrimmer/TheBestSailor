@@ -19,7 +19,6 @@
 #include "shared/network/MsgServerPlayerInfo.h"
 #include "shared/network/MsgAction.h"
 #include "shared/network/MsgData.h"
-#include "shared/network/UtilsNetwork.h"
 
 #include "server/game/ServerGame.h"
 #include "server/game/ServerGameSpeedestWin.h"
@@ -39,10 +38,10 @@ Server::Server()
 Server::~Server() {
 }
 
-void Server::start() {
+void Server::start(unsigned short portConnection) {
     srand(time(NULL));
 
-    initializeNetwork();
+    initializeNetwork(portConnection);
 
     while (true) {
         startChronoAndWait();
@@ -52,8 +51,8 @@ void Server::start() {
     }
 }
 
-void Server::initializeNetwork() {
-    m_network.initialize();
+void Server::initializeNetwork(unsigned short portConnection) {
+    m_network.initialize(portConnection);
 }
 
 void Server::startChronoAndWait() {
