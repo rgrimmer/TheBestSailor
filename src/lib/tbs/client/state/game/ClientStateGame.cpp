@@ -21,19 +21,26 @@ ClientState& ClientStateGame::getManager() {
     return m_manager;
 }
 
-void ClientStateGame::initialize(void) {
-    add(EStateGame::Wait, new ClientStateGameWait(*this, m_network, m_player, m_world));
-    add(EStateGame::Started, new ClientStateGameStarted(*this, m_network, m_player, m_world));
-    add(EStateGame::End, new ClientStateGameEnd(*this, m_network, m_player, m_world));
-    
-    m_apState[EStateGame::Wait]->initialize();
-    m_apState[EStateGame::Started]->initialize();
-
-    push(EStateGame::Wait);
+void ClientStateGame::create(EStateGame eState) {
+    switch (eState) {
+        case EStateGame::Wait:
+            add(eState, new ClientStateGameWait(*this, m_network, m_player, m_world));
+            break;
+        case EStateGame::Started:
+            add(eState, new ClientStateGameStarted(*this, m_network, m_player, m_world));
+            break;
+        case EStateGame::End:
+            add(eState, new ClientStateGameEnd(*this, m_network, m_player, m_world));
+            break;
+    }
 }
 
 void ClientStateGame::deactivate() {
     std::cout << "[StateGame][Desactivate]" << std::endl;
     m_network.getTcpManager().disconnect();
+}
+
+EStateGame ClientStateGame::firstState() const {
+    return EStateGame::Wait;
 }
 

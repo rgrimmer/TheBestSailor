@@ -29,7 +29,9 @@ public:
 
     ClientState& getManager();
 
-    virtual void initialize(void);
+
+    virtual void create(EStateGame eState);
+    virtual EStateGame firstState() const;
     virtual void deactivate();
     
 private:

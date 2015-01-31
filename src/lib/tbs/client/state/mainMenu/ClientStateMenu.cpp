@@ -23,13 +23,17 @@ ClientState& ClientStateMenu::getManager() {
     return m_manager;
 }
 
-void ClientStateMenu::initialize() {
-    add(EMainMenuState::ChoiceIp, new ClientStateMenuChoiceIp(*this, m_address));
-    add(EMainMenuState::SendInfo, new ClientStateMenuExchangeInfo(*this, m_network, m_player, m_address));
-    
-    m_apState[EMainMenuState::ChoiceIp]->initialize();
-    m_apState[EMainMenuState::SendInfo]->initialize();
-
-    push(EMainMenuState::ChoiceIp);
+void ClientStateMenu::create(EMainMenuState eState) {
+    switch (eState) {
+        case EMainMenuState::ChoiceIp:
+            add(eState, new ClientStateMenuChoiceIp(*this, m_address));
+            break;
+        case EMainMenuState::ExchangeInfo:
+            add(eState, new ClientStateMenuExchangeInfo(*this, m_network, m_player, m_address));
+            break;
+    }
 }
 
+EMainMenuState ClientStateMenu::firstState() const {
+    return EMainMenuState::ChoiceIp;
+}

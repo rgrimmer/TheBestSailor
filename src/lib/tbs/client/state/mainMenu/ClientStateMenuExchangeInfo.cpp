@@ -29,9 +29,6 @@ ClientStateMenuExchangeInfo::ClientStateMenuExchangeInfo(ClientStateMenu& manage
 ClientStateMenuExchangeInfo::~ClientStateMenuExchangeInfo() {
 }
 
-void ClientStateMenuExchangeInfo::initialize(void) {
-}
-
 void ClientStateMenuExchangeInfo::release(void) {
 }
 

@@ -7,7 +7,6 @@ class MsgData;
 
 class State {
 public:
-    virtual void initialize(void) = 0;
     virtual void release(void) = 0;
     virtual void activate(void) = 0;
     virtual void deactivate(void) = 0;

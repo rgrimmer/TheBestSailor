@@ -34,8 +34,8 @@ void Client::start(const std::string & name) {
     m_window.setJoystickThreshold(100.0f);
 
     m_player.setName(name);
-    m_state.initialize();
 
+    m_state.activate();
     while (m_window.isOpen()) {
         sf::Event event;
         while (m_window.pollEvent(event)) {

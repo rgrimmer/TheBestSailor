@@ -17,14 +17,17 @@ ClientState::ClientState(ClientNetwork& network, ClientPlayer& player)
 ClientState::~ClientState() {
 }
 
-void ClientState::initialize() {
-
-    add(EClientState::MainMenu, new ClientStateMenu(*this, m_network, m_player));
-    add(EClientState::Game, new ClientStateGame(*this, m_network, m_player));
-
-    m_apState[EClientState::MainMenu]->initialize();
-    m_apState[EClientState::Game]->initialize();
-
-    push(EClientState::MainMenu);
+EClientState ClientState::firstState() const {
+    return EClientState::MainMenu;
 }
 
+void ClientState::create(EClientState estate) {
+    switch (estate) {
+        case EClientState::Game:
+            add(EClientState::Game, new ClientStateGame(*this, m_network, m_player));
+            break;
+        case EClientState::MainMenu:
+            add(EClientState::MainMenu, new ClientStateMenu(*this, m_network, m_player));
+            break;
+    }
+}

@@ -23,7 +23,8 @@ public:
     ClientState(ClientNetwork& network, ClientPlayer& player);
     virtual ~ClientState();
 
-    virtual void initialize();
+    virtual EClientState firstState() const;
+    virtual void create(EClientState estate);
 
 private:
     ClientNetwork& m_network;

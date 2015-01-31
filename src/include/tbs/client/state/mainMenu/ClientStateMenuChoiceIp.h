@@ -18,7 +18,6 @@ public:
     virtual ~ClientStateMenuChoiceIp();
 
 public:
-    virtual void initialize();
     virtual void release();
     virtual void activate();
     virtual void deactivate();

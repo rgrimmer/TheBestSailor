@@ -15,7 +15,6 @@ public:
     virtual ~StateManager(void);
 
     // State interface
-    virtual void initialize(void) = 0;
     virtual void release(void);
     virtual void activate(void);
     virtual void deactivate(void);
@@ -30,6 +29,8 @@ public:
     void pop(void);
     void change(T eState);
     void reset(void);
+    virtual void create(T eState) = 0;
+    virtual T firstState() const = 0;
 
 protected:
     State* getCurrentState(void) const;
@@ -61,6 +62,10 @@ void StateManager<T>::release(void) {
 
 template<typename T>
 void StateManager<T>::reset(void) {
+    if(m_sState.size() == 0) {
+        push(firstState());
+        return;
+    }
     while (m_sState.size() > 1) {
         m_sState.pop();
     }
@@ -74,27 +79,27 @@ void StateManager<T>::activate(void) {
 
 template<typename T>
 void StateManager<T>::deactivate(void) {
-    getCurrentState()->deactivate();
+    m_sState.top()->deactivate();
 }
 
 template<typename T>
 void StateManager<T>::update(float dt) {
-    getCurrentState()->update(dt);
+    m_sState.top()->update(dt);
 }
 
 template<typename T>
 void StateManager<T>::render(sf::RenderWindow& window) const {
-    getCurrentState()->render(window);
+    m_sState.top()->render(window);
 }
 
 template<typename T>
 bool StateManager<T>::read(sf::Event& event) {
-    return getCurrentState()->read(event);
+    return m_sState.top()->read(event);
 }
 
 template<typename T>
 bool StateManager<T>::read(MsgData& msg) {
-    return getCurrentState()->read(msg);
+    return m_sState.top()->read(msg);
 }
 
 template<typename T>
@@ -110,6 +115,9 @@ void StateManager<T>::push(T eState) {
         pCurrentState->deactivate();
     }
 
+    if (m_apState.find(eState) == m_apState.end())
+        create(eState);
+
     m_sState.push(m_apState[eState]);
     m_apState[eState]->activate();
 }
@@ -119,6 +127,7 @@ void StateManager<T>::pop(void) {
     State* pCurrentState = getCurrentState();
 
     if (nullptr != pCurrentState) {
+        pCurrentState->deactivate();
         m_sState.pop();
     }
 
@@ -137,9 +146,13 @@ void StateManager<T>::change(T eState) {
     m_sState.pop();
 
     //push
-    m_apState[eState]->activate();
+    if (m_apState.find(eState) == m_apState.end())
+        create(eState);
 
     m_sState.push(m_apState[eState]);
+
+    m_apState[eState]->activate();
+
 }
 
 template<typename T>

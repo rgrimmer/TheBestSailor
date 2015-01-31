@@ -31,9 +31,6 @@ ClientStateGameWait::~ClientStateGameWait() {
 
 }
 
-void ClientStateGameWait::initialize(void) {
-}
-
 void ClientStateGameWait::release(void) {
 }
 

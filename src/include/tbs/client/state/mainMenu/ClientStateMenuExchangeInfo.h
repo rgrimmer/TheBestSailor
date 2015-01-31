@@ -22,7 +22,6 @@ public:
     ClientStateMenuExchangeInfo(ClientStateMenu& manager, ClientNetwork& network, ClientPlayer& player, std::string& address);
     virtual ~ClientStateMenuExchangeInfo();
 
-    virtual void initialize(void);
     virtual void release(void);
     virtual void activate(void);
     virtual void deactivate(void);

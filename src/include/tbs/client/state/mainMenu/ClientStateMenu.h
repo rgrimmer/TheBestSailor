@@ -14,8 +14,7 @@
 
 enum EMainMenuState {
     ChoiceIp,
-    WaitInfo,
-    SendInfo
+    ExchangeInfo
 };
 
 class ClientState;
@@ -27,7 +26,9 @@ public:
     ClientStateMenu(ClientState& manager, ClientNetwork& network, ClientPlayer& player);
     virtual ~ClientStateMenu();
 
-    virtual void initialize();
+    virtual void create(EMainMenuState eState);
+    virtual EMainMenuState firstState() const;
+
     ClientState& getManager();
 
 private:

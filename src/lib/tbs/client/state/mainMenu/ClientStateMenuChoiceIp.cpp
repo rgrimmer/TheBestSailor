@@ -17,9 +17,6 @@ ClientStateMenuChoiceIp::ClientStateMenuChoiceIp(ClientStateMenu& manager, std::
 ClientStateMenuChoiceIp::~ClientStateMenuChoiceIp() {
 }
 
-void ClientStateMenuChoiceIp::initialize() {
-}
-
 void ClientStateMenuChoiceIp::release() {
 }
 
@@ -47,7 +44,7 @@ bool ClientStateMenuChoiceIp::read(sf::Event& event) {
             m_address.erase(m_address.size() - 1, 1);
         }
         else if (event.key.code == sf::Keyboard::Return) {
-            m_manager.push(EMainMenuState::SendInfo);
+            m_manager.push(EMainMenuState::ExchangeInfo);
         }
         else if (event.key.code == sf::Keyboard::Escape) {
             m_manager.pop();

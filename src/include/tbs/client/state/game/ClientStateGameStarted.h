@@ -29,7 +29,6 @@ public:
     ClientStateGameStarted(ClientStateGame& manager, ClientNetwork& network, ClientPlayer& player, ClientWorld& world);
     virtual ~ClientStateGameStarted();
 
-    virtual void initialize(void);
     virtual void release(void);
     virtual void activate(void);
     virtual void deactivate(void);

@@ -34,9 +34,6 @@ ClientStateGameStarted::~ClientStateGameStarted() {
 
 }
 
-void ClientStateGameStarted::initialize(void) {
-}
-
 void ClientStateGameStarted::release(void) {
 }
 
