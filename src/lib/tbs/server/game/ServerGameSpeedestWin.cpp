@@ -161,11 +161,7 @@ bool ServerGameSpeedestWin::collideWithMap(const Ship & ship, const sf::Vector2f
 
 bool ServerGameSpeedestWin::collideWithCheckPoint(const Ship & ship, const ServerCheckpoint & checkPoint) {
 
-    if (static_cast<sf::Vector2i> (ship.getPosition()) == checkPoint.getPosition()) {
-        return true;
-    }
-
-    return false;
+    return (static_cast<sf::Vector2i> (ship.getPosition()) == checkPoint.getPosition());
 }
 
 bool ServerGameSpeedestWin::windComeFromFront(const Ship& ship, const Wind& wind) const {

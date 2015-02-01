@@ -24,7 +24,8 @@ ClientStateGameWait::ClientStateGameWait(ClientStateGame& manager, ClientNetwork
 , m_manager(manager)
 , m_network(network)
 , m_player(player)
-, m_world(world) {
+, m_world(world)
+, m_shipType(0) {
 }
 
 ClientStateGameWait::~ClientStateGameWait() {
@@ -36,7 +37,6 @@ void ClientStateGameWait::release(void) {
 
 void ClientStateGameWait::activate(void) {
     std::cout << "[GameWait][Activate]" << std::endl;
-    m_shipType = 0;
 }
 
 void ClientStateGameWait::deactivate(void) {
@@ -74,7 +74,7 @@ bool ClientStateGameWait::read(sf::Event& event) {
         }
         MsgData msg;
         msg << MsgType::Action << sf::Int16(event.key.code);
-        
+
         m_view.setType(m_shipType);
 
         m_network.getTcpManager().send(msg);
@@ -106,11 +106,14 @@ bool ClientStateGameWait::readInitGame(MsgData & msg) {
     sf::Int32 shipCount;
     msg >> gameType >> height >> width >> seedHeight >> seedWind;
 
+    m_world = ClientWorld();
     m_world.initialize();
     std::cout << "[GameWait][Read] \tmap(" << height << ", " << width << ", " << seedHeight << ", " << seedWind << ")" << std::endl;
     m_world.initializeMap(width, height, seedHeight, seedWind);
+    
 
     msg >> checkPointCount;
+    std::cout << "[GameWait][Read] \tcheckPointCount(" << checkPointCount << ")" << std::endl;
     for (int i = 0; i < checkPointCount; ++i) {
         sf::Vector2i posCheckPoint;
         msg >> posCheckPoint.x >> posCheckPoint.y;

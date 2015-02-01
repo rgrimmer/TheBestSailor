@@ -26,6 +26,9 @@ public:
     ClientStateMenu(ClientState& manager, ClientNetwork& network, ClientPlayer& player);
     virtual ~ClientStateMenu();
 
+
+    virtual void activate();
+
     virtual void create(EMainMenuState eState);
     virtual EMainMenuState firstState() const;
 

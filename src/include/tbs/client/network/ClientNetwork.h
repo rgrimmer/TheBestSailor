@@ -19,6 +19,7 @@ public:
     ClientNetwork();
     virtual ~ClientNetwork();
 
+    void disconnect();
     bool connect(const sf::IpAddress &address, unsigned short port, sf::Time timeout = sf::Time::Zero);
     void initialize();
     ClientTCPManager& getTcpManager();

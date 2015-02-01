@@ -33,6 +33,8 @@ void ClientStateMenuExchangeInfo::release(void) {
 }
 
 void ClientStateMenuExchangeInfo::activate(void) {
+
+    // Compute input address
     auto separator = m_stdAddress.find(":");
     if (separator == std::string::npos) {
         m_port = SERVER_PORT_TCP;
@@ -75,6 +77,7 @@ bool ClientStateMenuExchangeInfo::read(sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
         switch (event.key.code) {
             case sf::Keyboard::Escape:
+                m_network.disconnect();
                 m_manager.pop();
                 break;
             default:

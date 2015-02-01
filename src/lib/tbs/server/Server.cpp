@@ -93,6 +93,7 @@ void Server::startChronoAndWait() {
 void Server::createGame() {
     std::cout << "[Create] \tGame" << std::endl;
     // @TODO : switch with different game type
+    delete m_game;
     m_game = new ServerGameSpeedestWin(*this, m_players, MapHeader(NB_TILES_HEIGHT, NB_TILES_WIDTH, rand()));
 }
 

@@ -26,6 +26,10 @@ ClientMsgQueue& ClientNetwork::getMessageQueue() {
     return m_msgQueue;
 }
 
+void ClientNetwork::disconnect() {
+    m_tcpManager.disconnect();
+}
+
 bool ClientNetwork::connect(const sf::IpAddress &address, unsigned short port, sf::Time timeout) {
     sf::Time minTime = sf::milliseconds(1000);
     if (timeout < minTime)

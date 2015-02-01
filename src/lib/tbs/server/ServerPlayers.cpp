@@ -26,7 +26,7 @@ int ServerPlayers::size() const {
 }
 
 ServerPlayer& ServerPlayers::addNewPlayer() {
-    m_players.push_back(new ServerPlayer());
+    m_players.emplace_back(new ServerPlayer());
 
     ServerPlayer *m_player = m_players[m_players.size() - 1];
     m_player->setId(ServerPlayers::s_nextId++);
@@ -77,12 +77,14 @@ const std::unordered_set<ServerPlayer*>& ServerPlayers::inConnection() const {
 }
 
 void ServerPlayers::putPlayersInGameToInWait() {
+    std::cout << "put players in game to in wait" << std::endl;
     m_inWaitPlayers.insert(m_inGamePlayers.begin(), m_inGamePlayers.end());
     m_inGamePlayers.clear();
 }
 
 
 void ServerPlayers::putPlayersInGame() {
+    std::cout << "put players in game" << std::endl;
     m_inWaitPlayers.swap(m_inGamePlayers);
 }
 

@@ -16,6 +16,7 @@
 
 #include "client/network/ClientNetwork.h"
 
+#include "client/state/ClientState.h"
 #include "client/state/game/ClientStateGame.h"
 #include "client/state/game/ClientStateGameStarted.h"
 #include "client/network/Input.h"
@@ -150,7 +151,7 @@ bool ClientStateGameStarted::read(sf::Event& event) {
                 m_mainGraphic = (m_mainGraphic == dynamic_cast<sf::Drawable*> (m_detailsView)) ? dynamic_cast<sf::Drawable*> (m_globalView) : dynamic_cast<sf::Drawable*> (m_detailsView);
                 break;
             case sf::Keyboard::Escape:
-                return false;
+                m_manager.getManager().pop();
                 break;
             default:
                 break;
