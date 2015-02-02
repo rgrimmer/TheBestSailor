@@ -72,6 +72,10 @@ void ClientStateGameStarted::render(sf::RenderWindow& window) const {
         window.draw(*m_mainGraphic);
 
 
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+        TextView::setAbs(true);
+        window.draw(TextView("D", 200, TypeAlign::Center));
+    }
     // Draw winnner
     /*if (m_endGame != nullptr) {
         window.setView(window.getDefaultView());
