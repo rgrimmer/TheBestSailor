@@ -55,7 +55,7 @@ void ClientStateGameStarted::deactivate(void) {
 void ClientStateGameStarted::update(float dt) {
     Input input(m_keys, m_clock.getElapsedTime());
     
-    m_world.update(dt);
+//    m_world.update(dt);
     sf::Uint32 id = m_predictions.add(input);
     sendInfo(input, id);
 }
@@ -227,7 +227,7 @@ bool ClientStateGameStarted::readGameInfo(MsgData & msg) {
         std::cout << "Recv ship(" << static_cast<unsigned int> (id) << ") pos(" << positionX << "," << positionY << ") speed(" << speedX << "," << speedY << ")" << std::endl;
     }
 
-    updatePrediction(idReq);
+//    updatePrediction(idReq);
     return true;
 }
 
