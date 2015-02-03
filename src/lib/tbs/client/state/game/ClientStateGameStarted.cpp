@@ -28,7 +28,8 @@ ClientStateGameStarted::ClientStateGameStarted(ClientStateGame& manager, ClientN
 , m_player(player)
 , m_world(world)
 , m_followingCamera(true)
-, m_zoomValue(1.0f) {
+, m_zoomValue(1.0f)
+, m_activePrediction(true) {
 }
 
 ClientStateGameStarted::~ClientStateGameStarted() {
@@ -54,8 +55,10 @@ void ClientStateGameStarted::deactivate(void) {
 
 void ClientStateGameStarted::update(float dt) {
     Input input(m_keys, m_clock.getElapsedTime());
-    
-//    m_world.update(dt);
+
+    if (m_activePrediction) {
+        m_world.update(dt);
+    }
     sf::Uint32 id = m_predictions.add(input);
     sendInfo(input, id);
 }
@@ -70,17 +73,6 @@ void ClientStateGameStarted::render(sf::RenderWindow& window) const {
     // Draw view
     if (m_mainGraphic)
         window.draw(*m_mainGraphic);
-
-
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-        TextView::setAbs(true);
-        window.draw(TextView("D", 200, TypeAlign::Center));
-    }
-    // Draw winnner
-    /*if (m_endGame != nullptr) {
-        window.setView(window.getDefaultView());
-        window.draw(TextView(m_winner, 40, TypeAlign::Center));
-    }*/
 }
 
 void ClientStateGameStarted::sendInfo(const Input &input, sf::Uint32 id) {
@@ -157,6 +149,10 @@ bool ClientStateGameStarted::read(sf::Event& event) {
             case sf::Keyboard::Escape:
                 m_manager.getManager().pop();
                 break;
+                
+            case sf::Keyboard::O:
+                m_activePrediction =! m_activePrediction;
+                break;
             default:
                 break;
         }
@@ -207,6 +203,7 @@ bool ClientStateGameStarted::readGameInfo(MsgData & msg) {
     sf::Uint32 idReq;
     msg >> idReq;
 
+    Ship oldShip = m_world.getClientShip();
     while (!msg.endOfPacket()) {
 
         sf::Uint8 id;
@@ -227,17 +224,19 @@ bool ClientStateGameStarted::readGameInfo(MsgData & msg) {
         std::cout << "Recv ship(" << static_cast<unsigned int> (id) << ") pos(" << positionX << "," << positionY << ") speed(" << speedX << "," << speedY << ")" << std::endl;
     }
 
-//    updatePrediction(idReq);
+    if (m_activePrediction) {
+        updatePrediction(oldShip, idReq);
+    }
     return true;
 }
 
-void ClientStateGameStarted::updatePrediction(sf::Uint32 reqId) {
+void ClientStateGameStarted::updatePrediction(const Ship& oldShip, sf::Uint32 reqId) {
     std::vector<Input> predictions = m_predictions.getInputFrom(reqId);
     std::cout << "nbPrediction(" << predictions.size() << ")" << std::endl;
     Input* prevInput = &predictions[0];
- 
-    sf::Vector2f oldShipPos = m_world.getClientShip().getPosition();
-    
+
+    sf::Vector2f oldShipPos = oldShip.getPosition();
+
     for (unsigned int i = 1; i < predictions.size(); ++i) {
 
         // Set state of world 
@@ -254,20 +253,20 @@ void ClientStateGameStarted::updatePrediction(sf::Uint32 reqId) {
         // Go to the next predictions
         prevInput = &predictions[i];
     }
-    
+
     // Set state of world 
     Ship& ship = m_world.getClientShip();
     sf::Vector2f& newShipPos = ship.position();
-    
+
     // Smooth correction
-//    sf::Vector2f diffPos = newShipPos - oldShipPos;
-//    if(std::abs(diffPos.x) < 1) {
-//        newShipPos.x =  oldShipPos.x + (diffPos.x * 0.2);
-//    }
-//    if(std::abs(diffPos.y) < 1) {
-//        newShipPos.y =  oldShipPos.y + (diffPos.y * 0.2);
-//    }
-    
+    sf::Vector2f diffPos = newShipPos - oldShipPos;
+    if (std::abs(diffPos.x) < 1) {
+        newShipPos.x = oldShipPos.x + (diffPos.x * 0.2);
+    }
+    if (std::abs(diffPos.y) < 1) {
+        newShipPos.y = oldShipPos.y + (diffPos.y * 0.2);
+    }
+
     ship.setTurningNegative(prevInput->getActions().test(TURN_HELM_NEGATIVE));
     ship.setTurningPositive(prevInput->getActions().test(TURN_HELM_POSITIVE));
     ship.getSail().setTurningNegative(prevInput->getActions().test(TURN_SAIL_NEGATIVE));

@@ -66,7 +66,6 @@ void ClientWorld::update(float dt) {
 }
 
 void ClientWorld::updateShip(Ship& ship, float dt) {
-    std::cout << "update client ship" << std::endl;
     Wind wind = m_mapmap.getWind(static_cast<sf::Vector2i> (ship.getPosition()));
     float shipDirRad = Kinematics::degToRad(ship.getAngle());
     sf::Vector2f outP(std::cos(shipDirRad), std::sin(shipDirRad));

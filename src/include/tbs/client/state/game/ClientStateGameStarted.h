@@ -45,7 +45,7 @@ private:
     
     bool switchFollowingCamera();
     void sendInfo(const Input &input, sf::Uint32 idReq);
-    void updatePrediction(sf::Uint32 idReq);
+    void updatePrediction(const Ship& oldShip, sf::Uint32 idReq);
 
 protected:
     ClientStateGame& m_manager;
@@ -59,6 +59,8 @@ protected:
     InputPredictions m_predictions;
     bool m_followingCamera;
     float m_zoomValue;
+    
+    bool m_activePrediction;
     
     // Graphic
     sf::Drawable* m_mainGraphic;
